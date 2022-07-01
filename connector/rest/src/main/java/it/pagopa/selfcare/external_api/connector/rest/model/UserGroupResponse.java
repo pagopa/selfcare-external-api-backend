@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest.model;
 
-import it.pagopa.selfcare.external_api.model.groups.UserGroupStatus;
+import it.pagopa.selfcare.external_api.connector.model.groups.UserGroupStatus;
 import lombok.Data;
 
 import java.time.Instant;
