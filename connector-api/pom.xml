@@ -9,7 +9,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>selc-external-api-connector-api</artifactId>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
