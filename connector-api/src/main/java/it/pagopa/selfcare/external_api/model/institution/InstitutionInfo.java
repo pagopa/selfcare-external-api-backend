@@ -1,0 +1,34 @@
+package it.pagopa.selfcare.external_api.model.institution;
+
+import lombok.Data;
+
+import java.util.Objects;
+
+@Data
+public class InstitutionInfo {
+
+    private String id;
+    private String origin;
+    private String originId;
+    private InstitutionType institutionType;
+    private String externalId;
+    private String description;
+    private String address;
+    private String taxCode;
+    private String digitalAddress;
+    private String status;
+    private String category;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InstitutionInfo that = (InstitutionInfo) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
