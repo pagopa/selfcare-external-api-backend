@@ -36,7 +36,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - secretRef:
-                name: cdn-storage
+                name: application-insights
             - configMapRef:
                 name: jwt
             - configMapRef:
