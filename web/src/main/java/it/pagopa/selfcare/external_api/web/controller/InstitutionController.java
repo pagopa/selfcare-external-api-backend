@@ -24,15 +24,4 @@ public class InstitutionController {
         this.institutionService = institutionService;
     }
 
-    @GetMapping(value = "/{institutionId}/users/{userId}/products")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
-    public List<ProductsResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                             @PathVariable("institutionId")
-                                                                     String institutionId,
-                                                             @ApiParam("${swagger.external_api.user.model.id}")
-                                                             @PathVariable("userId")
-                                                                     String userId) {
-        return null;
-    }
 }
