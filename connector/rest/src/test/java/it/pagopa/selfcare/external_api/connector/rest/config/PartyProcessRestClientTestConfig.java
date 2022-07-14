@@ -4,7 +4,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 
 @TestConfiguration
-@Import(UserGroupRestClientConfig.class)
-public class UserGroupRestClientTestConfig {
+@Import(PartyProcessRestClientConfig.class)
+public class PartyProcessRestClientTestConfig {
 
 }
