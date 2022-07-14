@@ -16,6 +16,3 @@ autoscaling:
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
-  MS_PRODUCT_LOG_LEVEL: "INFO"
-  LOGO_STORAGE_URL: "https://selcucheckoutsa.z6.web.core.windows.net/resources/products/default/logo.png"
-  DEPICT_IMAGE_URL: "https://selcucheckoutsa.z6.web.core.windows.net/resources/products/default/depict-image.jpeg"
