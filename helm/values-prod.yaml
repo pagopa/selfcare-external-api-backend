@@ -1,5 +1,5 @@
 image:
-  repository: selcpacr.azurecr.io/selfcareexternalapi
+  repository: selcpacr.azurecr.io/selfcareexternalapibackend
   pullPolicy: Always # TODO change me in IfNotPresent when each build will have a different tag
   tag: 0.0.1-SNAPSHOT
 
@@ -17,3 +17,4 @@ autoscaling:
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
+  EXTERNAL_API_LOG_LEVEL: "INFO"

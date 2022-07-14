@@ -7,7 +7,7 @@ namespace: selc
 replicaCount: 1
 
 image:
-  repository: selcdacr.azurecr.io/selfcareexternalapi
+  repository: selcdacr.azurecr.io/selfcareexternalapibackend
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
