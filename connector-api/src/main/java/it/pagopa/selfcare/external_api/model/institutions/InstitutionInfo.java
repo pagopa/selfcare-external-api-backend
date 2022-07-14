@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.model.institutions;
 
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.external_api.model.onboarding.PartyRole;
 import lombok.Data;
 
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class InstitutionInfo {
     private String origin;
     private String originId;
     private InstitutionType institutionType;
+    private PartyRole userRole;
 
     @Override
     public boolean equals(Object o) {
