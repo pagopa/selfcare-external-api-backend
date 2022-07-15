@@ -1,7 +1,30 @@
 package it.pagopa.selfcare.external_api.core;
 
+import it.pagopa.selfcare.external_api.api.PartyConnector;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
-class InstitutionServiceImpl implements InstitutionService {//TODO change Name
+@Slf4j
+class InstitutionServiceImpl implements InstitutionService {
+
+    private final PartyConnector partyConnector;
+
+    @Autowired
+    InstitutionServiceImpl(PartyConnector partyConnector) {
+        this.partyConnector = partyConnector;
+    }
+
+    @Override
+    public Collection<InstitutionInfo> getInstitutions() {
+        log.trace("getInstitutions start");
+        Collection<InstitutionInfo> result = partyConnector.getOnBoardedInstitutions();
+        log.debug("getInstitutions result = {}", result);
+        log.trace("getInstitutions end");
+        return result;
+    }
 }
