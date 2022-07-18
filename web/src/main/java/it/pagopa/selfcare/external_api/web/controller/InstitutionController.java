@@ -1,6 +1,8 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.web.model.product.ProductsResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,4 @@ public class InstitutionController {
         this.institutionService = institutionService;
     }
 
-    @GetMapping(value = "/{institutionId}/users/{userId}/products")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductsResource> getInstitutionUserProducts() {
-        return null;
-    }
 }
