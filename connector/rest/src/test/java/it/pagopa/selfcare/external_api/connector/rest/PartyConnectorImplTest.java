@@ -1,10 +1,10 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
-import it.pagopa.selfcare.external_api.model.onboarding.PartyRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
