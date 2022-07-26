@@ -10,7 +10,7 @@ import javax.validation.Validator;
 
 @Aspect
 @Component
-public class ExternalApiControllerResponseValidator extends ControllerResponseValidator {//TODO change Name
+public class ExternalApiControllerResponseValidator extends ControllerResponseValidator {
 
     @Autowired
     public ExternalApiControllerResponseValidator(Validator validator) {

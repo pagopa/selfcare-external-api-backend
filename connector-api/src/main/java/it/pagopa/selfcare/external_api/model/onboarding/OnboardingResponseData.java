@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import lombok.Data;
 

@@ -1,13 +1,13 @@
 package it.pagopa.selfcare.external_api.model.institutions;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
-import it.pagopa.selfcare.external_api.model.onboarding.PartyRole;
 import lombok.Data;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode
 public class InstitutionInfo {
 
     private String id;
@@ -25,18 +25,5 @@ public class InstitutionInfo {
     private String originId;
     private InstitutionType institutionType;
     private PartyRole userRole;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InstitutionInfo that = (InstitutionInfo) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 
 }
