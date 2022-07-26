@@ -40,6 +40,7 @@ class InstitutionResourceTest {
         toCheckMap.put("taxCode", NotBlank.class);
         toCheckMap.put("origin", NotBlank.class);
         toCheckMap.put("originId", NotBlank.class);
+        toCheckMap.put("status", NotBlank.class);
         toCheckMap.put("userRole", NotNull.class);
 
         InstitutionResource institutionResource = new InstitutionResource();

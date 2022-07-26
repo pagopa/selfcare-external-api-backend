@@ -6,13 +6,16 @@
     "version" : "0.0.1-SNAPSHOT"
   },
   "servers" : [ {
-    "url" : "{basePath}:{port}",
+    "url" : "{url}:{port}{basePath}",
     "variables" : {
-      "basePath" : {
+      "url" : {
         "default" : "http://localhost"
       },
       "port" : {
         "default" : "8080"
+      },
+      "basePath" : {
+        "default" : ""
       }
     }
   } ],
@@ -92,7 +95,7 @@
     "schemas" : {
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "taxCode", "userRole", "zipCode" ],
+        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userRole", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -109,7 +112,7 @@
           },
           "externalId" : {
             "type" : "string",
-            "description" : "Institution's unique external Id(i.ee: IPA code)"
+            "description" : "Institution's unique external identifier"
           },
           "id" : {
             "type" : "string",
@@ -128,6 +131,10 @@
           "originId" : {
             "type" : "string",
             "description" : "Institution's details origin Id"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Institution onboarding status"
           },
           "taxCode" : {
             "type" : "string",

@@ -20,10 +20,12 @@ public class InstitutionMapper {
             resource.setDescription(model.getDescription());
             resource.setExternalId(model.getExternalId());
             resource.setAddress(model.getAddress());
+            resource.setStatus(model.getStatus());
             resource.setDigitalAddress(model.getDigitalAddress());
             resource.setTaxCode(model.getTaxCode());
             resource.setZipCode(model.getZipCode());
             resource.setOrigin(model.getOrigin());
+            resource.setOriginId(model.getOriginId());
             if (model.getUserRole() != null) {
                 resource.setUserRole(model.getUserRole().getSelfCareAuthority());
             }

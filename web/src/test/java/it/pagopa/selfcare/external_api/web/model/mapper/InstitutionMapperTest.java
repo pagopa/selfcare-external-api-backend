@@ -27,6 +27,7 @@ class InstitutionMapperTest {
         assertEquals(resource.getAddress(), model.getAddress());
         assertEquals(resource.getDigitalAddress(), model.getDigitalAddress());
         assertEquals(resource.getZipCode(), model.getZipCode());
+        assertEquals(resource.getStatus(), model.getStatus());
         assertEquals(resource.getTaxCode(), model.getTaxCode());
         assertEquals(resource.getOrigin(), model.getOrigin());
 

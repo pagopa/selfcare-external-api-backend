@@ -39,6 +39,11 @@ public class InstitutionResource {
     @NotBlank
     private String digitalAddress;
 
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.status}", required = true)
+    @JsonProperty(required = true)
+    @NotBlank
+    private String status;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.address}", required = true)
     @JsonProperty(required = true)
     @NotBlank
