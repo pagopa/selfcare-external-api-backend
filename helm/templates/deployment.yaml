@@ -40,6 +40,8 @@ spec:
             - configMapRef:
                 name: jwt
             - configMapRef:
+                name: inner-service-url
+            - configMapRef:
                 name: common
             - configMapRef:
                 name: {{ include "this.fullname" . }}
