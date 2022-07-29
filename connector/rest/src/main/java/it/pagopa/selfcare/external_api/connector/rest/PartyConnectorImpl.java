@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,21 +52,24 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public Collection<InstitutionInfo> getOnBoardedInstitutions() {
+    public Collection<InstitutionInfo> getOnBoardedInstitutions(String productId) {
         log.trace("getOnBoardedInstitutions start");
+        log.debug("getOnboardedInstitutions productId = {}", productId);
+        Assert.hasText(productId, "A productId is required");
         OnBoardingInfo onBoardingInfo = restClient.getOnBoardingInfo(null, EnumSet.of(ACTIVE));
-        Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo);
+        Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo, productId);
         log.debug("getOnBoardedInstitutions result = {}", result);
         log.trace("getOnBoardedInstitutions end");
         return result;
     }
 
-    private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo) {
+    private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo, String productId) {
         log.trace("parseOnBoardingInfo start");
         log.debug("parseOnBoardingInfo onBoardingInfo = {}", onBoardingInfo);
         Collection<InstitutionInfo> institutions = Collections.emptyList();
         if (onBoardingInfo != null && onBoardingInfo.getInstitutions() != null) {
             institutions = onBoardingInfo.getInstitutions().stream()
+                    .filter(onboardingResponseData -> onboardingResponseData.getProductInfo().getId().equals(productId))
                     .map(ONBOARDING_DATA_TO_INSTITUTION_INFO_FUNCTION)
                     .collect(Collectors.collectingAndThen(
                             Collectors.toMap(InstitutionInfo::getId, Function.identity(), MERGE_FUNCTION),

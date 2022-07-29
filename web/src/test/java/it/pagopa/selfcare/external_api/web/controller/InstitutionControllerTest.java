@@ -44,13 +44,15 @@ class InstitutionControllerTest {
     @Test
     void getInstitutions() throws Exception {
         //given
+        String productId = "productId";
         InstitutionInfo institutionInfo = mockInstance(new InstitutionInfo(), "setId");
         institutionInfo.setId(randomUUID().toString());
-        when(institutionServiceMock.getInstitutions())
+        when(institutionServiceMock.getInstitutions(anyString()))
                 .thenReturn(Collections.singletonList(institutionInfo));
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
                         .get(BASE_URL + "")
+                        .param("productId", productId)
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
@@ -66,7 +68,7 @@ class InstitutionControllerTest {
         assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
         assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
         verify(institutionServiceMock, times(1))
-                .getInstitutions();
+                .getInstitutions(productId);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 }

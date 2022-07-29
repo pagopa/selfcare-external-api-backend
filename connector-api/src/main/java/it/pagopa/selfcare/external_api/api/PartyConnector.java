@@ -6,6 +6,6 @@ import java.util.Collection;
 
 public interface PartyConnector {
 
-    Collection<InstitutionInfo> getOnBoardedInstitutions();
+    Collection<InstitutionInfo> getOnBoardedInstitutions(String productId);
 
 }
