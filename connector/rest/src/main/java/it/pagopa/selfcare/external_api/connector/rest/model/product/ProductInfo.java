@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.model.onboarding;
+package it.pagopa.selfcare.external_api.connector.rest.model.product;
 
 import lombok.Data;
 
