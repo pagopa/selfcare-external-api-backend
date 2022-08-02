@@ -31,7 +31,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.*;
+import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.INSTITUTION_ID_IS_REQUIRED;
+import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.USER_ID_IS_REQUIRED;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -204,10 +205,9 @@ class PartyConnectorImplTest {
     void getInstitutionUserProducts_nullInstitutionId(){
         //given
         String institutionId = null;
-        String productId = "productId";
         String userId = "userId";
         //when
-        Executable executable = () -> partyConnector.getInstitutionUserProducts(productId, institutionId, userId);
+        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
@@ -218,13 +218,11 @@ class PartyConnectorImplTest {
     void getInstitutionUserProducts_nullProductId(){
         //given
         String institutionId = "institutionId";
-        String productId = null;
         String userId = "userId";
         //when
-        Executable executable = () -> partyConnector.getInstitutionUserProducts(productId, institutionId, userId);
+        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals(PRODUCT_ID_IS_REQUIRED, e.getMessage());
         verifyNoInteractions(restClientMock);
     }
 
@@ -232,10 +230,9 @@ class PartyConnectorImplTest {
     void getInstitutionUserProducts_nullUserId(){
         //given
         String institutionId = "institutionId";
-        String productId = "productId";
         String userId = null;
         //when
-        Executable executable = () -> partyConnector.getInstitutionUserProducts(productId, institutionId, userId);
+        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
@@ -246,7 +243,6 @@ class PartyConnectorImplTest {
     void getInstitutionUserProducts() throws IOException {
         //given
         String institutionId = "institutionId";
-        String productId = "productId";
         String userId = "userId";
 
         File stubs = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/relationshipInfo_to_product.json");
@@ -254,20 +250,18 @@ class PartyConnectorImplTest {
         when(restClientMock.getUserInstitutionRelationships(any(), any(), any(), any(), any(),any()))
                 .thenReturn(response);
         //when
-        List<PartyProduct> products = partyConnector.getInstitutionUserProducts(productId, institutionId, userId);
+        List<PartyProduct> products = partyConnector.getInstitutionUserProducts(institutionId, userId);
         //then
         assertNotNull(products);
-        assertEquals(2, products.size());
-        for(PartyProduct product: products){
-            assertEquals("prod-io", product.getId());
-        }
+        assertEquals(3, products.size());
         assertEquals(PartyRole.DELEGATE, products.get(0).getRole());
         assertEquals(PartyRole.OPERATOR, products.get(1).getRole());
+        assertEquals(PartyRole.OPERATOR, products.get(2).getRole());
         verify(restClientMock, times(1))
                 .getUserInstitutionRelationships(eq(institutionId),
                         eq(EnumSet.allOf(PartyRole.class)),
                         eq(EnumSet.of(ACTIVE)),
-                        eq(Set.of(productId)),
+                        isNull(),
                         isNull(),
                         eq(userId));
     }

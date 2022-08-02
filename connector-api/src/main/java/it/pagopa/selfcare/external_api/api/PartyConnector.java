@@ -10,6 +10,6 @@ public interface PartyConnector {
 
     Collection<InstitutionInfo> getOnBoardedInstitutions(String productId);
 
-    List<PartyProduct> getInstitutionUserProducts(String productId, String institutionId, String userId);
+    List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId);
 
 }

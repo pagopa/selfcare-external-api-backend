@@ -76,14 +76,13 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public List<PartyProduct> getInstitutionUserProducts(String productId, String institutionId, String userId) {
+    public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts productId = {}, institutionId = {}, userId = {}", productId, institutionId, userId);
-        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
+        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}",  institutionId, userId);
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         List<PartyProduct> products = Collections.emptyList();
-        RelationshipsResponse response = restClient.getUserInstitutionRelationships(institutionId, EnumSet.allOf(PartyRole.class), EnumSet.of(ACTIVE), Set.of(productId), null, userId);
+        RelationshipsResponse response = restClient.getUserInstitutionRelationships(institutionId, EnumSet.allOf(PartyRole.class), EnumSet.of(ACTIVE), null, null, userId);
         if (response != null){
             products = response.stream()
                     .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
