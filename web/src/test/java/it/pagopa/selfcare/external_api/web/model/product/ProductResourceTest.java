@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.web.model.institutions;
+package it.pagopa.selfcare.external_api.web.model.product;
 
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProductResourceTest {
+class ProductResourceTest {
     private Validator validator;
 
     @BeforeEach
