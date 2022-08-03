@@ -6,6 +6,6 @@ import java.util.Collection;
 
 public interface InstitutionService {
 
-    Collection<InstitutionInfo> getInstitutions();
+    Collection<InstitutionInfo> getInstitutions(String productId);
 
 }
