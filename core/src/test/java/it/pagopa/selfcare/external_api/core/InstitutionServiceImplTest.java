@@ -108,7 +108,7 @@ class InstitutionServiceImplTest {
         //given
         String institutionId = "institutionId";
         String userId = UUID.randomUUID().toString();
-        SelfCareUser selfCareUser = SelfCareUser.builder(userId)
+        final SelfCareUser selfCareUser = SelfCareUser.builder(userId)
                 .email("test@example.com")
                 .name("name")
                 .surname("surname")
@@ -127,8 +127,8 @@ class InstitutionServiceImplTest {
         product2.setId(partyProduct2.getId());
         product3.setId("id3");
         product4.setId("id4");
-        List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
-        List<Product> products = List.of(product1, product2, product3, product4);
+        final List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
+        final List<Product> products = List.of(product1, product2, product3, product4);
         when(partyConnectorMock.getInstitutionUserProducts(any(), any()))
                 .thenReturn(partyProducts);
         when(productsConnectorMock.getProducts())

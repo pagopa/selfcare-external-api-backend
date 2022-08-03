@@ -52,14 +52,15 @@ class InstitutionServiceImpl implements InstitutionService {
         Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
         SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
         List<Product> products = productsConnector.getProducts();
-        Map<String, PartyProduct> institutionUserProducts = partyConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
-                .collect(Collectors.toMap(PartyProduct::getId, Function.identity()));
-        List<Product> result = products.stream()
-                .filter(product -> institutionUserProducts.containsKey(product.getId()))
-                .peek(product -> product.setUserRole(institutionUserProducts.get(product.getId()).getRole().getSelfCareAuthority().name()))
-                .collect(Collectors.toList());
-        log.debug("getInstitutionUserProducts result = {}", result);
+        if (!products.isEmpty()) {
+            Map<String, PartyProduct> institutionUserProducts = partyConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
+                    .collect(Collectors.toMap(PartyProduct::getId, Function.identity()));
+            products = products.stream()
+                    .filter(product -> institutionUserProducts.containsKey(product.getId()))
+                    .collect(Collectors.toList());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
         log.trace("getInstitutionUserProducts end");
-        return result;
+        return products;
     }
 }
