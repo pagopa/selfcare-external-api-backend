@@ -215,18 +215,6 @@ class PartyConnectorImplTest {
     }
 
     @Test
-    void getInstitutionUserProducts_nullProductId(){
-        //given
-        String institutionId = "institutionId";
-        String userId = "userId";
-        //when
-        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
-        //then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        verifyNoInteractions(restClientMock);
-    }
-
-    @Test
     void getInstitutionUserProducts_nullUserId(){
         //given
         String institutionId = "institutionId";

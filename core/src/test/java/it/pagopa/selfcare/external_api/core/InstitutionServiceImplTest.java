@@ -137,8 +137,6 @@ class InstitutionServiceImplTest {
         List<Product> result = institutionService.getInstitutionUserProducts(institutionId);
         //then
         assertEquals(2, result.size());
-        assertEquals("ADMIN", result.get(0).getUserRole());
-        assertEquals("LIMITED", result.get(1).getUserRole());
         verify(partyConnectorMock, times(1))
                 .getInstitutionUserProducts(eq(institutionId), eq(userId));
         verify(productsConnectorMock, times(1))
