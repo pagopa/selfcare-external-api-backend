@@ -228,6 +228,25 @@ class PartyConnectorImplTest {
     }
 
     @Test
+    void getInstitutionUserProducts_nullResponse(){
+        //given
+        String institutionId = "institutionId";
+        String userId = "userId";
+        //when
+        List<PartyProduct> products = partyConnector.getInstitutionUserProducts(institutionId, userId);
+        //then
+        assertNotNull(products);
+        assertTrue(products.isEmpty());
+        verify(restClientMock, times(1))
+                .getUserInstitutionRelationships(eq(institutionId),
+                        eq(EnumSet.allOf(PartyRole.class)),
+                        eq(EnumSet.of(ACTIVE)),
+                        isNull(),
+                        isNull(),
+                        eq(userId));
+    }
+    
+    @Test
     void getInstitutionUserProducts() throws IOException {
         //given
         String institutionId = "institutionId";
@@ -253,6 +272,5 @@ class PartyConnectorImplTest {
                         isNull(),
                         eq(userId));
     }
-
 
 }

@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -34,6 +35,12 @@ class InstitutionServiceImplTest {
 
     @Mock
     private ProductsConnector productsConnectorMock;
+    
+    @BeforeEach
+    void beforeEach() {
+        TestSecurityContextHolder.clearContext();
+    }
+
 
     @Test
     void getInstitutions() {
@@ -104,6 +111,29 @@ class InstitutionServiceImplTest {
     }
 
     @Test
+    void getInstitutionUserProducts_nullProducts(){
+        //given
+        String institutionId = "institutionId";
+        String userId = UUID.randomUUID().toString();
+        final SelfCareUser selfCareUser = SelfCareUser.builder(userId)
+                .email("test@example.com")
+                .name("name")
+                .surname("surname")
+                .build();
+        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
+
+        //when
+        List<Product> result = institutionService.getInstitutionUserProducts(institutionId);
+        //then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(productsConnectorMock, times(1))
+                .getProducts();
+        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoInteractions(partyConnectorMock);
+    }
+
+    @Test
     void getInstitutionUserProducts(){
         //given
         String institutionId = "institutionId";
@@ -138,7 +168,7 @@ class InstitutionServiceImplTest {
         //then
         assertEquals(2, result.size());
         verify(partyConnectorMock, times(1))
-                .getInstitutionUserProducts(eq(institutionId), eq(userId));
+                .getInstitutionUserProducts(institutionId, userId);
         verify(productsConnectorMock, times(1))
                 .getProducts();
         verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
