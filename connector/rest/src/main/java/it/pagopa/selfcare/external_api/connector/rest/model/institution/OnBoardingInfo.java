@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.connector.rest.model;
+package it.pagopa.selfcare.external_api.connector.rest.model.institution;
 
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import lombok.Data;

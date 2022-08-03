@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
+import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,11 +32,11 @@ public class InstitutionController {
         this.institutionService = institutionService;
     }
 
-    @GetMapping("")
+    @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
     public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
-                                                         @RequestParam(value = "productId") String productId) {
+                                                     @RequestParam(value = "productId") String productId) {
         log.trace("getInstitutions start");
         log.debug("getInstitutions productId = {}", productId);
         List<InstitutionResource> institutionResources = institutionService.getInstitutions(productId)
@@ -43,6 +45,20 @@ public class InstitutionController {
                 .collect(Collectors.toList());
         log.debug("getInstitutions result = {}", institutionResources);
         log.trace("getInstitutions end");
+        return institutionResources;
+    }
+
+    @GetMapping(value = "/{institutionId}/products")
+    public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                            @PathVariable("institutionId") String institutionId) {
+        log.trace("getInstitutionUserProducts start");
+        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
+        List<ProductResource> institutionResources = institutionService.getInstitutionUserProducts(institutionId)
+                .stream()
+                .map(ProductsMapper::toResource)
+                .collect(Collectors.toList());
+        log.debug("getInstitutionUserProducts result = {}", institutionResources);
+        log.trace("getInstitutionUserProducts end");
         return institutionResources;
     }
 }

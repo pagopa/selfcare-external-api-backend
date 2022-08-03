@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.model.onboarding;
+package it.pagopa.selfcare.external_api.model.user;
 
 public enum RelationshipState {
     PENDING,
