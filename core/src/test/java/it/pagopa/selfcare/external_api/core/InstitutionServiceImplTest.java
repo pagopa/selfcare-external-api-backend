@@ -194,13 +194,10 @@ class InstitutionServiceImplTest {
         partyProduct1.setRole(PartyRole.OPERATOR);
         PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
         partyProduct2.setId("prod-io");
-        partyProduct2.setRole(PartyRole.OPERATOR);
+        partyProduct2.setRole(PartyRole.DELEGATE);
         PartyProduct partyProduct3 = mockInstance(new PartyProduct(), 3);
         partyProduct3.setId("prod-interop");
         partyProduct3.setRole(PartyRole.OPERATOR);
-        PartyProduct partyProduct4 = mockInstance(new PartyProduct(), 4);
-        partyProduct4.setId("prod-interop");
-        partyProduct4.setRole(PartyRole.OPERATOR);
         product1.setId(partyProduct1.getId());
         product2.setId(partyProduct3.getId());
         product3.setId("id3");
