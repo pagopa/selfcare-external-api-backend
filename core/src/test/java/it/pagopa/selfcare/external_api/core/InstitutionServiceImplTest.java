@@ -136,8 +136,8 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionUserProducts(){
         //given
-        String institutionId = "institutionId";
-        String userId = UUID.randomUUID().toString();
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
         final SelfCareUser selfCareUser = SelfCareUser.builder(userId)
                 .email("test@example.com")
                 .name("name")
@@ -155,6 +155,51 @@ class InstitutionServiceImplTest {
         PartyProduct partyProduct3 = mockInstance(new PartyProduct(), 3);
         product1.setId(partyProduct1.getId());
         product2.setId(partyProduct2.getId());
+        product3.setId("id3");
+        product4.setId("id4");
+        final List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
+        final List<Product> products = List.of(product1, product2, product3, product4);
+        when(partyConnectorMock.getInstitutionUserProducts(any(), any()))
+                .thenReturn(partyProducts);
+        when(productsConnectorMock.getProducts())
+                .thenReturn(products);
+        //when
+        List<Product> result = institutionService.getInstitutionUserProducts(institutionId);
+        //then
+        assertEquals(2, result.size());
+        verify(partyConnectorMock, times(1))
+                .getInstitutionUserProducts(institutionId, userId);
+        verify(productsConnectorMock, times(1))
+                .getProducts();
+        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+    }
+    
+    @Test
+    void getInstitutionUserProducts_multipleRolesMerge(){
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final SelfCareUser selfCareUser = SelfCareUser.builder(userId)
+                .email("test@example.com")
+                .name("name")
+                .surname("surname")
+                .build();
+        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
+        Product product1 = mockInstance(new Product(), 1);
+        Product product2 = mockInstance(new Product(), 2);
+        Product product3 = mockInstance(new Product(), 3);
+        Product product4 = mockInstance(new Product(), 4);
+        PartyProduct partyProduct1 = mockInstance(new PartyProduct(), 1);
+        partyProduct1.setId("prod-io");
+        partyProduct1.setRole(PartyRole.OPERATOR);
+        PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
+        partyProduct2.setId("prod-io");
+        partyProduct2.setRole(PartyRole.DELEGATE);
+        PartyProduct partyProduct3 = mockInstance(new PartyProduct(), 3);
+        partyProduct3.setId("prod-interop");
+        partyProduct3.setRole(PartyRole.OPERATOR);
+        product1.setId(partyProduct1.getId());
+        product2.setId(partyProduct3.getId());
         product3.setId("id3");
         product4.setId("id4");
         final List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
