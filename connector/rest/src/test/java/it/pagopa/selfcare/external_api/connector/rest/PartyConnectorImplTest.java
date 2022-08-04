@@ -1,11 +1,21 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.model.OnBoardingInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
-import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -13,21 +23,38 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.util.ResourceUtils;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.external_api.model.onboarding.RelationshipState.ACTIVE;
+import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.INSTITUTION_ID_IS_REQUIRED;
+import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.USER_ID_IS_REQUIRED;
+import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PartyConnectorImplTest {
+
+    private final ObjectMapper mapper;
+
+    public PartyConnectorImplTest() {
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new Jdk8Module());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setTimeZone(TimeZone.getDefault());
+    }
 
     @InjectMocks
     private PartyConnectorImpl partyConnector;
@@ -174,5 +201,76 @@ class PartyConnectorImplTest {
         verifyNoMoreInteractions(restClientMock);
     }
 
+    @Test
+    void getInstitutionUserProducts_nullInstitutionId(){
+        //given
+        String institutionId = null;
+        String userId = "userId";
+        //when
+        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
+        verifyNoInteractions(restClientMock);
+    }
+
+    @Test
+    void getInstitutionUserProducts_nullUserId(){
+        //given
+        String institutionId = "institutionId";
+        String userId = null;
+        //when
+        Executable executable = () -> partyConnector.getInstitutionUserProducts(institutionId, userId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
+        verifyNoInteractions(restClientMock);
+    }
+
+    @Test
+    void getInstitutionUserProducts_nullResponse(){
+        //given
+        String institutionId = "institutionId";
+        String userId = "userId";
+        //when
+        List<PartyProduct> products = partyConnector.getInstitutionUserProducts(institutionId, userId);
+        //then
+        assertNotNull(products);
+        assertTrue(products.isEmpty());
+        verify(restClientMock, times(1))
+                .getUserInstitutionRelationships(eq(institutionId),
+                        eq(EnumSet.allOf(PartyRole.class)),
+                        eq(EnumSet.of(ACTIVE)),
+                        isNull(),
+                        isNull(),
+                        eq(userId));
+    }
+    
+    @Test
+    void getInstitutionUserProducts() throws IOException {
+        //given
+        String institutionId = "institutionId";
+        String userId = "userId";
+
+        File stubs = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/relationshipInfo_to_product.json");
+        RelationshipsResponse response = mapper.readValue(stubs, RelationshipsResponse.class);
+        when(restClientMock.getUserInstitutionRelationships(any(), any(), any(), any(), any(),any()))
+                .thenReturn(response);
+        //when
+        List<PartyProduct> products = partyConnector.getInstitutionUserProducts(institutionId, userId);
+        //then
+        assertNotNull(products);
+        assertEquals(3, products.size());
+        assertEquals(PartyRole.DELEGATE, products.get(0).getRole());
+        assertEquals(PartyRole.OPERATOR, products.get(1).getRole());
+        assertEquals(PartyRole.OPERATOR, products.get(2).getRole());
+        verify(restClientMock, times(1))
+                .getUserInstitutionRelationships(eq(institutionId),
+                        eq(EnumSet.allOf(PartyRole.class)),
+                        eq(EnumSet.of(ACTIVE)),
+                        isNull(),
+                        isNull(),
+                        eq(userId));
+    }
 
 }

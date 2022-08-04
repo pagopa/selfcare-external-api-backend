@@ -2,6 +2,8 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
+import it.pagopa.selfcare.external_api.model.product.ProductInfo;
+import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.Data;
 
 import java.util.List;
