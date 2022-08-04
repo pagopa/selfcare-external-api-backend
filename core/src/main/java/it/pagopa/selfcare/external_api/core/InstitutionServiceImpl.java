@@ -54,6 +54,7 @@ class InstitutionServiceImpl implements InstitutionService {
         List<Product> products = productsConnector.getProducts();
         if (!products.isEmpty()) {
             Map<String, PartyProduct> institutionUserProducts = partyConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
+                    .distinct()
                     .collect(Collectors.toMap(PartyProduct::getId, Function.identity()));
             products = products.stream()
                     .filter(product -> institutionUserProducts.containsKey(product.getId()))
