@@ -66,30 +66,6 @@ class PartyConnectorImplTest {
     void getOnboardedInstitutions_merge() throws IOException {
         //given
         String productId = "productId";
-//        OnBoardingInfo onBoardingInfo = new OnBoardingInfo();
-//        ProductInfo product = mockInstance(new ProductInfo(), 1);
-//        ProductInfo product2 = mockInstance(new ProductInfo(), 2);
-//        product.setId(productId);
-//        product2.setId(productId);
-//        OnboardingResponseData onboardingData1 = mockInstance(new OnboardingResponseData(), 1, "setState", "setRole");
-//        onboardingData1.setState(ACTIVE);
-//        onboardingData1.setRole(PartyRole.OPERATOR);
-//        onboardingData1.setProductInfo(product);
-//        OnboardingResponseData onboardingData2 = mockInstance(new OnboardingResponseData(), 2, "setState", "setId", "setRole");
-//        onboardingData2.setState(ACTIVE);
-//        onboardingData2.setId(onboardingData1.getId());
-//        onboardingData2.setRole(PartyRole.MANAGER);
-//        onboardingData2.setProductInfo(product2);
-//        OnboardingResponseData onboardingData4 = mockInstance(new OnboardingResponseData(), 4, "setState", "setId", "setRole");
-//        onboardingData4.setState(ACTIVE);
-//        onboardingData4.setId(onboardingData1.getId());
-//        onboardingData4.setRole(PartyRole.SUB_DELEGATE);
-//        onboardingData4.setProductInfo(product);
-//        OnboardingResponseData onboardingData3 = mockInstance(new OnboardingResponseData(), 3, "setState", "setRole");
-//        onboardingData3.setState(ACTIVE);
-//        onboardingData3.setRole(PartyRole.OPERATOR);
-//        onboardingData3.setProductInfo(product);
-//        onBoardingInfo.setInstitutions(List.of(onboardingData1, onboardingData2, onboardingData3, onboardingData3, onboardingData4));
         File stubs = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/onboardingInfo.json");
         OnBoardingInfo onBoardingInfo = mapper.readValue(stubs, OnBoardingInfo.class);
         when(restClientMock.getOnBoardingInfo(any(), any()))
@@ -104,19 +80,12 @@ class PartyConnectorImplTest {
         List<InstitutionInfo> institutionInfos = map.get(PartyRole.MANAGER);
         assertNotNull(institutionInfos);
         assertEquals(1, institutionInfos.size());
+        assertEquals(3, institutionInfos.get(0).getProductRoles().size());
         assertEquals(onBoardingInfo.getInstitutions().get(0).getId(), institutionInfos.get(0).getId());
-//        assertEquals(onboardingData2.getDescription(), institutionInfos.get(0).getDescription());
-//        assertEquals(onboardingData2.getExternalId(), institutionInfos.get(0).getExternalId());
-//        assertEquals(onboardingData2.getState().toString(), institutionInfos.get(0).getStatus());
-//        assertEquals(onboardingData2.getRole(), institutionInfos.get(0).getUserRole());
-        institutionInfos = map.get(PartyRole.OPERATOR);
+        institutionInfos = map.get(PartyRole.SUB_DELEGATE);
         assertNotNull(institutionInfos);
         assertEquals(1, institutionInfos.size());
-//        assertEquals(onboardingData3.getId(), institutionInfos.get(0).getId());
-//        assertEquals(onboardingData3.getDescription(), institutionInfos.get(0).getDescription());
-//        assertEquals(onboardingData3.getExternalId(), institutionInfos.get(0).getExternalId());
-//        assertEquals(onboardingData3.getState().toString(), institutionInfos.get(0).getStatus());
-//        assertEquals(onboardingData3.getRole(), institutionInfos.get(0).getUserRole());
+        assertEquals(3, institutionInfos.get(0).getProductRoles().size());
         verify(restClientMock, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(restClientMock);
