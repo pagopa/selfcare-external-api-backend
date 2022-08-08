@@ -104,6 +104,7 @@
       "get" : {
         "tags" : [ "institutions" ],
         "summary" : "getInstitutionUserProducts",
+        "description" : "Service to retrieve all active products for given institution and logged user",
         "operationId" : "getInstitutionUserProductsUsingGET",
         "parameters" : [ {
           "name" : "institutionId",
@@ -180,7 +181,7 @@
     "schemas" : {
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userRole", "zipCode" ],
+        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userProductRoles", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -225,10 +226,12 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "userRole" : {
-            "type" : "string",
-            "description" : "Logged user's role",
-            "enum" : [ "ADMIN", "LIMITED" ]
+          "userProductRoles" : {
+            "type" : "array",
+            "description" : "Logged user's roles on product",
+            "items" : {
+              "type" : "string"
+            }
           },
           "zipCode" : {
             "type" : "string",

@@ -6,6 +6,8 @@ import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +19,7 @@ class InstitutionMapperTest {
         InstitutionInfo model = TestUtils.mockInstance(new InstitutionInfo(), "setId");
         model.setId(randomUUID().toString());
         model.setBilling(TestUtils.mockInstance(new Billing()));
+        model.setProductRoles(List.of("string"));
         //when
         InstitutionResource resource = InstitutionMapper.toResource(model);
         //then
@@ -30,6 +33,7 @@ class InstitutionMapperTest {
         assertEquals(resource.getStatus(), model.getStatus());
         assertEquals(resource.getTaxCode(), model.getTaxCode());
         assertEquals(resource.getOrigin(), model.getOrigin());
+        assertEquals(resource.getUserProductRoles(), model.getProductRoles());
 
     }
 
