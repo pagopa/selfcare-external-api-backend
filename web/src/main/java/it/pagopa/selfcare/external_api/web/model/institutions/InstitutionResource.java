@@ -2,7 +2,6 @@ package it.pagopa.selfcare.external_api.web.model.institutions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.commons.base.security.SelfCareAuthority;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import lombok.Data;
 
@@ -63,13 +62,8 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}", required = true)
     private String origin;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.userRole}", required = true)
-    @JsonProperty(required = true)
-    @NotNull
-    private SelfCareAuthority userRole;
-    
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.productRoles}")
     @JsonProperty(required = true)
     @NotNull
-    private List<String> productRoles;
+    private List<String> userProductRoles;
 }
