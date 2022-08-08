@@ -42,6 +42,7 @@ class InstitutionResourceTest {
         toCheckMap.put("originId", NotBlank.class);
         toCheckMap.put("status", NotBlank.class);
         toCheckMap.put("userRole", NotNull.class);
+        toCheckMap.put("productRoles", NotNull.class);
 
         InstitutionResource institutionResource = new InstitutionResource();
 
@@ -61,6 +62,8 @@ class InstitutionResourceTest {
     void validateNotNullFields() {
         // given
         InstitutionResource institutionResource = TestUtils.mockInstance(new InstitutionResource());
+        institutionResource.setProductRoles(List.of("string"));
+
         // when
         Set<ConstraintViolation<Object>> violations = validator.validate(institutionResource);
         // then

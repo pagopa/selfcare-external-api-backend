@@ -217,6 +217,13 @@
             "type" : "string",
             "description" : "Institution's details origin Id"
           },
+          "productRoles" : {
+            "type" : "array",
+            "description" : "Logged user's role on products",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "status" : {
             "type" : "string",
             "description" : "Institution onboarding status"

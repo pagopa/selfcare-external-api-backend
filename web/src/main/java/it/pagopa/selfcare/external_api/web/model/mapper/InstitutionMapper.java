@@ -26,6 +26,8 @@ public class InstitutionMapper {
             resource.setZipCode(model.getZipCode());
             resource.setOrigin(model.getOrigin());
             resource.setOriginId(model.getOriginId());
+            if (model.getProductRoles() != null)
+                resource.setProductRoles(model.getProductRoles());
             if (model.getUserRole() != null) {
                 resource.setUserRole(model.getUserRole().getSelfCareAuthority());
             }
