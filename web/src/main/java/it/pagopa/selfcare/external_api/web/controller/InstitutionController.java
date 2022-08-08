@@ -55,12 +55,12 @@ public class InstitutionController {
                                                             @PathVariable("institutionId") String institutionId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
-        List<ProductResource> institutionResources = institutionService.getInstitutionUserProducts(institutionId)
+        List<ProductResource> productResources = institutionService.getInstitutionUserProducts(institutionId)
                 .stream()
                 .map(ProductsMapper::toResource)
                 .collect(Collectors.toList());
-        log.debug("getInstitutionUserProducts result = {}", institutionResources);
+        log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
-        return institutionResources;
+        return productResources;
     }
 }

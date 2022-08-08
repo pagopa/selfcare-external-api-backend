@@ -7,7 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 @Data
@@ -65,5 +65,5 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.productRoles}")
     @JsonProperty(required = true)
     @NotNull
-    private List<String> userProductRoles;
+    private Collection<String> userProductRoles;
 }

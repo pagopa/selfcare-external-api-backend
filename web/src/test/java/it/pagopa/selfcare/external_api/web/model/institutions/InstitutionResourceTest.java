@@ -61,7 +61,7 @@ class InstitutionResourceTest {
     void validateNotNullFields() {
         // given
         InstitutionResource institutionResource = TestUtils.mockInstance(new InstitutionResource());
-        institutionResource.setUserProductRoles(List.of("string"));
+        institutionResource.setUserProductRoles(Set.of("string"));
 
         // when
         Set<ConstraintViolation<Object>> violations = validator.validate(institutionResource);

@@ -85,7 +85,7 @@ class PartyConnectorImplTest {
         institutionInfos = map.get(PartyRole.SUB_DELEGATE);
         assertNotNull(institutionInfos);
         assertEquals(1, institutionInfos.size());
-        assertEquals(3, institutionInfos.get(0).getProductRoles().size());
+        assertEquals(2, institutionInfos.get(0).getProductRoles().size());
         verify(restClientMock, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(restClientMock);

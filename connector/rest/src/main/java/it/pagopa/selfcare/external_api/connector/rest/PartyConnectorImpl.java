@@ -52,7 +52,7 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setDigitalAddress(onboardingData.getDigitalAddress());
         institutionInfo.setZipCode(onboardingData.getZipCode());
         institutionInfo.setBilling(onboardingData.getBilling());
-        ArrayList<String> productRole = new ArrayList<>();
+        Set<String> productRole = new HashSet<>();
         productRole.add(onboardingData.getProductInfo().getRole());
         institutionInfo.setProductRoles(productRole);
         institutionInfo.setOrigin(onboardingData.getOrigin());
