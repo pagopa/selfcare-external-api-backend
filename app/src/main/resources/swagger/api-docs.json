@@ -181,7 +181,7 @@
     "schemas" : {
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "zipCode" ],
+        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userProductRoles", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {

@@ -62,7 +62,7 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}", required = true)
     private String origin;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.productRoles}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.productRoles}", required = true)
     @JsonProperty(required = true)
     @NotNull
     private Collection<String> userProductRoles;
