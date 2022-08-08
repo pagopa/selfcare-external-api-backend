@@ -6,6 +6,8 @@ import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Data
 @EqualsAndHashCode
 public class InstitutionInfo {
@@ -25,5 +27,6 @@ public class InstitutionInfo {
     private String originId;
     private InstitutionType institutionType;
     private PartyRole userRole;
+    private List<String> productRoles;
 
 }
