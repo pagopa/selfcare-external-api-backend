@@ -49,6 +49,8 @@ public class InstitutionController {
     }
 
     @GetMapping(value = "/{institutionId}/products")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
     public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                             @PathVariable("institutionId") String institutionId) {
         log.trace("getInstitutionUserProducts start");

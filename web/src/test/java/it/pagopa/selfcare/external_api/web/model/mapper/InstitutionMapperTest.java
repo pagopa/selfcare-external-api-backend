@@ -33,7 +33,7 @@ class InstitutionMapperTest {
         assertEquals(resource.getStatus(), model.getStatus());
         assertEquals(resource.getTaxCode(), model.getTaxCode());
         assertEquals(resource.getOrigin(), model.getOrigin());
-        assertEquals(resource.getProductRoles(), model.getProductRoles());
+        assertEquals(resource.getUserProductRoles(), model.getProductRoles());
 
     }
 
