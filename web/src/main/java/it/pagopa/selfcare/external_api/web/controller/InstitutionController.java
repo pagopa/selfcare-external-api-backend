@@ -49,16 +49,18 @@ public class InstitutionController {
     }
 
     @GetMapping(value = "/{institutionId}/products")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
     public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                             @PathVariable("institutionId") String institutionId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
-        List<ProductResource> institutionResources = institutionService.getInstitutionUserProducts(institutionId)
+        List<ProductResource> productResources = institutionService.getInstitutionUserProducts(institutionId)
                 .stream()
                 .map(ProductsMapper::toResource)
                 .collect(Collectors.toList());
-        log.debug("getInstitutionUserProducts result = {}", institutionResources);
+        log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
-        return institutionResources;
+        return productResources;
     }
 }

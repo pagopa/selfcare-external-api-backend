@@ -31,7 +31,15 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
     private final PartyProcessRestClient restClient;
     private static final BinaryOperator<InstitutionInfo> MERGE_FUNCTION =
-            (inst1, inst2) -> inst1.getUserRole().compareTo(inst2.getUserRole()) < 0 ? inst1 : inst2;
+            (inst1, inst2) -> {
+                if (inst1.getUserRole().compareTo(inst2.getUserRole()) < 0 ){
+                    inst1.getProductRoles().addAll(inst2.getProductRoles());
+                    return inst1;
+                }else{
+                    inst2.getProductRoles().addAll(inst1.getProductRoles());
+                    return inst2;
+                }
+            };
 
     private static final Function<OnboardingResponseData, InstitutionInfo> ONBOARDING_DATA_TO_INSTITUTION_INFO_FUNCTION = onboardingData -> {
         InstitutionInfo institutionInfo = new InstitutionInfo();
@@ -44,6 +52,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setDigitalAddress(onboardingData.getDigitalAddress());
         institutionInfo.setZipCode(onboardingData.getZipCode());
         institutionInfo.setBilling(onboardingData.getBilling());
+        Set<String> productRole = new HashSet<>();
+        productRole.add(onboardingData.getProductInfo().getRole());
+        institutionInfo.setProductRoles(productRole);
         institutionInfo.setOrigin(onboardingData.getOrigin());
         institutionInfo.setOriginId(onboardingData.getOriginId());
         institutionInfo.setInstitutionType(onboardingData.getInstitutionType());
@@ -57,6 +68,7 @@ public class PartyConnectorImpl implements PartyConnector {
         partyProduct.setRole(relationshipInfo.getRole());
         return partyProduct;
     };
+
 
     @Autowired
     public PartyConnectorImpl(PartyProcessRestClient restClient) {
@@ -78,12 +90,12 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}",  institutionId, userId);
+        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}", institutionId, userId);
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         List<PartyProduct> products = Collections.emptyList();
         RelationshipsResponse response = restClient.getUserInstitutionRelationships(institutionId, EnumSet.allOf(PartyRole.class), EnumSet.of(ACTIVE), null, null, userId);
-        if (response != null){
+        if (response != null) {
             products = response.stream()
                     .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
                     .collect(Collectors.toList());
