@@ -1,0 +1,197 @@
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "institutions": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "MANAGER",
+      "productInfo": {
+        "id": "productId",
+        "role": "role1",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "OPERATOR",
+      "productInfo": {
+        "id": "productId",
+        "role": "role2",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role3",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "OPERATOR",
+      "productInfo": {
+        "id": "productId",
+        "role": "role4",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "OPERATOR",
+      "productInfo": {
+        "id": "productId",
+        "role": "role4",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role6",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    }
+  ]
+}
