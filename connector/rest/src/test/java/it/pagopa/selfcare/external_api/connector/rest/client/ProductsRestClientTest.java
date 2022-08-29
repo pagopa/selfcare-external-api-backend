@@ -62,5 +62,11 @@ class ProductsRestClientTest extends BaseFeignRestClientTest {
         assertFalse(response.isEmpty());
     }
 
-
+    @Test
+    void getProduct() {
+        // given and when
+        Product response = restClient.getProduct("testProductId");
+        // then
+        assertFalse(response.getTitle().isEmpty());
+    }
 }
