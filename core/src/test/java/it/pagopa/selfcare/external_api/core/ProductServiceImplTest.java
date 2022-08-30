@@ -41,7 +41,7 @@ public class ProductServiceImplTest {
 
 
     @Test
-    void getInstitutions() {
+    void getProduct() {
         //given
         String productId = "productIds";
         Product expectedProduct = mockInstance(new Product());
