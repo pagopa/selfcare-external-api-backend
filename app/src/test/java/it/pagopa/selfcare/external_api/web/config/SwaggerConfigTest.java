@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.core.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         SwaggerConfig.class,
@@ -35,6 +35,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private InstitutionService institutionService;
+
+    @MockBean
+    private ProductService productService;
 
     @Autowired
     WebApplicationContext context;
