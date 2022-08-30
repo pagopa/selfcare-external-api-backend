@@ -183,7 +183,7 @@
       "get" : {
         "tags" : [ "product" ],
         "summary" : "getProduct",
-        "description" : "${swagger.external_api.products.api.getProduct}",
+        "description" : "The service retrieves Product information from product id",
         "operationId" : "getProductUsingGET",
         "parameters" : [ {
           "name" : "productId",
