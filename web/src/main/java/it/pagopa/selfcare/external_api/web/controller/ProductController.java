@@ -27,6 +27,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // Currently not used from APIM
     @GetMapping(value = "/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.products.api.getProduct}")
