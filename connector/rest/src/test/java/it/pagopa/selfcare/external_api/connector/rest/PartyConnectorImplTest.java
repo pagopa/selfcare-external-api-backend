@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.pagopa.selfcare.commons.base.security.PartyRole.MANAGER;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.ADMIN;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.LIMITED;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
@@ -88,7 +89,7 @@ class PartyConnectorImplTest {
         assertEquals(2, institutions.size());
         Map<PartyRole, List<InstitutionInfo>> map = institutions.stream()
                 .collect(Collectors.groupingBy(InstitutionInfo::getUserRole));
-        List<InstitutionInfo> institutionInfos = map.get(PartyRole.MANAGER);
+        List<InstitutionInfo> institutionInfos = map.get(MANAGER);
         assertNotNull(institutionInfos);
         assertEquals(1, institutionInfos.size());
         assertEquals(3, institutionInfos.get(0).getProductRoles().size());
@@ -119,7 +120,7 @@ class PartyConnectorImplTest {
         onboardingData1.setProductInfo(product1);
         OnboardingResponseData onboardingData2 = mockInstance(new OnboardingResponseData(), 2, "setState", "setId", "setRole");
         onboardingData2.setState(ACTIVE);
-        onboardingData2.setRole(PartyRole.MANAGER);
+        onboardingData2.setRole(MANAGER);
         onboardingData2.setProductInfo(product1);
         OnboardingResponseData onboardingData4 = mockInstance(new OnboardingResponseData(), 4, "setState", "setId", "setRole");
         onboardingData4.setState(ACTIVE);
@@ -273,6 +274,7 @@ class PartyConnectorImplTest {
         // given
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         userInfoFilter.setAllowedState(Optional.of(EnumSet.of(ACTIVE, SUSPENDED)));
+        userInfoFilter.setRole(Optional.of(MANAGER.toString()));
 
         Relationship relationship1 = TestUtils.mockInstance(new Relationship(), "setFrom");
         String id = "id";
@@ -306,7 +308,41 @@ class PartyConnectorImplTest {
         assertEquals(1, userInfo.getProducts().size());
         assertNotNull(productInfoMap.keySet());
         verify(partyManagementRestClientMock, times(1))
-                .getRelationships(isNull(), isNull(), isNull(), notNull(), isNull(), any());
+                .getRelationships(isNull(), isNull(), notNull(), notNull(), isNull(), any());
+        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(partyProcessRestClientMock);
+    }
+
+
+    @Test
+    void getUsers_nullRelationships() {
+        //given
+        UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
+        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+                .thenReturn(null);
+        //when
+        Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
+        //then
+        assertTrue(userInfos.isEmpty());
+        verify(partyManagementRestClientMock, times(1))
+                .getRelationships(any(), any(), any(), any(), any(), any());
+        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(partyProcessRestClientMock);
+    }
+
+
+    @Test
+    void getUsers_nullRelationshipsItems() {
+        //given
+        UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
+        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+                .thenReturn(new Relationships());
+        //when
+        Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
+        //then
+        assertTrue(userInfos.isEmpty());
+        verify(partyManagementRestClientMock, times(1))
+                .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(partyManagementRestClientMock);
         verifyNoInteractions(partyProcessRestClientMock);
     }
