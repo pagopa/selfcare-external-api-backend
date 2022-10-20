@@ -37,6 +37,8 @@ spec:
           envFrom:
             - secretRef:
                 name: application-insights
+            - secretRef:
+                name: common-secrets
             - configMapRef:
                 name: jwt
             - configMapRef:
