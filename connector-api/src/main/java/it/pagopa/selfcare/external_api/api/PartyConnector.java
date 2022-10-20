@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.api;
 
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.user.UserInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,4 +13,5 @@ public interface PartyConnector {
 
     List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId);
 
+    Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
 }

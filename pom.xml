@@ -15,7 +15,7 @@
     <name>selc-external-api</name>
     <description>Microservice to manage Self Care External API</description>
     <properties>
-        <selc-commons.version>2.0.2</selc-commons.version>
+        <selc-commons.version>2.2.0</selc-commons.version>
     </properties>
     <dependencyManagement>
         <dependencies>

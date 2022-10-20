@@ -7,5 +7,5 @@ import java.util.List;
 public interface ProductsConnector {
 
     List<Product> getProducts();
-
+    Product getProduct(String productId);
 }
