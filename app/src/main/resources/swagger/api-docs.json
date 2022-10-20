@@ -12,7 +12,7 @@
         "default" : "http://localhost"
       },
       "port" : {
-        "default" : "8080"
+        "default" : "80"
       },
       "basePath" : {
         "default" : ""
@@ -128,6 +128,110 @@
                   "type" : "array",
                   "items" : {
                     "$ref" : "#/components/schemas/ProductResource"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
+    "/institutions/{institutionId}/products/{productId}/users" : {
+      "get" : {
+        "tags" : [ "institutions" ],
+        "summary" : "getInstitutionProductsUsers",
+        "description" : "Service to get all the active users related to a specific pair of institution-product",
+        "operationId" : "getInstitutionProductsUsersUsingGET",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "description" : "Institution's unique internal Id",
+          "required" : true,
+          "style" : "simple",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "description" : "Product's unique identifier",
+          "required" : true,
+          "style" : "simple",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "description" : "User's unique identifier",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productRoles",
+          "in" : "query",
+          "description" : "User's roles in product",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UserResource"
                   }
                 }
               }
@@ -391,6 +495,39 @@
           "urlPublic" : {
             "type" : "string",
             "description" : "URL that redirects to the public information webpage of the product"
+          }
+        }
+      },
+      "UserResource" : {
+        "title" : "UserResource",
+        "required" : [ "email", "id", "name", "roles", "surname" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "description" : "User's institutional email",
+            "format" : "email",
+            "example" : "email@example.com"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "User's unique identifier",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "User's name"
+          },
+          "roles" : {
+            "type" : "array",
+            "description" : "User's roles in product",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "surname" : {
+            "type" : "string",
+            "description" : "User's surname"
           }
         }
       }
