@@ -1,0 +1,68 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/pdnd-interop-uservice-party-management/0.0.1/relationships",
+    "queryParameters": {
+      "from": {
+        "matches": "^\\w*(,\\w+)*$"
+      },
+      "to": {
+        "matches": "^\\w*(,\\w+)*$"
+      },
+      "products": {
+        "matches": "^\\w*(,\\w+)*$"
+      },
+      "productRoles": {
+        "matches": "^\\w*(,\\w+)*$"
+      },
+      "states": {
+        "matches": "^(?:ACTIVE|PENDING|SUSPENDED|DELETED|REJECTED){0,1}(?:,(?:ACTIVE|PENDING|SUSPENDED|DELETED|REJECTED))*$"
+      },
+      "roles": {
+        "matches": "^(?:MANAGER|DELEGATE|SUB_DELEGATE|OPERATOR){0,1}(?:,(?:MANAGER|DELEGATE|SUB_DELEGATE|OPERATOR))*$"
+      }
+    }
+  },
+  "response": {
+    "status": "200",
+    "jsonBody": {
+      "items": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "from": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "to": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "filePath": "string",
+          "fileName": "string",
+          "contentType": "string",
+          "tokenId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "role": "MANAGER",
+          "product": {
+            "id": "string",
+            "role": "string",
+            "createdAt": "2022-10-19T11:08:32.209Z"
+          },
+          "state": "PENDING",
+          "pricingPlan": "string",
+          "institutionUpdate": {
+            "institutionType": "PA",
+            "description": "AGENCY X",
+            "digitalAddress": "email@pec.mail.org",
+            "address": "via del campo",
+            "zipCode": "20100",
+            "taxCode": "string"
+          },
+          "billing": {
+            "vatNumber": "string",
+            "recipientCode": "string",
+            "publicServices": true
+          },
+          "createdAt": "2022-10-19T11:08:32.210Z",
+          "updatedAt": "2022-10-19T11:08:32.210Z"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

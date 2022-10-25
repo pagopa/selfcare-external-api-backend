@@ -5,6 +5,7 @@ import it.pagopa.selfcare.external_api.model.product.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -15,5 +16,9 @@ public interface ProductsRestClient extends ProductsConnector {
     @GetMapping(value = "${rest-client.products.getProducts.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<Product> getProducts();
+
+    @GetMapping(value = "${rest-client.products.getProduct.path}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    Product getProduct(@PathVariable("id") String productId);
 
 }
