@@ -28,5 +28,6 @@ info:
 logging:
   level:
     it.pagopa.selfcare: ${APP_LOG_LEVEL:DEBUG}
+    io.kubernetes.client.util: DEBUG
   pattern:
     additional-info: ",%X{X-Client-Ip:-}]"
