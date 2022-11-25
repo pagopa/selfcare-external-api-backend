@@ -84,5 +84,4 @@ tolerations: []
 affinity: {}
 
 config:
-  MONGODB_NAME: selcProduct
   APPLICATIONINSIGHTS_ROLE_NAME: "external-api"
