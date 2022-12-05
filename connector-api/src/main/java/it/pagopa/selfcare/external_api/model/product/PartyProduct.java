@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class PartyProduct {
-    private ProductStatus status;
+    private ProductOnboardingStatus status;
     private PartyRole role;
     private String id;
 }
