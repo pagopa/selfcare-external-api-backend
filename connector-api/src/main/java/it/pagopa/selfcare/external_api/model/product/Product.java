@@ -23,6 +23,7 @@ public class Product {
     private OffsetDateTime activatedAt;
     private boolean authorized;
     private String userRole;
+    private ProductOnboardingStatus productOnboardingStatus;
     private ProductStatus status;
     private String identityTokenAudience;
     private EnumMap<PartyRole, ProductRoleInfo> roleMappings;
