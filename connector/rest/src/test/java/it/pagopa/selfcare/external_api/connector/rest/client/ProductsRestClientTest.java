@@ -4,8 +4,10 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.ProductsRestClientTestConfig;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -68,5 +70,34 @@ class ProductsRestClientTest extends BaseFeignRestClientTest {
         Product response = restClient.getProduct("testProductId");
         // then
         assertFalse(response.getTitle().isEmpty());
+    }
+
+    @Test
+    void getProduct_institutionTypeNull() {
+        // given
+        String id = "id";
+        // when
+        Product product = restClient.getProduct(id, null);
+        // then
+        Assertions.assertNotNull(product);
+        Assertions.assertNotNull(product.getId());
+        Assertions.assertNotNull(product.getRoleMappings());
+        Assertions.assertNotNull(product.getTitle());
+        Assertions.assertFalse(product.getRoleMappings().isEmpty());
+    }
+
+    @Test
+    void getProduct_institutionTypeNotNull() {
+        // given
+        String id = "id";
+        InstitutionType institutionType = InstitutionType.PA;
+        // when
+        Product product = restClient.getProduct(id, institutionType);
+        // then
+        Assertions.assertNotNull(product);
+        Assertions.assertNotNull(product.getId());
+        Assertions.assertNotNull(product.getRoleMappings());
+        Assertions.assertNotNull(product.getTitle());
+        Assertions.assertFalse(product.getRoleMappings().isEmpty());
     }
 }

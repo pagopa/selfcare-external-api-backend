@@ -7,10 +7,12 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestCli
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
@@ -35,6 +37,7 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
+    protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
 
     private final PartyProcessRestClient partyProcessRestClient;
     private final PartyManagementRestClient partyManagementRestClient;
@@ -212,6 +215,77 @@ public class PartyConnectorImpl implements PartyConnector {
         log.debug("getUsers result = {}", userInfos);
         log.trace("getUsers end");
         return userInfos;
+    }
+
+    @Override
+    public void verifyOnboarding(String externalInstitutionId, String productId) {
+        log.trace("verifyOnboarding start");
+        log.debug("verifyOnboarding externalInstitutionId = {}, productId = {}", externalInstitutionId, productId);
+        Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
+        partyProcessRestClient.verifyOnboarding(externalInstitutionId, productId);
+        log.trace("verifyOnboarding end");
+    }
+
+    @Override
+    public Institution getInstitutionByExternalId(String externalInstitutionId) {
+        log.trace("getInstitution start");
+        log.debug("getInstitution externalInstitutionId = {}", externalInstitutionId);
+        Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Institution result = partyProcessRestClient.getInstitutionByExternalId(externalInstitutionId);
+        log.debug("getInstitution result = {}", result);
+        log.trace("getInstitution end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionUsingExternalId(String institutionExternalId) {
+        log.trace("createInstitutionUsingExternalId start");
+        log.debug("createInstitutionUsingExternalId externalId = {}", institutionExternalId);
+        Assert.hasText(institutionExternalId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Institution result = partyProcessRestClient.createInstitutionUsingExternalId(institutionExternalId);
+        log.debug("createInstitutionUsingExternalId result = {}", result);
+        log.trace("createInstitutionUsingExternalId end");
+        return result;
+    }
+
+    @Override
+    public void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData) {
+        Assert.notNull(onboardingImportData, "Onboarding data is required");
+        OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
+        onboardingInstitutionRequest.setInstitutionExternalId(onboardingImportData.getInstitutionExternalId());
+        onboardingInstitutionRequest.setPricingPlan(onboardingImportData.getPricingPlan());
+        onboardingInstitutionRequest.setBilling(onboardingImportData.getBilling());
+        onboardingInstitutionRequest.setProductId(onboardingImportData.getProductId());
+        onboardingInstitutionRequest.setProductName(onboardingImportData.getProductName());
+        onboardingInstitutionRequest.setImportContract(onboardingImportData.getImportContract());
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setInstitutionType(onboardingImportData.getInstitutionType());
+        institutionUpdate.setAddress(onboardingImportData.getInstitutionUpdate().getAddress());
+        institutionUpdate.setDescription(onboardingImportData.getInstitutionUpdate().getDescription());
+        institutionUpdate.setDigitalAddress(onboardingImportData.getInstitutionUpdate().getDigitalAddress());
+        institutionUpdate.setTaxCode(onboardingImportData.getInstitutionUpdate().getTaxCode());
+        institutionUpdate.setZipCode(onboardingImportData.getInstitutionUpdate().getZipCode());
+        institutionUpdate.setPaymentServiceProvider(onboardingImportData.getInstitutionUpdate().getPaymentServiceProvider());
+        institutionUpdate.setDataProtectionOfficer(onboardingImportData.getInstitutionUpdate().getDataProtectionOfficer());
+        institutionUpdate.setGeographicTaxonomyCodes(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().stream()
+                .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
+        onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
+
+        onboardingInstitutionRequest.setUsers(onboardingImportData.getUsers().stream()
+                .map(userInfo -> {
+                    User user = new User();
+                    user.setId(userInfo.getId());
+                    user.setName(userInfo.getName());
+                    user.setSurname(userInfo.getSurname());
+                    user.setTaxCode(userInfo.getTaxCode());
+                    user.setEmail(userInfo.getEmail());
+                    user.setRole(userInfo.getRole());
+                    user.setProductRole(userInfo.getProductRole());
+                    return user;
+                }).collect(Collectors.toList()));
+
+        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
 
 }

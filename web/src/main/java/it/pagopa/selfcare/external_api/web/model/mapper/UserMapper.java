@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,20 @@ public class UserMapper {
                         .map(CertifiedFieldMapper::toValue)
                         .ifPresent(resource::setEmail);
             }
+        }
+        return resource;
+    }
+
+    public static it.pagopa.selfcare.external_api.model.onboarding.User toUser(UserDto model) {
+        it.pagopa.selfcare.external_api.model.onboarding.User resource = null;
+        if (model != null) {
+            resource = new it.pagopa.selfcare.external_api.model.onboarding.User();
+            resource.setRole(model.getRole());
+            resource.setEmail(model.getEmail());
+            resource.setName(model.getName());
+            resource.setSurname(model.getSurname());
+            resource.setProductRole(model.getProductRole());
+            resource.setTaxCode(model.getTaxCode());
         }
         return resource;
     }

@@ -1,9 +1,11 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
+import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.model.user.WorkContact;
+import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,6 +54,27 @@ class UserMapperTest {
         assertEquals(model.getUser().getFamilyName().getValue(), resource.getSurname());
         assertEquals(model.getUser().getWorkContacts().get(model.getInstitutionId()).getEmail().getValue(), resource.getEmail());
         assertIterableEquals(productInfo.getRoleInfos().stream().map(RoleInfo::getRole).collect(Collectors.toList()), resource.getRoles());
+    }
+
+    @Test
+    void toUser() {
+        // given
+        UserDto model = mockInstance(new UserDto());
+        // when
+        User resource = UserMapper.toUser(model);
+        // then
+        assertNotNull(resource);
+        reflectionEqualsByName(model, resource);
+    }
+
+    @Test
+    void toUser_null() {
+        // given
+        UserDto model = null;
+        // when
+        User resource = UserMapper.toUser(model);
+        // then
+        assertNull(resource);
     }
 
 }
