@@ -9,6 +9,8 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.Relation
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.validation.ValidationException;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -212,6 +215,23 @@ public class PartyConnectorImpl implements PartyConnector {
         log.debug("getUsers result = {}", userInfos);
         log.trace("getUsers end");
         return userInfos;
+    }
+
+    @Override
+    public List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId) {
+        log.trace("getGeographicTaxonomyList start");
+        log.debug("getGeographicTaxonomyList institutionId = {}", institutionId);
+        Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
+        Institution institution = partyProcessRestClient.getInstitution(institutionId);
+        List<GeographicTaxonomy> result;
+        if (institution.getGeographicTaxonomies() == null) {
+            throw new ValidationException(String.format("The institution %s does not have geographic taxonomies.", institutionId));
+        } else {
+            result = institution.getGeographicTaxonomies();
+        }
+        log.debug("getGeographicTaxonomyList result = {}", result);
+        log.trace("getGeographicTaxonomyList end");
+        return result;
     }
 
 }

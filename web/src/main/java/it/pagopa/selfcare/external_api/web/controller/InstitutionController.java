@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.mapper.GeographicTaxonomyMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserMapper;
@@ -95,5 +97,23 @@ public class InstitutionController {
         log.trace("getInstitutionProductUsers end");
         return result;
     }
+
+    @GetMapping(value = "/{institutionId}/geographicTaxonomy")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.dashboard.institutions.api.getInstitutionGeographicTaxonomy}")
+    public List<GeographicTaxonomyResource> getInstitutionGeographicTaxonomies(@ApiParam("${swagger.dashboard.institutions.model.id}")
+                                                                               @PathVariable("institutionId")
+                                                                               String institutionId) {
+        log.trace("getInstitutionGeographicTaxonomy start");
+        log.debug("getInstitutionGeographicTaxonomy institutionId = {}", institutionId);
+        List<GeographicTaxonomyResource> geographicTaxonomies = institutionService.getGeographicTaxonomyList(institutionId)
+                .stream()
+                .map(GeographicTaxonomyMapper::toResource)
+                .collect(Collectors.toList());
+        log.debug("getInstitutionGeographicTaxonomy result = {}", geographicTaxonomies);
+        log.trace("getInstitutionGeographicTaxonomy end");
+        return geographicTaxonomies;
+    }
+
 
 }
