@@ -9,6 +9,7 @@ import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.User;
@@ -345,4 +346,37 @@ class InstitutionServiceImplTest {
         verifyNoInteractions(partyConnectorMock);
     }
 
+    @Test
+    void getInstitutionsByGeoTaxonomies() {
+        //given
+        Set<String> geoTaxIds = Set.of("geoTax1", "geoTax2");
+        SearchMode searchMode = SearchMode.any;
+        when(partyConnectorMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
+                .thenReturn(List.of(mockInstance(new Institution())));
+        //when
+        Collection<Institution> results = institutionService.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
+        //then
+        assertNotNull(results);
+        assertFalse(results.isEmpty());
+        assertEquals(1, results.size());
+        ArgumentCaptor<String> geoTaxIdCaptor = ArgumentCaptor.forClass(String.class);
+        verify(partyConnectorMock, times(1))
+                .getInstitutionsByGeoTaxonomies(geoTaxIdCaptor.capture(), eq(searchMode));
+        assertEquals(String.join(",", geoTaxIds), geoTaxIdCaptor.getValue());
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies_nullGeoTaxIds() {
+        //given
+        Set<String> geoTax = null;
+        SearchMode searchMode = SearchMode.any;
+        //when
+        Executable executable = () -> institutionService.getInstitutionsByGeoTaxonomies(geoTax, searchMode);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("GeoTaxonomy ids are required in order to retrieve the institutions", e.getMessage());
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, partyConnectorMock);
+    }
 }

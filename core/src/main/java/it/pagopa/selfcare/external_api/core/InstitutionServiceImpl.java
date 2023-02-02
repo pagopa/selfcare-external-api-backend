@@ -6,7 +6,9 @@ import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -107,6 +109,18 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug("getGeographicTaxonomyList result = {}", result);
         log.trace("getGeographicTaxonomyList end");
         return result;
+    }
+
+    @Override
+    public Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode) {
+        log.trace("getInstitutionByGeoTaxonomy start");
+        log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
+        Assert.notEmpty(geoTaxIds, "GeoTaxonomy ids are required in order to retrieve the institutions");
+        String geoIds = String.join(",", geoTaxIds);
+        Collection<Institution> institutions = partyConnector.getInstitutionsByGeoTaxonomies(geoIds, searchMode);
+        log.debug("getInstitutionByGeoTaxonomy result = {}", "null)");
+        log.trace("getInstitutionByGeoTaxonomy end");
+        return institutions;
     }
 
 }

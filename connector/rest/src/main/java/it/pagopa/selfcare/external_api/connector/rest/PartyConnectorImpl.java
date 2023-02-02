@@ -9,9 +9,11 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.Relation
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
@@ -232,6 +234,19 @@ public class PartyConnectorImpl implements PartyConnector {
         log.debug("getGeographicTaxonomyList result = {}", result);
         log.trace("getGeographicTaxonomyList end");
         return result;
+    }
+
+    @Override
+    public Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode) {
+        log.trace("getInstitutionByGeoTaxonomy start");
+        log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
+        Collection<Institution> institutions = partyManagementRestClient.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode).getItems();
+        if (institutions == null) {
+            throw new ResourceNotFoundException(String.format("No institutions where found for given taxIds = %s", geoTaxIds));
+        }
+        log.debug("getInstitutionByGeoTaxonomy result = {}", institutions);
+        log.trace("getInstitutionByGeoTaxonomy end");
+        return institutions;
     }
 
 }

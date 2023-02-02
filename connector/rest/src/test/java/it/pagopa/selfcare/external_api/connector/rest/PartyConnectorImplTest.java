@@ -12,14 +12,13 @@ import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
-import it.pagopa.selfcare.external_api.model.institutions.Attribute;
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
@@ -543,4 +542,43 @@ class PartyConnectorImplTest {
         verifyNoInteractions(partyManagementRestClientMock);
     }
 
+    @Test
+    void getInstitutionsByGeoTaxonomies() throws IOException {
+        //given
+        String geoTaxIds = "taxId";
+        SearchMode searchMode = SearchMode.any;
+        File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/institutions.json");
+        Institutions institutions = mapper.readValue(stub, Institutions.class);
+
+        when(partyManagementRestClientMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
+                .thenReturn(institutions);
+        //when
+        Collection<Institution> results = partyConnector.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
+        //then
+        assertNotNull(results);
+        assertFalse(results.isEmpty());
+        assertEquals(2, results.size());
+        verify(partyManagementRestClientMock, times(1))
+                .getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
+        verifyNoInteractions(partyProcessRestClientMock);
+        verifyNoMoreInteractions(partyManagementRestClientMock);
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies_nullResponse() {
+        //given
+        String geoTax = "geoTaxIds";
+        SearchMode searchMode = SearchMode.any;
+        when(partyManagementRestClientMock.getInstitutionsByGeoTaxonomies(any(), any()))
+                .thenReturn(new Institutions());
+        //when
+        Executable executable = () -> partyConnector.getInstitutionsByGeoTaxonomies(geoTax, searchMode);
+        //then
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
+        assertEquals(String.format("No institutions where found for given taxIds = %s", geoTax), e.getMessage());
+        verify(partyManagementRestClientMock, times(1))
+                .getInstitutionsByGeoTaxonomies(geoTax, searchMode);
+        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(partyProcessRestClientMock);
+    }
 }

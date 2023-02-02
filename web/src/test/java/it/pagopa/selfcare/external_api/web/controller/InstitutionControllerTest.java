@@ -2,13 +2,19 @@ package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
+import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
@@ -24,6 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
+import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
@@ -56,10 +63,10 @@ class InstitutionControllerTest {
                 .thenReturn(Collections.singletonList(institutionInfo));
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                .get(BASE_URL + "")
-                .param("productId", productId)
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE))
+                        .get(BASE_URL + "")
+                        .param("productId", productId)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andReturn();
         //then
@@ -86,9 +93,9 @@ class InstitutionControllerTest {
                 .thenReturn(Collections.singletonList(product));
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                .get(BASE_URL + "/" + institutionId + "/products")
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE))
+                        .get(BASE_URL + "/" + institutionId + "/products")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andReturn();
         //then
@@ -118,9 +125,9 @@ class InstitutionControllerTest {
                 .thenReturn(Collections.emptyList());
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE))
+                        .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         // then
@@ -152,11 +159,11 @@ class InstitutionControllerTest {
                 .thenReturn(singletonList(userInfoModel));
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
-                .queryParam("userId", userId)
-                .queryParam("productRoles", role)
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE))
+                        .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
+                        .queryParam("userId", userId)
+                        .queryParam("productRoles", role)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         // then
@@ -171,4 +178,64 @@ class InstitutionControllerTest {
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
+    @Test
+    void getGeoTaxonomies() throws Exception {
+        //given
+        String institutionId = "institutionId";
+        GeographicTaxonomy geographicTaxonomyMock = mockInstance(new GeographicTaxonomy());
+        when(institutionServiceMock.getGeographicTaxonomyList(anyString()))
+                .thenReturn(List.of(geographicTaxonomyMock));
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/{institutionId}/geographicTaxonomy", institutionId)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        //then
+        List<GeographicTaxonomyResource> geographicTaxonomies = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                }
+        );
+        assertNotNull(geographicTaxonomies);
+        assertFalse(geographicTaxonomies.isEmpty());
+        verify(institutionServiceMock, times(1))
+                .getGeographicTaxonomyList(institutionId);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies() throws Exception {
+        //given
+        String[] geoTaxIds = {"geotax1", "geoTax2"};
+        SearchMode searchMode = SearchMode.any;
+        Institution institution = mockInstance(new Institution());
+        institution.setId(randomUUID().toString());
+        institution.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        when(institutionServiceMock.getInstitutionsByGeoTaxonomies(any(), any()))
+                .thenReturn(List.of(institution));
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/byGeoTaxonomies")
+                        .queryParam("geoTaxonomies", geoTaxIds)
+                        .queryParam("searchMode", searchMode.toString())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        //then
+        List<InstitutionDetailResource> resources = objectMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(resources);
+        assertFalse(resources.isEmpty());
+        resources.forEach(institutionDetailResource -> {
+            institutionDetailResource.getGeographicTaxonomies().forEach(TestUtils::checkNotNullFields);
+            checkNotNullFields(institutionDetailResource);
+        });
+        verify(institutionServiceMock, times(1))
+                .getInstitutionsByGeoTaxonomies(Set.of(geoTaxIds), searchMode);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
 }

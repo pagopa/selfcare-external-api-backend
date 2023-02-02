@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 
@@ -19,4 +21,6 @@ public interface InstitutionService {
     Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
+
+    Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode);
 }

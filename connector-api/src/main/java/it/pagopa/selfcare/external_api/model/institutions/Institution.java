@@ -22,5 +22,10 @@ public class Institution {
     private InstitutionType institutionType;
     private List<Attribute> attributes;
     private List<GeographicTaxonomy> geographicTaxonomies;
-
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private String supportEmail;
+    private String supportPhone;
+    private Boolean imported;
 }
