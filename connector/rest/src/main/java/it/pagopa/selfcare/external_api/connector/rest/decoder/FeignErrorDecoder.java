@@ -8,7 +8,6 @@ public class FeignErrorDecoder extends ErrorDecoder.Default {
 
     @Override
     public Exception decode(String methodKey, Response response) {
-        System.out.println(response.status());
         if (response.status() == 404) {
             throw new ResourceNotFoundException();
         } else {
