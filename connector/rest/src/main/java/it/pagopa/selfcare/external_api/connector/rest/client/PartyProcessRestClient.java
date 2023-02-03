@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.connector.rest.client;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -33,4 +34,8 @@ public interface PartyProcessRestClient {
                                                           @RequestParam(value = "products", required = false) Set<String> productIds,
                                                           @RequestParam(value = "productRoles", required = false) Set<String> productRoles,
                                                           @RequestParam(value = "personId", required = false) String personId);
+
+    @GetMapping(value = "${rest-client.party-process.getInstitution.path}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    Institution getInstitution(@PathVariable(value = "id") String id);
 }
