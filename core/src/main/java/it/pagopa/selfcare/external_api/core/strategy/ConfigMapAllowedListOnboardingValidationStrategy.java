@@ -26,7 +26,7 @@ public class ConfigMapAllowedListOnboardingValidationStrategy implements Onboard
 
 
     @Autowired
-    public ConfigMapAllowedListOnboardingValidationStrategy(@Value("#{${onboarding.institutions-allowed-list}}") Map<String, Set<String>> institutionProductsAllowedMap) {
+    public ConfigMapAllowedListOnboardingValidationStrategy(@Value("#{${external_api.institutions-allowed-list}}") Map<String, Set<String>> institutionProductsAllowedMap) {
         log.trace("Initializing {}", ConfigMapAllowedListOnboardingValidationStrategy.class.getSimpleName());
         log.debug("ConfigMapAllowedListOnboardingValidationStrategy institutionProductsAllowedMap = {}", institutionProductsAllowedMap);
         validateSpecialcharecterUsage(institutionProductsAllowedMap);

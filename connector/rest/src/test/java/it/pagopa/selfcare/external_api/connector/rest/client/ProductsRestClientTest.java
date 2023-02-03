@@ -73,9 +73,9 @@ class ProductsRestClientTest extends BaseFeignRestClientTest {
     }
 
     @Test
-    void getProduct_institutionTypeNull() {
+    void getProductNoInstitutionType_fullyValued() {
         // given
-        String id = "id";
+        String id = "testProductId3";
         // when
         Product product = restClient.getProduct(id, null);
         // then
@@ -87,9 +87,9 @@ class ProductsRestClientTest extends BaseFeignRestClientTest {
     }
 
     @Test
-    void getProduct_institutionTypeNotNull() {
+    void getProductWithInstitutionType_fullyValued() {
         // given
-        String id = "id";
+        String id = "testProductId2";
         InstitutionType institutionType = InstitutionType.PA;
         // when
         Product product = restClient.getProduct(id, institutionType);

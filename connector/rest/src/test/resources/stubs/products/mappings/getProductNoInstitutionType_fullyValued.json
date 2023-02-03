@@ -1,12 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPathPattern": "/products/testProductId2",
-    "queryParameters": {
-      "institutionType": {
-        "matches": "^(?:PA|GSP|PT|PSP|SCP|null){0,1}"
-      }
-    }
+    "url": "/products/testProductId3"
   },
   "response": {
     "status": "200",
