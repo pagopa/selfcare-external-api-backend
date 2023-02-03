@@ -61,7 +61,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public List<Product> getInstitutionUserProducts(String institutionId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
-        Assert.hasText(institutionId, "An institutionId is required");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.state(authentication != null, "Authentication is required");
         Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
@@ -84,7 +84,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles) {
         log.trace("getInstitutionProductUsers start");
         log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}", institutionId, productId, productRoles);
-        Assert.hasText(institutionId, "An Institution id is required");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Assert.hasText(productId, "A Product id is required");
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         userInfoFilter.setInstitutionId(Optional.of(institutionId));

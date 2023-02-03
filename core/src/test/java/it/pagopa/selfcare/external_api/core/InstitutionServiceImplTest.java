@@ -120,7 +120,7 @@ class InstitutionServiceImplTest {
         Executable executable = () -> institutionService.getInstitutionUserProducts(institutionId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals("An institutionId is required", e.getMessage());
+        assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
         verifyNoInteractions(partyConnectorMock, productsConnectorMock);
     }
 
@@ -245,7 +245,7 @@ class InstitutionServiceImplTest {
         Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        Assertions.assertEquals("An Institution id is required", e.getMessage());
+        Assertions.assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
         verifyNoInteractions(productsConnectorMock, partyConnectorMock);
     }
 

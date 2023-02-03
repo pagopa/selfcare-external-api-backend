@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-public class ExternalApiExceptionHandlerTest {
+class ExternalApiExceptionHandlerTest {
 
     private static final String DETAIL_MESSAGE = "detail message";
     private final ExternalApiExceptionHandler handler;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class InstitutionDetailResourceTest {
+class InstitutionDetailResourceTest {
     private Validator validator;
 
     @BeforeEach
