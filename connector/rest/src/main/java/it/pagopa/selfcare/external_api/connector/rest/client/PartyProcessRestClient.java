@@ -55,7 +55,11 @@ public interface PartyProcessRestClient {
     Institution createInstitutionRaw(@PathVariable("externalId") String externalId,
                                      @RequestBody InstitutionSeed institutionSeed);
 
-    @PostMapping(value = "${rest-client.party-process.onboardingOrganization.path}", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${rest-client.party-process.onboardingImportOrganization.path}", consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
-    void onboardingOrganization(@RequestBody OnboardingImportInstitutionRequest request);
+    void onboardingImportOrganization(@RequestBody OnboardingImportInstitutionRequest request);
+
+    @PostMapping(value = "${rest-client.party-process.autoApprovalOnboardingOrganization.path}", consumes = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    void autoApprovalOnboardingOrganization(@RequestBody OnboardingImportInstitutionRequest request);
 }

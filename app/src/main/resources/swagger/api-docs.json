@@ -69,11 +69,11 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
                   "$ref" : "#/components/schemas/Problem"
                 }
               }
@@ -486,12 +486,12 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -601,7 +601,21 @@
       },
       "CompanyInformationsDto": {
         "title": "CompanyInformationsDto",
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
+          },
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
+          },
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
       },
       "DpoDataDto": {
         "title": "DpoDataDto",
@@ -720,15 +734,15 @@
             "type": "string",
             "description": "Institution data origin"
           },
-          "originId" : {
-            "type" : "string",
-            "description" : "Institution's details origin Id"
+          "originId": {
+            "type": "string",
+            "description": "Institution's details origin Id"
           },
-          "status" : {
-            "type" : "string",
-            "description" : "Institution onboarding status"
+          "status": {
+            "type": "string",
+            "description": "Institution onboarding status"
           },
-          "taxCode" : {
+          "taxCode": {
             "type" : "string",
             "description" : "Institution's taxCode"
           },

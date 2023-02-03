@@ -40,7 +40,13 @@
           "code": "string",
           "desc": "string"
         }
-      ]
+      ],
+      "rea": "string",
+      "shareCapital": "10000",
+      "businessRegisterPlace": "Rome",
+      "supportEmail": "string",
+      "supportPhone": "string",
+      "imported": true
     },
     "headers": {
       "Content-Type": "application/json"
