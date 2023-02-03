@@ -50,7 +50,6 @@ class OnboardingControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(emptyString()));
         // then
-        // Inserire un argument captor per verificare i valori che poi escono dal mapper?
         verify(onboardingServiceMock, times(1))
                 .oldContractOnboarding(any(OnboardingImportData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
