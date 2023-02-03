@@ -14,6 +14,7 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
@@ -39,6 +40,7 @@ import static it.pagopa.selfcare.commons.base.security.PartyRole.MANAGER;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.ADMIN;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.LIMITED;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
 import static it.pagopa.selfcare.external_api.connector.rest.PartyConnectorImpl.*;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.SUSPENDED;
@@ -661,7 +663,7 @@ class PartyConnectorImplTest {
         // given
         OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData(), "setPricingPlan");
         Billing billing = mockInstance(new Billing());
-        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate(), "setRea", "setShareCapital", "setBusinessRegisterPlace", "setSupportEmail", "setSupportPhone", "setImported");
         institutionUpdate.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
         onboardingImportData.setInstitutionUpdate(institutionUpdate);
         onboardingImportData.setBilling(billing);
@@ -686,6 +688,152 @@ class PartyConnectorImplTest {
         assertEquals(onboardingImportData.getUsers().get(0).getRole(), request.getUsers().get(0).getRole());
         assertEquals(onboardingImportData.getUsers().get(0).getEmail(), request.getUsers().get(0).getEmail());
         assertEquals(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().get(0).getCode(), request.getInstitutionUpdate().getGeographicTaxonomyCodes().get(0));
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void createInstitutionRaw_nullInput() {
+        //given
+        final OnboardingData onboardingData = null;
+        //when
+        Executable executable = () -> partyConnector.createInstitutionRaw(onboardingData);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("An OnboardingData is required", e.getMessage());
+        verifyNoInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void createInstitutionRaw() {
+        //given
+        final OnboardingData onboardingData = mockInstance(new OnboardingData());
+        Institution institution = mockInstance(new Institution());
+        List<GeographicTaxonomy> geographicTaxonomyList = List.of(mockInstance(new GeographicTaxonomy()));
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
+        institutionUpdate.setGeographicTaxonomies(geographicTaxonomyList);
+        institution.setGeographicTaxonomies(geographicTaxonomyList);
+        when(partyProcessRestClientMock.createInstitutionRaw(anyString(), any()))
+                .thenReturn(institution);
+        //when
+        Institution result = partyConnector.createInstitutionRaw(onboardingData);
+        //then
+        assertNotNull(result);
+        reflectionEqualsByName(institution, result);
+        assertEquals(institution.getRea(), result.getRea());
+        assertEquals(institution.getShareCapital(), result.getShareCapital());
+        assertEquals(institution.getBusinessRegisterPlace(), result.getBusinessRegisterPlace());
+        assertEquals(institution.getSupportEmail(), result.getSupportEmail());
+        assertEquals(institution.getSupportPhone(), result.getSupportPhone());
+        final ArgumentCaptor<InstitutionSeed> argumentCaptor = ArgumentCaptor.forClass(InstitutionSeed.class);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionRaw(eq(onboardingData.getInstitutionExternalId()),
+                        argumentCaptor.capture());
+        final InstitutionSeed institutionSeed = argumentCaptor.getValue();
+        assertEquals(onboardingData.getInstitutionUpdate().getDescription(), institutionSeed.getDescription());
+        assertEquals(onboardingData.getInstitutionUpdate().getDigitalAddress(), institutionSeed.getDigitalAddress());
+        assertEquals(onboardingData.getInstitutionUpdate().getAddress(), institutionSeed.getAddress());
+        assertEquals(onboardingData.getInstitutionUpdate().getZipCode(), institutionSeed.getZipCode());
+        assertEquals(onboardingData.getInstitutionUpdate().getTaxCode(), institutionSeed.getTaxCode());
+        assertEquals(onboardingData.getInstitutionType(), institutionSeed.getInstitutionType());
+        assertTrue(institutionSeed.getAttributes().isEmpty());
+        assertEquals(onboardingData.getInstitutionUpdate().getPaymentServiceProvider(), institutionSeed.getPaymentServiceProvider());
+        assertEquals(onboardingData.getInstitutionUpdate().getDataProtectionOfficer(), institutionSeed.getDataProtectionOfficer());
+        assertEquals(onboardingData.getInstitutionUpdate().getGeographicTaxonomies(), institutionSeed.getGeographicTaxonomies());
+        assertEquals(onboardingData.getInstitutionUpdate().getRea(), institutionSeed.getRea());
+        assertEquals(onboardingData.getInstitutionUpdate().getShareCapital(), institutionSeed.getShareCapital());
+        assertEquals(onboardingData.getInstitutionUpdate().getBusinessRegisterPlace(), institutionSeed.getBusinessRegisterPlace());
+        assertEquals(onboardingData.getInstitutionUpdate().getSupportEmail(), institutionSeed.getSupportEmail());
+        assertEquals(onboardingData.getInstitutionUpdate().getSupportPhone(), institutionSeed.getSupportPhone());
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void onboardingOrganization_nullOnboardingData() {
+        // given
+        OnboardingData onboardingData = null;
+        // when
+        Executable executable = () -> partyConnector.autoApprovalOnboarding(onboardingData);
+        // then
+        Assertions.assertThrows(IllegalArgumentException.class, executable);
+        Mockito.verifyNoInteractions(partyProcessRestClientMock);
+    }
+
+
+    @Test
+    void onboardingOrganization_emptyUsers() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        Billing billing = mockInstance(new Billing());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
+        institutionUpdate.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        onboardingData.setBilling(billing);
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+
+        // when
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        // then
+        verify(partyProcessRestClientMock, times(1))
+                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+        OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
+        assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
+        assertNotNull(request.getUsers());
+        assertTrue(request.getUsers().isEmpty());
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void onboardingOrganization_emptyGeographicTaxonomies() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        Billing billing = mockInstance(new Billing());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
+        institutionUpdate.setGeographicTaxonomies(List.of());
+        onboardingData.setBilling(billing);
+        onboardingData.setUsers(List.of(mockInstance(new User())));
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+        // when
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        // then
+        verify(partyProcessRestClientMock, times(1))
+                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+        OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
+        assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
+        assertNotNull(request.getInstitutionUpdate().getGeographicTaxonomyCodes());
+        assertTrue(request.getInstitutionUpdate().getGeographicTaxonomyCodes().isEmpty());
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+
+    @Test
+    void onboardingOrganization() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        Billing billing = mockInstance(new Billing());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
+        institutionUpdate.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+        onboardingData.setBilling(billing);
+        onboardingData.setUsers(List.of(mockInstance(new User())));
+        // when
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        // then
+        verify(partyProcessRestClientMock, times(1))
+                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+        OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
+        assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
+        assertNotNull(request.getUsers());
+        assertEquals(1, request.getUsers().size());
+        assertEquals(1, request.getInstitutionUpdate().getGeographicTaxonomyCodes().size());
+        TestUtils.reflectionEqualsByName(institutionUpdate, request.getInstitutionUpdate());
+        TestUtils.reflectionEqualsByName(billing, request.getBilling());
+        assertEquals(onboardingData.getProductId(), request.getProductId());
+        assertEquals(onboardingData.getProductName(), request.getProductName());
+        assertEquals(onboardingData.getUsers().get(0).getName(), request.getUsers().get(0).getName());
+        assertEquals(onboardingData.getUsers().get(0).getSurname(), request.getUsers().get(0).getSurname());
+        assertEquals(onboardingData.getUsers().get(0).getTaxCode(), request.getUsers().get(0).getTaxCode());
+        assertEquals(onboardingData.getUsers().get(0).getRole(), request.getUsers().get(0).getRole());
+        assertEquals(onboardingData.getUsers().get(0).getEmail(), request.getUsers().get(0).getEmail());
+        assertEquals(onboardingData.getInstitutionUpdate().getGeographicTaxonomies().get(0).getCode(), request.getInstitutionUpdate().getGeographicTaxonomyCodes().get(0));
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 

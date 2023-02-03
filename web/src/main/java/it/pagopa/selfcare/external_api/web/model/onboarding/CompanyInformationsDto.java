@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.web.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+@Data
 public class CompanyInformationsDto {
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.companyInformations.rea}")

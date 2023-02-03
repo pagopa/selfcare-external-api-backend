@@ -19,5 +19,11 @@ public class InstitutionUpdate {
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
     private List<String> geographicTaxonomyCodes;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private String supportEmail;
+    private String supportPhone;
+    private Boolean imported;
 
 }

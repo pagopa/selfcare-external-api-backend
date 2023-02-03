@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.api;
 
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
@@ -23,5 +24,9 @@ public interface PartyConnector {
 
     Institution createInstitutionUsingExternalId(String institutionExternalId);
 
+    Institution createInstitutionRaw(OnboardingData onboardingData);
+
     void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData);
+
+    void autoApprovalOnboarding(OnboardingData onboardingData);
 }

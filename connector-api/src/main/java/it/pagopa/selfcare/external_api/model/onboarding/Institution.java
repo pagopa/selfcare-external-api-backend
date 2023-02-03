@@ -20,4 +20,10 @@ public class Institution {
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
     private List<GeographicTaxonomy> geographicTaxonomies;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private String supportEmail;
+    private String supportPhone;
+    private Boolean imported;
 }
