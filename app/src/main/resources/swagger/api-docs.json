@@ -69,11 +69,11 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
                   "$ref" : "#/components/schemas/Problem"
                 }
               }
@@ -676,12 +676,12 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -791,7 +791,21 @@
       },
       "CompanyInformationsDto": {
         "title": "CompanyInformationsDto",
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
+          },
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
+          },
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
       },
       "DpoDataDto": {
         "title": "DpoDataDto",
@@ -910,203 +924,15 @@
             "type": "string",
             "description": "Institution data origin"
           },
-          "originId" : {
-            "type" : "string",
-            "description" : "Institution's details origin Id"
-          },
-          "status" : {
-            "GeographicTaxonomyResource": {
-              "title": "GeographicTaxonomyResource",
-              "required": [
-                "code",
-                "desc"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "description": "Institution's geographic taxonomy ISTAT code"
-                },
-                "desc": {
-                  "type": "string",
-                  "description": "Institution's geographic taxonomy extended name"
-                }
-              }
-            },
-            "InstitutionDetailResource": {
-              "title": "InstitutionDetailResource",
-              "required": [
-                "address",
-                "description",
-                "digitalAddress",
-                "externalId",
-                "geographicTaxonomies",
-                "id",
-                "institutionType",
-                "origin",
-                "originId",
-                "taxCode",
-                "zipCode"
-              ],
-              "type": "object",
-              "properties": {
-                "address": {
-                  "type": "string",
-                  "description": "Institution's physical address"
-                },
-                "businessRegisterPlace": {
-                  "type": "string",
-                  "description": "Institution's business register place"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Institution's legal name"
-                },
-                "digitalAddress": {
-                  "type": "string",
-                  "description": "Institution's digitalAddress"
-                },
-                "externalId": {
-                  "type": "string",
-                  "description": "Institution's unique external identifier"
-                },
-                "geographicTaxonomies": {
-                  "type": "array",
-                  "description": "Institution's geographic taxonomy list",
-                  "items": {
-                    "$ref": "#/components/schemas/GeographicTaxonomyResource"
-                  }
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Institution's unique internal Id",
-                  "format": "uuid"
-                },
-                "imported": {
-                  "type": "boolean",
-                  "description": "True if institution is stored from batch api",
-                  "example": false
-                },
-                "institutionType": {
-                  "type": "string",
-                  "description": "Institution's type",
-                  "enum": [
-                    "GSP",
-                    "PA",
-                    "PSP",
-                    "PT",
-                    "SCP"
-                  ]
-                },
-                "origin": {
-                  "type": "string",
-                  "description": "Institution data origin"
-                },
-                "originId": {
-                  "type": "string",
-                  "description": "Institution's details origin Id"
-                },
-                "rea": {
-                  "type": "string",
-                  "description": "Institution's REA"
-                },
-                "shareCapital": {
-                  "type": "string",
-                  "description": "Institution's share capital value"
-                },
-                "supportEmail": {
-                  "type": "string",
-                  "description": "Institution's support email contact",
-                  "format": "email",
-                  "example": "email@example.com"
-                },
-                "supportPhone": {
-                  "type": "string",
-                  "description": "Institution's support phone contact"
-                },
-                "taxCode": {
-                  "type": "string",
-                  "description": "Institution's taxCode"
-                },
-                "zipCode": {
-                  "type": "string",
-                  "description": "Institution's zipCode"
-                }
-              }
-            },
-            "InstitutionResource": {
-              "title": "InstitutionResource",
-              "required": [
-                "address",
-                "description",
-                "digitalAddress",
-                "externalId",
-                "id",
-                "institutionType",
-                "origin",
-                "originId",
-                "status",
-                "taxCode",
-                "userProductRoles",
-                "zipCode"
-              ],
-              "type": "object",
-              "properties": {
-                "address": {
-                  "type": "string",
-                  "description": "Institution's physical address"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "Institution's legal name"
-                },
-                "digitalAddress": {
-                  "type": "string",
-                  "description": "Institution's digitalAddress"
-                },
-                "externalId": {
+          "originId": {
             "type": "string",
-            "description": "Institution's unique external identifier"
+            "description": "Institution's details origin Id"
           },
-          "id": {
+          "status": {
             "type": "string",
-            "description": "Institution's unique internal Id",
-            "format": "uuid"
+            "description": "Institution onboarding status"
           },
-          "institutionType": {
-            "type": "string",
-            "description": "Institution's type",
-            "enum": [
-              "GSP",
-              "PA",
-              "PSP",
-              "PT",
-              "SCP"
-            ]
-            "institutionType": {
-              "type": "string",
-              "description": "Institution's type",
-              "enum": [
-                "GSP",
-                "PA",
-                "PSP",
-                "PT",
-                "SCP"
-              ]
-            },
-            "origin": {
-              "type": "string",
-              "description": "Institution data origin"
-            },
-            "originId": {
-              "type": "string",
-              "description": "Institution's details origin Id"
-            },
-            "status": {
-            "type" : "string",
-            "description" : "Institution onboarding status"
-          },
-          "taxCode" : {
+          "taxCode": {
             "type" : "string",
             "description" : "Institution's taxCode"
           },

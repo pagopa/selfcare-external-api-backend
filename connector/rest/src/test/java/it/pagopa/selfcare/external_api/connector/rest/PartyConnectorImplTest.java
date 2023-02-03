@@ -779,7 +779,7 @@ class PartyConnectorImplTest {
         partyConnector.autoApprovalOnboarding(onboardingData);
         // then
         verify(partyProcessRestClientMock, times(1))
-                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+                .autoApprovalOnboardingOrganization(onboardingImportRequestCaptor.capture());
         OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
         assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
         assertNotNull(request.getUsers());
@@ -801,7 +801,7 @@ class PartyConnectorImplTest {
         partyConnector.autoApprovalOnboarding(onboardingData);
         // then
         verify(partyProcessRestClientMock, times(1))
-                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+                .autoApprovalOnboardingOrganization(onboardingImportRequestCaptor.capture());
         OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
         assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
         assertNotNull(request.getInstitutionUpdate().getGeographicTaxonomyCodes());
@@ -824,7 +824,7 @@ class PartyConnectorImplTest {
         partyConnector.autoApprovalOnboarding(onboardingData);
         // then
         verify(partyProcessRestClientMock, times(1))
-                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+                .autoApprovalOnboardingOrganization(onboardingImportRequestCaptor.capture());
         OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
         assertEquals(onboardingData.getInstitutionExternalId(), request.getInstitutionExternalId());
         assertNotNull(request.getUsers());
