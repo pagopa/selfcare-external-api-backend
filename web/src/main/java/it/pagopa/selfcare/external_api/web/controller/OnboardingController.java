@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -58,10 +60,13 @@ public class OnboardingController {
                                        @RequestBody
                                        @Valid
                                        OnboardingDto request) {
-        log.trace("onboarding start");
-        log.debug("onboarding institutionId = {}, productId = {}, request = {}", externalInstitutionId, productId, request);
-        //onboardingService.oldContractOnboarding(OnboardingMapper.toOnboardingImportData(externalInstitutionId, request));
-        log.trace("onboarding end");
+        log.trace("autoApprovalOnboarding start");
+        log.debug("autoApprovalOnboarding institutionId = {}, productId = {}, request = {}", externalInstitutionId, productId, request);
+        if (InstitutionType.PSP.equals(request.getInstitutionType()) && request.getPspData() == null) {
+            throw new ValidationException("Field 'pspData' is required for PSP institution onboarding");
+        }
+        onboardingService.autoApprovalOnboarding(OnboardingMapper.toOnboardingData(externalInstitutionId, productId, request));
+        log.trace("autoApprovalOnboarding end");
     }
 
 }

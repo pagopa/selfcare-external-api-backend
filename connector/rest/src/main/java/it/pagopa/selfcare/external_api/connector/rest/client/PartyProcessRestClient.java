@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.connector.rest.client;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -49,7 +50,12 @@ public interface PartyProcessRestClient {
     @ResponseBody
     Institution createInstitutionUsingExternalId(@PathVariable("externalId") String externalId);
 
-    @PostMapping(value = "${rest-client.party-process.onboardingImportOrganization.path}", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${rest-client.party-process.createInstitutionRaw.path}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    Institution createInstitutionRaw(@PathVariable("externalId") String externalId,
+                                     @RequestBody InstitutionSeed institutionSeed);
+
+    @PostMapping(value = "${rest-client.party-process.onboardingOrganization.path}", consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
     void onboardingImportOrganization(@RequestBody OnboardingImportInstitutionRequest request);
 

@@ -877,6 +877,44 @@
           "address": {
             "type": "string",
             "description": "Institution's physical address"
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's legal name"
+          },
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "Institution's unique external identifier"
+          },
+          "id": {
+            "type": "string",
+            "description": "Institution's unique internal Id",
+            "format": "uuid"
+          },
+          "institutionType": {
+            "type": "string",
+            "description": "Institution's type",
+            "enum": [
+              "GSP",
+              "PA",
+              "PSP",
+              "PT",
+              "SCP"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
+          },
+          "originId" : {
+            "type" : "string",
+            "description" : "Institution's details origin Id"
+          },
+          "status" : {
             "GeographicTaxonomyResource": {
               "title": "GeographicTaxonomyResource",
               "required": [
