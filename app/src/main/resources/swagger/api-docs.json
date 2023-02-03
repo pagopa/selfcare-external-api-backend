@@ -8,7 +8,7 @@
   "servers" : [ {
     "url" : "{url}:{port}{basePath}",
     "variables" : {
-      "url" : {
+      "url": {
         "default": "http://localhost"
       },
       "port": {
@@ -47,16 +47,17 @@
           {
             "name": "productId",
             "in": "query",
-          "description" : "Product's unique identifier",
-          "required" : true,
-          "style" : "form",
-          "schema" : {
-            "type" : "string"
+            "description": "Product's unique identifier",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -248,12 +249,12 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -378,16 +379,17 @@
         ],
         "summary": "getProduct",
         "description": "The service retrieves Product information from product id",
-        "operationId" : "getProductUsingGET",
-        "parameters" : [ {
-          "name" : "productId",
-          "in" : "path",
-          "description" : "Product's unique identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
+        "operationId": "getProductUsingGET",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
         } ],
         "responses" : {
           "200" : {
@@ -498,13 +500,13 @@
             "description": "Institution's digitalAddress"
           },
           "externalId": {
-            "type" : "string",
-            "description" : "Institution's unique external identifier"
+            "type": "string",
+            "description": "Institution's unique external identifier"
           },
-          "id" : {
-            "type" : "string",
-            "description" : "Institution's unique internal Id",
-            "format" : "uuid"
+          "id": {
+            "type": "string",
+            "description": "Institution's unique internal Id",
+            "format": "uuid"
           },
           "institutionType" : {
             "type": "string",
@@ -604,14 +606,14 @@
               "$ref": "#/components/schemas/InvalidParam"
             }
           },
-          "status" : {
-            "type" : "integer",
-            "description" : "The HTTP status code.",
-            "format" : "int32",
-            "example" : 500
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
           },
-          "title" : {
-            "type" : "string",
+          "title": {
+            "type": "string",
             "description" : "Short human-readable summary of the problem."
           },
           "type" : {
@@ -626,8 +628,8 @@
         "required" : [ "description", "id", "title", "urlBO" ],
         "type" : "object",
         "properties" : {
-          "description" : {
-            "type" : "string",
+          "description": {
+            "type": "string",
             "description": "Product's description"
           },
           "id": {
@@ -715,15 +717,15 @@
             "type": "string",
             "description": "User's name"
           },
-          "roles" : {
-            "type" : "array",
-            "description" : "User's roles in product",
-            "items" : {
-              "type" : "string"
+          "roles": {
+            "type": "array",
+            "description": "User's roles in product",
+            "items": {
+              "type": "string"
             }
           },
-          "surname" : {
-            "type" : "string",
+          "surname": {
+            "type": "string",
             "description" : "User's surname"
           }
         }
