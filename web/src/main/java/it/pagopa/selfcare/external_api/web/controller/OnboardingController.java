@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,24 @@ public class OnboardingController {
         log.debug("oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
         onboardingService.oldContractOnboarding(OnboardingMapper.toOnboardingImportData(externalInstitutionId, request));
         log.trace("oldContractonboarding end");
+    }
+
+    @PostMapping(value = "/{externalInstitutionId}/products/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.autoApprovalOnboarding}")
+    public void autoApprovalOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
+                                       @PathVariable("externalInstitutionId")
+                                       String externalInstitutionId,
+                                       @ApiParam("${swagger.external_api.products.model.id}")
+                                       @PathVariable("productId")
+                                       String productId,
+                                       @RequestBody
+                                       @Valid
+                                       OnboardingDto request) {
+        log.trace("onboarding start");
+        log.debug("onboarding institutionId = {}, productId = {}, request = {}", externalInstitutionId, productId, request);
+        //onboardingService.oldContractOnboarding(OnboardingMapper.toOnboardingImportData(externalInstitutionId, request));
+        log.trace("onboarding end");
     }
 
 }
