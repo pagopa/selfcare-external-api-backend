@@ -316,7 +316,7 @@ public class PartyConnectorImpl implements PartyConnector {
                     return user;
                 }).collect(Collectors.toList()));
 
-        partyProcessRestClient.onboardingImportOrganization(onboardingInstitutionRequest);
+        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
 
     @Override
@@ -394,7 +394,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingContract.setVersion(onboardingData.getContractVersion());
         onboardingInstitutionRequest.setContract(onboardingContract);
 
-        partyProcessRestClient.autoApprovalOnboardingOrganization(onboardingInstitutionRequest);
+        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
 
 }

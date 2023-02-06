@@ -277,7 +277,7 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
@@ -290,7 +290,7 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
@@ -302,7 +302,7 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.autoApprovalOnboardingOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
@@ -314,7 +314,7 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.autoApprovalOnboardingOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
