@@ -18,6 +18,7 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
@@ -289,6 +290,12 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setDataProtectionOfficer(onboardingImportData.getInstitutionUpdate().getDataProtectionOfficer());
         institutionUpdate.setGeographicTaxonomyCodes(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().stream()
                 .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
+        institutionUpdate.setRea(onboardingImportData.getInstitutionUpdate().getRea());
+        institutionUpdate.setShareCapital(onboardingImportData.getInstitutionUpdate().getShareCapital());
+        institutionUpdate.setBusinessRegisterPlace(onboardingImportData.getInstitutionUpdate().getBusinessRegisterPlace());
+        institutionUpdate.setSupportEmail(onboardingImportData.getInstitutionUpdate().getSupportEmail());
+        institutionUpdate.setSupportPhone(onboardingImportData.getInstitutionUpdate().getSupportPhone());
+        institutionUpdate.setImported(onboardingImportData.getInstitutionUpdate().getImported());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         OnboardingContract onboardingContract = new OnboardingContract();
@@ -309,7 +316,6 @@ public class PartyConnectorImpl implements PartyConnector {
                     return user;
                 }).collect(Collectors.toList()));
 
-        partyProcessRestClient.onboardingImportOrganization(onboardingInstitutionRequest);
         partyProcessRestClient.onboardingImportOrganization(onboardingInstitutionRequest);
     }
 

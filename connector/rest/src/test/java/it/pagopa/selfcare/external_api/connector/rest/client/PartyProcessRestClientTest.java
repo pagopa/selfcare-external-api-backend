@@ -8,10 +8,10 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -315,7 +315,6 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
         Executable executable = () -> restClient.autoApprovalOnboardingOrganization(onboardingRequest);
-        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }

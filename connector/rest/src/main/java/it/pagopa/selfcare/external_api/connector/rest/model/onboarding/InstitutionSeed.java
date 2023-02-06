@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest.model.onboarding;
 
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

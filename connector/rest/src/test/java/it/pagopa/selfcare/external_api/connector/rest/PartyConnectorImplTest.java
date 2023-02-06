@@ -20,11 +20,9 @@ import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.Onboardin
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
-import it.pagopa.selfcare.external_api.model.onboarding.User;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;

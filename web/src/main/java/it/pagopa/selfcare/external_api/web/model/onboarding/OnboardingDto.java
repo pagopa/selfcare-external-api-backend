@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.web.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import lombok.Data;
 
@@ -37,7 +38,7 @@ public class OnboardingDto {
     @Valid
     private PspDataDto pspData;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.geographicTaxonomies}", required = true)
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.geographicTaxonomy}", required = true)
     @NotNull
     @Valid
     private List<GeographicTaxonomyDto> geographicTaxonomies;
