@@ -16,6 +16,8 @@ public class OnboardingImportData {
     private String productName;
     private List<User> users;
     private ImportContract importContract;
+    private String contractPath;
+    private String contractVersion;
     private Billing billing;
     private InstitutionUpdate institutionUpdate;
     private InstitutionType institutionType;

@@ -1,7 +1,7 @@
 {
   "request": {
-    "method": "POST",
-    "urlPath": "/pdnd-interop-uservice-party-process/0.0.1/institutions/externalId"
+    "method": "GET",
+    "urlPath": "/pdnd-interop-uservice-party-process/0.0.1/institutions/institutionId1"
   },
   "response": {
     "status": "200",
@@ -16,6 +16,41 @@
       "taxCode": "string",
       "origin": "IPA",
       "institutionType": "PA",
+      "rea": "string",
+      "shareCapital": "10000",
+      "businessRegisterPlace": "Rome",
+      "supportEmail": "string",
+      "supportPhone": "string",
+      "imported": true,
+      "products": {
+        "additionalProp1": {
+          "product": "string",
+          "pricingPlan": "string",
+          "billing": {
+            "vatNumber": "string",
+            "recipientCode": "string",
+            "publicServices": true
+          }
+        },
+        "additionalProp2": {
+          "product": "string",
+          "pricingPlan": "string",
+          "billing": {
+            "vatNumber": "string",
+            "recipientCode": "string",
+            "publicServices": true
+          }
+        },
+        "additionalProp3": {
+          "product": "string",
+          "pricingPlan": "string",
+          "billing": {
+            "vatNumber": "string",
+            "recipientCode": "string",
+            "publicServices": true
+          }
+        }
+      },
       "attributes": [
         {
           "origin": "string",
@@ -40,13 +75,7 @@
           "code": "string",
           "desc": "string"
         }
-      ],
-      "rea": "string",
-      "shareCapital": "10000",
-      "businessRegisterPlace": "Rome",
-      "supportEmail": "string",
-      "supportPhone": "string",
-      "imported": false
+      ]
     },
     "headers": {
       "Content-Type": "application/json"

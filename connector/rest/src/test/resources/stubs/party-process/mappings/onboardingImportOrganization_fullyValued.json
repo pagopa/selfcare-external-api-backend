@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/pdnd-interop-uservice-party-process/0.0.1/onboarding/institution/complete/prod-io",
+    "url": "/pdnd-interop-uservice-party-process/0.0.1/onboarding/institution/complete",
     "bodyPatterns": [
       {
         "matchesJsonPath": "$[?(@.institutionExternalId == 'institutionId1')]"

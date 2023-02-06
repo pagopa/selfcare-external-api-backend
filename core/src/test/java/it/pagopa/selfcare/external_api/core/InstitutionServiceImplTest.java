@@ -6,7 +6,10 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.User;
@@ -27,6 +30,7 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import java.util.*;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.external_api.core.InstitutionServiceImpl.REQUIRED_INSTITUTION_MESSAGE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -116,7 +120,7 @@ class InstitutionServiceImplTest {
         Executable executable = () -> institutionService.getInstitutionUserProducts(institutionId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals("An institutionId is required", e.getMessage());
+        assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
         verifyNoInteractions(partyConnectorMock, productsConnectorMock);
     }
 
@@ -241,7 +245,7 @@ class InstitutionServiceImplTest {
         Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        Assertions.assertEquals("An Institution id is required", e.getMessage());
+        Assertions.assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
         verifyNoInteractions(productsConnectorMock, partyConnectorMock);
     }
 
@@ -311,4 +315,68 @@ class InstitutionServiceImplTest {
         verifyNoInteractions(productsConnectorMock);
     }
 
+    @Test
+    void getGeographicTaxonomyList() {
+        // given
+        String institutionId = "institutionId";
+        Institution institutionMock = mockInstance(new Institution());
+        institutionMock.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        when(partyConnectorMock.getGeographicTaxonomyList(anyString()))
+                .thenReturn(institutionMock.getGeographicTaxonomies());
+        // when
+        List<GeographicTaxonomy> result = institutionService.getGeographicTaxonomyList(institutionId);
+        // then
+        assertNotNull(result);
+        assertEquals(institutionMock.getGeographicTaxonomies().get(0).getCode(), result.get(0).getCode());
+        assertEquals(institutionMock.getGeographicTaxonomies().get(0).getDesc(), result.get(0).getDesc());
+        verify(partyConnectorMock, times(1))
+                .getGeographicTaxonomyList(institutionId);
+        verifyNoMoreInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void getGeographicTaxonomyList_hasNullInstitutionId() {
+        // given
+        String institutionId = null;
+        // when
+        Executable executable = () -> institutionService.getGeographicTaxonomyList(institutionId);
+        // then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
+        verifyNoInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies() {
+        //given
+        Set<String> geoTaxIds = Set.of("geoTax1", "geoTax2");
+        SearchMode searchMode = SearchMode.any;
+        when(partyConnectorMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
+                .thenReturn(List.of(mockInstance(new Institution())));
+        //when
+        Collection<Institution> results = institutionService.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
+        //then
+        assertNotNull(results);
+        assertFalse(results.isEmpty());
+        assertEquals(1, results.size());
+        ArgumentCaptor<String> geoTaxIdCaptor = ArgumentCaptor.forClass(String.class);
+        verify(partyConnectorMock, times(1))
+                .getInstitutionsByGeoTaxonomies(geoTaxIdCaptor.capture(), eq(searchMode));
+        assertEquals(String.join(",", geoTaxIds), geoTaxIdCaptor.getValue());
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies_nullGeoTaxIds() {
+        //given
+        Set<String> geoTax = null;
+        SearchMode searchMode = SearchMode.any;
+        //when
+        Executable executable = () -> institutionService.getInstitutionsByGeoTaxonomies(geoTax, searchMode);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals("GeoTaxonomy ids are required in order to retrieve the institutions", e.getMessage());
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, partyConnectorMock);
+    }
 }

@@ -18,5 +18,6 @@ public class OnboardingImportInstitutionRequest {
     private String pricingPlan;
     private Billing billing;
     private ImportContract importContract;
+    private OnboardingContract contract;
 
 }

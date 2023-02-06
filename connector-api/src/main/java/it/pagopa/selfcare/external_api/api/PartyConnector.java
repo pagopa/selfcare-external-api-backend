@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.api;
 
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
@@ -24,4 +26,8 @@ public interface PartyConnector {
     Institution createInstitutionUsingExternalId(String institutionExternalId);
 
     void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData);
+
+    List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
+
+    Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode);
 }

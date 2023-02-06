@@ -8,7 +8,7 @@ import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedExcept
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.onboarding.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
@@ -67,6 +67,9 @@ class OnboardingServiceImpl implements OnboardingService {
                     onboardingImportData.getInstitutionExternalId(),
                     product.getId()));
         }
+
+        onboardingImportData.setContractPath(product.getContractTemplatePath());
+        onboardingImportData.setContractVersion(product.getContractTemplateVersion());
 
         final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
         if (product.getParentId() != null) {

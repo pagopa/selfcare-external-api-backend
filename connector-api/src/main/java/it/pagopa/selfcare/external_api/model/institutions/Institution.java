@@ -1,11 +1,15 @@
-package it.pagopa.selfcare.external_api.model.onboarding;
+package it.pagopa.selfcare.external_api.model.institutions;
 
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(of = "id")
 public class Institution {
+
     private String id;
     private String externalId;
     private String originId;
@@ -17,7 +21,11 @@ public class Institution {
     private String origin;
     private InstitutionType institutionType;
     private List<Attribute> attributes;
-    private PaymentServiceProvider paymentServiceProvider;
-    private DataProtectionOfficer dataProtectionOfficer;
     private List<GeographicTaxonomy> geographicTaxonomies;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private String supportEmail;
+    private String supportPhone;
+    private Boolean imported;
 }

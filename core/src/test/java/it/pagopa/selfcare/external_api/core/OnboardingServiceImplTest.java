@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedExcept
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.Product;
@@ -37,7 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class OnboardingServiceImpltTest {
+public class OnboardingServiceImplTest {
 
     @InjectMocks
     private OnboardingServiceImpl onboardingServiceImpl;

@@ -10,7 +10,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardi
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.onboarding.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.SneakyThrows;
@@ -276,6 +276,35 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
+    }
+
+    @Test
+    void getInstitution_fullyValued() {
+        // given
+        String id = testCase2instIdMap.get(TestCase.FULLY_VALUED);
+        // when
+        Institution response = restClient.getInstitution(id);
+        assertNotNull(response);
+        TestUtils.checkNotNullFields(response);
+        response.getAttributes().forEach(TestUtils::checkNotNullFields);
+
+    }
+
+
+    @Test
+    void getInstitution_fullyNull() {
+        // given
+        String id = testCase2instIdMap.get(TestCase.FULLY_NULL);
+        // when
+        Institution response = restClient.getInstitution(id);
+        assertNotNull(response);
+        assertNull(response.getAddress());
+        assertNull(response.getDescription());
+        assertNull(response.getDigitalAddress());
+        assertNull(response.getId());
+        assertNull(response.getExternalId());
+        assertNull(response.getTaxCode());
+        assertNull(response.getZipCode());
     }
 
 }
