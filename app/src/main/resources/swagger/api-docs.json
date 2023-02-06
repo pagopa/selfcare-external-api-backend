@@ -58,12 +58,12 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/InstitutionResource"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstitutionResource"
                   }
                 }
               }
@@ -239,11 +239,11 @@
           "200" : {
             "description" : "OK",
             "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/UserResource"
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResource"
                   }
                 }
               }
@@ -390,14 +390,15 @@
             "schema": {
               "type": "string"
             }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ProductResource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResource"
                 }
               }
             }
@@ -508,7 +509,7 @@
             "description": "Institution's unique internal Id",
             "format": "uuid"
           },
-          "institutionType" : {
+          "institutionType": {
             "type": "string",
             "description": "Institution's type",
             "enum": [
@@ -519,9 +520,9 @@
               "SCP"
             ]
           },
-          "origin" : {
-            "type" : "string",
-            "description" : "Institution data origin"
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
           },
           "originId" : {
             "type" : "string",
@@ -614,11 +615,11 @@
           },
           "title": {
             "type": "string",
-            "description" : "Short human-readable summary of the problem."
+            "description": "Short human-readable summary of the problem."
           },
-          "type" : {
-            "type" : "string",
-            "description" : "A URL to a page with more details regarding the problem."
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
           }
         },
         "description" : "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
@@ -726,7 +727,7 @@
           },
           "surname": {
             "type": "string",
-            "description" : "User's surname"
+            "description": "User's surname"
           }
         }
       }

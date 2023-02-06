@@ -285,7 +285,7 @@ public class PartyConnectorImpl implements PartyConnector {
                     return user;
                 }).collect(Collectors.toList()));
 
-        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
+        partyProcessRestClient.onboardingImportOrganization(onboardingInstitutionRequest);
     }
 
 }

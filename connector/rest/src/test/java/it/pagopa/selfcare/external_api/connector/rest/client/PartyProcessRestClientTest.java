@@ -8,8 +8,10 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
@@ -24,14 +26,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static it.pagopa.selfcare.commons.base.security.PartyRole.MANAGER;
 import static it.pagopa.selfcare.commons.base.security.PartyRole.OPERATOR;
 import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
+import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.PENDING;
 import static org.junit.jupiter.api.Assertions.*;
@@ -254,31 +254,28 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         checkNotNullFields(response);
     }
 
-    /*
     @Test
-    void onboardingOrganization_fullyValued() {
+    void onboardingImportOrganization_fullyValued() {
         // given
         OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
 
-
     @Test
-    void onboardingOrganization_fullyNull() {
+    void onboardingImportOrganization_fullyNull() {
         // given
         OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
-     */
 
 }

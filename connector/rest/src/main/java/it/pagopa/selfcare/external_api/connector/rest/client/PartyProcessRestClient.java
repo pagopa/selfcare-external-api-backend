@@ -49,7 +49,7 @@ public interface PartyProcessRestClient {
     @ResponseBody
     Institution createInstitutionUsingExternalId(@PathVariable("externalId") String externalId);
 
-    @PostMapping(value = "${rest-client.party-process.onboardingOrganization.path}", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "${rest-client.party-process.onboardingImportOrganization.path}", consumes = APPLICATION_JSON_VALUE)
     @ResponseBody
-    void onboardingOrganization(@RequestBody OnboardingImportInstitutionRequest request);
+    void onboardingImportOrganization(@RequestBody OnboardingImportInstitutionRequest request);
 }
