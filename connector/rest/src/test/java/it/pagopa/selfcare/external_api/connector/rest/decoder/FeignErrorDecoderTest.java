@@ -15,7 +15,7 @@ import static feign.Util.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FeignErrorDecoderTest {
+class FeignErrorDecoderTest {
     FeignErrorDecoder feignDecoder = new FeignErrorDecoder();
 
     private Map<String, Collection<String>> headers = new LinkedHashMap<>();
