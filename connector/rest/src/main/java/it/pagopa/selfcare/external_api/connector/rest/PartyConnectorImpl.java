@@ -346,6 +346,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingInstitutionRequest.setContract(onboardingContract);
 
         partyProcessRestClient.autoApprovalOnboardingOrganization(onboardingInstitutionRequest);
+        partyProcessRestClient.onboardingImportOrganization(onboardingInstitutionRequest);
     }
 
 }
