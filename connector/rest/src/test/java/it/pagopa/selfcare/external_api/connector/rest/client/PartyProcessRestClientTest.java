@@ -9,7 +9,7 @@ import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestCli
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;

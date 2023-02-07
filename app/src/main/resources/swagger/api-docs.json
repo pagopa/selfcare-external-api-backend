@@ -74,16 +74,16 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref" : "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
                   "$ref" : "#/components/schemas/Problem"
                 }
               }
@@ -321,16 +321,17 @@
             "schema": {
               "type": "string"
             }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/ProductResource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResource"
                   }
                 }
               }
@@ -604,12 +605,12 @@
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -849,13 +850,13 @@
           "userProductRoles": {
             "type": "array",
             "description": "Logged user's roles on product",
-            "items" : {
-              "type" : "string"
+            "items": {
+              "type": "string"
             }
           },
-          "zipCode" : {
-            "type" : "string",
-            "description" : "Institution's zipCode"
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },
