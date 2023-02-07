@@ -622,7 +622,7 @@ class PartyConnectorImplTest {
         // given
         OnboardingImportData onboardingData = mockInstance(new OnboardingImportData(), "setPrincingPlan");
         Billing billing = mockInstance(new Billing());
-        it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate institutionUpdate = mockInstance(new it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate(), "setInstitutionType");
+        InstitutionUpdate institutionUpdate = mockInstance(new it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate(), "setInstitutionType");
         institutionUpdate.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
         onboardingData.setBilling(billing);
         onboardingData.setInstitutionUpdate(institutionUpdate);
@@ -644,7 +644,7 @@ class PartyConnectorImplTest {
         // given
         OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData(), "setPricingPlan");
         Billing billing = mockInstance(new Billing());
-        it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate institutionUpdate = mockInstance(new it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate(), "setInstitutionType");
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate(), "setInstitutionType");
         institutionUpdate.setGeographicTaxonomies(List.of());
         onboardingImportData.setBilling(billing);
         onboardingImportData.setUsers(List.of(mockInstance(new User())));
@@ -667,7 +667,7 @@ class PartyConnectorImplTest {
         // given
         OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData(), "setPricingPlan");
         Billing billing = mockInstance(new Billing());
-        it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate institutionUpdate = mockInstance(new it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate());
         institutionUpdate.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
         onboardingImportData.setInstitutionUpdate(institutionUpdate);
         onboardingImportData.setBilling(billing);
