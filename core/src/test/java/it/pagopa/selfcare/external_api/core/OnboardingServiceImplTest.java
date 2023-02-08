@@ -38,7 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class OnboardingServiceImplTest {
+class OnboardingServiceImplTest {
 
     @InjectMocks
     private OnboardingServiceImpl onboardingServiceImpl;
