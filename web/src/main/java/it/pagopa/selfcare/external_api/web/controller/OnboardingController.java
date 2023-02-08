@@ -5,7 +5,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -43,6 +46,27 @@ public class OnboardingController {
         log.debug("oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
         onboardingService.oldContractOnboarding(OnboardingMapper.toOnboardingImportData(externalInstitutionId, request));
         log.trace("oldContractonboarding end");
+    }
+
+    @PostMapping(value = "/{externalInstitutionId}/products/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.autoApprovalOnboarding}")
+    public void autoApprovalOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
+                                       @PathVariable("externalInstitutionId")
+                                       String externalInstitutionId,
+                                       @ApiParam("${swagger.external_api.products.model.id}")
+                                       @PathVariable("productId")
+                                       String productId,
+                                       @RequestBody
+                                       @Valid
+                                       OnboardingDto request) {
+        log.trace("autoApprovalOnboarding start");
+        log.debug("autoApprovalOnboarding institutionId = {}, productId = {}, request = {}", externalInstitutionId, productId, request);
+        if (InstitutionType.PSP.equals(request.getInstitutionType()) && request.getPspData() == null) {
+            throw new ValidationException("Field 'pspData' is required for PSP institution onboarding");
+        }
+        onboardingService.autoApprovalOnboarding(OnboardingMapper.toOnboardingData(externalInstitutionId, productId, request));
+        log.trace("autoApprovalOnboarding end");
     }
 
 }

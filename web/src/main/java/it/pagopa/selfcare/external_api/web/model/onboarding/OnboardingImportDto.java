@@ -17,7 +17,7 @@ public class OnboardingImportDto {
     @Valid
     private List<UserDto> users;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.importContract}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.importContract}", required = true)
     @NotNull
     @Valid
     private ImportContractDto importContract;

@@ -8,8 +8,10 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -255,13 +257,27 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
     }
 
     @Test
+    void createInstitutionRaw() {
+        //given
+        String externalId = "externalId";
+        InstitutionSeed institutionSeed = mockInstance(new InstitutionSeed());
+        institutionSeed.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        //when
+        Institution response = restClient.createInstitutionRaw(externalId, institutionSeed);
+        //then
+        assertNotNull(response);
+        checkNotNullFields(response);
+    }
+
+
+    @Test
     void onboardingImportOrganization_fullyValued() {
         // given
         OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
@@ -273,7 +289,31 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
         onboardingRequest.setUsers(List.of(mockInstance(new User())));
         // when
-        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
+        // then
+        assertDoesNotThrow(executable);
+    }
+
+    @Test
+    void autoApprovalOnboardingOrganization_fullyValued() {
+        // given
+        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
+        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
+        onboardingRequest.setUsers(List.of(mockInstance(new User())));
+        // when
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
+        // then
+        assertDoesNotThrow(executable);
+    }
+
+    @Test
+    void autoApprovalOnboardingImportOrganization_fullyNull() {
+        // given
+        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
+        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
+        onboardingRequest.setUsers(List.of(mockInstance(new User())));
+        // when
+        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
         // then
         assertDoesNotThrow(executable);
     }
