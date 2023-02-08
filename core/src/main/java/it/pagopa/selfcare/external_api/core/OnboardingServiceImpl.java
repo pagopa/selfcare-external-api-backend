@@ -7,7 +7,7 @@ import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
-import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;

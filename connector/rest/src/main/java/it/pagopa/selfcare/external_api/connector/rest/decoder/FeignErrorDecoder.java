@@ -2,7 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest.decoder;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 
 public class FeignErrorDecoder extends ErrorDecoder.Default {
 

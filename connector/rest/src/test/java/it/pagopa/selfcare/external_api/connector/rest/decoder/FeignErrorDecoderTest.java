@@ -2,7 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest.decoder;
 
 import feign.Request;
 import feign.Response;
-import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 

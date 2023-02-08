@@ -10,7 +10,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardi
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
@@ -282,7 +282,6 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         assertDoesNotThrow(executable);
     }
 
-
     @Test
     void onboardingImportOrganization_fullyNull() {
         // given
@@ -347,6 +346,5 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         assertNull(response.getTaxCode());
         assertNull(response.getZipCode());
     }
-
 
 }
