@@ -4,6 +4,7 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 
@@ -17,6 +18,14 @@ public interface PartyConnector {
     List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId);
 
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
+
+    void verifyOnboarding(String externalInstitutionId, String productId);
+
+    Institution getInstitutionByExternalId(String externalInstitutionId);
+
+    Institution createInstitutionUsingExternalId(String institutionExternalId);
+
+    void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
 

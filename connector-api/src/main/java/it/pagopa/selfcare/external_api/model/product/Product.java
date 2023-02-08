@@ -27,6 +27,9 @@ public class Product {
     private ProductStatus status;
     private String identityTokenAudience;
     private EnumMap<PartyRole, ProductRoleInfo> roleMappings;
+    private String parentId;
+    private String contractTemplatePath;
+    private String contractTemplateVersion;
 
 
     public static Optional<PartyRole> getPartyRole(String productRoleCode, EnumMap<PartyRole, ProductRoleInfo> roleMappings) {

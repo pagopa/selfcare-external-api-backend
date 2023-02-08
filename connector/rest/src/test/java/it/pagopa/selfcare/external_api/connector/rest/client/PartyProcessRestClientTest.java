@@ -8,12 +8,16 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.commons.httpclient.HttpClientConfiguration;
 import org.springframework.context.ApplicationContextInitializer;
@@ -22,13 +26,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static it.pagopa.selfcare.commons.base.security.PartyRole.MANAGER;
 import static it.pagopa.selfcare.commons.base.security.PartyRole.OPERATOR;
+import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
+import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.PENDING;
 import static org.junit.jupiter.api.Assertions.*;
@@ -172,6 +175,107 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         assertNotNull(response);
         assertTrue(response.getInstitutions().isEmpty());
         assertNull(response.getUserId());
+    }
+
+    @Test
+    void verifyOnboarding_found() {
+        // given
+        String externalId = "externalId";
+        final String productId = "productId";
+        // when
+        Executable executable = () -> restClient.verifyOnboarding(externalId, productId);
+        //then
+        assertDoesNotThrow(executable);
+    }
+
+
+    @Test
+    void verifyOnboarding_notFound() {
+        //given
+        String externalId = "externalIdNotFound";
+        final String productId = "productId";
+        //when
+        Executable executable = () -> restClient.verifyOnboarding(externalId, productId);
+        //then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
+
+    @Test
+    void getInstitutionByExternalId_fullyValued() {
+        //given
+        String externalId = testCase2instIdMap.get(TestCase.FULLY_VALUED);
+        //when
+        Institution response = restClient.getInstitutionByExternalId(externalId);
+        //then
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertNotNull(response.getAddress());
+    }
+
+    @Test
+    void getInstitutionByExternalId_fullyNull() {
+        // given
+        String externalId = testCase2instIdMap.get(TestCase.FULLY_NULL);
+        // when
+        Institution response = restClient.getInstitutionByExternalId(externalId);
+        //then
+        assertNotNull(response);
+        assertNull(response.getAddress());
+        assertNull(response.getDescription());
+        assertNull(response.getDigitalAddress());
+        assertNull(response.getId());
+        assertNull(response.getExternalId());
+        assertNull(response.getTaxCode());
+        assertNull(response.getZipCode());
+        assertNull(response.getOrigin());
+        assertNull(response.getAttributes());
+    }
+
+
+    @Test
+    void getInstitutionByExternalId_notFound() {
+        //given
+        String externalId = "externalIdNotFound";
+        //when
+        Executable executable = () -> restClient.getInstitutionByExternalId(externalId);
+        //then
+        assertThrows(ResourceNotFoundException.class, executable);
+    }
+
+    @Test
+    void createInstitutionUsingExternalId() {
+        //given
+        String externalId = "externalId";
+        //when
+        Institution response = restClient.createInstitutionUsingExternalId(externalId);
+        //then
+        assertNotNull(response);
+        checkNotNullFields(response);
+    }
+
+    @Test
+    void onboardingImportOrganization_fullyValued() {
+        // given
+        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
+        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
+        onboardingRequest.setUsers(List.of(mockInstance(new User())));
+        // when
+        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        // then
+        assertDoesNotThrow(executable);
+    }
+
+    @Test
+    void onboardingImportOrganization_fullyNull() {
+        // given
+        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
+        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
+        onboardingRequest.setUsers(List.of(mockInstance(new User())));
+        // when
+        Executable executable = () -> restClient.onboardingImportOrganization(onboardingRequest);
+        // then
+        assertDoesNotThrow(executable);
     }
 
     @Test
