@@ -27,7 +27,7 @@
     },
     {
       "name": "onboarding",
-      "description": "Onboarding Controller"
+      "description": "Onboarding operations"
     },
     {
       "name": "product",
@@ -352,26 +352,26 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref" : "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
                   "$ref" : "#/components/schemas/Problem"
                 }
               }
@@ -874,6 +874,11 @@
       },
       "ImportContractDto": {
         "title": "ImportContractDto",
+        "required": [
+          "contractType",
+          "fileName",
+          "filePath"
+        ],
         "type": "object",
         "properties": {
           "contractType": {
@@ -1149,6 +1154,7 @@
       "OnboardingImportDto": {
         "title": "OnboardingImportDto",
         "required": [
+          "importContract",
           "users"
         ],
         "type": "object",

@@ -63,7 +63,8 @@ class SwaggerConfig {
                         .version(environment.getProperty("swagger.version", environment.getProperty("spring.application.version")))
                         .build())
                 .select().apis(RequestHandlerSelectors.basePackage("it.pagopa.selfcare.external_api.web.controller")).build()
-                .tags(new Tag("institutions", environment.getProperty("swagger.external_api.institutions.api.description")))
+                .tags(new Tag("institutions", environment.getProperty("swagger.external_api.institutions.api.description")),
+                        new Tag("onboarding", environment.getProperty("swagger.external_api.onboarding.api.description")))
                 .directModelSubstitute(LocalTime.class, String.class)
                 .ignoredParameterTypes(Pageable.class)
                 .forCodeGeneration(true)
