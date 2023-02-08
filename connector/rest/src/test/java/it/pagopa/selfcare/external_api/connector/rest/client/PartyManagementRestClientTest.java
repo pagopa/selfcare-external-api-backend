@@ -4,8 +4,11 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
+import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyManagementRestClientTestConfig;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
@@ -85,6 +88,23 @@ class PartyManagementRestClientTest extends BaseFeignRestClientTest {
             checkNotNullFields(relationship.getInstitutionUpdate());
             checkNotNullFields(relationship.getBilling());
             checkNotNullFields(relationship.getProduct());
+        });
+    }
+
+    @Test
+    void getInstitutionsByGeoTaxonomies_fullyValued() {
+        //given
+        final String geoTaxonomies = "geoTax";
+        final SearchMode searchMode = SearchMode.any;
+        //when
+        final Institutions response = restClient.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode);
+        //then
+        assertNotNull(response);
+        assertNotNull(response.getItems());
+        assertFalse(response.getItems().isEmpty());
+        response.getItems().forEach(institution -> {
+            institution.getGeographicTaxonomies().forEach(TestUtils::checkNotNullFields);
+            checkNotNullFields(institution);
         });
     }
 

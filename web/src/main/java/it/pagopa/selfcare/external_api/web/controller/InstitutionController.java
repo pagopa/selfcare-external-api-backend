@@ -4,8 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.mapper.GeographicTaxonomyMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserMapper;
@@ -78,13 +83,13 @@ public class InstitutionController {
                                                           @PathVariable("institutionId") String institutionId,
                                                           @ApiParam("${swagger.external_api.products.model.id}")
                                                           @PathVariable("productId")
-                                                                  String productId,
+                                                          String productId,
                                                           @ApiParam("${swagger.external_api.user.model.id}")
                                                           @RequestParam(value = "userId", required = false)
-                                                                  Optional<String> userId,
+                                                          Optional<String> userId,
                                                           @ApiParam("${swagger.external_api.model.productRoles}")
                                                           @RequestParam(value = "productRoles", required = false)
-                                                                  Optional<Set<String>> productRoles) {
+                                                          Optional<Set<String>> productRoles) {
         log.trace("getInstitutionProductUsers start");
         log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}", institutionId, productId, productRoles);
         Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRoles);
@@ -95,5 +100,39 @@ public class InstitutionController {
         log.trace("getInstitutionProductUsers end");
         return result;
     }
+
+    @GetMapping(value = "/{institutionId}/geographicTaxonomy")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionGeographicTaxonomy}")
+    public List<GeographicTaxonomyResource> getInstitutionGeographicTaxonomies(@ApiParam("${swagger.external-api.institutions.model.id}")
+                                                                               @PathVariable("institutionId")
+                                                                               String institutionId) {
+        log.trace("getInstitutionGeographicTaxonomy start");
+        log.debug("getInstitutionGeographicTaxonomy institutionId = {}", institutionId);
+        List<GeographicTaxonomyResource> geographicTaxonomies = institutionService.getGeographicTaxonomyList(institutionId)
+                .stream()
+                .map(GeographicTaxonomyMapper::toResource)
+                .collect(Collectors.toList());
+        log.debug("getInstitutionGeographicTaxonomy result = {}", geographicTaxonomies);
+        log.trace("getInstitutionGeographicTaxonomy end");
+        return geographicTaxonomies;
+    }
+
+    @GetMapping(value = "/byGeoTaxonomies")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionByGeoTaxonomies}")
+    public List<InstitutionDetailResource> getInstitutionsByGeoTaxonomies(@ApiParam("${swagger.external-api.geographicTaxonomy.model.id}")
+                                                                          @RequestParam("geoTaxonomies") Set<String> geoTaxonomies,
+                                                                          @ApiParam("${swagger.external-api.geographicTaxonomy.searchMode}")
+                                                                          @RequestParam(value = "searchMode", required = false) Optional<SearchMode> searchMode) {
+        log.trace("getInstitutionByGeoTaxonomies start");
+        log.debug("getInstitutionByGeoTaxonomies geoTaxonomies = {}, searchMode = {}", geoTaxonomies, searchMode);
+        Collection<Institution> institutions = institutionService.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode.orElse(null));
+        List<InstitutionDetailResource> result = institutions.stream().map(InstitutionMapper::toResource).collect(Collectors.toList());
+        log.debug("getInstitutionByGeoTaxonomies result = {}", result);
+        log.trace("getInstitutionByGeoTaxonomies end");
+        return result;
+    }
+
 
 }

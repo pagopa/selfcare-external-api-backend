@@ -8,6 +8,7 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
@@ -171,6 +172,35 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         assertNotNull(response);
         assertTrue(response.getInstitutions().isEmpty());
         assertNull(response.getUserId());
+    }
+
+    @Test
+    void getInstitution_fullyValued() {
+        // given
+        String id = testCase2instIdMap.get(TestCase.FULLY_VALUED);
+        // when
+        Institution response = restClient.getInstitution(id);
+        assertNotNull(response);
+        TestUtils.checkNotNullFields(response);
+        response.getAttributes().forEach(TestUtils::checkNotNullFields);
+
+    }
+
+
+    @Test
+    void getInstitution_fullyNull() {
+        // given
+        String id = testCase2instIdMap.get(TestCase.FULLY_NULL);
+        // when
+        Institution response = restClient.getInstitution(id);
+        assertNotNull(response);
+        assertNull(response.getAddress());
+        assertNull(response.getDescription());
+        assertNull(response.getDigitalAddress());
+        assertNull(response.getId());
+        assertNull(response.getExternalId());
+        assertNull(response.getTaxCode());
+        assertNull(response.getZipCode());
     }
 
 }
