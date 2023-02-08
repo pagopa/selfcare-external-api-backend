@@ -372,7 +372,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref" : "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -866,9 +866,9 @@
             "type": "string",
             "description": "Institution's geographic taxonomy ISTAT code"
           },
-          "desc" : {
-            "type" : "string",
-            "description" : "Institution's geographic taxonomy extended name"
+          "desc": {
+            "type": "string",
+            "description": "Institution's geographic taxonomy extended name"
           }
         }
       },
