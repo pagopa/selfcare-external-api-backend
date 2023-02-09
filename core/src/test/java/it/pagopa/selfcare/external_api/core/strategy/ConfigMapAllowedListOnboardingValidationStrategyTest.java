@@ -51,6 +51,21 @@ class ConfigMapAllowedListOnboardingValidationStrategyTest {
         assertEquals("Invalid configuration: bad using of special character '*' in allowed-list for key 'prod-io'. If used, the '*' is the only value allowed for a given key", e.getMessage());
     }
 
+    @Test
+    void validate_allowedListSizeGreaterThanOne() {
+        // given
+        final Map<String, Set<String>> institutionProductsAllowedList =
+                Map.of("prod-io", Set.of("inst-1", "inst-2", "inst-3"));
+        final String productId = "prod-io";
+        final String institutionExternalId = "inst-2";
+        final ConfigMapAllowedListOnboardingValidationStrategy validationStrategy =
+                new ConfigMapAllowedListOnboardingValidationStrategy(institutionProductsAllowedList);
+        // when
+        final boolean validate = validationStrategy.validate(productId, institutionExternalId);
+        // then
+        assertTrue(validate);
+    }
+
 
     @Test
     void validate_institutionExplicitlyInAllowed() {
