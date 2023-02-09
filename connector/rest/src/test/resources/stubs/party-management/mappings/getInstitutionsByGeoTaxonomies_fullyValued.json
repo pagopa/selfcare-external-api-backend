@@ -33,34 +33,34 @@
           "supportPhone": "string",
           "imported": true,
           "products": {
-                "additionalProp1": {
-                  "product": "string",
-                  "pricingPlan": "string",
-                  "billing": {
-                    "vatNumber": "string",
-                    "recipientCode": "string",
-                    "publicServices": true
-                  }
-                },
-                "additionalProp2": {
-                  "product": "string",
-                  "pricingPlan": "string",
-                  "billing": {
-                    "vatNumber": "string",
-                    "recipientCode": "string",
-                    "publicServices": true
-                  }
-                },
-                "additionalProp3": {
-                  "product": "string",
-                  "pricingPlan": "string",
-                  "billing": {
-                    "vatNumber": "string",
-                    "recipientCode": "string",
-                    "publicServices": true
-                  }
-                }
-              },
+            "additionalProp1": {
+              "product": "string",
+              "pricingPlan": "string",
+              "billing": {
+                "vatNumber": "string",
+                "recipientCode": "string",
+                "publicServices": true
+              }
+            },
+            "additionalProp2": {
+              "product": "string",
+              "pricingPlan": "string",
+              "billing": {
+                "vatNumber": "string",
+                "recipientCode": "string",
+                "publicServices": true
+              }
+            },
+            "additionalProp3": {
+              "product": "string",
+              "pricingPlan": "string",
+              "billing": {
+                "vatNumber": "string",
+                "recipientCode": "string",
+                "publicServices": true
+              }
+            }
+          },
           "attributes": [
             {
               "origin": "string",

@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.core.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private OnboardingService onboardingService;
 
     @Autowired
     WebApplicationContext context;

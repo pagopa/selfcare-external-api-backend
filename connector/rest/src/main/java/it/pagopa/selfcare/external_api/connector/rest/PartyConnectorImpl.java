@@ -7,6 +7,10 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestCli
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -14,7 +18,10 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
+import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
@@ -40,6 +47,7 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
+    protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
 
     private final PartyProcessRestClient partyProcessRestClient;
     private final PartyManagementRestClient partyManagementRestClient;
@@ -220,6 +228,98 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
+    public void verifyOnboarding(String externalInstitutionId, String productId) {
+        log.trace("verifyOnboarding start");
+        log.debug("verifyOnboarding externalInstitutionId = {}, productId = {}", externalInstitutionId, productId);
+        Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
+        partyProcessRestClient.verifyOnboarding(externalInstitutionId, productId);
+        log.trace("verifyOnboarding end");
+    }
+
+    @Override
+    public Institution getInstitutionByExternalId(String externalInstitutionId) {
+        log.trace("getInstitution start");
+        log.debug("getInstitution externalInstitutionId = {}", externalInstitutionId);
+        Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Institution result = partyProcessRestClient.getInstitutionByExternalId(externalInstitutionId);
+        log.debug("getInstitution result = {}", result);
+        log.trace("getInstitution end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionUsingExternalId(String institutionExternalId) {
+        log.trace("createInstitutionUsingExternalId start");
+        log.debug("createInstitutionUsingExternalId externalId = {}", institutionExternalId);
+        Assert.hasText(institutionExternalId, REQUIRED_INSTITUTION_ID_MESSAGE);
+        Institution result = partyProcessRestClient.createInstitutionUsingExternalId(institutionExternalId);
+        log.debug("createInstitutionUsingExternalId result = {}", result);
+        log.trace("createInstitutionUsingExternalId end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionRaw(OnboardingData onboardingData) {
+        log.trace("createInstitutionUsingExternalId start");
+        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Institution result = partyProcessRestClient.createInstitutionRaw(onboardingData.getInstitutionExternalId(), new InstitutionSeed(onboardingData));
+        log.debug("createInstitutionUsingExternalId result = {}", result);
+        log.trace("createInstitutionUsingExternalId end");
+        return result;
+    }
+
+    @Override
+    public void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData) {
+        Assert.notNull(onboardingImportData, "Onboarding data is required");
+        OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
+        onboardingInstitutionRequest.setInstitutionExternalId(onboardingImportData.getInstitutionExternalId());
+        onboardingInstitutionRequest.setPricingPlan(onboardingImportData.getPricingPlan());
+        onboardingInstitutionRequest.setBilling(onboardingImportData.getBilling());
+        onboardingInstitutionRequest.setProductId(onboardingImportData.getProductId());
+        onboardingInstitutionRequest.setProductName(onboardingImportData.getProductName());
+        onboardingInstitutionRequest.setImportContract(onboardingImportData.getImportContract());
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setInstitutionType(onboardingImportData.getInstitutionType());
+        institutionUpdate.setAddress(onboardingImportData.getInstitutionUpdate().getAddress());
+        institutionUpdate.setDescription(onboardingImportData.getInstitutionUpdate().getDescription());
+        institutionUpdate.setDigitalAddress(onboardingImportData.getInstitutionUpdate().getDigitalAddress());
+        institutionUpdate.setTaxCode(onboardingImportData.getInstitutionUpdate().getTaxCode());
+        institutionUpdate.setZipCode(onboardingImportData.getInstitutionUpdate().getZipCode());
+        institutionUpdate.setPaymentServiceProvider(onboardingImportData.getInstitutionUpdate().getPaymentServiceProvider());
+        institutionUpdate.setDataProtectionOfficer(onboardingImportData.getInstitutionUpdate().getDataProtectionOfficer());
+        institutionUpdate.setGeographicTaxonomyCodes(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().stream()
+                .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
+        institutionUpdate.setRea(onboardingImportData.getInstitutionUpdate().getRea());
+        institutionUpdate.setShareCapital(onboardingImportData.getInstitutionUpdate().getShareCapital());
+        institutionUpdate.setBusinessRegisterPlace(onboardingImportData.getInstitutionUpdate().getBusinessRegisterPlace());
+        institutionUpdate.setSupportEmail(onboardingImportData.getInstitutionUpdate().getSupportEmail());
+        institutionUpdate.setSupportPhone(onboardingImportData.getInstitutionUpdate().getSupportPhone());
+        institutionUpdate.setImported(onboardingImportData.getInstitutionUpdate().getImported());
+        onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
+
+        OnboardingContract onboardingContract = new OnboardingContract();
+        onboardingContract.setPath(onboardingImportData.getContractPath());
+        onboardingContract.setVersion(onboardingImportData.getContractVersion());
+        onboardingInstitutionRequest.setContract(onboardingContract);
+
+        onboardingInstitutionRequest.setUsers(onboardingImportData.getUsers().stream()
+                .map(userInfo -> {
+                    User user = new User();
+                    user.setId(userInfo.getId());
+                    user.setName(userInfo.getName());
+                    user.setSurname(userInfo.getSurname());
+                    user.setTaxCode(userInfo.getTaxCode());
+                    user.setEmail(userInfo.getEmail());
+                    user.setRole(userInfo.getRole());
+                    user.setProductRole(userInfo.getProductRole());
+                    return user;
+                }).collect(Collectors.toList()));
+
+        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
+    }
+
+    @Override
     public List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId) {
         log.trace("getGeographicTaxonomyList start");
         log.debug("getGeographicTaxonomyList institutionId = {}", institutionId);
@@ -247,6 +347,54 @@ public class PartyConnectorImpl implements PartyConnector {
         log.debug("getInstitutionByGeoTaxonomy result = {}", institutions);
         log.trace("getInstitutionByGeoTaxonomy end");
         return institutions;
+    }
+
+    @Override
+    public void autoApprovalOnboarding(OnboardingData onboardingData) {
+        Assert.notNull(onboardingData, "Onboarding data is required");
+        OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
+        onboardingInstitutionRequest.setInstitutionExternalId(onboardingData.getInstitutionExternalId());
+        onboardingInstitutionRequest.setPricingPlan(onboardingData.getPricingPlan());
+        onboardingInstitutionRequest.setBilling(onboardingData.getBilling());
+        onboardingInstitutionRequest.setProductId(onboardingData.getProductId());
+        onboardingInstitutionRequest.setProductName(onboardingData.getProductName());
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setInstitutionType(onboardingData.getInstitutionType());
+        institutionUpdate.setAddress(onboardingData.getInstitutionUpdate().getAddress());
+        institutionUpdate.setDescription(onboardingData.getInstitutionUpdate().getDescription());
+        institutionUpdate.setDigitalAddress(onboardingData.getInstitutionUpdate().getDigitalAddress());
+        institutionUpdate.setTaxCode(onboardingData.getInstitutionUpdate().getTaxCode());
+        institutionUpdate.setZipCode(onboardingData.getInstitutionUpdate().getZipCode());
+        institutionUpdate.setPaymentServiceProvider(onboardingData.getInstitutionUpdate().getPaymentServiceProvider());
+        institutionUpdate.setDataProtectionOfficer(onboardingData.getInstitutionUpdate().getDataProtectionOfficer());
+        institutionUpdate.setGeographicTaxonomyCodes(onboardingData.getInstitutionUpdate().getGeographicTaxonomies().stream()
+                .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
+        institutionUpdate.setRea(onboardingData.getInstitutionUpdate().getRea());
+        institutionUpdate.setShareCapital(onboardingData.getInstitutionUpdate().getShareCapital());
+        institutionUpdate.setBusinessRegisterPlace(onboardingData.getInstitutionUpdate().getBusinessRegisterPlace());
+        institutionUpdate.setSupportEmail(onboardingData.getInstitutionUpdate().getSupportEmail());
+        institutionUpdate.setSupportPhone(onboardingData.getInstitutionUpdate().getSupportPhone());
+        institutionUpdate.setImported(onboardingData.getInstitutionUpdate().getImported());
+        onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
+
+        onboardingInstitutionRequest.setUsers(onboardingData.getUsers().stream()
+                .map(userInfo -> {
+                    User user = new User();
+                    user.setId(userInfo.getId());
+                    user.setName(userInfo.getName());
+                    user.setSurname(userInfo.getSurname());
+                    user.setTaxCode(userInfo.getTaxCode());
+                    user.setEmail(userInfo.getEmail());
+                    user.setRole(userInfo.getRole());
+                    user.setProductRole(userInfo.getProductRole());
+                    return user;
+                }).collect(Collectors.toList()));
+        OnboardingContract onboardingContract = new OnboardingContract();
+        onboardingContract.setPath(onboardingData.getContractPath());
+        onboardingContract.setVersion(onboardingData.getContractVersion());
+        onboardingInstitutionRequest.setContract(onboardingContract);
+
+        partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
 
 }
