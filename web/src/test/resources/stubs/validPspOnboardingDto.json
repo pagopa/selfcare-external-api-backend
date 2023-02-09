@@ -9,7 +9,7 @@
     "vatNumber": "string",
     "zipCode": "string"
   },
-  "institutionType": "GSP",
+  "institutionType": "PSP",
   "origin": "string",
   "pricingPlan": "string",
   "pspData": {
