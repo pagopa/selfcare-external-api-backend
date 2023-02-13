@@ -20,7 +20,6 @@ import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.Onboardin
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
@@ -684,6 +683,7 @@ class PartyConnectorImplTest {
         assertEquals(1, request.getInstitutionUpdate().getGeographicTaxonomyCodes().size());
         TestUtils.reflectionEqualsByName(institutionUpdate, request.getInstitutionUpdate());
         TestUtils.reflectionEqualsByName(billing, request.getBilling());
+        TestUtils.reflectionEqualsByName(onboardingImportData.getContractImported(), request.getContractImported());
         assertEquals(onboardingImportData.getProductId(), request.getProductId());
         assertEquals(onboardingImportData.getProductName(), request.getProductName());
         assertEquals(onboardingImportData.getUsers().get(0).getName(), request.getUsers().get(0).getName());

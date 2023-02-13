@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest.model.onboarding;
 
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.ImportContract;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class OnboardingImportInstitutionRequest {
     private InstitutionUpdate institutionUpdate;
     private String pricingPlan;
     private Billing billing;
-    private ImportContract importContract;
+    private OnboardingImportContract contractImported;
     private OnboardingContract contract;
 
 }

@@ -76,6 +76,25 @@ class OnboardingControllerTest {
     }
 
     @Test
+    void onboardingPspValidRequest(@Value("classpath:stubs/validPspOnboardingDto.json") Resource onboardingDto) throws Exception {
+        // given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/{institutionId}/products/{productId}", institutionId, productId)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboarding(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
     void onboardingInvalidPspOnboardingRequest(@Value("classpath:stubs/invalidPspOnboardingDto.json") Resource onboardingDto) throws Exception {
         // given
         String institutionId = "institutionId";

@@ -278,7 +278,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingInstitutionRequest.setBilling(onboardingImportData.getBilling());
         onboardingInstitutionRequest.setProductId(onboardingImportData.getProductId());
         onboardingInstitutionRequest.setProductName(onboardingImportData.getProductName());
-        onboardingInstitutionRequest.setImportContract(onboardingImportData.getImportContract());
+        onboardingInstitutionRequest.setContractImported(onboardingImportData.getContractImported());
         InstitutionUpdate institutionUpdate = new InstitutionUpdate();
         institutionUpdate.setInstitutionType(onboardingImportData.getInstitutionType());
         institutionUpdate.setAddress(onboardingImportData.getInstitutionUpdate().getAddress());
