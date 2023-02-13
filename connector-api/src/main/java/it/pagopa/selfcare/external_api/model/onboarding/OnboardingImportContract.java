@@ -3,7 +3,7 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import lombok.Data;
 
 @Data
-public class ImportContract {
+public class OnboardingImportContract {
 
     private String fileName;
     private String filePath;

@@ -23,7 +23,7 @@
   "tags": [
     {
       "name": "institutions",
-      "description": "Institution Controller"
+      "description": "Instituions operations"
     },
     {
       "name": "onboarding",
@@ -31,7 +31,7 @@
     },
     {
       "name": "product",
-      "description": "Product Controller"
+      "description": "Products operations"
     }
   ],
   "paths": {

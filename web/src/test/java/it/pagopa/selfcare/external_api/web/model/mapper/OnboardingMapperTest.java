@@ -1,8 +1,8 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.ImportContract;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.*;
@@ -22,7 +22,7 @@ class OnboardingMapperTest {
         //given
         ImportContractDto model = mockInstance(new ImportContractDto());
         //when
-        ImportContract resource = OnboardingMapper.fromDto(model);
+        OnboardingImportContract resource = OnboardingMapper.fromDto(model);
         //then
         assertNotNull(resource);
         reflectionEqualsByName(model, resource);
@@ -33,7 +33,7 @@ class OnboardingMapperTest {
         // given
         ImportContractDto importContractDto = null;
         // when
-        ImportContract resource = OnboardingMapper.fromDto(importContractDto);
+        OnboardingImportContract resource = OnboardingMapper.fromDto(importContractDto);
         // then
         assertNull(resource);
     }
@@ -53,9 +53,10 @@ class OnboardingMapperTest {
         assertNotNull(resource);
         assertEquals(model.getUsers().size(), resource.getUsers().size());
         assertEquals(institutionId, resource.getInstitutionExternalId());
+        assertTrue(resource.getInstitutionUpdate().getImported());
         assertEquals("prod-io", resource.getProductId());
         reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0));
-        reflectionEqualsByName(importContractDto, resource.getImportContract());
+        reflectionEqualsByName(importContractDto, resource.getContractImported());
     }
 
     @Test

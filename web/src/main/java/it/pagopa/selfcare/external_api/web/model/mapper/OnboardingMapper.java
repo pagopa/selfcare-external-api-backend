@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OnboardingMapper {
 
-    public static ImportContract fromDto(ImportContractDto model) {
-        ImportContract resource = null;
+    public static OnboardingImportContract fromDto(ImportContractDto model) {
+        OnboardingImportContract resource = null;
         if (model != null) {
-            resource = new ImportContract();
+            resource = new OnboardingImportContract();
             resource.setFileName(model.getFileName());
             resource.setFilePath(model.getFilePath());
             resource.setContractType(model.getContractType());
@@ -44,9 +44,10 @@ public class OnboardingMapper {
             resource.setUsers(model.getUsers().stream()
                     .map(UserMapper::toUser)
                     .collect(Collectors.toList()));
-            resource.setImportContract(fromDto(model.getImportContract()));
+            resource.setContractImported(fromDto(model.getImportContract()));
             resource.setBilling(new Billing());
             resource.setInstitutionUpdate(new InstitutionUpdate());
+            resource.getInstitutionUpdate().setImported(true);
             resource.setInstitutionType(InstitutionType.PA);
         }
         return resource;

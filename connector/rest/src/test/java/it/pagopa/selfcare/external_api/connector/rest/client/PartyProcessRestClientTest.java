@@ -269,9 +269,8 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         checkNotNullFields(response);
     }
 
-
     @Test
-    void onboardingImportOrganization_fullyValued() {
+    void onboardingOrganization_fullyValued() {
         // given
         OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
@@ -283,31 +282,7 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
     }
 
     @Test
-    void onboardingImportOrganization_fullyNull() {
-        // given
-        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
-        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
-        onboardingRequest.setUsers(List.of(mockInstance(new User())));
-        // when
-        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
-        // then
-        assertDoesNotThrow(executable);
-    }
-
-    @Test
-    void autoApprovalOnboardingOrganization_fullyValued() {
-        // given
-        OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
-        onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_VALUED));
-        onboardingRequest.setUsers(List.of(mockInstance(new User())));
-        // when
-        Executable executable = () -> restClient.onboardingOrganization(onboardingRequest);
-        // then
-        assertDoesNotThrow(executable);
-    }
-
-    @Test
-    void autoApprovalOnboardingImportOrganization_fullyNull() {
+    void onboardingOrganization_fullyNull() {
         // given
         OnboardingImportInstitutionRequest onboardingRequest = new OnboardingImportInstitutionRequest();
         onboardingRequest.setInstitutionExternalId(testCase2instIdMap.get(TestCase.FULLY_NULL));
