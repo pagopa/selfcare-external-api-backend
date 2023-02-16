@@ -68,6 +68,7 @@ public class PartyConnectorImpl implements PartyConnector {
         userInfo.setId(relationshipInfo.getFrom());
         userInfo.setStatus(relationshipInfo.getState().toString());
         userInfo.setRole(relationshipInfo.getRole().getSelfCareAuthority());
+        userInfo.setPartyRole(relationshipInfo.getRole());
         ProductInfo productInfo = new ProductInfo();
         productInfo.setId(relationshipInfo.getProduct().getId());
         RoleInfo roleInfo = new RoleInfo();

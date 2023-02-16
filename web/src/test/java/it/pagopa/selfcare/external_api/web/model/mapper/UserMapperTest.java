@@ -53,6 +53,7 @@ class UserMapperTest {
         assertEquals(model.getUser().getName().getValue(), resource.getName());
         assertEquals(model.getUser().getFamilyName().getValue(), resource.getSurname());
         assertEquals(model.getUser().getWorkContacts().get(model.getInstitutionId()).getEmail().getValue(), resource.getEmail());
+        assertEquals(model.getPartyRole(), resource.getRole());
         assertIterableEquals(productInfo.getRoleInfos().stream().map(RoleInfo::getRole).collect(Collectors.toList()), resource.getRoles());
     }
 
