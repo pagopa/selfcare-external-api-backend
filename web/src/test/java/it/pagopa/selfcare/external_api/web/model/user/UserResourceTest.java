@@ -41,6 +41,7 @@ class UserResourceTest {
         toCheckMap.put("surname", NotBlank.class);
         toCheckMap.put("email", NotBlank.class);
         toCheckMap.put("roles", NotEmpty.class);
+        toCheckMap.put("role", NotNull.class);
         UserResource resource = new UserResource();
 
         // when
