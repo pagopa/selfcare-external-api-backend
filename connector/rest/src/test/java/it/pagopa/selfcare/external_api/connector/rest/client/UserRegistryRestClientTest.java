@@ -4,8 +4,13 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import feign.FeignException;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
+import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.UserRegistryRestClientTestConfig;
+import it.pagopa.selfcare.external_api.connector.rest.model.user_registry.EmbeddedExternalId;
+import it.pagopa.selfcare.external_api.model.user.MutableUserFieldsDto;
+import it.pagopa.selfcare.external_api.model.user.SaveUserDto;
 import it.pagopa.selfcare.external_api.model.user.User;
+import it.pagopa.selfcare.external_api.model.user.UserId;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -104,6 +109,39 @@ class UserRegistryRestClientTest extends BaseFeignRestClientTest {
         //then
         assertNotNull(response);
         assertNull(response.getId());
+    }
+
+    @Test
+    void search_fullyValued() {
+        //given
+        String externalId = "externalId1";
+        //when
+        User response = restClient.search(new EmbeddedExternalId(externalId), EnumSet.allOf(User.Fields.class));
+        //then
+        assertNotNull(response);
+        assertNotNull(response.getWorkContacts());
+        assertEquals(externalId, response.getFiscalCode());
+    }
+
+    @Test
+    void saveUser() {
+        //given
+        SaveUserDto userDto = TestUtils.mockInstance(new SaveUserDto(), "setWorkContacts");
+        //when
+        UserId id = restClient.saveUser(userDto);
+        //then
+        assertNotNull(id);
+    }
+
+    @Test
+    void patchUser() {
+        //given
+        UUID id = UUID.randomUUID();
+        MutableUserFieldsDto mutableUserFieldsDto = TestUtils.mockInstance(new MutableUserFieldsDto(), "setWorkContacts");
+        //when
+        Executable executable = () -> restClient.patchUser(id, mutableUserFieldsDto);
+        //then
+        assertDoesNotThrow(executable);
     }
 
 }

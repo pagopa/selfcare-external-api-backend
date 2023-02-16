@@ -5,7 +5,10 @@ import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -30,6 +33,7 @@ class InstitutionServiceImpl implements InstitutionService {
 
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
 
+    static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
     private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userRegistryConnector;
@@ -57,7 +61,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public List<Product> getInstitutionUserProducts(String institutionId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
-        Assert.hasText(institutionId, "An institutionId is required");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.state(authentication != null, "Authentication is required");
         Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
@@ -80,7 +84,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles) {
         log.trace("getInstitutionProductUsers start");
         log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}", institutionId, productId, productRoles);
-        Assert.hasText(institutionId, "An Institution id is required");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Assert.hasText(productId, "A Product id is required");
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         userInfoFilter.setInstitutionId(Optional.of(institutionId));
@@ -94,6 +98,29 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", result);
         log.trace("getInstitutionProductUsers end");
         return result;
+    }
+
+    @Override
+    public List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId) {
+        log.trace("getGeographicTaxonomyList start");
+        log.debug("getGeographicTaxonomyList externalInstitutionId = {}", institutionId);
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
+        List<GeographicTaxonomy> result = partyConnector.getGeographicTaxonomyList(institutionId);
+        log.debug("getGeographicTaxonomyList result = {}", result);
+        log.trace("getGeographicTaxonomyList end");
+        return result;
+    }
+
+    @Override
+    public Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode) {
+        log.trace("getInstitutionByGeoTaxonomy start");
+        log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
+        Assert.notEmpty(geoTaxIds, "GeoTaxonomy ids are required in order to retrieve the institutions");
+        String geoIds = String.join(",", geoTaxIds);
+        Collection<Institution> institutions = partyConnector.getInstitutionsByGeoTaxonomies(geoIds, searchMode);
+        log.debug("getInstitutionByGeoTaxonomy result = {}", "null)");
+        log.trace("getInstitutionByGeoTaxonomy end");
+        return institutions;
     }
 
 }
