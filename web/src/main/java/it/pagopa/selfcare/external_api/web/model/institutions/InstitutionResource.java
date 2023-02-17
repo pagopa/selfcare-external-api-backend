@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -66,4 +67,21 @@ public class InstitutionResource {
     @JsonProperty(required = true)
     @NotNull
     private Collection<String> userProductRoles;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.recipientCode}")
+    private String recipientCode;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.companyInformations}")
+    private CompanyInformationsResource companyInformations;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.assistance}")
+    private AssistanceContactsResource assistanceContacts;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData}")
+    @Valid
+    private PspDataResource pspData;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData}")
+    @Valid
+    private DpoDataResource dpoData;
 }

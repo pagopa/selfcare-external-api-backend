@@ -43,7 +43,12 @@
               "code": "string",
               "description": "string"
             }
-          ]
+          ],
+          "rea": "RM-123456",
+          "shareCapital": "9999",
+          "businessRegisterPlace": "Business Register Place Test",
+          "supportEmail": "supportEmail@example.com",
+          "supportPhone": "supportPhone@example.com"
         }
       ]
     },

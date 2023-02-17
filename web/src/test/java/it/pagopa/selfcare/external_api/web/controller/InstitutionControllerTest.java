@@ -30,8 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.*;
 import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,6 +58,9 @@ class InstitutionControllerTest {
         String productId = "productId";
         InstitutionInfo institutionInfo = mockInstance(new InstitutionInfo(), "setId");
         institutionInfo.setId(randomUUID().toString());
+        institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
+        institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
+        institutionInfo.getAssistanceContacts().setSupportEmail("spportEmail@example.com");
         when(institutionServiceMock.getInstitutions(anyString()))
                 .thenReturn(Collections.singletonList(institutionInfo));
         //when
@@ -79,6 +81,11 @@ class InstitutionControllerTest {
         assertEquals(institutionInfo.getId(), response.get(0).getId().toString());
         assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
         assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
+        assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
+        reflectionEqualsByName(institutionInfo.getAssistanceContacts(), response.get(0).getAssistanceContacts());
+        reflectionEqualsByName(institutionInfo.getCompanyInformations(), response.get(0).getCompanyInformations());
+        reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
+        reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
         verify(institutionServiceMock, times(1))
                 .getInstitutions(productId);
         verifyNoMoreInteractions(institutionServiceMock);

@@ -101,6 +101,8 @@ class PartyConnectorImplTest {
         assertEquals(1, institutionInfos.size());
         assertEquals(3, institutionInfos.get(0).getProductRoles().size());
         assertEquals(onBoardingInfo.getInstitutions().get(0).getId(), institutionInfos.get(0).getId());
+        assertNull(institutionInfos.get(0).getAssistanceContacts());
+        assertNull(institutionInfos.get(0).getCompanyInformations());
         institutionInfos = map.get(PartyRole.SUB_DELEGATE);
         assertNotNull(institutionInfos);
         assertEquals(1, institutionInfos.size());

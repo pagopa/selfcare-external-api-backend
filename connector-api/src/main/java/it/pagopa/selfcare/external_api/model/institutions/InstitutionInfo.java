@@ -28,5 +28,9 @@ public class InstitutionInfo {
     private InstitutionType institutionType;
     private PartyRole userRole;
     private Collection<String> productRoles;
+    private CompanyInformations companyInformations;
+    private AssistanceContacts assistanceContacts;
+    private PaymentServiceProvider paymentServiceProvider;
+    private DataProtectionOfficer dataProtectionOfficer;
 
 }

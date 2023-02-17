@@ -26,4 +26,9 @@ public class OnboardingResponseData {
     private String origin;
     private String originId;
     private List<Attribute> attributes;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private String supportEmail;
+    private String supportPhone;
 }

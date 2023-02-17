@@ -1,9 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +29,12 @@ public class InstitutionMapper {
             resource.setOriginId(model.getOriginId());
             if (model.getProductRoles() != null)
                 resource.setUserProductRoles(model.getProductRoles());
+            if (model.getBilling() != null)
+                resource.setRecipientCode(model.getBilling().getRecipientCode());
+            resource.setCompanyInformations(toResource(model.getCompanyInformations()));
+            resource.setAssistanceContacts(toResource(model.getAssistanceContacts()));
+            resource.setPspData(toResource(model.getPaymentServiceProvider()));
+            resource.setDpoData(toResource(model.getDataProtectionOfficer()));
         }
         return resource;
     }
@@ -60,6 +64,52 @@ public class InstitutionMapper {
             resource.setSupportEmail(model.getSupportEmail());
             resource.setSupportPhone(model.getSupportPhone());
             resource.setImported(model.getImported());
+        }
+        return resource;
+    }
+
+
+    public static AssistanceContactsResource toResource(AssistanceContacts model) {
+        AssistanceContactsResource resource = null;
+        if (model != null) {
+            resource = new AssistanceContactsResource();
+            resource.setSupportEmail(model.getSupportEmail());
+            resource.setSupportPhone(model.getSupportPhone());
+        }
+        return resource;
+    }
+
+    public static CompanyInformationsResource toResource(CompanyInformations model) {
+        CompanyInformationsResource resource = null;
+        if (model != null) {
+            resource = new CompanyInformationsResource();
+            resource.setRea(model.getRea());
+            resource.setShareCapital(model.getShareCapital());
+            resource.setBusinessRegisterPlace(model.getBusinessRegisterPlace());
+        }
+        return resource;
+    }
+
+    public static PspDataResource toResource(PaymentServiceProvider model) {
+        PspDataResource resource = null;
+        if (model != null) {
+            resource = new PspDataResource();
+            resource.setBusinessRegisterNumber(model.getBusinessRegisterNumber());
+            resource.setLegalRegisterName(model.getLegalRegisterName());
+            resource.setLegalRegisterNumber(model.getLegalRegisterNumber());
+            resource.setAbiCode(model.getAbiCode());
+            resource.setVatNumberGroup(model.getVatNumberGroup());
+        }
+        return resource;
+    }
+
+    public static DpoDataResource toResource(DataProtectionOfficer model) {
+        DpoDataResource resource = null;
+        if (model != null) {
+            resource = new DpoDataResource();
+            resource.setAddress(model.getAddress());
+            resource.setPec(model.getPec());
+            resource.setEmail(model.getEmail());
         }
         return resource;
     }

@@ -63,7 +63,9 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "businessRegisterPlace": "Business Register Place Test",
+      "supportPhone": "supportPhone@example.com"
     },
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -95,7 +97,9 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "shareCapital": "9999",
+      "supportEmail": "supportEmail@example.com"
     },
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
@@ -127,7 +131,11 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "shareCapital": "9999",
+      "businessRegisterPlace": "Business Register Place Test",
+      "supportEmail": "supportEmail@example.com",
+      "supportPhone": "supportPhone@example.com"
     },
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
@@ -159,7 +167,10 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "rea": "RM-123456",
+      "supportEmail": "supportEmail@example.com",
+      "supportPhone": "supportPhone@example.com"
     },
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
@@ -191,7 +202,78 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "rea": "RM-123456",
+      "businessRegisterPlace": "Business Register Place Test"
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role6",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ],
+      "rea": "RM-123456",
+      "shareCapital": "9999"
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role6",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ],
+      "rea": "RM-123456",
+      "shareCapital": "9999",
+      "businessRegisterPlace": "Business Register Place Test"
     }
   ]
 }
