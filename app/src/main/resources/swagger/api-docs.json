@@ -388,6 +388,14 @@
           "schema" : {
             "type" : "string"
           }
+        }, {
+          "name" : "x-selfcare-uid",
+          "in" : "header",
+          "description" : "x-selfcare-uid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1172,6 +1180,10 @@
             "description" : "User's institutional email",
             "format" : "email",
             "example" : "email@example.com"
+          },
+          "fiscalCode" : {
+            "type" : "string",
+            "description" : "User's fiscal code"
           },
           "id" : {
             "type" : "string",

@@ -86,7 +86,7 @@ class InstitutionServiceImpl implements InstitutionService {
     @Override
     public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
         log.trace("getInstitutionProductUsers start");
-        log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}", institutionId, productId, productRoles);
+        log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Assert.hasText(productId, "A Product id is required");
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
