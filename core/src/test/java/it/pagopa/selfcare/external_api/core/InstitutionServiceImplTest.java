@@ -242,7 +242,7 @@ class InstitutionServiceImplTest {
         Optional<String> userId = Optional.empty();
         Optional<Set<String>> productRole = Optional.empty();
         // when
-        Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole);
+        Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole, null);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
@@ -258,7 +258,7 @@ class InstitutionServiceImplTest {
         Optional<String> userId = Optional.empty();
         Optional<Set<String>> productRole = Optional.empty();
         // when
-        Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole);
+        Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole, null);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals("A Product id is required", e.getMessage());
@@ -287,7 +287,7 @@ class InstitutionServiceImplTest {
         when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
                 .thenReturn(user);
         // when
-        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, usrIdParam, productRole);
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, usrIdParam, productRole, null);
         // then
         Assertions.assertNotNull(userInfos);
         userInfos.forEach(userInfo1 -> {
@@ -311,6 +311,58 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.name));
         assertTrue(capturedFields.contains(User.Fields.familyName));
         assertTrue(capturedFields.contains(User.Fields.workContacts));
+        assertFalse(capturedFields.contains(User.Fields.fiscalCode));
+        verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
+        verifyNoInteractions(productsConnectorMock);
+    }
+
+    @Test
+    void getInstitutionProductUsers_withFiscalCode() {
+        // given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        Optional<String> usrIdParam = Optional.empty();
+        Optional<Set<String>> productRole = Optional.empty();
+        String xSelfCareUid = "onboarding-interceptor";
+        UserInfo userInfo = mockInstance(new UserInfo());
+        String userId = UUID.randomUUID().toString();
+        userInfo.setId(userId);
+        User user = mockInstance(new User());
+        user.setId(userId);
+        WorkContact contact = mockInstance(new WorkContact());
+        Map<String, WorkContact> workContact = new HashMap<>();
+        workContact.put(institutionId, contact);
+        user.setWorkContacts(workContact);
+        when(partyConnectorMock.getUsers(any()))
+                .thenReturn(Collections.singletonList(userInfo));
+        when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
+                .thenReturn(user);
+        // when
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, usrIdParam, productRole, xSelfCareUid);
+        // then
+        Assertions.assertNotNull(userInfos);
+        userInfos.forEach(userInfo1 -> {
+            TestUtils.checkNotNullFields(userInfo1, "products");
+            TestUtils.checkNotNullFields(userInfo1.getUser());
+        });
+        ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
+        verify(partyConnectorMock, times(1))
+                .getUsers(filterCaptor.capture());
+        UserInfo.UserInfoFilter capturedFilter = filterCaptor.getValue();
+        assertEquals(usrIdParam, capturedFilter.getRole());
+        assertEquals(institutionId, capturedFilter.getInstitutionId().get());
+        assertEquals(productId, capturedFilter.getProductId().get());
+        assertEquals(productRole, capturedFilter.getProductRoles());
+        assertEquals(Optional.empty(), capturedFilter.getUserId());
+        assertEquals(Optional.of(EnumSet.of(ACTIVE)), capturedFilter.getAllowedStates());
+        ArgumentCaptor<EnumSet<User.Fields>> filedsCaptor = ArgumentCaptor.forClass(EnumSet.class);
+        verify(userRegistryConnectorMock, times(1))
+                .getUserByInternalId(eq(userId), filedsCaptor.capture());
+        EnumSet<User.Fields> capturedFields = filedsCaptor.getValue();
+        assertTrue(capturedFields.contains(User.Fields.name));
+        assertTrue(capturedFields.contains(User.Fields.familyName));
+        assertTrue(capturedFields.contains(User.Fields.workContacts));
+        assertTrue(capturedFields.contains(User.Fields.fiscalCode));
         verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }

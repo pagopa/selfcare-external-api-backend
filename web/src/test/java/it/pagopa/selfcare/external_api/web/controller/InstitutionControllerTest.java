@@ -121,7 +121,7 @@ class InstitutionControllerTest {
         // given
         String institutionId = "institutionId";
         String productId = "productId";
-        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any()))
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -138,7 +138,7 @@ class InstitutionControllerTest {
         assertNotNull(products);
         assertTrue(products.isEmpty());
         verify(institutionServiceMock, times(1))
-                .getInstitutionProductUsers(institutionId, productId, Optional.empty(), Optional.empty());
+                .getInstitutionProductUsers(institutionId, productId, Optional.empty(), Optional.empty(), null);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
@@ -155,7 +155,7 @@ class InstitutionControllerTest {
         final UserInfo userInfoModel = mockInstance(new UserInfo(), "setId", "setProducts");
         userInfoModel.setId(randomUUID().toString());
         userInfoModel.setProducts(Map.of(productId, productInfo));
-        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any()))
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
                 .thenReturn(singletonList(userInfoModel));
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -174,7 +174,44 @@ class InstitutionControllerTest {
         assertNotNull(products);
         assertFalse(products.isEmpty());
         verify(institutionServiceMock, times(1))
-                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)));
+                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)), null);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    void getInstitutionProductUsers_withHeader() throws Exception {
+        // given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        String userId = "userId";
+        String role = "admin";
+        String xSelfCareUid = "onboarding-interceptor";
+        final ProductInfo productInfo = mockInstance(new ProductInfo(), "setRoleInfos");
+        productInfo.setRoleInfos(List.of(mockInstance(new RoleInfo())));
+        final UserInfo userInfoModel = mockInstance(new UserInfo(), "setId", "setProducts");
+        userInfoModel.setId(randomUUID().toString());
+        userInfoModel.setProducts(Map.of(productId, productInfo));
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
+                .thenReturn(singletonList(userInfoModel));
+        // when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
+                        .queryParam("userId", userId)
+                        .queryParam("productRoles", role)
+                        .header("x-selfcare-uid", xSelfCareUid)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // then
+        List<UserResource> products = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(products);
+        assertFalse(products.isEmpty());
+        verify(institutionServiceMock, times(1))
+                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)), xSelfCareUid);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
