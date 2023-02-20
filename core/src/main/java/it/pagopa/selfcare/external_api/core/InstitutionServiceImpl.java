@@ -39,7 +39,7 @@ class InstitutionServiceImpl implements InstitutionService {
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userRegistryConnector;
 
-    private final String serviceType = "onboarding-interceptor";
+    private final static String serviceType = "onboarding-interceptor";
 
     @Autowired
     InstitutionServiceImpl(PartyConnector partyConnector,
