@@ -389,12 +389,12 @@
             "type" : "string"
           }
         }, {
-          "name" : "x-selfcare-uid",
-          "in" : "header",
-          "description" : "x-selfcare-uid",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
+          "name": "x-selfcare-uid",
+          "in": "header",
+          "description": "x-selfcare-uid",
+          "required": false,
+          "schema": {
+            "type": "string"
           }
         } ],
         "responses" : {
@@ -673,99 +673,172 @@
   "components" : {
     "schemas" : {
       "AssistanceContactsDto" : {
-        "title" : "AssistanceContactsDto",
-        "type" : "object",
-        "properties" : {
-          "supportEmail" : {
-            "type" : "string",
-            "description" : "Institution's support email contact",
-            "format" : "email",
-            "example" : "email@example.com"
+        "title": "AssistanceContactsDto",
+        "type": "object",
+        "properties": {
+          "supportEmail": {
+            "type": "string",
+            "description": "Institution's support email contact",
+            "format": "email",
+            "example": "email@example.com"
           },
-          "supportPhone" : {
-            "type" : "string",
-            "description" : "Institution's support phone contact"
+          "supportPhone": {
+            "type": "string",
+            "description": "Institution's support phone contact"
           }
         }
       },
-      "BillingDataDto" : {
-        "title" : "BillingDataDto",
-        "required" : [ "businessName", "digitalAddress", "recipientCode", "registeredOffice", "taxCode", "vatNumber", "zipCode" ],
-        "type" : "object",
-        "properties" : {
-          "businessName" : {
-            "type" : "string",
-            "description" : "Institution's legal name"
+      "AssistanceContactsResource": {
+        "title": "AssistanceContactsResource",
+        "type": "object",
+        "properties": {
+          "supportEmail": {
+            "type": "string",
+            "description": "Institution's support email contact",
+            "format": "email",
+            "example": "email@example.com"
           },
-          "digitalAddress" : {
-            "type" : "string",
-            "description" : "Institution's digitalAddress"
-          },
-          "publicServices" : {
-            "type" : "boolean",
-            "description" : "Institution's service type",
-            "example" : false
-          },
-          "recipientCode" : {
-            "type" : "string",
-            "description" : "Billing recipient code"
-          },
-          "registeredOffice" : {
-            "type" : "string",
-            "description" : "Institution's physical address"
-          },
-          "taxCode" : {
-            "type" : "string",
-            "description" : "Institution's taxCode"
-          },
-          "vatNumber" : {
-            "type" : "string",
-            "description" : "Institution's VAT number"
-          },
-          "zipCode" : {
-            "type" : "string",
-            "description" : "Institution's zipCode"
+          "supportPhone": {
+            "type": "string",
+            "description": "Institution's support phone contact"
           }
         }
       },
-      "CompanyInformationsDto" : {
-        "title" : "CompanyInformationsDto",
-        "type" : "object",
-        "properties" : {
-          "businessRegisterPlace" : {
-            "type" : "string",
-            "description" : "Institution's business register place"
+      "BillingDataDto": {
+        "title": "BillingDataDto",
+        "required": [
+          "businessName",
+          "digitalAddress",
+          "recipientCode",
+          "registeredOffice",
+          "taxCode",
+          "vatNumber",
+          "zipCode"
+        ],
+        "type": "object",
+        "properties": {
+          "businessName": {
+            "type": "string",
+            "description": "Institution's legal name"
           },
-          "rea" : {
-            "type" : "string",
-            "description" : "Institution's REA"
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
           },
-          "shareCapital" : {
-            "type" : "string",
-            "description" : "Institution's share capital value"
+          "publicServices": {
+            "type": "boolean",
+            "description": "Institution's service type",
+            "example": false
+          },
+          "recipientCode": {
+            "type": "string",
+            "description": "Billing recipient code"
+          },
+          "registeredOffice": {
+            "type": "string",
+            "description": "Institution's physical address"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's taxCode"
+          },
+          "vatNumber": {
+            "type": "string",
+            "description": "Institution's VAT number"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },
-      "DpoDataDto" : {
-        "title" : "DpoDataDto",
-        "required" : [ "address", "email", "pec" ],
-        "type" : "object",
-        "properties" : {
-          "address" : {
-            "type" : "string",
-            "description" : "DPO's address"
+      "CompanyInformationsDto": {
+        "title": "CompanyInformationsDto",
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
           },
-          "email" : {
-            "type" : "string",
-            "description" : "DPO's email",
-            "format" : "email",
-            "example" : "email@example.com"
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
           },
-          "pec" : {
-            "type" : "string",
-            "description" : "DPO's PEC",
-            "format" : "email",
-            "example" : "email@example.com"
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
+      },
+      "CompanyInformationsResource": {
+        "title": "CompanyInformationsResource",
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
+          },
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
+          },
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
+      },
+      "DpoDataDto": {
+        "title": "DpoDataDto",
+        "required": [
+          "address",
+          "email",
+          "pec"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "DPO's address"
+          },
+          "email": {
+            "type": "string",
+            "description": "DPO's email",
+            "format": "email",
+            "example": "email@example.com"
+          },
+          "pec": {
+            "type": "string",
+            "description": "DPO's PEC",
+            "format": "email",
+            "example": "email@example.com"
+          }
+        }
+      },
+      "DpoDataResource": {
+        "title": "DpoDataResource",
+        "required": [
+          "address",
+          "email",
+          "pec"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "DPO's address"
+          },
+          "email": {
+            "type": "string",
+            "description": "DPO's email",
+            "format": "email",
+            "example": "email@example.com"
+          },
+          "pec": {
+            "type": "string",
+            "description": "DPO's PEC",
+            "format": "email",
+            "example": "email@example.com"
           }
         }
       },
@@ -906,58 +979,84 @@
         "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userProductRoles", "zipCode" ],
         "type" : "object",
         "properties" : {
-          "address" : {
-            "type" : "string",
-            "description" : "Institution's physical address"
+          "address": {
+            "type": "string",
+            "description": "Institution's physical address"
           },
-          "description" : {
-            "type" : "string",
-            "description" : "Institution's legal name"
+          "assistanceContacts": {
+            "description": "Institution's assistance contacts",
+            "$ref": "#/components/schemas/AssistanceContactsResource"
           },
-          "digitalAddress" : {
-            "type" : "string",
-            "description" : "Institution's digitalAddress"
+          "companyInformations": {
+            "description": "GPS, SCP, PT optional data",
+            "$ref": "#/components/schemas/CompanyInformationsResource"
           },
-          "externalId" : {
-            "type" : "string",
-            "description" : "Institution's unique external identifier"
+          "description": {
+            "type": "string",
+            "description": "Institution's legal name"
           },
-          "id" : {
-            "type" : "string",
-            "description" : "Institution's unique internal Id",
-            "format" : "uuid"
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
           },
-          "institutionType" : {
-            "type" : "string",
-            "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SCP" ]
+          "dpoData": {
+            "description": "Data Protection Officer (DPO) specific data",
+            "$ref": "#/components/schemas/DpoDataResource"
           },
-          "origin" : {
-            "type" : "string",
-            "description" : "Institution data origin"
+          "externalId": {
+            "type": "string",
+            "description": "Institution's unique external identifier"
           },
-          "originId" : {
-            "type" : "string",
-            "description" : "Institution's details origin Id"
+          "id": {
+            "type": "string",
+            "description": "Institution's unique internal Id",
+            "format": "uuid"
           },
-          "status" : {
-            "type" : "string",
-            "description" : "Institution onboarding status"
+          "institutionType": {
+            "type": "string",
+            "description": "Institution's type",
+            "enum": [
+              "GSP",
+              "PA",
+              "PSP",
+              "PT",
+              "SCP"
+            ]
           },
-          "taxCode" : {
-            "type" : "string",
-            "description" : "Institution's taxCode"
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
           },
-          "userProductRoles" : {
-            "type" : "array",
-            "description" : "Logged user's roles on product",
-            "items" : {
-              "type" : "string"
+          "originId": {
+            "type": "string",
+            "description": "Institution's details origin Id"
+          },
+          "pspData": {
+            "description": "Payment Service Provider (PSP) specific data",
+            "$ref": "#/components/schemas/PspDataResource"
+          },
+          "recipientCode": {
+            "type": "string",
+            "description": "Billing recipient code"
+          },
+          "status": {
+            "type": "string",
+            "description": "Institution onboarding status"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's taxCode"
+          },
+          "userProductRoles": {
+            "type": "array",
+            "description": "Logged user's roles on product",
+            "items": {
+              "type": "string"
             }
           },
-          "zipCode" : {
-            "type" : "string",
-            "description" : "Institution's zipCode"
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },
@@ -1113,30 +1212,64 @@
         "required" : [ "abiCode", "businessRegisterNumber", "dpoData", "legalRegisterName", "legalRegisterNumber", "vatNumberGroup" ],
         "type" : "object",
         "properties" : {
-          "abiCode" : {
-            "type" : "string",
-            "description" : "PSP's ABI code"
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
           },
-          "businessRegisterNumber" : {
-            "type" : "string",
-            "description" : "PSP's Business Register number"
+          "businessRegisterNumber": {
+            "type": "string",
+            "description": "PSP's Business Register number"
           },
-          "dpoData" : {
-            "description" : "Data Protection Officer (DPO) specific data",
-            "$ref" : "#/components/schemas/DpoDataDto"
+          "dpoData": {
+            "description": "Data Protection Officer (DPO) specific data",
+            "$ref": "#/components/schemas/DpoDataDto"
           },
-          "legalRegisterName" : {
-            "type" : "string",
-            "description" : "PSP's legal register name"
+          "legalRegisterName": {
+            "type": "string",
+            "description": "PSP's legal register name"
           },
-          "legalRegisterNumber" : {
-            "type" : "string",
-            "description" : "PSP's legal register number"
+          "legalRegisterNumber": {
+            "type": "string",
+            "description": "PSP's legal register number"
           },
-          "vatNumberGroup" : {
-            "type" : "boolean",
-            "description" : "PSP's Vat Number group",
-            "example" : false
+          "vatNumberGroup": {
+            "type": "boolean",
+            "description": "PSP's Vat Number group",
+            "example": false
+          }
+        }
+      },
+      "PspDataResource": {
+        "title": "PspDataResource",
+        "required": [
+          "abiCode",
+          "businessRegisterNumber",
+          "legalRegisterName",
+          "legalRegisterNumber",
+          "vatNumberGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
+          },
+          "businessRegisterNumber": {
+            "type": "string",
+            "description": "PSP's Business Register number"
+          },
+          "legalRegisterName": {
+            "type": "string",
+            "description": "PSP's legal register name"
+          },
+          "legalRegisterNumber": {
+            "type": "string",
+            "description": "PSP's legal register number"
+          },
+          "vatNumberGroup": {
+            "type": "boolean",
+            "description": "PSP's Vat Number group",
+            "example": false
           }
         }
       },

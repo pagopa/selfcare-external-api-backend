@@ -2,6 +2,8 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
+import it.pagopa.selfcare.external_api.model.institutions.BusinessData;
+import it.pagopa.selfcare.external_api.model.institutions.SupportContact;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.Data;
@@ -26,4 +28,8 @@ public class OnboardingResponseData {
     private String origin;
     private String originId;
     private List<Attribute> attributes;
+    private BusinessData businessData;
+    private SupportContact supportContact;
+    private PaymentServiceProvider paymentServiceProvider;
+    private DataProtectionOfficer dataProtectionOfficer;
 }

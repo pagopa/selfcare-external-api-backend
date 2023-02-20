@@ -17,7 +17,7 @@
         "role": "role1",
         "createdAt": "2022-08-08T09:13:00.837Z"
       },
-      "institutionType": "PA",
+      "institutionType": "PSP",
       "pricingPlan": "string",
       "billing": {
         "vatNumber": "string",
@@ -31,7 +31,28 @@
           "code": "string",
           "description": "string"
         }
-      ]
+      ],
+      "businessData": {
+        "rea": "RM-123456",
+        "shareCapital": "9999",
+        "businessRegisterPlace": "BusinessRegisterPlaceTest"
+      },
+      "supportContact": {
+        "supportEmail": "supportEmailTest@example.com",
+        "supportPhone": "supportPhoneTest"
+      },
+      "paymentServiceProvider": {
+        "abiCode": "abiCodeTest",
+        "businessRegisterNumber": "businessRegisterNumberTest",
+        "legalRegisterName": "legalRegisterNameTest",
+        "legalRegisterNumber": "legalRegisterNumberTest",
+        "vatNumberGroup": true
+      },
+      "dataProtectionOfficer": {
+        "address": "dpoAddressTest",
+        "email": "dpoEmailTest@example.com",
+        "pec": "dpoPecTest@example.com"
+      }
     },
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -192,6 +213,78 @@
           "description": "string"
         }
       ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role6",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "PA",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ]
+    },
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f67afa6",
+      "externalId": "string",
+      "originId": "string",
+      "description": "string",
+      "taxCode": "string",
+      "digitalAddress": "string",
+      "address": "string",
+      "zipCode": "string",
+      "state": "ACTIVE",
+      "role": "SUB_DELEGATE",
+      "productInfo": {
+        "id": "productId",
+        "role": "role6",
+        "createdAt": "2022-08-08T09:13:00.837Z"
+      },
+      "institutionType": "GSP",
+      "pricingPlan": "string",
+      "billing": {
+        "vatNumber": "string",
+        "recipientCode": "string",
+        "publicServices": true
+      },
+      "origin": "IPA",
+      "attributes": [
+        {
+          "origin": "string",
+          "code": "string",
+          "description": "string"
+        }
+      ],
+      "businessData": {
+        "rea": "RM-123456",
+        "shareCapital": "9999",
+        "businessRegisterPlace": "BusinessRegisterPlaceTest"
+      },
+      "supportContact": {
+        "supportEmail": "supportEmailTest@example.com"
+      }
     }
   ]
 }

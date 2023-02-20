@@ -125,6 +125,10 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setOriginId(onboardingData.getOriginId());
         institutionInfo.setInstitutionType(onboardingData.getInstitutionType());
         institutionInfo.setUserRole(onboardingData.getRole());
+        institutionInfo.setBusinessData(onboardingData.getBusinessData());
+        institutionInfo.setSupportContact(onboardingData.getSupportContact());
+        institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
+        institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
         return institutionInfo;
     };
 
