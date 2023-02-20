@@ -48,6 +48,9 @@ public class UserResource {
     @Email
     private String email;
 
+    @ApiModelProperty(value = "${swagger.external_api.user.model.fiscalCode}")
+    private String fiscalCode;
+
     @ApiModelProperty(value = "${swagger.external_api.user.model.productRoles}", required = true)
     @JsonProperty(required = true)
     @NotEmpty
