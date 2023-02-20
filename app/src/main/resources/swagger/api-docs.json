@@ -727,20 +727,20 @@
           },
           "publicServices": {
             "type": "boolean",
-            "description" : "Institution's service type",
-            "example" : false
+            "description": "Institution's service type",
+            "example": false
           },
-          "recipientCode" : {
-            "type" : "string",
-            "description" : "Billing recipient code"
+          "recipientCode": {
+            "type": "string",
+            "description": "Billing recipient code"
           },
-          "registeredOffice" : {
-            "type" : "string",
-            "description" : "Institution's physical address"
+          "registeredOffice": {
+            "type": "string",
+            "description": "Institution's physical address"
           },
-          "taxCode" : {
-            "type" : "string",
-            "description" : "Institution's taxCode"
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's taxCode"
           },
           "vatNumber": {
             "type": "string",

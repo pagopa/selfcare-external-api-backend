@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AssistanceContactsResourceTest {
+class AssistanceContactsResourceTest {
 
     private Validator validator;
 
