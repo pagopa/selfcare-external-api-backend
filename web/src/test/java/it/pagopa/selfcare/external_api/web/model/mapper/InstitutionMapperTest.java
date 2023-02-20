@@ -1,17 +1,15 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.*;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +22,9 @@ class InstitutionMapperTest {
         model.setId(randomUUID().toString());
         model.setBilling(mockInstance(new Billing()));
         model.setProductRoles(List.of("string"));
+        model.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
+        model.getDataProtectionOfficer().setPec("dpoPec@example.com");
+        model.getSupportContact().setSupportEmail("spportEmail@example.com");
         //when
         InstitutionResource resource = InstitutionMapper.toResource(model);
         //then
@@ -38,7 +39,11 @@ class InstitutionMapperTest {
         assertEquals(resource.getTaxCode(), model.getTaxCode());
         assertEquals(resource.getOrigin(), model.getOrigin());
         assertEquals(resource.getUserProductRoles(), model.getProductRoles());
-
+        assertEquals(resource.getRecipientCode(), model.getBilling().getRecipientCode());
+        reflectionEqualsByName(resource.getAssistanceContacts(), model.getSupportContact());
+        reflectionEqualsByName(resource.getCompanyInformations(), model.getBusinessData());
+        reflectionEqualsByName(resource.getPspData(), model.getPaymentServiceProvider());
+        reflectionEqualsByName(resource.getDpoData(), model.getDataProtectionOfficer());
     }
 
     @Test
@@ -74,4 +79,45 @@ class InstitutionMapperTest {
         //then
         assertNull(resource);
     }
+
+    @Test
+    void toResource_nullAssistanceContacts() {
+        // given
+        SupportContact model = null;
+        // when
+        AssistanceContactsResource resource = InstitutionMapper.toResource(model);
+        // then
+        assertNull(resource);
+    }
+
+    @Test
+    void toResource_nullCompanyInformations() {
+        // given
+        BusinessData model = null;
+        // when
+        CompanyInformationsResource resource = InstitutionMapper.toResource(model);
+        // then
+        assertNull(resource);
+    }
+
+    @Test
+    void toResource_nullPspData() {
+        // given
+        PaymentServiceProvider model = null;
+        // when
+        PspDataResource resource = InstitutionMapper.toResource(model);
+        // then
+        assertNull(resource);
+    }
+
+    @Test
+    void toResource_nullDpoData() {
+        // given
+        DataProtectionOfficer model = null;
+        // when
+        DpoDataResource resource = InstitutionMapper.toResource(model);
+        // then
+        assertNull(resource);
+    }
+
 }

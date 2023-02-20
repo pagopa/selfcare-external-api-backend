@@ -9,7 +9,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,8 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class InstitutionResourceTest {
+class DpoDataResourceTest {
+
     private Validator validator;
 
     @BeforeEach
@@ -31,22 +31,14 @@ class InstitutionResourceTest {
     void validateNullFields() {
         // given
         HashMap<String, Class<? extends Annotation>> toCheckMap = new HashMap<>();
-        toCheckMap.put("id", NotBlank.class);
-        toCheckMap.put("description", NotBlank.class);
-        toCheckMap.put("externalId", NotBlank.class);
-        toCheckMap.put("digitalAddress", NotBlank.class);
         toCheckMap.put("address", NotBlank.class);
-        toCheckMap.put("zipCode", NotBlank.class);
-        toCheckMap.put("taxCode", NotBlank.class);
-        toCheckMap.put("origin", NotBlank.class);
-        toCheckMap.put("originId", NotBlank.class);
-        toCheckMap.put("status", NotBlank.class);
-        toCheckMap.put("userProductRoles", NotNull.class);
+        toCheckMap.put("pec", NotBlank.class);
+        toCheckMap.put("email", NotBlank.class);
 
-        InstitutionResource institutionResource = new InstitutionResource();
+        DpoDataResource dpoDataResource = new DpoDataResource();
 
         // when
-        Set<ConstraintViolation<Object>> violations = validator.validate(institutionResource);
+        Set<ConstraintViolation<Object>> violations = validator.validate(dpoDataResource);
         // then
         List<ConstraintViolation<Object>> filteredViolations = violations.stream()
                 .filter(violation -> {
@@ -60,14 +52,13 @@ class InstitutionResourceTest {
     @Test
     void validateNotNullFields() {
         // given
-        InstitutionResource institutionResource = TestUtils.mockInstance(new InstitutionResource());
-        institutionResource.setUserProductRoles(Set.of("string"));
-        institutionResource.getAssistanceContacts().setSupportEmail("supportEmail@xample.com");
-        institutionResource.getDpoData().setEmail("dpoEmail@example.com");
-        institutionResource.getDpoData().setPec("dpoPec@example.com");
+        DpoDataResource dpoDataResource = TestUtils.mockInstance(new DpoDataResource());
+        dpoDataResource.setPec("dpoPec@example.com");
+        dpoDataResource.setEmail("dpoEmail@example.com");
         // when
-        Set<ConstraintViolation<Object>> violations = validator.validate(institutionResource);
+        Set<ConstraintViolation<Object>> violations = validator.validate(dpoDataResource);
         // then
         assertTrue(violations.isEmpty());
     }
+
 }
