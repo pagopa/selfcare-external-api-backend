@@ -44,11 +44,27 @@
               "description": "string"
             }
           ],
-          "rea": "RM-123456",
-          "shareCapital": "9999",
-          "businessRegisterPlace": "Business Register Place Test",
-          "supportEmail": "supportEmail@example.com",
-          "supportPhone": "supportPhone@example.com"
+          "businessData": {
+            "rea": "RM-123456",
+            "shareCapital": "9999",
+            "businessRegisterPlace": "BusinessRegisterPlaceTest"
+          },
+          "supportContact": {
+            "supportEmail": "supportEmailTest",
+            "supportPhone": "supportPhoneTest"
+          },
+          "paymentServiceProvider": {
+            "abiCode": "abiCodeTest",
+            "businessRegisterNumber": "businessRegisterNumberTest",
+            "legalRegisterName": "legalRegisterNameTest",
+            "legalRegisterNumber": "legalRegisterNumberTest",
+            "vatNumberGroup": true
+          },
+          "dataProtectionOfficer": {
+            "address": "dpoAddressTest",
+            "email": "dpoEmailTest@example.com",
+            "pec": "dpoPecTest@example.com"
+          }
         }
       ]
     },

@@ -1,6 +1,11 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
-import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.institutions.BusinessData;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SupportContact;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -31,8 +36,8 @@ public class InstitutionMapper {
                 resource.setUserProductRoles(model.getProductRoles());
             if (model.getBilling() != null)
                 resource.setRecipientCode(model.getBilling().getRecipientCode());
-            resource.setCompanyInformations(toResource(model.getCompanyInformations()));
-            resource.setAssistanceContacts(toResource(model.getAssistanceContacts()));
+            resource.setCompanyInformations(toResource(model.getBusinessData()));
+            resource.setAssistanceContacts(toResource(model.getSupportContact()));
             resource.setPspData(toResource(model.getPaymentServiceProvider()));
             resource.setDpoData(toResource(model.getDataProtectionOfficer()));
         }
@@ -69,7 +74,7 @@ public class InstitutionMapper {
     }
 
 
-    public static AssistanceContactsResource toResource(AssistanceContacts model) {
+    public static AssistanceContactsResource toResource(SupportContact model) {
         AssistanceContactsResource resource = null;
         if (model != null) {
             resource = new AssistanceContactsResource();
@@ -79,7 +84,7 @@ public class InstitutionMapper {
         return resource;
     }
 
-    public static CompanyInformationsResource toResource(CompanyInformations model) {
+    public static CompanyInformationsResource toResource(BusinessData model) {
         CompanyInformationsResource resource = null;
         if (model != null) {
             resource = new CompanyInformationsResource();

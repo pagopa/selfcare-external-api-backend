@@ -14,7 +14,10 @@ import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.Onboardin
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
@@ -104,29 +107,6 @@ public class PartyConnectorImpl implements PartyConnector {
         return userInfo1;
     };
 
-    // TODO evaluete wheter to use this function or to make the necessary evaluation in the function below
-    private static final Function<OnboardingResponseData, CompanyInformations> COMPANY_INFORMATIONS_MAPPER = onboardingData -> {
-        CompanyInformations companyInformations = null;
-        if (onboardingData.getRea() != null || onboardingData.getShareCapital() != null || onboardingData.getBusinessRegisterPlace() != null) {
-            companyInformations = new CompanyInformations();
-            companyInformations.setRea(onboardingData.getRea());
-            companyInformations.setShareCapital(onboardingData.getShareCapital());
-            companyInformations.setBusinessRegisterPlace(onboardingData.getBusinessRegisterPlace());
-        }
-        return companyInformations;
-    };
-
-    // TODO evaluete wheter to use this function or to make the necessary evaluation in the function below
-    private static final Function<OnboardingResponseData, AssistanceContacts> ASSISTANCE_CONTACTS_MAPPER = onboardingData -> {
-        AssistanceContacts assistanceContacts = null;
-        if (onboardingData.getSupportEmail() != null || onboardingData.getSupportPhone() != null) {
-            assistanceContacts = new AssistanceContacts();
-            assistanceContacts.setSupportEmail(onboardingData.getSupportEmail());
-            assistanceContacts.setSupportPhone(onboardingData.getSupportPhone());
-        }
-        return assistanceContacts;
-    };
-
     private static final Function<OnboardingResponseData, InstitutionInfo> ONBOARDING_DATA_TO_INSTITUTION_INFO_FUNCTION = onboardingData -> {
         InstitutionInfo institutionInfo = new InstitutionInfo();
         institutionInfo.setId(onboardingData.getId());
@@ -145,8 +125,10 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setOriginId(onboardingData.getOriginId());
         institutionInfo.setInstitutionType(onboardingData.getInstitutionType());
         institutionInfo.setUserRole(onboardingData.getRole());
-        institutionInfo.setCompanyInformations(COMPANY_INFORMATIONS_MAPPER.apply(onboardingData));
-        institutionInfo.setAssistanceContacts(ASSISTANCE_CONTACTS_MAPPER.apply(onboardingData));
+        institutionInfo.setBusinessData(onboardingData.getBusinessData());
+        institutionInfo.setSupportContact(onboardingData.getSupportContact());
+        institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
+        institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
         return institutionInfo;
     };
 

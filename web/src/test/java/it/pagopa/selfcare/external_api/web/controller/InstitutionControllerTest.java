@@ -60,7 +60,7 @@ class InstitutionControllerTest {
         institutionInfo.setId(randomUUID().toString());
         institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
         institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
-        institutionInfo.getAssistanceContacts().setSupportEmail("spportEmail@example.com");
+        institutionInfo.getSupportContact().setSupportEmail("spportEmail@example.com");
         when(institutionServiceMock.getInstitutions(anyString()))
                 .thenReturn(Collections.singletonList(institutionInfo));
         //when
@@ -82,8 +82,8 @@ class InstitutionControllerTest {
         assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
         assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
         assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
-        reflectionEqualsByName(institutionInfo.getAssistanceContacts(), response.get(0).getAssistanceContacts());
-        reflectionEqualsByName(institutionInfo.getCompanyInformations(), response.get(0).getCompanyInformations());
+        reflectionEqualsByName(institutionInfo.getSupportContact(), response.get(0).getAssistanceContacts());
+        reflectionEqualsByName(institutionInfo.getBusinessData(), response.get(0).getCompanyInformations());
         reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
         reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
         verify(institutionServiceMock, times(1))

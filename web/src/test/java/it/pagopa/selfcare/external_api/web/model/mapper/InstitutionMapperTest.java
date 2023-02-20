@@ -2,6 +2,8 @@ package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,7 @@ class InstitutionMapperTest {
         model.setProductRoles(List.of("string"));
         model.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
         model.getDataProtectionOfficer().setPec("dpoPec@example.com");
-        model.getAssistanceContacts().setSupportEmail("spportEmail@example.com");
+        model.getSupportContact().setSupportEmail("spportEmail@example.com");
         //when
         InstitutionResource resource = InstitutionMapper.toResource(model);
         //then
@@ -38,8 +40,8 @@ class InstitutionMapperTest {
         assertEquals(resource.getOrigin(), model.getOrigin());
         assertEquals(resource.getUserProductRoles(), model.getProductRoles());
         assertEquals(resource.getRecipientCode(), model.getBilling().getRecipientCode());
-        reflectionEqualsByName(resource.getAssistanceContacts(), model.getAssistanceContacts());
-        reflectionEqualsByName(resource.getCompanyInformations(), model.getCompanyInformations());
+        reflectionEqualsByName(resource.getAssistanceContacts(), model.getSupportContact());
+        reflectionEqualsByName(resource.getCompanyInformations(), model.getBusinessData());
         reflectionEqualsByName(resource.getPspData(), model.getPaymentServiceProvider());
         reflectionEqualsByName(resource.getDpoData(), model.getDataProtectionOfficer());
     }
@@ -81,7 +83,7 @@ class InstitutionMapperTest {
     @Test
     void toResource_nullAssistanceContacts() {
         // given
-        AssistanceContacts model = null;
+        SupportContact model = null;
         // when
         AssistanceContactsResource resource = InstitutionMapper.toResource(model);
         // then
@@ -91,7 +93,7 @@ class InstitutionMapperTest {
     @Test
     void toResource_nullCompanyInformations() {
         // given
-        CompanyInformations model = null;
+        BusinessData model = null;
         // when
         CompanyInformationsResource resource = InstitutionMapper.toResource(model);
         // then

@@ -2,7 +2,9 @@ package it.pagopa.selfcare.external_api.model.institutions;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,8 +30,8 @@ public class InstitutionInfo {
     private InstitutionType institutionType;
     private PartyRole userRole;
     private Collection<String> productRoles;
-    private CompanyInformations companyInformations;
-    private AssistanceContacts assistanceContacts;
+    private BusinessData businessData;
+    private SupportContact supportContact;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
 
