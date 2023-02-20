@@ -389,12 +389,12 @@
             "type" : "string"
           }
         }, {
-          "name" : "x-selfcare-uid",
-          "in" : "header",
-          "description" : "x-selfcare-uid",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
+          "name": "x-selfcare-uid",
+          "in": "header",
+          "description": "x-selfcare-uid",
+          "required": false,
+          "schema": {
+            "type": "string"
           }
         } ],
         "responses" : {
@@ -717,16 +717,16 @@
         ],
         "type": "object",
         "properties": {
-          "businessName" : {
-            "type" : "string",
-            "description" : "Institution's legal name"
+          "businessName": {
+            "type": "string",
+            "description": "Institution's legal name"
           },
-          "digitalAddress" : {
-            "type" : "string",
-            "description" : "Institution's digitalAddress"
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
           },
-          "publicServices" : {
-            "type" : "boolean",
+          "publicServices": {
+            "type": "boolean",
             "description" : "Institution's service type",
             "example" : false
           },
@@ -742,13 +742,13 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "vatNumber" : {
-            "type" : "string",
-            "description" : "Institution's VAT number"
+          "vatNumber": {
+            "type": "string",
+            "description": "Institution's VAT number"
           },
-          "zipCode" : {
-            "type" : "string",
-            "description" : "Institution's zipCode"
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },
@@ -837,8 +837,8 @@
           "pec": {
             "type": "string",
             "description": "DPO's PEC",
-            "format" : "email",
-            "example" : "email@example.com"
+            "format": "email",
+            "example": "email@example.com"
           }
         }
       },
@@ -1013,8 +1013,8 @@
             "format": "uuid"
           },
           "institutionType": {
-            "type" : "string",
-            "description" : "Institution's type",
+            "type": "string",
+            "description": "Institution's type",
             "enum": [
               "GSP",
               "PA",
@@ -1049,14 +1049,14 @@
           },
           "userProductRoles": {
             "type": "array",
-            "description" : "Logged user's roles on product",
-            "items" : {
-              "type" : "string"
+            "description": "Logged user's roles on product",
+            "items": {
+              "type": "string"
             }
           },
-          "zipCode" : {
-            "type" : "string",
-            "description" : "Institution's zipCode"
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },
@@ -1212,12 +1212,12 @@
         "required" : [ "abiCode", "businessRegisterNumber", "dpoData", "legalRegisterName", "legalRegisterNumber", "vatNumberGroup" ],
         "type" : "object",
         "properties" : {
-          "abiCode" : {
-            "type" : "string",
-            "description" : "PSP's ABI code"
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
           },
-          "businessRegisterNumber" : {
-            "type" : "string",
+          "businessRegisterNumber": {
+            "type": "string",
             "description": "PSP's Business Register number"
           },
           "dpoData": {
