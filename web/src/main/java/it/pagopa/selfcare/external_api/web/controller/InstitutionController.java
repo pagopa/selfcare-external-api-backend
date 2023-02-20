@@ -90,7 +90,7 @@ public class InstitutionController {
                                                           @ApiParam("${swagger.external_api.model.productRoles}")
                                                           @RequestParam(value = "productRoles", required = false)
                                                           Optional<Set<String>> productRoles,
-                                                          @RequestHeader(value = "x-selfcare-uid") Optional<String> xSelfCareUid) {
+                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
         log.trace("getInstitutionProductUsers start");
         log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
         Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRoles, xSelfCareUid.orElse(null));
