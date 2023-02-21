@@ -23,6 +23,8 @@ public class UserMapper {
             if (model.getUser() != null) {
                 resource.setName(CertifiedFieldMapper.toValue(model.getUser().getName()));
                 resource.setSurname(CertifiedFieldMapper.toValue(model.getUser().getFamilyName()));
+                resource.setRole(model.getPartyRole());
+                resource.setFiscalCode(model.getUser().getFiscalCode());
                 resource.setRoles(model.getProducts().entrySet().stream()
                         .filter(entry -> entry.getKey().equals(productId))
                         .map(Map.Entry::getValue)

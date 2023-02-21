@@ -14,6 +14,7 @@ package it.pagopa.selfcare.external_api.web.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -47,9 +48,17 @@ public class UserResource {
     @Email
     private String email;
 
+    @ApiModelProperty(value = "${swagger.external_api.user.model.fiscalCode}")
+    private String fiscalCode;
+
     @ApiModelProperty(value = "${swagger.external_api.user.model.productRoles}", required = true)
     @JsonProperty(required = true)
     @NotEmpty
     private List<String> roles;
+
+    @ApiModelProperty(value = "${swagger.external_api.user.model.role}", required = true)
+    @JsonProperty(required = true)
+    @NotNull
+    private PartyRole role;
 
 }

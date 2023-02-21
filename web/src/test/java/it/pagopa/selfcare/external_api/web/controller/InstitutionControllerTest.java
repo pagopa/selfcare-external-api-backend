@@ -30,8 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.*;
 import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,6 +58,9 @@ class InstitutionControllerTest {
         String productId = "productId";
         InstitutionInfo institutionInfo = mockInstance(new InstitutionInfo(), "setId");
         institutionInfo.setId(randomUUID().toString());
+        institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
+        institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
+        institutionInfo.getSupportContact().setSupportEmail("spportEmail@example.com");
         when(institutionServiceMock.getInstitutions(anyString()))
                 .thenReturn(Collections.singletonList(institutionInfo));
         //when
@@ -79,6 +81,11 @@ class InstitutionControllerTest {
         assertEquals(institutionInfo.getId(), response.get(0).getId().toString());
         assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
         assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
+        assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
+        reflectionEqualsByName(institutionInfo.getSupportContact(), response.get(0).getAssistanceContacts());
+        reflectionEqualsByName(institutionInfo.getBusinessData(), response.get(0).getCompanyInformations());
+        reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
+        reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
         verify(institutionServiceMock, times(1))
                 .getInstitutions(productId);
         verifyNoMoreInteractions(institutionServiceMock);
@@ -121,7 +128,7 @@ class InstitutionControllerTest {
         // given
         String institutionId = "institutionId";
         String productId = "productId";
-        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any()))
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -138,7 +145,7 @@ class InstitutionControllerTest {
         assertNotNull(products);
         assertTrue(products.isEmpty());
         verify(institutionServiceMock, times(1))
-                .getInstitutionProductUsers(institutionId, productId, Optional.empty(), Optional.empty());
+                .getInstitutionProductUsers(institutionId, productId, Optional.empty(), Optional.empty(), null);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
@@ -155,7 +162,7 @@ class InstitutionControllerTest {
         final UserInfo userInfoModel = mockInstance(new UserInfo(), "setId", "setProducts");
         userInfoModel.setId(randomUUID().toString());
         userInfoModel.setProducts(Map.of(productId, productInfo));
-        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any()))
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
                 .thenReturn(singletonList(userInfoModel));
         // when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -174,7 +181,44 @@ class InstitutionControllerTest {
         assertNotNull(products);
         assertFalse(products.isEmpty());
         verify(institutionServiceMock, times(1))
-                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)));
+                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)), null);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    void getInstitutionProductUsers_withHeader() throws Exception {
+        // given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        String userId = "userId";
+        String role = "admin";
+        String xSelfCareUid = "onboarding-interceptor";
+        final ProductInfo productInfo = mockInstance(new ProductInfo(), "setRoleInfos");
+        productInfo.setRoleInfos(List.of(mockInstance(new RoleInfo())));
+        final UserInfo userInfoModel = mockInstance(new UserInfo(), "setId", "setProducts");
+        userInfoModel.setId(randomUUID().toString());
+        userInfoModel.setProducts(Map.of(productId, productInfo));
+        when(institutionServiceMock.getInstitutionProductUsers(any(), any(), any(), any(), any()))
+                .thenReturn(singletonList(userInfoModel));
+        // when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
+                        .queryParam("userId", userId)
+                        .queryParam("productRoles", role)
+                        .header("x-selfcare-uid", xSelfCareUid)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // then
+        List<UserResource> products = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(products);
+        assertFalse(products.isEmpty());
+        verify(institutionServiceMock, times(1))
+                .getInstitutionProductUsers(institutionId, productId, Optional.of(userId), Optional.of(Set.of(role)), xSelfCareUid);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 

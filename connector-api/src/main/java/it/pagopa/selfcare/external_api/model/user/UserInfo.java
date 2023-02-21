@@ -12,6 +12,7 @@
 
 package it.pagopa.selfcare.external_api.model.user;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareAuthority;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,6 +29,7 @@ public class UserInfo {
     private String id;
     private User user;
     private SelfCareAuthority role;
+    private PartyRole partyRole;
     private Map<String, ProductInfo> products;
     private String status;
     private String institutionId;
