@@ -65,7 +65,7 @@ variables:
     containerRegistry: '$(DEV_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(DEV_AGENT_POOL)
     mavenGoals: 'package'
-    settingsXmlsecureFileName: '$(SETTINGS_XML_RO_SECURE_FILE_NAME)'
+    settingsXmlsecureFileName: '$(SETTINGS_XML_RW_SECURE_FILE_NAME)'
 
 stages:
   - stage: Release
