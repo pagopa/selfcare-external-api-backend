@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.EnumSet;
@@ -39,8 +40,8 @@ public interface PartyProcessRestClient {
 
     @RequestMapping(method = HEAD, value = "${rest-client.party-process.verifyOnboarding.path}")
     @ResponseBody
-    void verifyOnboarding(@PathVariable("externalId") String externalInstitutionId,
-                          @PathVariable("productId") String productId);
+    ResponseEntity<Void> verifyOnboarding(@PathVariable("externalId") String externalInstitutionId,
+                                          @PathVariable("productId") String productId);
 
     @GetMapping(value = "${rest-client.party-process.getInstitutionByExternalId.path}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody

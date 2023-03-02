@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface PartyConnector {
 
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
 
-    void verifyOnboarding(String externalInstitutionId, String productId);
+    ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId);
 
     Institution getInstitutionByExternalId(String externalInstitutionId);
 

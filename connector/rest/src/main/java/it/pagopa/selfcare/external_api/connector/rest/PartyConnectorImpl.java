@@ -28,6 +28,7 @@ import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -233,13 +234,15 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public void verifyOnboarding(String externalInstitutionId, String productId) {
+    public ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId) {
         log.trace("verifyOnboarding start");
         log.debug("verifyOnboarding externalInstitutionId = {}, productId = {}", externalInstitutionId, productId);
         Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
         Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
-        partyProcessRestClient.verifyOnboarding(externalInstitutionId, productId);
+        ResponseEntity<Void> responseEntity = partyProcessRestClient.verifyOnboarding(externalInstitutionId, productId);
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX RESPONSE ENTITY: " + responseEntity);
         log.trace("verifyOnboarding end");
+        return responseEntity;
     }
 
     @Override
