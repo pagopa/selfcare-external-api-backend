@@ -240,7 +240,6 @@ public class PartyConnectorImpl implements PartyConnector {
         Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
         Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
         ResponseEntity<Void> responseEntity = partyProcessRestClient.verifyOnboarding(externalInstitutionId, productId);
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX RESPONSE ENTITY: " + responseEntity);
         log.trace("verifyOnboarding end");
         return responseEntity;
     }
