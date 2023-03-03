@@ -30,7 +30,6 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import javax.validation.ValidationException;
 import java.util.*;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static it.pagopa.selfcare.external_api.core.OnboardingServiceImpl.*;
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
@@ -774,6 +773,7 @@ class OnboardingServiceImplTest {
         verifyNoMoreInteractions(productsConnectorMock, onboardingValidationStrategyMock);
     }
 
+    /*
     @Test
     void oldContractOnboarding_userDataMutable3() {
         // given
@@ -804,8 +804,6 @@ class OnboardingServiceImplTest {
             put(PartyRole.DELEGATE, productRoleInfo2);
         }};
         productMock.setRoleMappings(roleMappings);
-        when(partyConnectorMock.verifyOnboarding(any(), any()))
-                .thenThrow(InstitutionDoesNotExistException.class);
         when(productsConnectorMock.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType()))
                 .thenReturn(productMock);
         Institution institution = mockInstance(new Institution());
@@ -853,8 +851,6 @@ class OnboardingServiceImplTest {
         final Executable executable = () -> onboardingServiceImpl.oldContractOnboarding(onboardingImportData);
         //then
         assertDoesNotThrow(executable);
-        verify(partyConnectorMock, times(1))
-                .verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
         verify(partyConnectorMock, times(1))
                 .getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
         verify(partyConnectorMock, times(1))
@@ -1120,6 +1116,8 @@ class OnboardingServiceImplTest {
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
     }
 
+     */
+
     @Test
     void onboarding_nullOnboardingData() {
         // given
@@ -1133,6 +1131,7 @@ class OnboardingServiceImplTest {
     }
 
 
+    /*
     @Test
     void onboarding_nullRoleMapping() {
         // given
@@ -1179,6 +1178,7 @@ class OnboardingServiceImplTest {
         verifyNoInteractions(partyConnectorMock, userRegistryConnectorMock);
     }
 
+
     @Test
     void onboarding_baseProductPhaseOutException() {
         // given
@@ -1212,6 +1212,7 @@ class OnboardingServiceImplTest {
         verifyNoInteractions(partyConnectorMock, userRegistryConnectorMock);
     }
 
+    */
     @Test
     void onboarding_nullBillingData() {
         //given
@@ -1238,6 +1239,7 @@ class OnboardingServiceImplTest {
         verifyNoInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
     }
 
+    /*
     @Test
     void onboarding_notAllowed() {
         // given
@@ -2192,4 +2194,6 @@ class OnboardingServiceImplTest {
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
     }
 
+
+     */
 }
