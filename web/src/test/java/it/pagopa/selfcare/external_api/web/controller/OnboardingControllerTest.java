@@ -111,5 +111,16 @@ class OnboardingControllerTest {
         verifyNoInteractions(onboardingServiceMock);
     }
 
+    @Test
+    void verifyOnboarding() throws Exception {
+        final String externalInstitutionId = "externalInstitutionId";
+        final String productId = "productId";
+        //when
+        mvc.perform(MockMvcRequestBuilders
+                        .head(BASE_URL + "/{externalInstitutionId}/products/{productId}", externalInstitutionId, productId)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isNoContent());
+    }
 
 }
