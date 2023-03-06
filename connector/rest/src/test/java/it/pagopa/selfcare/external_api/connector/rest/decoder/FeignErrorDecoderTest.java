@@ -6,6 +6,8 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,12 +55,17 @@ class FeignErrorDecoderTest {
         assertThrows(InstitutionDoesNotExistException.class, executable);
     }
 
-    @Test
-    void testDecodeToInstitutionDoesNotExistException_HttpMethodNotHead() throws Throwable {
+    @ParameterizedTest
+    @CsvSource(value = {
+            "BadRequest,400",
+            "Unauthorized,401",
+            "OK,200"
+    })
+    void testDecodeToInstitutionDoesNotExistException_HttpMethodNotHead(String reason, Integer code) {
         //given
         Response response = Response.builder()
-                .status(400)
-                .reason("BadRequest")
+                .status(code)
+                .reason(reason)
                 .request(Request.create(Request.HttpMethod.GET, "/api", Collections.emptyMap(), null, UTF_8))
                 .headers(headers)
                 .body("hello world", UTF_8)
@@ -85,35 +92,4 @@ class FeignErrorDecoderTest {
         assertDoesNotThrow(executable);
     }
 
-    @Test
-    void testDecodeToInstitutionDoesNotExistException_HttpStatusNot400AndHttMethodNotHead() throws Throwable {
-        //given
-        Response response = Response.builder()
-                .status(401)
-                .reason("Unauthorized")
-                .request(Request.create(Request.HttpMethod.GET, "/api", Collections.emptyMap(), null, UTF_8))
-                .headers(headers)
-                .body("hello world", UTF_8)
-                .build();
-        //when
-        Executable executable = () -> feignDecoder.decode("", response);
-        //then
-        assertDoesNotThrow(executable);
-    }
-
-    @Test
-    void testDecodeDefault() {
-        //given
-        Response response = Response.builder()
-                .status(200)
-                .reason("OK")
-                .request(Request.create(Request.HttpMethod.GET, "/api", Collections.emptyMap(), null, UTF_8))
-                .headers(headers)
-                .body("hello world", UTF_8)
-                .build();
-        //when
-        Executable executable = () -> feignDecoder.decode("", response);
-        //then
-        assertDoesNotThrow(executable);
-    }
 }

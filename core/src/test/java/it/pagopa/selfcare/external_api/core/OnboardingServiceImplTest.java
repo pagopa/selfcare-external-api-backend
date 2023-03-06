@@ -92,6 +92,23 @@ class OnboardingServiceImplTest {
     }
 
     @Test
+    void olContractOnboarding_noExceptionsRaised() {
+        // given
+        OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData());
+        ResponseEntity<Void> responseEntityMock = new ResponseEntity<>(HttpStatus.OK);
+        when(partyConnectorMock.verifyOnboarding(any(), any()))
+                .thenReturn(responseEntityMock);
+        // when
+        Executable executable = () -> onboardingServiceImpl.oldContractOnboarding(onboardingImportData);
+        // then
+        assertDoesNotThrow(executable);
+        verify(partyConnectorMock, times(1))
+                .verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
+        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock);
+    }
+
+    @Test
     void oldContractOnboarding_nullOnboardingData() {
         // given
         OnboardingImportData onboardingImportData = null;
@@ -1176,6 +1193,23 @@ class OnboardingServiceImplTest {
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId()),
                 e.getMessage());
+        verify(partyConnectorMock, times(1))
+                .verifyOnboarding(onboardingData.getInstitutionExternalId(), onboardingData.getProductId());
+        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock);
+    }
+
+    @Test
+    void autoApprovalOnboarding_noExceptionsRaised() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        ResponseEntity<Void> responseEntityMock = new ResponseEntity<>(HttpStatus.OK);
+        when(partyConnectorMock.verifyOnboarding(any(), any()))
+                .thenReturn(responseEntityMock);
+        // when
+        Executable executable = () -> onboardingServiceImpl.autoApprovalOnboarding(onboardingData);
+        // then
+        assertDoesNotThrow(executable);
         verify(partyConnectorMock, times(1))
                 .verifyOnboarding(onboardingData.getInstitutionExternalId(), onboardingData.getProductId());
         verifyNoMoreInteractions(partyConnectorMock);
@@ -2328,6 +2362,25 @@ class OnboardingServiceImplTest {
         verify(partyConnectorMock, times(1))
                 .getInstitutionByExternalId(onboardingData.getInstitutionExternalId());
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
+    @Test
+    void verifyOnboarding() {
+        // given
+        ResponseEntity<Void> responseEntityMock = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        String externalInstitutionIdMock = "externalInstitutionId";
+        String productIdMock = "productId";
+        when(partyConnectorMock.verifyOnboarding(any(), any()))
+                .thenReturn(responseEntityMock);
+        // when
+        ResponseEntity<Void> response = onboardingServiceImpl.verifyOnboarding(externalInstitutionIdMock, productIdMock);
+        // then
+        assertNotNull(response);
+        assertEquals(response, responseEntityMock);
+        verify(partyConnectorMock, times(1))
+                .verifyOnboarding(externalInstitutionIdMock, productIdMock);
+        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, onboardingValidationStrategyMock);
     }
 
 }
