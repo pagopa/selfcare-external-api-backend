@@ -4,7 +4,7 @@
     "urlPath": "/pdnd-interop-uservice-party-process/0.0.1/onboarding/institution/externalId/products/productId"
   },
   "response": {
-    "status": "200",
+    "status": "204",
     "headers": {
       "Content-Type": "application/json"
     }

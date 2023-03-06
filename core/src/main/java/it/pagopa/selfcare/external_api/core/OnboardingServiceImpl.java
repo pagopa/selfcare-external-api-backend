@@ -69,17 +69,17 @@ class OnboardingServiceImpl implements OnboardingService {
         try {
             ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
             if (responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                log.debug((String.format("autoApprovalOnboarding: the institution with external id %s is already onboarded on the product %s ",
+                log.debug((String.format("oldContractOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s ",
+                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId()));
             }
         } catch (ResourceNotFoundException | InstitutionDoesNotExistException exception) {
-            log.debug("autoApprovalOnboarding: starting onboarding process for institution %s on product %s",
+            log.debug(String.format("oldContractOnboarding: starting onboarding process for institution %s on product %s",
                     onboardingImportData.getInstitutionExternalId(),
-                    onboardingImportData.getProductId());
+                    onboardingImportData.getProductId()));
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
             Assert.notNull(product, "Product is required");
@@ -175,17 +175,17 @@ class OnboardingServiceImpl implements OnboardingService {
         try {
             ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingData.getInstitutionExternalId(), onboardingData.getProductId());
             if (responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                log.debug((String.format("autoApprovalOnboarding: the institution with external id %s is already onboarded on the product %s ",
+                log.debug((String.format("autoApprovalOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s ",
+                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId()));
             }
         } catch (ResourceNotFoundException | InstitutionDoesNotExistException exception) {
-            log.debug("autoApprovalOnboarding: starting onboarding process for institution %s on product %s",
+            log.debug(String.format("autoApprovalOnboarding: starting onboarding process for institution %s on product %s",
                     onboardingData.getInstitutionExternalId(),
-                    onboardingData.getProductId());
+                    onboardingData.getProductId()));
 
             Product product = productsConnector.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
             Assert.notNull(product, "Product is required");

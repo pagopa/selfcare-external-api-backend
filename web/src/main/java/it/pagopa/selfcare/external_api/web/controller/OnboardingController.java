@@ -83,11 +83,11 @@ public class OnboardingController {
             })
     @RequestMapping(method = HEAD, value = "/{externalInstitutionId}/products/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.verifyOnboarding}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.verifyOnboarding}")
     public void verifyOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
                                  @PathVariable("externalInstitutionId")
                                  String externalInstitutionId,
-                                 @ApiParam("${swagger.external_api.product.model.id}")
+                                 @ApiParam("${swagger.external_api.products.model.id}")
                                  @PathVariable("productId")
                                  String productId) {
         log.trace("verifyOnboarding start");
