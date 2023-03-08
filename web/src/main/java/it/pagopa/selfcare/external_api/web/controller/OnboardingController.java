@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
@@ -38,7 +39,20 @@ public class OnboardingController {
         this.onboardingService = onboardingService;
     }
 
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    }),
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    })
+    })
     @PostMapping(value = "/{externalInstitutionId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.onboardingOldContract}")
@@ -54,6 +68,20 @@ public class OnboardingController {
         log.trace("oldContractonboarding end");
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    }),
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    })
+    })
     @PostMapping(value = "/{externalInstitutionId}/products/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.autoApprovalOnboarding}")
