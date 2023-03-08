@@ -37,7 +37,7 @@ variables:
   imageRepository: '$(K8S_IMAGE_REPOSITORY_NAME)'
   deployNamespace: '$(DEPLOY_NAMESPACE)'
   deploymentName: '$(DEPLOYMENT_NAME)'
-  settingsXmlROsecureFileName: '$(SETTINGS_XML_RO_SECURE_FILE_NAME)'
+  settingsXmlROsecureFileName: '$(SETTINGS_XML_RW_SECURE_FILE_NAME)'
 
 
   ${{ if or(startsWith(variables['Build.SourceBranch'], 'refs/heads/release-uat'), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix')) }}:

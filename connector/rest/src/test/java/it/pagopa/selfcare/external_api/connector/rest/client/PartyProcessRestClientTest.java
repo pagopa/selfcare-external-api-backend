@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardi
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
+import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -202,6 +203,16 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         assertThrows(ResourceNotFoundException.class, executable);
     }
 
+    @Test
+    void verifyOnboarding_notExists() {
+        //given
+        String externalId = "externalIdNotExists";
+        final String productId = "productId";
+        //when
+        Executable executable = () -> restClient.verifyOnboarding(externalId, productId);
+        //then
+        assertThrows(InstitutionDoesNotExistException.class, executable);
+    }
 
     @Test
     void getInstitutionByExternalId_fullyValued() {

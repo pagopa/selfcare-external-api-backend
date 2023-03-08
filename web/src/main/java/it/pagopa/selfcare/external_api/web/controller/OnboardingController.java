@@ -4,6 +4,11 @@ package it.pagopa.selfcare.external_api.web.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
@@ -18,6 +23,8 @@ import javax.validation.Valid;
 import javax.validation.ValidationException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 
 @Slf4j
 @RestController
@@ -32,10 +39,23 @@ public class OnboardingController {
         this.onboardingService = onboardingService;
     }
 
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    }),
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    })
+    })
     @PostMapping(value = "/{externalInstitutionId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.onboardingOldContract}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.onboardingOldContract}")
     public void oldContractOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
                                       @PathVariable("externalInstitutionId")
                                       String externalInstitutionId,
@@ -48,9 +68,23 @@ public class OnboardingController {
         log.trace("oldContractonboarding end");
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "409",
+                    description = "Conflict",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    }),
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                    schema = @Schema(implementation = Problem.class))
+                    })
+    })
     @PostMapping(value = "/{externalInstitutionId}/products/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.autoApprovalOnboarding}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.autoApprovalOnboarding}")
     public void autoApprovalOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
                                        @PathVariable("externalInstitutionId")
                                        String externalInstitutionId,
@@ -67,6 +101,27 @@ public class OnboardingController {
         }
         onboardingService.autoApprovalOnboarding(OnboardingMapper.toOnboardingData(externalInstitutionId, productId, request));
         log.trace("autoApprovalOnboarding end");
+    }
+
+    @ApiResponse(responseCode = "403",
+            description = "Forbidden",
+            content = {
+                    @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                            schema = @Schema(implementation = Problem.class))
+            })
+    @RequestMapping(method = HEAD, value = "/{externalInstitutionId}/products/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.verifyOnboarding}")
+    public void verifyOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
+                                 @PathVariable("externalInstitutionId")
+                                 String externalInstitutionId,
+                                 @ApiParam("${swagger.external_api.products.model.id}")
+                                 @PathVariable("productId")
+                                 String productId) {
+        log.trace("verifyOnboarding start");
+        log.debug("verifyOnboarding externalInstitutionId = {}, productId = {}", externalInstitutionId, productId);
+        onboardingService.verifyOnboarding(externalInstitutionId, productId);
+        log.trace("verifyOnboarding end");
     }
 
 }
