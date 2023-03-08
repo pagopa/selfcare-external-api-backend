@@ -21,4 +21,5 @@ public class OnboardingImportDto {
     @NotNull
     @Valid
     private ImportContractDto importContract;
+
 }
