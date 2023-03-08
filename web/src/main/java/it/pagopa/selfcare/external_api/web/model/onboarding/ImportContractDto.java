@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
@@ -26,7 +25,6 @@ public class ImportContractDto {
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.onboardingDate}", required = true)
     @NotNull
-    @Valid
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime onboardingDate;
 
