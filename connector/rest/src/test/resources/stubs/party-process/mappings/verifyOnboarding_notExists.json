@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "HEAD",
+    "urlPath": "/pdnd-interop-uservice-party-process/0.0.1/onboarding/institution/externalIdNotExists/products/productId"
+  },
+  "response": {
+    "status": "400",
+    "jsonBody": {
+      "status": "Error",
+      "message": "Bad request"
+    }
+  }
+}

@@ -4,6 +4,7 @@ import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.commons.web.model.mapper.ProblemMapper;
 import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
+import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,12 @@ public class ExternalApiExceptionHandler {
 
     @ExceptionHandler({UpdateNotAllowedException.class})
     ResponseEntity<Problem> handleUpdateNotAllowedException(UpdateNotAllowedException e) {
+        log.warn(e.toString());
+        return ProblemMapper.toResponseEntity(new Problem(CONFLICT, e.getMessage()));
+    }
+
+    @ExceptionHandler({InstitutionAlreadyOnboardedException.class})
+    ResponseEntity<Problem> handleInstitutionAlreadyOnboardedException(InstitutionAlreadyOnboardedException e) {
         log.warn(e.toString());
         return ProblemMapper.toResponseEntity(new Problem(CONFLICT, e.getMessage()));
     }
