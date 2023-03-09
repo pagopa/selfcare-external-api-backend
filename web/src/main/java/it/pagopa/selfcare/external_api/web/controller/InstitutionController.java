@@ -135,5 +135,18 @@ public class InstitutionController {
         return result;
     }
 
+    @PostMapping(value = "/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.addInstitution}")
+    public String addInstitution(@ApiParam("swagger.external-api.institutions.model.externalId")
+                                 @PathVariable("externalId") String externalId) {
+        log.trace("addInstitution start");
+        log.debug("addInstitution externalId = {}", externalId);
+        String institutionId = institutionService.addInstitution(externalId);
+        log.debug("addInstitution result = {}", institutionId);
+        log.trace("addInstitution end");
+        return institutionId;
+    }
+
 
 }

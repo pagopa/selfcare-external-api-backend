@@ -27,6 +27,7 @@ public class InstitutionMapper {
             resource.setExternalId(model.getExternalId());
             resource.setAddress(model.getAddress());
             resource.setStatus(model.getStatus());
+            resource.setInstitutionType(model.getInstitutionType());
             resource.setDigitalAddress(model.getDigitalAddress());
             resource.setTaxCode(model.getTaxCode());
             resource.setZipCode(model.getZipCode());
@@ -64,11 +65,13 @@ public class InstitutionMapper {
             resource.setOrigin(model.getOrigin());
             resource.setOriginId(model.getOriginId());
             resource.setRea(model.getRea());
+            resource.setInstitutionType(model.getInstitutionType());
             resource.setShareCapital(model.getShareCapital());
             resource.setBusinessRegisterPlace(model.getBusinessRegisterPlace());
             resource.setSupportEmail(model.getSupportEmail());
             resource.setSupportPhone(model.getSupportPhone());
             resource.setImported(model.getImported());
+
         }
         return resource;
     }

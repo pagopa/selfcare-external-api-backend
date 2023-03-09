@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
@@ -35,6 +36,7 @@ class InstitutionServiceImpl implements InstitutionService {
     private static final EnumSet<User.Fields> USER_FIELD_LIST_FISCAL_CODE = EnumSet.of(name, familyName, workContacts, fiscalCode);
 
     static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
+    protected static final String EXTERNAL_INSTITUTION_ID_IS_REQUIRED = "An external institution id is required";
     private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userRegistryConnector;
@@ -129,6 +131,22 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug("getInstitutionByGeoTaxonomy result = {}", "null)");
         log.trace("getInstitutionByGeoTaxonomy end");
         return institutions;
+    }
+
+    @Override
+    public String addInstitution(String externalId) {
+        log.trace("addInstitution start");
+        log.debug("addInstitution externalId = {}", externalId);
+        Assert.hasText(externalId, EXTERNAL_INSTITUTION_ID_IS_REQUIRED);
+        String institutionInternalId = null;
+        try {
+            institutionInternalId = partyConnector.getInstitutionByExternalId(externalId).getId();
+        } catch (ResourceNotFoundException e) {
+            institutionInternalId = partyConnector.createInstitutionUsingExternalId(externalId).getId();
+        }
+        log.debug("addInstitution result = {}", institutionInternalId);
+        log.trace("addInstitution end");
+        return institutionInternalId;
     }
 
 }

@@ -6,6 +6,7 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
@@ -30,6 +31,7 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import java.util.*;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.external_api.core.InstitutionServiceImpl.EXTERNAL_INSTITUTION_ID_IS_REQUIRED;
 import static it.pagopa.selfcare.external_api.core.InstitutionServiceImpl.REQUIRED_INSTITUTION_MESSAGE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -148,7 +150,7 @@ class InstitutionServiceImplTest {
     }
 
     @Test
-    void getInstitutionUserProducts(){
+    void getInstitutionUserProducts() {
         //given
         final String institutionId = "institutionId";
         final String userId = UUID.randomUUID().toString();
@@ -158,10 +160,10 @@ class InstitutionServiceImplTest {
                 .surname("surname")
                 .build();
         TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
-        Product product1 = mockInstance(new Product(), 1);
-        Product product2 = mockInstance(new Product(), 2);
-        Product product3 = mockInstance(new Product(), 3);
-        Product product4 = mockInstance(new Product(), 4);
+        final Product product1 = mockInstance(new Product(), 1);
+        final Product product2 = mockInstance(new Product(), 2);
+        final Product product3 = mockInstance(new Product(), 3);
+        final Product product4 = mockInstance(new Product(), 4);
 
         PartyProduct partyProduct1 = mockInstance(new PartyProduct(), 1);
         PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
@@ -189,7 +191,7 @@ class InstitutionServiceImplTest {
     }
     
     @Test
-    void getInstitutionUserProducts_multipleRolesMerge(){
+    void getInstitutionUserProducts_multipleRolesMerge() {
         //given
         final String institutionId = "institutionId";
         final String userId = UUID.randomUUID().toString();
@@ -199,17 +201,17 @@ class InstitutionServiceImplTest {
                 .surname("surname")
                 .build();
         TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
-        Product product1 = mockInstance(new Product(), 1);
-        Product product2 = mockInstance(new Product(), 2);
-        Product product3 = mockInstance(new Product(), 3);
-        Product product4 = mockInstance(new Product(), 4);
-        PartyProduct partyProduct1 = mockInstance(new PartyProduct(), 1);
+        final Product product1 = mockInstance(new Product(), 1);
+        final Product product2 = mockInstance(new Product(), 2);
+        final Product product3 = mockInstance(new Product(), 3);
+        final Product product4 = mockInstance(new Product(), 4);
+        final PartyProduct partyProduct1 = mockInstance(new PartyProduct(), 1);
         partyProduct1.setId("prod-io");
         partyProduct1.setRole(PartyRole.OPERATOR);
-        PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
+        final PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
         partyProduct2.setId("prod-io");
         partyProduct2.setRole(PartyRole.DELEGATE);
-        PartyProduct partyProduct3 = mockInstance(new PartyProduct(), 3);
+        final PartyProduct partyProduct3 = mockInstance(new PartyProduct(), 3);
         partyProduct3.setId("prod-interop");
         partyProduct3.setRole(PartyRole.OPERATOR);
         product1.setId(partyProduct1.getId());
@@ -237,10 +239,10 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionProductUsers_nullInstitutionId() {
         // given
-        String institutionId = null;
-        String productId = "productId";
-        Optional<String> userId = Optional.empty();
-        Optional<Set<String>> productRole = Optional.empty();
+        final String institutionId = null;
+        final String productId = "productId";
+        final Optional<String> userId = Optional.empty();
+        final Optional<Set<String>> productRole = Optional.empty();
         // when
         Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole, null);
         // then
@@ -253,10 +255,10 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionProductUsers_nullProductId() {
         // given
-        String institutionId = "institutionId";
-        String productId = null;
-        Optional<String> userId = Optional.empty();
-        Optional<Set<String>> productRole = Optional.empty();
+        final String institutionId = "institutionId";
+        final String productId = null;
+        final Optional<String> userId = Optional.empty();
+        final Optional<Set<String>> productRole = Optional.empty();
         // when
         Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole, null);
         // then
@@ -269,14 +271,14 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionProductUsers() {
         // given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        Optional<String> usrIdParam = Optional.empty();
-        Optional<Set<String>> productRole = Optional.empty();
-        UserInfo userInfo = mockInstance(new UserInfo());
-        String userId = UUID.randomUUID().toString();
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+        final Optional<String> usrIdParam = Optional.empty();
+        final Optional<Set<String>> productRole = Optional.empty();
+        final UserInfo userInfo = mockInstance(new UserInfo());
+        final String userId = UUID.randomUUID().toString();
         userInfo.setId(userId);
-        User user = mockInstance(new User());
+        final User user = mockInstance(new User());
         user.setId(userId);
         WorkContact contact = mockInstance(new WorkContact());
         Map<String, WorkContact> workContact = new HashMap<>();
@@ -319,13 +321,13 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionProductUsers_withFiscalCode() {
         // given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        Optional<String> usrIdParam = Optional.empty();
-        Optional<Set<String>> productRole = Optional.empty();
-        String xSelfCareUid = "onboarding-interceptor";
-        UserInfo userInfo = mockInstance(new UserInfo());
-        String userId = UUID.randomUUID().toString();
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+        final Optional<String> usrIdParam = Optional.empty();
+        final Optional<Set<String>> productRole = Optional.empty();
+        final String xSelfCareUid = "onboarding-interceptor";
+        final UserInfo userInfo = mockInstance(new UserInfo());
+        final String userId = UUID.randomUUID().toString();
         userInfo.setId(userId);
         User user = mockInstance(new User());
         user.setId(userId);
@@ -370,8 +372,8 @@ class InstitutionServiceImplTest {
     @Test
     void getGeographicTaxonomyList() {
         // given
-        String institutionId = "institutionId";
-        Institution institutionMock = mockInstance(new Institution());
+        final String institutionId = "institutionId";
+        final Institution institutionMock = mockInstance(new Institution());
         institutionMock.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
         when(partyConnectorMock.getGeographicTaxonomyList(anyString()))
                 .thenReturn(institutionMock.getGeographicTaxonomies());
@@ -389,7 +391,7 @@ class InstitutionServiceImplTest {
     @Test
     void getGeographicTaxonomyList_hasNullInstitutionId() {
         // given
-        String institutionId = null;
+        final String institutionId = null;
         // when
         Executable executable = () -> institutionService.getGeographicTaxonomyList(institutionId);
         // then
@@ -401,8 +403,8 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionsByGeoTaxonomies() {
         //given
-        Set<String> geoTaxIds = Set.of("geoTax1", "geoTax2");
-        SearchMode searchMode = SearchMode.any;
+        final Set<String> geoTaxIds = Set.of("geoTax1", "geoTax2");
+        final SearchMode searchMode = SearchMode.any;
         when(partyConnectorMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
                 .thenReturn(List.of(mockInstance(new Institution())));
         //when
@@ -422,13 +424,62 @@ class InstitutionServiceImplTest {
     @Test
     void getInstitutionsByGeoTaxonomies_nullGeoTaxIds() {
         //given
-        Set<String> geoTax = null;
-        SearchMode searchMode = SearchMode.any;
+        final Set<String> geoTax = null;
+        final SearchMode searchMode = SearchMode.any;
         //when
         Executable executable = () -> institutionService.getInstitutionsByGeoTaxonomies(geoTax, searchMode);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("GeoTaxonomy ids are required in order to retrieve the institutions", e.getMessage());
         verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, partyConnectorMock);
+    }
+
+    @Test
+    void addInstitution_nullExternalId() {
+        //given
+        final String externalId = null;
+        //when
+        Executable executable = () -> institutionService.addInstitution(externalId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(EXTERNAL_INSTITUTION_ID_IS_REQUIRED, e.getMessage());
+        verifyNoInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void addInstitution_exists() {
+        //given
+        String externalId = "externalId";
+        Institution institution = mockInstance(new Institution());
+        when(partyConnectorMock.getInstitutionByExternalId(anyString()))
+                .thenReturn(institution);
+        //when
+        String internalInstitutionId = institutionService.addInstitution(externalId);
+        //then
+        assertEquals(institution.getId(), internalInstitutionId);
+        verify(partyConnectorMock, times(1))
+                .getInstitutionByExternalId(externalId);
+        verifyNoMoreInteractions(partyConnectorMock);
+    }
+
+    @Test
+    void addInstitution_notExists() {
+        //given
+        final String externalId = "externalId";
+        final Institution institution = mockInstance(new Institution());
+        doThrow(ResourceNotFoundException.class).
+                when(partyConnectorMock)
+                .getInstitutionByExternalId(anyString());
+        when(partyConnectorMock.createInstitutionUsingExternalId(anyString()))
+                .thenReturn(institution);
+        //when
+        String internalInstitutionId = institutionService.addInstitution(externalId);
+        //then
+        assertEquals(institution.getId(), internalInstitutionId);
+        verify(partyConnectorMock, times(1))
+                .getInstitutionByExternalId(externalId);
+        verify(partyConnectorMock, times(1))
+                .createInstitutionUsingExternalId(externalId);
+        verifyNoMoreInteractions(partyConnectorMock);
     }
 }

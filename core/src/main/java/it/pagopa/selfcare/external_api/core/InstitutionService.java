@@ -23,4 +23,6 @@ public interface InstitutionService {
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
 
     Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode);
+
+    String addInstitution(String externalId);
 }
