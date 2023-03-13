@@ -18,7 +18,7 @@ public class OnboardingMapper {
             resource.setFileName(model.getFileName());
             resource.setFilePath(model.getFilePath());
             resource.setContractType(model.getContractType());
-            resource.setOnboardingDate(model.getOnboardingDate());
+            resource.setCreatedAt(model.getOnboardingDate());
         }
         return resource;
     }

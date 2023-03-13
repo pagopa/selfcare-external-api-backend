@@ -25,6 +25,7 @@ class OnboardingMapperTest {
         OnboardingImportContract resource = OnboardingMapper.fromDto(model);
         //then
         assertNotNull(resource);
+        assertEquals(model.getOnboardingDate(), resource.getCreatedAt());
         reflectionEqualsByName(model, resource);
     }
 

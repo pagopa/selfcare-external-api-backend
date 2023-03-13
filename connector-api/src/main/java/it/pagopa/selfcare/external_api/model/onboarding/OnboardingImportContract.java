@@ -10,6 +10,6 @@ public class OnboardingImportContract {
     private String fileName;
     private String filePath;
     private String contractType;
-    private OffsetDateTime onboardingDate;
+    private OffsetDateTime createdAt;
 
 }
