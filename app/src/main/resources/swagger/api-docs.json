@@ -112,16 +112,15 @@
         "summary" : "addInstitution",
         "description" : "Checks if there is an institution with given externalId and returns its internalId if doesn't exists it creates it",
         "operationId" : "addInstitutionUsingPOST",
-        "parameters" : [ {
-          "name" : "externalId",
-          "in" : "path",
-          "description" : "swagger.external-api.institutions.model.externalId",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SearchInstitutionDto"
+              }
+            }
           }
-        } ],
+        },
         "responses" : {
           "201" : {
             "description" : "Created",
@@ -1428,6 +1427,17 @@
             "type" : "boolean",
             "description" : "PSP's Vat Number group",
             "example" : false
+          }
+        }
+      },
+      "SearchInstitutionDto" : {
+        "title" : "SearchInstitutionDto",
+        "required" : [ "externalId" ],
+        "type" : "object",
+        "properties" : {
+          "externalId" : {
+            "type" : "string",
+            "description" : "Institution's unique external identifier"
           }
         }
       },

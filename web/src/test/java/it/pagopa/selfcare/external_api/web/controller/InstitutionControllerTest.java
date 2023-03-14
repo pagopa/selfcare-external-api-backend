@@ -16,6 +16,7 @@ import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.institutions.SearchInstitutionDto;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import org.junit.jupiter.api.Test;
@@ -281,5 +282,13 @@ class InstitutionControllerTest {
         verify(institutionServiceMock, times(1))
                 .getInstitutionsByGeoTaxonomies(Set.of(geoTaxIds), searchMode);
         verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    void addInstitution() throws Exception {
+        //given
+        SearchInstitutionDto dto = mockInstance(new SearchInstitutionDto());
+
+        //
     }
 }
