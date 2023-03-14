@@ -282,4 +282,6 @@ class InstitutionControllerTest {
                 .getInstitutionsByGeoTaxonomies(Set.of(geoTaxIds), searchMode);
         verifyNoMoreInteractions(institutionServiceMock);
     }
+
+
 }
