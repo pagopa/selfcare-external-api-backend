@@ -9,6 +9,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ class ImportContractDtoTest {
         toCheckMap.put("fileName", NotBlank.class);
         toCheckMap.put("filePath", NotBlank.class);
         toCheckMap.put("contractType", NotBlank.class);
+        toCheckMap.put("onboardingDate", NotNull.class);
 
         ImportContractDto importContractDto = new ImportContractDto();
         //when

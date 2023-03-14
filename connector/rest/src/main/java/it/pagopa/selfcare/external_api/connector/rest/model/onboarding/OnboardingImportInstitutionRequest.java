@@ -20,4 +20,5 @@ public class OnboardingImportInstitutionRequest {
     private OnboardingImportContract contractImported;
     private OnboardingContract contract;
 
+
 }
