@@ -11,6 +11,7 @@
   "importContract": {
     "fileName": "fileName",
     "filePath": "filePath",
-    "contractType": "contractType"
+    "contractType": "contractType",
+    "onboardingDate": "2007-12-03T10:15:30+01:00"
   }
 }

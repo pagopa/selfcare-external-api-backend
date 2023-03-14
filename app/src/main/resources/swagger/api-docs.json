@@ -1043,7 +1043,7 @@
       },
       "ImportContractDto" : {
         "title" : "ImportContractDto",
-        "required" : [ "contractType", "fileName", "filePath" ],
+        "required" : [ "contractType", "fileName", "filePath", "onboardingDate" ],
         "type" : "object",
         "properties" : {
           "contractType" : {
@@ -1057,6 +1057,11 @@
           "filePath" : {
             "type" : "string",
             "description" : "Institution's old contract file path"
+          },
+          "onboardingDate" : {
+            "type" : "string",
+            "description" : "Institution's old onboarding date in the format 2007-12-03T10:15:30+01:00 (YYYY-MM-DD-T-HH:mm:ss+UTC)",
+            "format" : "date-time"
           }
         }
       },
