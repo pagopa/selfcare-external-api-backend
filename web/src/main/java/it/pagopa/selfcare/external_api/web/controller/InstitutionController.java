@@ -10,7 +10,6 @@ import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.web.model.institutions.SearchInstitutionDto;
 import it.pagopa.selfcare.external_api.web.model.mapper.GeographicTaxonomyMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -135,21 +133,6 @@ public class InstitutionController {
         log.debug("getInstitutionByGeoTaxonomies result = {}", result);
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;
-    }
-
-    @PostMapping(value = "/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.addInstitution}")
-    public String addInstitution(@ApiParam("swagger.external-api.institutions.model.searchInstitutionDto")
-                                 @RequestBody
-                                 @Valid
-                                 SearchInstitutionDto searchInstitutionDto) {
-        log.trace("addInstitution start");
-        log.debug("addInstitution searchInstitutionDto = {}", searchInstitutionDto);
-        String institutionId = institutionService.addInstitution(searchInstitutionDto.getExternalId());
-        log.debug("addInstitution result = {}", institutionId);
-        log.trace("addInstitution end");
-        return institutionId;
     }
 
 

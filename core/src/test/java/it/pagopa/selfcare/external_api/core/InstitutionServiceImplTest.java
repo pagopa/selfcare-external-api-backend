@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.core;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.commons.utils.TestUtils;
+import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
@@ -11,6 +12,7 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.User;
@@ -31,7 +33,6 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import java.util.*;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.external_api.core.InstitutionServiceImpl.EXTERNAL_INSTITUTION_ID_IS_REQUIRED;
 import static it.pagopa.selfcare.external_api.core.InstitutionServiceImpl.REQUIRED_INSTITUTION_MESSAGE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,6 +52,9 @@ class InstitutionServiceImplTest {
 
     @Mock
     private UserRegistryConnector userRegistryConnectorMock;
+
+    @Mock
+    private MsCoreConnector msCoreConnectorMock;
 
     @BeforeEach
     void beforeEach() {
@@ -433,53 +437,40 @@ class InstitutionServiceImplTest {
         assertEquals("GeoTaxonomy ids are required in order to retrieve the institutions", e.getMessage());
         verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, partyConnectorMock);
     }
-
-    @Test
-    void addInstitution_nullExternalId() {
-        //given
-        final String externalId = null;
-        //when
-        Executable executable = () -> institutionService.addInstitution(externalId);
-        //then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals(EXTERNAL_INSTITUTION_ID_IS_REQUIRED, e.getMessage());
-        verifyNoInteractions(partyConnectorMock);
-    }
-
     @Test
     void addInstitution_exists() {
         //given
-        String externalId = "externalId";
+        CreatePnPgInstitution createPnPgInstitution = mockInstance(new CreatePnPgInstitution());
         Institution institution = mockInstance(new Institution());
         when(partyConnectorMock.getInstitutionByExternalId(anyString()))
                 .thenReturn(institution);
         //when
-        String internalInstitutionId = institutionService.addInstitution(externalId);
+        String internalInstitutionId = institutionService.addInstitution(createPnPgInstitution);
         //then
         assertEquals(institution.getId(), internalInstitutionId);
         verify(partyConnectorMock, times(1))
-                .getInstitutionByExternalId(externalId);
+                .getInstitutionByExternalId(createPnPgInstitution.getExternalId());
         verifyNoMoreInteractions(partyConnectorMock);
     }
 
     @Test
     void addInstitution_notExists() {
         //given
-        final String externalId = "externalId";
-        final Institution institution = mockInstance(new Institution());
+        final CreatePnPgInstitution createPnPgInstitution = mockInstance(new CreatePnPgInstitution());
+        final String institutionId = "institutionId";
         doThrow(ResourceNotFoundException.class).
                 when(partyConnectorMock)
                 .getInstitutionByExternalId(anyString());
-        when(partyConnectorMock.createInstitutionUsingExternalId(anyString()))
-                .thenReturn(institution);
+        when(msCoreConnectorMock.createPnPgInstitution(any()))
+                .thenReturn(institutionId);
         //when
-        String internalInstitutionId = institutionService.addInstitution(externalId);
+        String internalInstitutionId = institutionService.addInstitution(createPnPgInstitution);
         //then
-        assertEquals(institution.getId(), internalInstitutionId);
+        assertEquals(institutionId, internalInstitutionId);
         verify(partyConnectorMock, times(1))
-                .getInstitutionByExternalId(externalId);
-        verify(partyConnectorMock, times(1))
-                .createInstitutionUsingExternalId(externalId);
+                .getInstitutionByExternalId(createPnPgInstitution.getExternalId());
+        verify(msCoreConnectorMock, times(1))
+                .createPnPgInstitution(createPnPgInstitution);
         verifyNoMoreInteractions(partyConnectorMock);
     }
 }

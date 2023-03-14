@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
+import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
@@ -10,6 +11,7 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -39,6 +41,8 @@ class InstitutionServiceImpl implements InstitutionService {
     protected static final String EXTERNAL_INSTITUTION_ID_IS_REQUIRED = "An external institution id is required";
     private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
+
+    private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
 
     private final static String serviceType = "onboarding-interceptor";
@@ -46,9 +50,10 @@ class InstitutionServiceImpl implements InstitutionService {
     @Autowired
     InstitutionServiceImpl(PartyConnector partyConnector,
                            ProductsConnector productsConnector,
-                           UserRegistryConnector userRegistryConnector) {
+                           MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector) {
         this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
+        this.msCoreConnector = msCoreConnector;
         this.userRegistryConnector = userRegistryConnector;
     }
 
@@ -134,15 +139,14 @@ class InstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
-    public String addInstitution(String externalId) {
+    public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
-        log.debug("addInstitution externalId = {}", externalId);
-        Assert.hasText(externalId, EXTERNAL_INSTITUTION_ID_IS_REQUIRED);
+        log.debug("addInstitution request = {}", request);
         String institutionInternalId = null;
         try {
-            institutionInternalId = partyConnector.getInstitutionByExternalId(externalId).getId();
+            institutionInternalId = partyConnector.getInstitutionByExternalId(request.getExternalId()).getId();
         } catch (ResourceNotFoundException e) {
-            institutionInternalId = partyConnector.createInstitutionUsingExternalId(externalId).getId();
+            institutionInternalId = msCoreConnector.createPnPgInstitution(request);
         }
         log.debug("addInstitution result = {}", institutionInternalId);
         log.trace("addInstitution end");
