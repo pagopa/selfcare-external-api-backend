@@ -23,6 +23,9 @@
     "name" : "institutions",
     "description" : "Instituions operations"
   }, {
+    "name" : "institutions-pnpg",
+    "description" : "Pn Pg Controller"
+  }, {
     "name" : "onboarding",
     "description" : "Onboarding operations"
   }, {
@@ -719,6 +722,68 @@
         } ]
       }
     },
+    "/pn-pg/institutions/add" : {
+      "post" : {
+        "tags" : [ "institutions-pnpg" ],
+        "summary" : "addInstitution",
+        "description" : "Checks if there is an institution with given externalId and returns its internalId if doesn't exists it creates it",
+        "operationId" : "addInstitutionUsingPOST",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreatePnPgInstitutionDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
     "/products/{productId}" : {
       "get" : {
         "tags" : [ "product" ],
@@ -900,6 +965,21 @@
           "shareCapital" : {
             "type" : "string",
             "description" : "Institution's share capital value"
+          }
+        }
+      },
+      "CreatePnPgInstitutionDto" : {
+        "title" : "CreatePnPgInstitutionDto",
+        "required" : [ "externalId" ],
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string",
+            "description" : "Institution's legal name"
+          },
+          "externalId" : {
+            "type" : "string",
+            "description" : "Institution's unique external identifier"
           }
         }
       },
