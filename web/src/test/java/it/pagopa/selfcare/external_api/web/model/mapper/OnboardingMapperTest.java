@@ -56,6 +56,8 @@ class OnboardingMapperTest {
         assertEquals(institutionId, resource.getInstitutionExternalId());
         assertTrue(resource.getInstitutionUpdate().getImported());
         assertEquals("prod-io", resource.getProductId());
+        assertTrue(resource.getInstitutionUpdate().getImported());
+        assertNull(resource.getInstitutionType());
         reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0));
         reflectionEqualsByName(importContractDto, resource.getContractImported());
     }

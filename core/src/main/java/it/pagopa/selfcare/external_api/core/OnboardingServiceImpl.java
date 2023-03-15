@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
@@ -44,6 +45,7 @@ class OnboardingServiceImpl implements OnboardingService {
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(User.Fields.name, User.Fields.familyName, User.Fields.workContacts);
 
     private final PartyConnector partyConnector;
+    private final MsPartyRegistryProxyConnector registryProxyConnector;
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userConnector;
     private final OnboardingValidationStrategy onboardingValidationStrategy;
@@ -52,11 +54,13 @@ class OnboardingServiceImpl implements OnboardingService {
     OnboardingServiceImpl(PartyConnector partyConnector,
                           ProductsConnector productsConnector,
                           UserRegistryConnector userConnector,
-                          OnboardingValidationStrategy onboardingValidationStrategy) {
+                          OnboardingValidationStrategy onboardingValidationStrategy,
+                          MsPartyRegistryProxyConnector registryProxyConnector) {
         this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
         this.userConnector = userConnector;
         this.onboardingValidationStrategy = onboardingValidationStrategy;
+        this.registryProxyConnector = registryProxyConnector;
     }
 
     @Override
@@ -64,7 +68,7 @@ class OnboardingServiceImpl implements OnboardingService {
         log.trace("oldContractOnboarding start");
         log.debug("oldContractOnboarding = {}", onboardingImportData);
         Assert.notNull(onboardingImportData, REQUIRED_ONBOARDING_DATA_MESSAGE);
-        Assert.notNull(onboardingImportData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
+        //Assert.notNull(onboardingImportData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
 
         try {
             ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
@@ -80,6 +84,14 @@ class OnboardingServiceImpl implements OnboardingService {
             log.debug(String.format("oldContractOnboarding: starting onboarding process for institution %s on product %s",
                     onboardingImportData.getInstitutionExternalId(),
                     onboardingImportData.getProductId()));
+
+            Institution institution = null;
+            try {
+                institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
+                onboardingImportData.setInstitutionType(institution.getInstitutionType());
+            } catch (ResourceNotFoundException e) {
+                setOnboardingImportDataInstitutionType(onboardingImportData);
+            }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
             Assert.notNull(product, "Product is required");
@@ -128,12 +140,10 @@ class OnboardingServiceImpl implements OnboardingService {
                 userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
             });
 
-            Institution institution;
-            try {
-                institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
-            } catch (ResourceNotFoundException e) {
+            if (institution == null) {
                 institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
             }
+
             String finalInstitutionInternalId = institution.getId();
             onboardingImportData.getUsers().forEach(user -> {
 
@@ -148,16 +158,7 @@ class OnboardingServiceImpl implements OnboardingService {
                         .getId().toString()));
             });
 
-            onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
-            onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
-            onboardingImportData.getBilling().setPublicServices(true);
-            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(Collections.emptyList());
-            onboardingImportData.setOrigin(institution.getOrigin());
+            setOnboardingImportDataFields(onboardingImportData, institution);
 
             partyConnector.oldContractOnboardingOrganization(onboardingImportData);
             log.trace("oldContractOnboarding end");
@@ -319,6 +320,28 @@ class OnboardingServiceImpl implements OnboardingService {
             throw new OnboardingNotAllowedException(String.format(ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE,
                     externalInstitutionId,
                     productId));
+        }
+    }
+
+    private void setOnboardingImportDataFields(OnboardingImportData onboardingImportData, Institution institution) {
+        onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
+        onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
+        onboardingImportData.getBilling().setPublicServices(true);
+        onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
+        onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
+        onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
+        onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
+        onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
+        onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(Collections.emptyList());
+        onboardingImportData.setOrigin(institution.getOrigin());
+    }
+
+    private void setOnboardingImportDataInstitutionType(OnboardingImportData onboardingImportData) {
+        String institutionCategory = registryProxyConnector.getInstitutionCategory(onboardingImportData.getInstitutionExternalId());
+        if (institutionCategory.equals("L37")) {
+            onboardingImportData.setInstitutionType(InstitutionType.GSP);
+        } else {
+            onboardingImportData.setInstitutionType(InstitutionType.PA);
         }
     }
 }
