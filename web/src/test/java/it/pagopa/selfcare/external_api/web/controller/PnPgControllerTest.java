@@ -50,7 +50,7 @@ class PnPgControllerTest {
                         .content(objectMapper.writeValueAsString(dto))
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andReturn();
         //then
         String response = result.getResponse().getContentAsString();
