@@ -68,7 +68,6 @@ class OnboardingServiceImpl implements OnboardingService {
         log.trace("oldContractOnboarding start");
         log.debug("oldContractOnboarding = {}", onboardingImportData);
         Assert.notNull(onboardingImportData, REQUIRED_ONBOARDING_DATA_MESSAGE);
-        //Assert.notNull(onboardingImportData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
 
         try {
             ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
