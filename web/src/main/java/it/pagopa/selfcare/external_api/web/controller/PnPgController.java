@@ -28,7 +28,7 @@ public class PnPgController {
     }
 
     @PostMapping(value = "/institutions/add")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.addInstitution}")
     public String addInstitution(@ApiParam("swagger.external-api.institutions.model.searchInstitutionDto")
                                  @RequestBody
