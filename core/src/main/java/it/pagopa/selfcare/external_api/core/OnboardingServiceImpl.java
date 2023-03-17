@@ -87,7 +87,11 @@ class OnboardingServiceImpl implements OnboardingService {
             Institution institution = null;
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
-                onboardingImportData.setInstitutionType(institution.getInstitutionType());
+                if (institution.getInstitutionType() == null) {
+                    setOnboardingImportDataInstitutionType(onboardingImportData);
+                } else {
+                    onboardingImportData.setInstitutionType(institution.getInstitutionType());
+                }
             } catch (ResourceNotFoundException e) {
                 setOnboardingImportDataInstitutionType(onboardingImportData);
             }
