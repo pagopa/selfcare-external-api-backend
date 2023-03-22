@@ -12,6 +12,7 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedExc
 import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
@@ -84,16 +85,18 @@ class OnboardingServiceImpl implements OnboardingService {
                     onboardingImportData.getInstitutionExternalId(),
                     onboardingImportData.getProductId()));
 
+            InstitutionResource ipaInstitutionResource = registryProxyConnector.getInstitutionCategory(onboardingImportData.getInstitutionExternalId());
+
             Institution institution = null;
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
                 if (institution.getInstitutionType() == null) {
-                    setOnboardingImportDataInstitutionType(onboardingImportData);
+                    setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
                 } else {
                     onboardingImportData.setInstitutionType(institution.getInstitutionType());
                 }
             } catch (ResourceNotFoundException e) {
-                setOnboardingImportDataInstitutionType(onboardingImportData);
+                setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
             }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
@@ -161,7 +164,7 @@ class OnboardingServiceImpl implements OnboardingService {
                         .getId().toString()));
             });
 
-            setOnboardingImportDataFields(onboardingImportData, institution);
+            setOnboardingImportDataFields(onboardingImportData, institution, ipaInstitutionResource);
 
             partyConnector.oldContractOnboardingOrganization(onboardingImportData);
             log.trace("oldContractOnboarding end");
@@ -326,9 +329,9 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private void setOnboardingImportDataFields(OnboardingImportData onboardingImportData, Institution institution) {
+    private void setOnboardingImportDataFields(OnboardingImportData onboardingImportData, Institution institution, InstitutionResource ipaInstitutionResource) {
         onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
-        onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
+        onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
         onboardingImportData.getBilling().setPublicServices(true);
         onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
         onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
@@ -336,11 +339,11 @@ class OnboardingServiceImpl implements OnboardingService {
         onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
         onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
         onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(Collections.emptyList());
+        onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
         onboardingImportData.setOrigin(institution.getOrigin());
     }
 
-    private void setOnboardingImportDataInstitutionType(OnboardingImportData onboardingImportData) {
-        String institutionCategory = registryProxyConnector.getInstitutionCategory(onboardingImportData.getInstitutionExternalId());
+    private void setOnboardingImportDataInstitutionType(OnboardingImportData onboardingImportData, String institutionCategory) {
         if (institutionCategory.equals("L37")) {
             onboardingImportData.setInstitutionType(InstitutionType.GSP);
         } else {
