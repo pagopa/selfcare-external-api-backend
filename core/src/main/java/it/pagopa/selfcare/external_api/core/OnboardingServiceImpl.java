@@ -338,7 +338,7 @@ class OnboardingServiceImpl implements OnboardingService {
         onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
         onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
         onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-        onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(Collections.emptyList());
+        onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
         onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
         onboardingImportData.setOrigin(institution.getOrigin());
     }
