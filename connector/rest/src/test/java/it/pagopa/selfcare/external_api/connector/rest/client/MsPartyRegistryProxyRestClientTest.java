@@ -46,7 +46,7 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
                 @Override
                 public void initialize(ConfigurableApplicationContext applicationContext) {
                         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext,
-                                String.format("MS_PARTY_REGISTRY_PROXY_URL=%s",
+                                String.format("USERVICE_PARTY_REGISTRY_PROXY_URL=%s",
                                         wm.getRuntimeInfo().getHttpBaseUrl())
                         );
                 }
