@@ -4,6 +4,6 @@ import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 
 public interface MsPartyRegistryProxyConnector {
 
-    InstitutionResource getInstitutionCategory(String institutionExternalId);
+    InstitutionResource findInstitution(String institutionExternalId);
 
 }

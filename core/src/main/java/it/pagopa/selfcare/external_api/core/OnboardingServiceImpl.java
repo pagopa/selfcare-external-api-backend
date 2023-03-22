@@ -85,7 +85,7 @@ class OnboardingServiceImpl implements OnboardingService {
                     onboardingImportData.getInstitutionExternalId(),
                     onboardingImportData.getProductId()));
 
-            InstitutionResource ipaInstitutionResource = registryProxyConnector.getInstitutionCategory(onboardingImportData.getInstitutionExternalId());
+            InstitutionResource ipaInstitutionResource = registryProxyConnector.findInstitution(onboardingImportData.getInstitutionExternalId());
 
             Institution institution = null;
             try {

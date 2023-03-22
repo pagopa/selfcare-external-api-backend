@@ -22,7 +22,7 @@ public class MsPartyRegistryProxyConnectorImpl implements MsPartyRegistryProxyCo
     }
 
     @Override
-    public InstitutionResource getInstitutionCategory(String institutionExternalId) {
+    public InstitutionResource findInstitution(String institutionExternalId) {
         log.trace("getInstitutionCategory start");
         log.debug("getInstitutionCategory institutionExternalId = {}", institutionExternalId);
         Assert.hasText(institutionExternalId, EXTERNAL_INSTITUTION_ID_IS_REQUIRED);

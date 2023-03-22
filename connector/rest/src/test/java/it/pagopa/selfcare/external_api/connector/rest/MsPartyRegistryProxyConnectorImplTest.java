@@ -35,7 +35,7 @@ class MsPartyRegistryProxyConnectorImplTest {
         when(msPartyRegistryProxyRestClientMock.findInstitution(any(), any(), any()))
                 .thenReturn(institutionResourceMock);
         // when
-        InstitutionResource result = msPartyRegistryProxyConnectorImplMock.getInstitutionCategory(instiutionExternalIdMock);
+        InstitutionResource result = msPartyRegistryProxyConnectorImplMock.findInstitution(instiutionExternalIdMock);
         // then
         reflectionEqualsByName(institutionResourceMock, result);
         verify(msPartyRegistryProxyRestClientMock, times(1))
@@ -48,7 +48,7 @@ class MsPartyRegistryProxyConnectorImplTest {
         // given
         String instiutionExternalIdMock = null;
         // when
-        Executable executable = () -> msPartyRegistryProxyConnectorImplMock.getInstitutionCategory(instiutionExternalIdMock);
+        Executable executable = () -> msPartyRegistryProxyConnectorImplMock.findInstitution(instiutionExternalIdMock);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(EXTERNAL_INSTITUTION_ID_IS_REQUIRED, e.getMessage());
