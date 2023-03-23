@@ -169,6 +169,21 @@ class InstitutionServiceImplTest {
         final Product product3 = mockInstance(new Product(), 3);
         final Product product4 = mockInstance(new Product(), 4);
 
+        EnumMap<PartyRole, it.pagopa.selfcare.external_api.model.product.ProductRoleInfo> roleMappings = new EnumMap<>(PartyRole.class);
+        for (PartyRole partyRole : PartyRole.values()) {
+            it.pagopa.selfcare.external_api.model.product.ProductRoleInfo productRoleInfo = new it.pagopa.selfcare.external_api.model.product.ProductRoleInfo();
+            List<it.pagopa.selfcare.external_api.model.product.ProductRoleInfo.ProductRole> roles = new ArrayList<>();
+            roles.add(mockInstance(new it.pagopa.selfcare.external_api.model.product.ProductRoleInfo.ProductRole(), partyRole.ordinal() + 1));
+            roles.add(mockInstance(new it.pagopa.selfcare.external_api.model.product.ProductRoleInfo.ProductRole(), partyRole.ordinal() + 2));
+            productRoleInfo.setRoles(roles);
+            productRoleInfo.setMultiroleAllowed(true);
+            roleMappings.put(partyRole, productRoleInfo);
+        }
+
+        product1.setRoleMappings(roleMappings);
+        product2.setRoleMappings(roleMappings);
+        product3.setRoleMappings(roleMappings);
+        product4.setRoleMappings(roleMappings);
         PartyProduct partyProduct1 = mockInstance(new PartyProduct(), 1);
         PartyProduct partyProduct2 = mockInstance(new PartyProduct(), 2);
         partyProduct2.setRole(PartyRole.OPERATOR);
