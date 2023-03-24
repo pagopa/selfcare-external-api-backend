@@ -49,6 +49,7 @@ public class OnboardingMapper {
             resource.setBilling(new Billing());
             resource.setInstitutionUpdate(new InstitutionUpdate());
             resource.getInstitutionUpdate().setImported(true);
+            //resource.setInstitutionType(InstitutionType.PA);
         }
         return resource;
     }

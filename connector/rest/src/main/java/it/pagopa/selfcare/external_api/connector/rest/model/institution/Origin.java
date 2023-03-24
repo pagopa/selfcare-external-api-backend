@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.model.institutions;
+package it.pagopa.selfcare.external_api.connector.rest.model.institution;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
