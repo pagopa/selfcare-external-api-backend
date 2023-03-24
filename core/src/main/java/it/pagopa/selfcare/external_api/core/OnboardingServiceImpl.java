@@ -354,7 +354,7 @@ class OnboardingServiceImpl implements OnboardingService {
         }
         return billing;
     }
-
+}
     private Institution createInsituttion(OnboardingData onboardingData) {
         Institution institution;
         if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
