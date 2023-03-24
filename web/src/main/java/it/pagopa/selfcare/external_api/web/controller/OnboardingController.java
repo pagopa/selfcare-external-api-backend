@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.time.OffsetDateTime;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
@@ -64,6 +65,9 @@ public class OnboardingController {
                                       OnboardingImportDto request) {
         log.trace("oldContractonboarding start");
         log.debug("oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
+        if (request.getImportContract().getOnboardingDate().compareTo(OffsetDateTime.now()) > 0) {
+            throw new ValidationException("Invalid onboarding date: the onboarding date must be prior to the current date.");
+        }
         onboardingService.oldContractOnboarding(OnboardingMapper.toOnboardingImportData(externalInstitutionId, request));
         log.trace("oldContractonboarding end");
     }
