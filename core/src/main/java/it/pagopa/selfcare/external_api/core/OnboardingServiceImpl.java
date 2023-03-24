@@ -127,7 +127,6 @@ class OnboardingServiceImpl implements OnboardingService {
                 userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
             });
 
-
             if (institution == null) {
                 institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
                 onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
@@ -220,7 +219,7 @@ class OnboardingServiceImpl implements OnboardingService {
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingData.getInstitutionExternalId());
             } catch (ResourceNotFoundException e) {
-                institution = createInsituttion(onboardingData);
+                institution = createInstitution(onboardingData);
             }
 
             String finalInstitutionInternalId = institution.getId();
@@ -354,8 +353,8 @@ class OnboardingServiceImpl implements OnboardingService {
         }
         return billing;
     }
-}
-    private Institution createInsituttion(OnboardingData onboardingData) {
+
+    private Institution createInstitution(OnboardingData onboardingData) {
         Institution institution;
         if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
                 (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
