@@ -216,7 +216,12 @@ class OnboardingServiceImpl implements OnboardingService {
                 userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
             });
 
-            Institution institution = createInsituttion(onboardingData);
+            Institution institution;
+            try {
+                institution = partyConnector.getInstitutionByExternalId(onboardingData.getInstitutionExternalId());
+            } catch (ResourceNotFoundException e) {
+                institution = createInsituttion(onboardingData);
+            }
 
             String finalInstitutionInternalId = institution.getId();
             onboardingData.getUsers().forEach(user -> {
@@ -352,16 +357,12 @@ class OnboardingServiceImpl implements OnboardingService {
 
     private Institution createInsituttion(OnboardingData onboardingData) {
         Institution institution;
-        try {
-            institution = partyConnector.getInstitutionByExternalId(onboardingData.getInstitutionExternalId());
-        } catch (ResourceNotFoundException e) {
-            if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
-                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
-                            && onboardingData.getOrigin().equals("IPA"))) {
-                institution = partyConnector.createInstitutionUsingExternalId(onboardingData.getInstitutionExternalId());
-            } else {
-                institution = partyConnector.createInstitutionRaw(onboardingData);
-            }
+        if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+                (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
+                        && onboardingData.getOrigin().equals("IPA"))) {
+            institution = partyConnector.createInstitutionUsingExternalId(onboardingData.getInstitutionExternalId());
+        } else {
+            institution = partyConnector.createInstitutionRaw(onboardingData);
         }
         return institution;
     }
