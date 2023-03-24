@@ -132,7 +132,6 @@ class OnboardingServiceImpl implements OnboardingService {
                 institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
                 onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
                 onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
-                onboardingImportData.getBilling().setPublicServices(true);
             } else {
                 OnboardingResponseData onboardedInstitution = partyConnector.getOnboardedInstitution(onboardingImportData.getInstitutionExternalId());
                 onboardingImportData.setBilling(createBilling(onboardedInstitution, ipaInstitutionResource));
