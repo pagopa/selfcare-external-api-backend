@@ -419,7 +419,7 @@ public class PartyConnectorImpl implements PartyConnector {
             result = onBoardingInfo.getInstitutions().get(0);
         } else if (onBoardingInfo.getInstitutions().size() > 1) {
             List<OnboardingResponseData> institutions = new ArrayList<>();
-            onBoardingInfo.getInstitutions().forEach((institution) -> {
+            onBoardingInfo.getInstitutions().forEach(institution -> {
                         if (institution.getExternalId().equals(institutionExternalId)) {
                             institutions.add(institution);
                         }

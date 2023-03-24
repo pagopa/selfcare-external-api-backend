@@ -341,52 +341,6 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    /*
-    private void createInstitutionAndSetFields(OnboardingImportData onboardingImportData, Institution institution, InstitutionResource ipaInstitutionResource){
-        if (institution == null) {
-            institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
-            onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
-            onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
-            onboardingImportData.getBilling().setPublicServices(true);
-            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
-            onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
-            onboardingImportData.setOrigin(institution.getOrigin());
-        } else {
-            OnboardingResponseData onboardedInstitution = partyConnector.getOnboardedInstitution(onboardingImportData.getInstitutionExternalId());
-            if (onboardedInstitution != null) {
-                if (onboardedInstitution.getBilling() != null) {
-                    onboardingImportData.getBilling().setVatNumber(onboardedInstitution.getBilling().getVatNumber());
-                    onboardingImportData.getBilling().setRecipientCode(onboardedInstitution.getBilling().getRecipientCode());
-                    onboardingImportData.getBilling().setPublicServices(onboardedInstitution.getBilling().getPublicServices());
-                } else {
-                    onboardingImportData.getBilling().setVatNumber(ipaInstitutionResource.getTaxCode());
-                    onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
-                }
-            } else {
-                onboardingImportData.getBilling().setVatNumber(ipaInstitutionResource.getTaxCode());
-                onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
-            }
-            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
-            onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
-            onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
-            onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
-            onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
-            onboardingImportData.setOrigin(institution.getOrigin());
-        }
-    }
-
-     */
-
     private Billing createBilling(OnboardingResponseData onboardedInstitution, InstitutionResource ipaInstitutionResource) {
         Billing billing = new Billing();
         if (onboardedInstitution != null) {
