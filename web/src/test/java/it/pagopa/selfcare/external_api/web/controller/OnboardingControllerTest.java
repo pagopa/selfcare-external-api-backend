@@ -1,10 +1,13 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
+import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
@@ -54,6 +60,27 @@ class OnboardingControllerTest {
         verify(onboardingServiceMock, times(1))
                 .oldContractOnboarding(any(OnboardingImportData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void oldContractOnboarding_invalidDate() throws Exception {
+        // given
+        String institutionId = "institutionId";
+        OnboardingImportDto onboardingImportDto = TestUtils.mockInstance(new OnboardingImportDto());
+        onboardingImportDto.getImportContract().setOnboardingDate(OffsetDateTime.now().plusHours(1));
+        UserDto userDto = TestUtils.mockInstance(new UserDto(), "setEmail");
+        userDto.setEmail("email@example.com");
+        onboardingImportDto.setUsers(List.of(userDto));
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/{institutionId}", institutionId)
+                        .content(objectMapper.writeValueAsString(onboardingImportDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Invalid onboarding date: the onboarding date must be prior to the current date.")));
+        // then
+        verifyNoInteractions(onboardingServiceMock);
     }
 
     @Test

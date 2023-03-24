@@ -5,7 +5,7 @@ import feign.FeignException;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.MsPartyRegistryProxyRestClientTestConfig;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResource;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
                 @Override
                 public void initialize(ConfigurableApplicationContext applicationContext) {
                         TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext,
-                                String.format("MS_PARTY_REGISTRY_PROXY_URL=%s",
+                                String.format("USERVICE_PARTY_REGISTRY_PROXY_URL=%s",
                                         wm.getRuntimeInfo().getHttpBaseUrl())
                         );
                 }
