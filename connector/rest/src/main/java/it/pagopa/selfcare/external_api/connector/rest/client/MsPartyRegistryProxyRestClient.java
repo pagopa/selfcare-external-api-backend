@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest.client;
 
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.institutions.Origin;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResource;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.Origin;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

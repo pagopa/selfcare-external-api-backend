@@ -295,12 +295,8 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setZipCode(onboardingImportData.getInstitutionUpdate().getZipCode());
         institutionUpdate.setPaymentServiceProvider(onboardingImportData.getInstitutionUpdate().getPaymentServiceProvider());
         institutionUpdate.setDataProtectionOfficer(onboardingImportData.getInstitutionUpdate().getDataProtectionOfficer());
-        if (onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies() != null) {
-            institutionUpdate.setGeographicTaxonomyCodes(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().stream()
-                    .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
-        } else {
-            institutionUpdate.setGeographicTaxonomyCodes(Collections.emptyList());
-        }
+        institutionUpdate.setGeographicTaxonomyCodes(onboardingImportData.getInstitutionUpdate().getGeographicTaxonomies().stream()
+                .map(GeographicTaxonomy::getCode).collect(Collectors.toList()));
         institutionUpdate.setRea(onboardingImportData.getInstitutionUpdate().getRea());
         institutionUpdate.setShareCapital(onboardingImportData.getInstitutionUpdate().getShareCapital());
         institutionUpdate.setBusinessRegisterPlace(onboardingImportData.getInstitutionUpdate().getBusinessRegisterPlace());
@@ -406,32 +402,6 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingInstitutionRequest.setContract(onboardingContract);
 
         partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
-    }
-
-    @Override
-    public OnboardingResponseData getOnboardedInstitution(String institutionExternalId) {
-        log.trace("getOnBoardedInstitution start");
-        log.debug("getOnboardedInstitution institutionExternalId = {}", institutionExternalId);
-        Assert.hasText(institutionExternalId, REQUIRED_INSTITUTION_ID_MESSAGE);
-        OnBoardingInfo onBoardingInfo = partyProcessRestClient.getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
-        OnboardingResponseData result = null;
-        if (onBoardingInfo.getInstitutions().size() == 1) {
-            result = onBoardingInfo.getInstitutions().get(0);
-        } else if (onBoardingInfo.getInstitutions().size() > 1) {
-            List<OnboardingResponseData> institutions = new ArrayList<>();
-            onBoardingInfo.getInstitutions().forEach(institution -> {
-                        if (institution.getExternalId().equals(institutionExternalId)) {
-                            institutions.add(institution);
-                        }
-                    }
-            );
-            if (institutions.size() != 0) {
-                result = institutions.get(0);
-            }
-        }
-        log.debug("getOnBoardedInstitution result = {}", result);
-        log.trace("getOnBoardedInstitution end");
-        return result;
     }
 
 }
