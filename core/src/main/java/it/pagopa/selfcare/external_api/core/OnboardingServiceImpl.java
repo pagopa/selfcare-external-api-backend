@@ -13,13 +13,11 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
 import it.pagopa.selfcare.external_api.model.product.ProductStatus;
+import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.model.user.mapper.CertifiedFieldMapper;
 import it.pagopa.selfcare.external_api.model.user.mapper.UserMapper;
@@ -65,12 +63,6 @@ class OnboardingServiceImpl implements OnboardingService {
         this.registryProxyConnector = registryProxyConnector;
     }
 
-    //Verifico se l'ente ha già fatto adesione ad IO.
-    //Se non ha già fatto adesione allora procedo
-
-    //La seconda cosa che vado a fare è recuperare l'ente da IPA perchè potrebbe servirmi
-
-    // Vado poi a verificare se l'ente è presente già su selfcare o meno
     @Override
     public void oldContractOnboarding(OnboardingImportData onboardingImportData) {
         log.trace("oldContractOnboarding start");
@@ -97,14 +89,13 @@ class OnboardingServiceImpl implements OnboardingService {
             Institution institution = null;
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
-                //If an institution with institutionType = PA has the onboarding request in "To be completed" state the institutionType is not returned
                 if (institution.getInstitutionType() == null) {
-                    setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
+                    setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
                 } else {
                     onboardingImportData.setInstitutionType(institution.getInstitutionType());
                 }
             } catch (ResourceNotFoundException e) {
-                setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
+                setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
             }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
@@ -120,27 +111,9 @@ class OnboardingServiceImpl implements OnboardingService {
             onboardingImportData.setContractVersion(product.getContractTemplateVersion());
 
             final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
-            if (product.getParentId() != null) {
-                final Product baseProduct = productsConnector.getProduct(product.getParentId(), null);
-                if (baseProduct.getStatus() == ProductStatus.PHASE_OUT) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the base product is dismissed.",
-                            onboardingImportData.getInstitutionExternalId(),
-                            baseProduct.getId()));
-                }
-                validateOnboarding(onboardingImportData.getInstitutionExternalId(), baseProduct.getId());
-                try {
-                    partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), baseProduct.getId());
-                } catch (RuntimeException e) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
-                            onboardingImportData.getInstitutionExternalId(),
-                            product.getId(),
-                            baseProduct.getId()));
-                }
-                roleMappings = baseProduct.getRoleMappings();
-            } else {
-                validateOnboarding(onboardingImportData.getInstitutionExternalId(), product.getId());
-                roleMappings = product.getRoleMappings();
-            }
+            validateOnboarding(onboardingImportData.getInstitutionExternalId(), product.getId());
+            roleMappings = product.getRoleMappings();
+
 
             onboardingImportData.setProductName(product.getTitle());
             Assert.notNull(roleMappings, "Role mappings is required");
@@ -154,56 +127,27 @@ class OnboardingServiceImpl implements OnboardingService {
                 userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
             });
 
+
             if (institution == null) {
-                //Se non ho trovato l'ente su selfcare vado a crearlo (la creazione su party è quella che passa per IPA)
                 institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
-                //A questo livello posso fare l'inserimento dei dati che mi mancano per una nuova creazione di un ente
                 onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
                 onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
                 onboardingImportData.getBilling().setPublicServices(true);
-                onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-                onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-                onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-                onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-                onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-                onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
-                onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
-                onboardingImportData.setOrigin(institution.getOrigin());
             } else {
-                //Faccio una chiamata verso party process, verso la getOnboardingInfo (così recupero i dati dell'ente come viene fatto in dashboard), uso queti
-                //dati per impostare il codice destinatario e la partita iva se sono già presenti su selfcare
-                //DA VERIFICARE COSA SUCCEDE IN CASO DI ONBOARDING IN STATO "DA VALIDARE" E "DA COMPLETARE"
-                //N.B.: Se lo stato di adesione è in stato "DA VALIDARE" o "DA COMPLETARE" non ritornerò nulla perchè voglio solamente le ACTIVE
-                //Dalla onboarding info posso ricavare un vettore vuoto, cioè institutions = []
-                //Nel caso in cui l'ente non sia presente all'interno di selfcare in stato ACTIVE, quello che succede è che
-                //mi ritorna tutti gli enti per quell'utente
-                // Se dalla chiamata non trovo l'ente in stato active mi aspetto che onboardedInstitution sia null
                 OnboardingResponseData onboardedInstitution = partyConnector.getOnboardedInstitution(onboardingImportData.getInstitutionExternalId());
-                //A questo livello posso fare l'inserimento dei dati che mi mancano
-                if (onboardedInstitution != null && onboardedInstitution.getBilling() != null) {
-                    onboardingImportData.getBilling().setVatNumber(onboardedInstitution.getBilling().getVatNumber());
-                    onboardingImportData.getBilling().setRecipientCode(onboardedInstitution.getBilling().getRecipientCode());
-                    onboardingImportData.getBilling().setPublicServices(onboardedInstitution.getBilling().getPublicServices());
-                } else {
-                    onboardingImportData.getBilling().setVatNumber(ipaInstitutionResource.getTaxCode());
-                    onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
-                    onboardingImportData.getBilling().setPublicServices(true);
-                    if (onboardingImportData.getInstitutionType().equals(InstitutionType.PA)) {
-                        onboardingImportData.getBilling().setPublicServices(false);
-                    }
-                }
-                onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-                onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-                onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-                onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-                onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-                onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
-                onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
-                onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
-                onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
-                onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
-                onboardingImportData.setOrigin(institution.getOrigin());
+                onboardingImportData.setBilling(createBilling(onboardedInstitution, ipaInstitutionResource));
             }
+            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
+            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
+            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
+            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
+            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
+            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
+            onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
+            onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
+            onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
+            onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
+            onboardingImportData.setOrigin(institution.getOrigin());
 
             String finalInstitutionInternalId = institution.getId();
             onboardingImportData.getUsers().forEach(user -> {
@@ -219,123 +163,10 @@ class OnboardingServiceImpl implements OnboardingService {
                         .getId().toString()));
             });
 
-            //Qui vado ad impostare i campi che mi mancano per l'ente.
-            //DA VEDERE COME GESTIRE L'IMPOSTAZIONE DI "CODICE DESTINATARIO" E "PARTITA IVA"
-            //setOnboardingImportDataFields(onboardingImportData, institution, ipaInstitutionResource);
-
             partyConnector.oldContractOnboardingOrganization(onboardingImportData);
             log.trace("oldContractOnboarding end");
         }
     }
-
-    /*
-    @Override
-    public void oldContractOnboarding(OnboardingImportData onboardingImportData) {
-        log.trace("oldContractOnboarding start");
-        log.debug("oldContractOnboarding = {}", onboardingImportData);
-        Assert.notNull(onboardingImportData, REQUIRED_ONBOARDING_DATA_MESSAGE);
-
-        try {
-            ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), onboardingImportData.getProductId());
-            if (responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                log.debug((String.format("oldContractOnboarding: the institution with external id %s is already onboarded on the product %s",
-                        onboardingImportData.getInstitutionExternalId(),
-                        onboardingImportData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
-                        onboardingImportData.getInstitutionExternalId(),
-                        onboardingImportData.getProductId()));
-            }
-        } catch (ResourceNotFoundException | InstitutionDoesNotExistException exception) {
-            log.debug(String.format("oldContractOnboarding: starting onboarding process for institution %s on product %s",
-                    onboardingImportData.getInstitutionExternalId(),
-                    onboardingImportData.getProductId()));
-
-            InstitutionResource ipaInstitutionResource = registryProxyConnector.findInstitution(onboardingImportData.getInstitutionExternalId());
-
-            Institution institution = null;
-            try {
-                institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
-                if (institution.getInstitutionType() == null) {
-                    setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
-                } else {
-                    onboardingImportData.setInstitutionType(institution.getInstitutionType());
-                }
-            } catch (ResourceNotFoundException e) {
-                setOnboardingImportDataInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
-            }
-
-            Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
-            Assert.notNull(product, "Product is required");
-
-            if (product.getStatus() == ProductStatus.PHASE_OUT) {
-                throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
-                        onboardingImportData.getInstitutionExternalId(),
-                        product.getId()));
-            }
-
-            onboardingImportData.setContractPath(product.getContractTemplatePath());
-            onboardingImportData.setContractVersion(product.getContractTemplateVersion());
-
-            final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
-            if (product.getParentId() != null) {
-                final Product baseProduct = productsConnector.getProduct(product.getParentId(), null);
-                if (baseProduct.getStatus() == ProductStatus.PHASE_OUT) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the base product is dismissed.",
-                            onboardingImportData.getInstitutionExternalId(),
-                            baseProduct.getId()));
-                }
-                validateOnboarding(onboardingImportData.getInstitutionExternalId(), baseProduct.getId());
-                try {
-                    partyConnector.verifyOnboarding(onboardingImportData.getInstitutionExternalId(), baseProduct.getId());
-                } catch (RuntimeException e) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
-                            onboardingImportData.getInstitutionExternalId(),
-                            product.getId(),
-                            baseProduct.getId()));
-                }
-                roleMappings = baseProduct.getRoleMappings();
-            } else {
-                validateOnboarding(onboardingImportData.getInstitutionExternalId(), product.getId());
-                roleMappings = product.getRoleMappings();
-            }
-
-            onboardingImportData.setProductName(product.getTitle());
-            Assert.notNull(roleMappings, "Role mappings is required");
-            onboardingImportData.getUsers().forEach(userInfo -> {
-                Assert.notNull(roleMappings.get(userInfo.getRole()),
-                        String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
-                Assert.notEmpty(roleMappings.get(userInfo.getRole()).getRoles(),
-                        String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
-                Assert.state(roleMappings.get(userInfo.getRole()).getRoles().size() == 1,
-                        String.format(MORE_THAN_ONE_PRODUCT_ROLE_AVAILABLE, userInfo.getRole()));
-                userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
-            });
-
-            if (institution == null) {
-                institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
-            }
-
-            String finalInstitutionInternalId = institution.getId();
-            onboardingImportData.getUsers().forEach(user -> {
-
-                final Optional<User> searchResult =
-                        userConnector.search(user.getTaxCode(), USER_FIELD_LIST);
-                searchResult.ifPresentOrElse(foundUser -> {
-                    Optional<MutableUserFieldsDto> updateRequest = createUpdateRequest(user, foundUser, finalInstitutionInternalId);
-                    updateRequest.ifPresent(mutableUserFieldsDto ->
-                            userConnector.updateUser(UUID.fromString(foundUser.getId()), mutableUserFieldsDto));
-                    user.setId(foundUser.getId());
-                }, () -> user.setId(userConnector.saveUser(UserMapper.toSaveUserDto(user, finalInstitutionInternalId))
-                        .getId().toString()));
-            });
-
-            setOnboardingImportDataFields(onboardingImportData, institution, ipaInstitutionResource);
-
-            partyConnector.oldContractOnboardingOrganization(onboardingImportData);
-            log.trace("oldContractOnboarding end");
-        }
-    }
-     */
 
     @Override
     public void autoApprovalOnboarding(OnboardingData onboardingData) {
@@ -372,28 +203,7 @@ class OnboardingServiceImpl implements OnboardingService {
             onboardingData.setContractPath(product.getContractTemplatePath());
             onboardingData.setContractVersion(product.getContractTemplateVersion());
 
-            final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
-            if (product.getParentId() != null) {
-                final Product baseProduct = productsConnector.getProduct(product.getParentId(), null);
-                if (baseProduct.getStatus() == ProductStatus.PHASE_OUT) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the base product is dismissed.",
-                            onboardingData.getInstitutionExternalId(),
-                            baseProduct.getId()));
-                }
-                validateOnboarding(onboardingData.getInstitutionExternalId(), baseProduct.getId());
-                try {
-                    partyConnector.verifyOnboarding(onboardingData.getInstitutionExternalId(), baseProduct.getId());
-                } catch (RuntimeException e) {
-                    throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
-                            onboardingData.getInstitutionExternalId(),
-                            product.getId(),
-                            baseProduct.getId()));
-                }
-                roleMappings = baseProduct.getRoleMappings();
-            } else {
-                validateOnboarding(onboardingData.getInstitutionExternalId(), product.getId());
-                roleMappings = product.getRoleMappings();
-            }
+            final EnumMap<PartyRole, ProductRoleInfo> roleMappings = getRoleMappings(product, onboardingData.getInstitutionExternalId());
 
             onboardingData.setProductName(product.getTitle());
             Assert.notNull(roleMappings, "Role mappings is required");
@@ -495,25 +305,103 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private void setOnboardingImportDataFields(OnboardingImportData onboardingImportData, Institution institution, InstitutionResource ipaInstitutionResource) {
-        onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
-        onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
-        onboardingImportData.getBilling().setPublicServices(true);
-        onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
-        onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
-        onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
-        onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
-        onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
-        onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
-        onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
-        onboardingImportData.setOrigin(institution.getOrigin());
-    }
-
-    private void setOnboardingImportDataInstitutionType(OnboardingImportData onboardingImportData, String institutionCategory) {
+    private void setInstitutionType(OnboardingImportData onboardingImportData, String institutionCategory) {
         if (institutionCategory.equals("L37")) {
             onboardingImportData.setInstitutionType(InstitutionType.GSP);
         } else {
             onboardingImportData.setInstitutionType(InstitutionType.PA);
         }
+    }
+
+    private EnumMap<PartyRole, ProductRoleInfo> getRoleMappings(Product product, String institutionExternalId) {
+        if (product.getParentId() != null) {
+            final Product baseProduct = productsConnector.getProduct(product.getParentId(), null);
+            verifyBaseProductOnboarding(baseProduct, product, institutionExternalId);
+            return baseProduct.getRoleMappings();
+        } else {
+            validateOnboarding(institutionExternalId, product.getId());
+            return product.getRoleMappings();
+        }
+    }
+
+    private void verifyBaseProductOnboarding(Product baseProduct, Product product, String institutionExternalId) {
+        if (baseProduct.getStatus() == ProductStatus.PHASE_OUT) {
+            throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the base product is dismissed.",
+                    institutionExternalId,
+                    baseProduct.getId()));
+        }
+        validateOnboarding(institutionExternalId, baseProduct.getId());
+        try {
+            partyConnector.verifyOnboarding(institutionExternalId, baseProduct.getId());
+        } catch (RuntimeException e) {
+            throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
+                    institutionExternalId,
+                    product.getId(),
+                    baseProduct.getId()));
+        }
+    }
+
+    /*
+    private void createInstitutionAndSetFields(OnboardingImportData onboardingImportData, Institution institution, InstitutionResource ipaInstitutionResource){
+        if (institution == null) {
+            institution = partyConnector.createInstitutionUsingExternalId(onboardingImportData.getInstitutionExternalId());
+            onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
+            onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
+            onboardingImportData.getBilling().setPublicServices(true);
+            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
+            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
+            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
+            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
+            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
+            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
+            onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
+            onboardingImportData.setOrigin(institution.getOrigin());
+        } else {
+            OnboardingResponseData onboardedInstitution = partyConnector.getOnboardedInstitution(onboardingImportData.getInstitutionExternalId());
+            if (onboardedInstitution != null) {
+                if (onboardedInstitution.getBilling() != null) {
+                    onboardingImportData.getBilling().setVatNumber(onboardedInstitution.getBilling().getVatNumber());
+                    onboardingImportData.getBilling().setRecipientCode(onboardedInstitution.getBilling().getRecipientCode());
+                    onboardingImportData.getBilling().setPublicServices(onboardedInstitution.getBilling().getPublicServices());
+                } else {
+                    onboardingImportData.getBilling().setVatNumber(ipaInstitutionResource.getTaxCode());
+                    onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
+                }
+            } else {
+                onboardingImportData.getBilling().setVatNumber(ipaInstitutionResource.getTaxCode());
+                onboardingImportData.getBilling().setRecipientCode(ipaInstitutionResource.getOriginId());
+            }
+            onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
+            onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
+            onboardingImportData.getInstitutionUpdate().setAddress(institution.getAddress());
+            onboardingImportData.getInstitutionUpdate().setTaxCode(institution.getTaxCode());
+            onboardingImportData.getInstitutionUpdate().setZipCode(institution.getZipCode());
+            onboardingImportData.getInstitutionUpdate().setGeographicTaxonomies(institution.getGeographicTaxonomies());
+            onboardingImportData.getInstitutionUpdate().setSupportEmail(institution.getSupportEmail());
+            onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
+            onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
+            onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
+            onboardingImportData.setOrigin(institution.getOrigin());
+        }
+    }
+
+     */
+
+    private Billing createBilling(OnboardingResponseData onboardedInstitution, InstitutionResource ipaInstitutionResource) {
+        Billing billing = new Billing();
+        if (onboardedInstitution != null) {
+            if (onboardedInstitution.getBilling() != null) {
+                billing.setVatNumber(onboardedInstitution.getBilling().getVatNumber());
+                billing.setRecipientCode(onboardedInstitution.getBilling().getRecipientCode());
+                billing.setPublicServices(onboardedInstitution.getBilling().getPublicServices());
+            } else {
+                billing.setVatNumber(ipaInstitutionResource.getTaxCode());
+                billing.setRecipientCode(ipaInstitutionResource.getOriginId());
+            }
+        } else {
+            billing.setVatNumber(ipaInstitutionResource.getTaxCode());
+            billing.setRecipientCode(ipaInstitutionResource.getOriginId());
+        }
+        return billing;
     }
 }

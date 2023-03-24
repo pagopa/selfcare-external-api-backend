@@ -427,15 +427,8 @@ public class PartyConnectorImpl implements PartyConnector {
             );
             if (institutions.size() != 0) {
                 result = institutions.get(0);
-                //result = institutions.get(institutions.size() - 1);
             }
         }
-        //Qui posso avere diverse casistiche:
-        // se c'è l'ente ed è in stato ACTIVE allora mi ritorna proprio l'ente.
-        // se l'ente non c'è allora mi ritorna una lista di enti
-        // posso avere una lista di enti anche nel caso in cui l'ente è presente ed ha fatto adesione su più prodotti
-        // posso avere anche il caso in cui la lista ritornata è vuota, questo succede se ho un ente che è in stato ad esempio PENDING ma io faccio la ricerca
-        // per quell'ente con stato ACTIVE
         log.debug("getOnBoardedInstitution result = {}", result);
         log.trace("getOnBoardedInstitution end");
         return result;
