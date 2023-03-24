@@ -994,7 +994,7 @@ class PartyConnectorImplTest {
         OnboardingResponseData result = partyConnector.getOnboardedInstitution(institutionExternalId);
         //then
         assertNotNull(result);
-        reflectionEqualsByName(onboardingInfoMock.getInstitutions().get(1), result);
+        reflectionEqualsByName(onboardingInfoMock.getInstitutions().get(0), result);
         verify(partyProcessRestClientMock, times(1))
                 .getOnBoardingInfo(eq(institutionExternalId), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(partyProcessRestClientMock);

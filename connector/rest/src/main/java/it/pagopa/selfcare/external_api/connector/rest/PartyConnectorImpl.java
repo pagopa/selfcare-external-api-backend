@@ -426,7 +426,8 @@ public class PartyConnectorImpl implements PartyConnector {
                     }
             );
             if (institutions.size() != 0) {
-                result = institutions.get(institutions.size() - 1);
+                result = institutions.get(0);
+                //result = institutions.get(institutions.size() - 1);
             }
         }
         //Qui posso avere diverse casistiche:
