@@ -67,7 +67,7 @@ public interface PartyProcessRestClient {
     @GetMapping(value = "${rest-client.party-process.getUserInstitutionRelationshipsByExternalId.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CollectionFormat(feign.CollectionFormat.CSV)
-    RelationshipsResponse getUserInstitutionRelationshipsByExternalId(@PathVariable("id") String institutionId,
+    RelationshipsResponse getUserInstitutionRelationshipsByExternalId(@PathVariable("externalId") String institutionId,
                                                                       @RequestParam(value = "personId", required = false) String personId,
                                                                       @RequestParam(value = "roles", required = false) EnumSet<PartyRole> roles,
                                                                       @RequestParam(value = "states", required = false) EnumSet<RelationshipState> states,
