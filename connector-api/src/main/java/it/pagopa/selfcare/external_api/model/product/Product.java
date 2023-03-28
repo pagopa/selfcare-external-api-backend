@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.model.product;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -30,6 +31,10 @@ public class Product {
     private String parentId;
     private String contractTemplatePath;
     private String contractTemplateVersion;
+    private Instant contractTemplateUpdatedAt;
+    private Instant createdAt;
+    private String roleManagementURL;
+
 
 
     public static Optional<PartyRole> getPartyRole(String productRoleCode, EnumMap<PartyRole, ProductRoleInfo> roleMappings) {

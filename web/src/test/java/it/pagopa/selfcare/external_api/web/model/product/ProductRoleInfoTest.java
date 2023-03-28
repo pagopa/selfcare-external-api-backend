@@ -1,6 +1,7 @@
-package it.pagopa.selfcare.external_api.web.model.onboarding;
+package it.pagopa.selfcare.external_api.web.model.product;
 
 import it.pagopa.selfcare.commons.utils.TestUtils;
+import it.pagopa.selfcare.external_api.web.model.products.ProductRoleInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -16,10 +17,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ImportContractDtoTest {
-
+class ProductRoleInfoTest {
     private Validator validator;
 
     @BeforeEach
@@ -30,15 +31,15 @@ class ImportContractDtoTest {
 
     @Test
     void validateNullFields() {
+        // given
         HashMap<String, Class<? extends Annotation>> toCheckMap = new HashMap<>();
-        toCheckMap.put("fileName", NotBlank.class);
-        toCheckMap.put("filePath", NotBlank.class);
-        toCheckMap.put("contractType", NotBlank.class);
-        toCheckMap.put("onboardingDate", NotNull.class);
+        toCheckMap.put("multiroleAllowed", NotNull.class);
+        toCheckMap.put("roles", NotEmpty.class);
 
-        ImportContractDto importContractDto = new ImportContractDto();
-        //when
-        Set<ConstraintViolation<Object>> violations = validator.validate(importContractDto);
+        ProductRoleInfo productRoleInfo = new ProductRoleInfo();
+
+        // when
+        Set<ConstraintViolation<Object>> violations = validator.validate(productRoleInfo);
         // then
         List<ConstraintViolation<Object>> filteredViolations = violations.stream()
                 .filter(violation -> {
@@ -52,9 +53,11 @@ class ImportContractDtoTest {
     @Test
     void validateNotNullFields() {
         // given
-        ImportContractDto importContractDto = TestUtils.mockInstance(new ImportContractDto());
+        ProductRoleInfo productRoleInfo = TestUtils.mockInstance(new ProductRoleInfo());
+
+        productRoleInfo.setRoles(List.of(mockInstance(new it.pagopa.selfcare.external_api.model.product.ProductRoleInfo.ProductRole())));
         // when
-        Set<ConstraintViolation<Object>> violations = validator.validate(importContractDto);
+        Set<ConstraintViolation<Object>> violations = validator.validate(productRoleInfo);
         // then
         assertTrue(violations.isEmpty());
     }

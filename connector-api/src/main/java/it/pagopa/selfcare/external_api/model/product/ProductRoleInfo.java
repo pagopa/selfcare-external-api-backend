@@ -18,6 +18,9 @@ public class ProductRoleInfo {
         private String code;
         private String label;
         private String description;
+
     }
+
+
 
 }

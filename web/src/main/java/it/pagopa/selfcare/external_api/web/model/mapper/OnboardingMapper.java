@@ -18,6 +18,7 @@ public class OnboardingMapper {
             resource.setFileName(model.getFileName());
             resource.setFilePath(model.getFilePath());
             resource.setContractType(model.getContractType());
+            resource.setCreatedAt(model.getOnboardingDate());
         }
         return resource;
     }
@@ -48,7 +49,7 @@ public class OnboardingMapper {
             resource.setBilling(new Billing());
             resource.setInstitutionUpdate(new InstitutionUpdate());
             resource.getInstitutionUpdate().setImported(true);
-            resource.setInstitutionType(InstitutionType.PA);
+            //resource.setInstitutionType(InstitutionType.PA);
         }
         return resource;
     }
