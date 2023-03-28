@@ -1,9 +1,13 @@
 package it.pagopa.selfcare.external_api.api;
 
-import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import org.springframework.http.ResponseEntity;
 
@@ -34,5 +38,5 @@ public interface PartyConnector {
 
     void autoApprovalOnboarding(OnboardingData onboardingData);
 
-    RelationshipsResponse getRelationships(String institutionExternalId);
+    Relationships getRelationships(String institutionExternalId);
 }

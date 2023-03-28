@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.connector.rest.model.relationship;
+package it.pagopa.selfcare.external_api.model.relationship;
 
 import lombok.Data;
 

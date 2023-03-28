@@ -2,10 +2,10 @@ package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -5,19 +5,24 @@ import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
+import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
@@ -404,14 +409,14 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public RelationshipsResponse getRelationships(String institutionExternalId) {
+    public Relationships getRelationships(String institutionInternalId) {
         log.trace("getRelationships start");
-        log.debug("getRelationships institutionExternalId = {}", institutionExternalId);
-        Assert.hasText(institutionExternalId, REQUIRED_INSTITUTION_ID_MESSAGE);
-        RelationshipsResponse relationshipsResponse = partyProcessRestClient.getUserInstitutionRelationshipsByExternalId(institutionExternalId, null, null, EnumSet.of(ACTIVE), null, null);
-        log.debug("getRelationships result = {}", relationshipsResponse);
+        log.debug("getRelationships institutionExternalId = {}", institutionInternalId);
+        Assert.hasText(institutionInternalId, INSTITUTION_ID_IS_REQUIRED);
+        Relationships relationships = partyManagementRestClient.getRelationships(null, institutionInternalId, null, EnumSet.of(ACTIVE), null, null);
+        log.debug("getRelationships result = {}", relationships);
         log.trace("getRelationships end");
-        return relationshipsResponse;
+        return relationships;
     }
 
 }

@@ -10,9 +10,15 @@
  * Do not edit the class manually.
  */
 
-package it.pagopa.selfcare.external_api.model.institutions;
+package it.pagopa.selfcare.external_api.model.relationship;
 
-import java.util.ArrayList;
+import lombok.Data;
 
-public class RelationshipsResponse extends ArrayList<RelationshipInfo> {
+import java.util.List;
+
+@Data
+public class Relationships {
+
+    private List<Relationship> items;
+
 }

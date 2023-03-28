@@ -13,8 +13,6 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.institutions.RelationshipInfo;
-import it.pagopa.selfcare.external_api.model.institutions.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
@@ -22,6 +20,8 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
 import it.pagopa.selfcare.external_api.model.product.ProductStatus;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.model.user.mapper.CertifiedFieldMapper;
 import it.pagopa.selfcare.external_api.model.user.mapper.UserMapper;
@@ -137,8 +137,8 @@ class OnboardingServiceImpl implements OnboardingService {
                 onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
                 onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
             } else {
-                RelationshipsResponse relationshipsResponse = partyConnector.getRelationships(onboardingImportData.getInstitutionExternalId());
-                onboardingImportData.setBilling(createBilling(relationshipsResponse, ipaInstitutionResource));
+                Relationships relationships = partyConnector.getRelationships(institution.getId());
+                onboardingImportData.setBilling(createBilling(relationships, ipaInstitutionResource));
             }
             onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
             onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
@@ -341,13 +341,13 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private Billing createBilling(RelationshipsResponse relationshipsResponse, InstitutionResource ipaInstitutionResource) {
+    private Billing createBilling(Relationships relationships, InstitutionResource ipaInstitutionResource) {
         Billing billing = null;
-        if (relationshipsResponse != null) {
-            if (!relationshipsResponse.isEmpty()) {
-                List<RelationshipInfo> relationshipsInfoWithBilling = relationshipsResponse.stream().filter(relationshipInfo -> relationshipInfo.getBilling() != null).collect(Collectors.toList());
-                if (!relationshipsInfoWithBilling.isEmpty()) {
-                    billing = relationshipsInfoWithBilling.get(0).getBilling();
+        if (relationships.getItems() != null) {
+            if (!relationships.getItems().isEmpty()) {
+                List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).collect(Collectors.toList());
+                if (!relationshipsWithBilling.isEmpty()) {
+                    billing = relationshipsWithBilling.get(0).getBilling();
                 }
             }
         }

@@ -10,24 +10,24 @@
  * Do not edit the class manually.
  */
 
-package it.pagopa.selfcare.external_api.model.institutions;
+package it.pagopa.selfcare.external_api.model.relationship;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
 
 @Data
-public class RelationshipInfo {
+public class Relationship {
 
     private String id;
     private String from;
     private String to;
     private PartyRole role;
-    private ProductInfo product;
+    private RelationshipProduct product;
     private RelationshipState state;
     private String pricingPlan;
     private InstitutionUpdate institutionUpdate;

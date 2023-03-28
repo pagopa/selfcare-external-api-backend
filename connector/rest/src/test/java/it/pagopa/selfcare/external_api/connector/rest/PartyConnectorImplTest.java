@@ -14,16 +14,17 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -957,30 +958,30 @@ class PartyConnectorImplTest {
     @Test
     void getRelationships() {
         //given
-        String institutionExternalId = "institutionExternalId";
-        RelationshipsResponse relationshipsResponse = new RelationshipsResponse();
-        relationshipsResponse.add(mockInstance(new RelationshipInfo()));
-        when(partyProcessRestClientMock.getUserInstitutionRelationshipsByExternalId(any(), any(), any(), any(), any(), any()))
-                .thenReturn(relationshipsResponse);
+        String institutionInternalId = "institutionInternalId";
+        Relationships relationships = new Relationships();
+        relationships.setItems(List.of(mockInstance(new Relationship())));
+        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+                .thenReturn(relationships);
         //when
-        RelationshipsResponse result = partyConnector.getRelationships(institutionExternalId);
+        Relationships result = partyConnector.getRelationships(institutionInternalId);
         //then
         assertNotNull(result);
-        assertFalse(result.isEmpty());
-        verify(partyProcessRestClientMock, times(1))
-                .getUserInstitutionRelationshipsByExternalId(institutionExternalId, null, null, EnumSet.of(ACTIVE), null, null);
-        verifyNoMoreInteractions(partyProcessRestClientMock);
+        assertFalse(result.getItems().isEmpty());
+        verify(partyManagementRestClientMock, times(1))
+                .getRelationships(null, institutionInternalId, null, EnumSet.of(ACTIVE), null, null);
+        verifyNoMoreInteractions(partyManagementRestClientMock);
     }
 
     @Test
     void getRelationships_nullInstitutionExternalId() {
         //given
-        String institutionExternalId = null;
+        String institutionInternalId = null;
         //when
-        Executable executable = () -> partyConnector.getRelationships(institutionExternalId);
+        Executable executable = () -> partyConnector.getRelationships(institutionInternalId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals(REQUIRED_INSTITUTION_ID_MESSAGE, e.getMessage());
+        assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
         Mockito.verifyNoInteractions(partyProcessRestClientMock);
     }
 
