@@ -14,13 +14,13 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
@@ -955,102 +955,33 @@ class PartyConnectorImplTest {
     }
 
     @Test
-    void getOnboardedInstitution_sizeOne() {
+    void getRelationships() {
         //given
         String institutionExternalId = "institutionExternalId";
-        OnBoardingInfo onboardingInfoMock = mockInstance(new OnBoardingInfo());
-        onboardingInfoMock.setInstitutions(List.of(mockInstance(new OnboardingResponseData())));
-        when(partyProcessRestClientMock.getOnBoardingInfo(anyString(), any()))
-                .thenReturn(onboardingInfoMock);
+        RelationshipsResponse relationshipsResponse = new RelationshipsResponse();
+        relationshipsResponse.add(mockInstance(new RelationshipInfo()));
+        when(partyProcessRestClientMock.getUserInstitutionRelationshipsByExternalId(any(), any(), any(), any(), any(), any()))
+                .thenReturn(relationshipsResponse);
         //when
-        OnboardingResponseData result = partyConnector.getOnboardedInstitution(institutionExternalId);
+        RelationshipsResponse result = partyConnector.getRelationships(institutionExternalId);
         //then
         assertNotNull(result);
-        reflectionEqualsByName(onboardingInfoMock.getInstitutions().get(0), result);
+        assertFalse(result.isEmpty());
         verify(partyProcessRestClientMock, times(1))
-                .getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
+                .getUserInstitutionRelationshipsByExternalId(institutionExternalId, null, null, EnumSet.of(ACTIVE), null, null);
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 
     @Test
-    void getOnboardedInstitution_sizeGreaterThanOne() {
-        //given
-        String institutionExternalId = "institutionExternalId";
-        Billing billingMock = mockInstance(new Billing(), "setRecipientCode", "setVatNumber");
-        billingMock.setRecipientCode("recipientCodeMock2");
-        billingMock.setVatNumber("vatNumberMock2");
-        OnboardingResponseData onboardingResponseDataMock1 = mockInstance(new OnboardingResponseData(), "setexternalId");
-        onboardingResponseDataMock1.setExternalId(institutionExternalId);
-        OnboardingResponseData onboardingResponseDataMock2 = mockInstance(new OnboardingResponseData(), "externalId", "setBilling");
-        onboardingResponseDataMock2.setExternalId(institutionExternalId);
-        onboardingResponseDataMock2.setBilling(billingMock);
-        OnBoardingInfo onboardingInfoMock = mockInstance(new OnBoardingInfo());
-        onboardingInfoMock.setInstitutions(new ArrayList<>());
-        onboardingInfoMock.getInstitutions().add(onboardingResponseDataMock1);
-        onboardingInfoMock.getInstitutions().add(onboardingResponseDataMock2);
-        when(partyProcessRestClientMock.getOnBoardingInfo(anyString(), any()))
-                .thenReturn(onboardingInfoMock);
-        //when
-        OnboardingResponseData result = partyConnector.getOnboardedInstitution(institutionExternalId);
-        //then
-        assertNotNull(result);
-        reflectionEqualsByName(onboardingInfoMock.getInstitutions().get(0), result);
-        verify(partyProcessRestClientMock, times(1))
-                .getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
-        verifyNoMoreInteractions(partyProcessRestClientMock);
-    }
-
-    @Test
-    void getOnboardedInstitution_sizeGreaterThanOneInstitutionNotFound() {
-        //given
-        String institutionExternalId = "institutionExternalId";
-        Billing billingMock = mockInstance(new Billing(), "setRecipientCode", "setVatNumber");
-        billingMock.setRecipientCode("recipientCodeMock2");
-        billingMock.setVatNumber("vatNumberMock2");
-        OnboardingResponseData onboardingResponseDataMock1 = mockInstance(new OnboardingResponseData());
-        OnboardingResponseData onboardingResponseDataMock2 = mockInstance(new OnboardingResponseData(), "setBilling");
-        onboardingResponseDataMock2.setBilling(billingMock);
-        OnBoardingInfo onboardingInfoMock = mockInstance(new OnBoardingInfo());
-        onboardingInfoMock.setInstitutions(new ArrayList<>());
-        onboardingInfoMock.getInstitutions().add(onboardingResponseDataMock1);
-        onboardingInfoMock.getInstitutions().add(onboardingResponseDataMock2);
-        when(partyProcessRestClientMock.getOnBoardingInfo(anyString(), any()))
-                .thenReturn(onboardingInfoMock);
-        //when
-        OnboardingResponseData result = partyConnector.getOnboardedInstitution(institutionExternalId);
-        //then
-        assertNull(result);
-        verify(partyProcessRestClientMock, times(1))
-                .getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
-        verifyNoMoreInteractions(partyProcessRestClientMock);
-    }
-
-    @Test
-    void getOnboardedInstitution_sizeZero() {
-        //given
-        String institutionExternalId = "institutionExternalId";
-        OnBoardingInfo onboardingInfoMock = mockInstance(new OnBoardingInfo());
-        onboardingInfoMock.setInstitutions(Collections.emptyList());
-        when(partyProcessRestClientMock.getOnBoardingInfo(anyString(), any()))
-                .thenReturn(onboardingInfoMock);
-        //when
-        OnboardingResponseData result = partyConnector.getOnboardedInstitution(institutionExternalId);
-        //then
-        assertNull(result);
-        verify(partyProcessRestClientMock, times(1))
-                .getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
-        verifyNoMoreInteractions(partyProcessRestClientMock);
-    }
-
-    @Test
-    void getOnboardedInstitution_nullInstitutionExternalId() {
+    void getRelationships_nullInstitutionExternalId() {
         //given
         String institutionExternalId = null;
         //when
-        Executable executable = () -> partyConnector.getOnboardedInstitution(institutionExternalId);
+        Executable executable = () -> partyConnector.getRelationships(institutionExternalId);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(REQUIRED_INSTITUTION_ID_MESSAGE, e.getMessage());
         Mockito.verifyNoInteractions(partyProcessRestClientMock);
     }
+
 }

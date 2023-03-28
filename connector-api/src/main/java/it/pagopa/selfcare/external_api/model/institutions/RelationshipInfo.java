@@ -10,11 +10,11 @@
  * Do not edit the class manually.
  */
 
-package it.pagopa.selfcare.external_api.connector.rest.model.institution;
+package it.pagopa.selfcare.external_api.model.institutions;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.external_api.connector.rest.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.Data;
 

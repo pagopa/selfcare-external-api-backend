@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package it.pagopa.selfcare.external_api.connector.rest.model.institution;
+package it.pagopa.selfcare.external_api.model.institutions;
 
 import java.util.ArrayList;
 
