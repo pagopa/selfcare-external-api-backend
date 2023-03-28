@@ -343,13 +343,12 @@ class OnboardingServiceImpl implements OnboardingService {
 
     private Billing createBilling(Relationships relationships, InstitutionResource ipaInstitutionResource) {
         Billing billing = null;
-        if (relationships.getItems() != null) {
-            if (!relationships.getItems().isEmpty()) {
-                List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).collect(Collectors.toList());
-                if (!relationshipsWithBilling.isEmpty()) {
-                    billing = relationshipsWithBilling.get(0).getBilling();
-                }
+        if (relationships.getItems() != null && !relationships.getItems().isEmpty()) {
+            List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).collect(Collectors.toList());
+            if (!relationshipsWithBilling.isEmpty()) {
+                billing = relationshipsWithBilling.get(0).getBilling();
             }
+
         }
 
         if (billing == null) {
