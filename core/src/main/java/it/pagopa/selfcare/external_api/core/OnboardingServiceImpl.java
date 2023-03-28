@@ -13,11 +13,15 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
 import it.pagopa.selfcare.external_api.model.product.ProductStatus;
-import it.pagopa.selfcare.external_api.model.user.User;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.model.user.mapper.CertifiedFieldMapper;
 import it.pagopa.selfcare.external_api.model.user.mapper.UserMapper;
@@ -30,6 +34,7 @@ import org.springframework.util.Assert;
 
 import javax.validation.ValidationException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -132,8 +137,8 @@ class OnboardingServiceImpl implements OnboardingService {
                 onboardingImportData.getBilling().setVatNumber(institution.getTaxCode());
                 onboardingImportData.getBilling().setRecipientCode(institution.getOriginId());
             } else {
-                OnboardingResponseData onboardedInstitution = partyConnector.getOnboardedInstitution(onboardingImportData.getInstitutionExternalId());
-                onboardingImportData.setBilling(createBilling(onboardedInstitution, ipaInstitutionResource));
+                Relationships relationships = partyConnector.getRelationships(institution.getId());
+                onboardingImportData.setBilling(createBilling(relationships, ipaInstitutionResource));
             }
             onboardingImportData.getInstitutionUpdate().setDescription(institution.getDescription());
             onboardingImportData.getInstitutionUpdate().setDigitalAddress(institution.getDigitalAddress());
@@ -336,21 +341,22 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private Billing createBilling(OnboardingResponseData onboardedInstitution, InstitutionResource ipaInstitutionResource) {
-        Billing billing = new Billing();
-        if (onboardedInstitution != null) {
-            if (onboardedInstitution.getBilling() != null) {
-                billing.setVatNumber(onboardedInstitution.getBilling().getVatNumber());
-                billing.setRecipientCode(onboardedInstitution.getBilling().getRecipientCode());
-                billing.setPublicServices(onboardedInstitution.getBilling().getPublicServices());
-            } else {
-                billing.setVatNumber(ipaInstitutionResource.getTaxCode());
-                billing.setRecipientCode(ipaInstitutionResource.getOriginId());
+    private Billing createBilling(Relationships relationships, InstitutionResource ipaInstitutionResource) {
+        Billing billing = null;
+        if (relationships.getItems() != null && !relationships.getItems().isEmpty()) {
+            List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).collect(Collectors.toList());
+            if (!relationshipsWithBilling.isEmpty()) {
+                billing = relationshipsWithBilling.get(0).getBilling();
             }
-        } else {
+
+        }
+
+        if (billing == null) {
+            billing = new Billing();
             billing.setVatNumber(ipaInstitutionResource.getTaxCode());
             billing.setRecipientCode(ipaInstitutionResource.getOriginId());
         }
+
         return billing;
     }
 
