@@ -11,8 +11,6 @@ import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.Instituti
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -23,6 +21,8 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
@@ -409,29 +409,14 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public OnboardingResponseData getOnboardedInstitution(String institutionExternalId) {
-        log.trace("getOnBoardedInstitution start");
-        log.debug("getOnboardedInstitution institutionExternalId = {}", institutionExternalId);
-        Assert.hasText(institutionExternalId, REQUIRED_INSTITUTION_ID_MESSAGE);
-        OnBoardingInfo onBoardingInfo = partyProcessRestClient.getOnBoardingInfo(institutionExternalId, EnumSet.of(ACTIVE));
-        OnboardingResponseData result = null;
-        if (onBoardingInfo.getInstitutions().size() == 1) {
-            result = onBoardingInfo.getInstitutions().get(0);
-        } else if (onBoardingInfo.getInstitutions().size() > 1) {
-            List<OnboardingResponseData> institutions = new ArrayList<>();
-            onBoardingInfo.getInstitutions().forEach(institution -> {
-                        if (institution.getExternalId().equals(institutionExternalId)) {
-                            institutions.add(institution);
-                        }
-                    }
-            );
-            if (institutions.size() != 0) {
-                result = institutions.get(0);
-            }
-        }
-        log.debug("getOnBoardedInstitution result = {}", result);
-        log.trace("getOnBoardedInstitution end");
-        return result;
+    public Relationships getRelationships(String institutionInternalId) {
+        log.trace("getRelationships start");
+        log.debug("getRelationships institutionExternalId = {}", institutionInternalId);
+        Assert.hasText(institutionInternalId, INSTITUTION_ID_IS_REQUIRED);
+        Relationships relationships = partyManagementRestClient.getRelationships(null, institutionInternalId, null, EnumSet.of(ACTIVE), null, null);
+        log.debug("getRelationships result = {}", relationships);
+        log.trace("getRelationships end");
+        return relationships;
     }
 
 }

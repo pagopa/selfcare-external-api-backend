@@ -1,0 +1,20 @@
+image:
+  repository: selcpacr.azurecr.io/selfcareexternalapibackend
+  pullPolicy: Always # TODO change me in IfNotPresent when each build will have a different tag
+  tag: 0.0.1-SNAPSHOT
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://selfcare.pagopa.it"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+configEnvSpecific:
+  JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
+  APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
+  EXTERNAL_API_LOG_LEVEL: "INFO"

@@ -2,8 +2,8 @@ package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClient;
