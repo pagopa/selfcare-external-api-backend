@@ -2,7 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsPartyRegistryProxyRestClient;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +22,15 @@ public class MsPartyRegistryProxyConnectorImpl implements MsPartyRegistryProxyCo
     }
 
     @Override
-    public InstitutionResource findInstitution(String institutionExternalId) {
+    public String getInstitutionCategory(String institutionExternalId) {
         log.trace("getInstitutionCategory start");
         log.debug("getInstitutionCategory institutionExternalId = {}", institutionExternalId);
         Assert.hasText(institutionExternalId, EXTERNAL_INSTITUTION_ID_IS_REQUIRED);
         InstitutionResource result = restClient.findInstitution(institutionExternalId, null, null);
-        log.trace("getInstitutionCategory institutionCategory retrieved = {}", result);
+        String institutionCategory = result.getCategory();
+        log.trace("getInstitutionCategory institutionCategory retrieved = {}", institutionCategory);
         log.debug("getInstitutionCategory end");
-        return result;
+        return institutionCategory;
     }
 
 }

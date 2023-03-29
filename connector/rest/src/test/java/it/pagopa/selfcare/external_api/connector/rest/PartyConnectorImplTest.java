@@ -661,28 +661,6 @@ class PartyConnectorImplTest {
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 
-    @Test
-    void oldContractOnboardingOrganization_nullGeographicTaxonomies() {
-        // given
-        OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData(), "setPricingPlan");
-        Billing billing = mockInstance(new Billing());
-        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate(), "setInstitutionType");
-        onboardingImportData.setBilling(billing);
-        onboardingImportData.setUsers(List.of(mockInstance(new User())));
-        onboardingImportData.setInstitutionUpdate(institutionUpdate);
-        // when
-        partyConnector.oldContractOnboardingOrganization(onboardingImportData);
-        // then
-        verify(partyProcessRestClientMock, times(1))
-                .onboardingOrganization(onboardingImportRequestCaptor.capture());
-        OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
-        assertEquals(onboardingImportData.getInstitutionExternalId(), request.getInstitutionExternalId());
-        assertNotNull(request.getInstitutionUpdate().getGeographicTaxonomyCodes());
-        assertTrue(request.getInstitutionUpdate().getGeographicTaxonomyCodes().isEmpty());
-        assertTrue(request.getInstitutionUpdate().getGeographicTaxonomyCodes().isEmpty());
-        verifyNoMoreInteractions(partyProcessRestClientMock);
-    }
-
 
     @Test
     void oldContractOnboardingOrganization() {
