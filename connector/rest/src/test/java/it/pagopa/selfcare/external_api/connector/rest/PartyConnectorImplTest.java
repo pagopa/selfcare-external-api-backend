@@ -17,13 +17,14 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardi
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.connector.rest.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -660,6 +661,28 @@ class PartyConnectorImplTest {
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 
+    @Test
+    void oldContractOnboardingOrganization_nullGeographicTaxonomies() {
+        // given
+        OnboardingImportData onboardingImportData = mockInstance(new OnboardingImportData(), "setPricingPlan");
+        Billing billing = mockInstance(new Billing());
+        InstitutionUpdate institutionUpdate = mockInstance(new InstitutionUpdate(), "setInstitutionType");
+        onboardingImportData.setBilling(billing);
+        onboardingImportData.setUsers(List.of(mockInstance(new User())));
+        onboardingImportData.setInstitutionUpdate(institutionUpdate);
+        // when
+        partyConnector.oldContractOnboardingOrganization(onboardingImportData);
+        // then
+        verify(partyProcessRestClientMock, times(1))
+                .onboardingOrganization(onboardingImportRequestCaptor.capture());
+        OnboardingImportInstitutionRequest request = onboardingImportRequestCaptor.getValue();
+        assertEquals(onboardingImportData.getInstitutionExternalId(), request.getInstitutionExternalId());
+        assertNotNull(request.getInstitutionUpdate().getGeographicTaxonomyCodes());
+        assertTrue(request.getInstitutionUpdate().getGeographicTaxonomyCodes().isEmpty());
+        assertTrue(request.getInstitutionUpdate().getGeographicTaxonomyCodes().isEmpty());
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
 
     @Test
     void oldContractOnboardingOrganization() {
@@ -931,4 +954,35 @@ class PartyConnectorImplTest {
         verifyNoMoreInteractions(partyManagementRestClientMock);
         verifyNoInteractions(partyProcessRestClientMock);
     }
+
+    @Test
+    void getRelationships() {
+        //given
+        String institutionInternalId = "institutionInternalId";
+        Relationships relationships = new Relationships();
+        relationships.setItems(List.of(mockInstance(new Relationship())));
+        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+                .thenReturn(relationships);
+        //when
+        Relationships result = partyConnector.getRelationships(institutionInternalId);
+        //then
+        assertNotNull(result);
+        assertFalse(result.getItems().isEmpty());
+        verify(partyManagementRestClientMock, times(1))
+                .getRelationships(null, institutionInternalId, null, EnumSet.of(ACTIVE), null, null);
+        verifyNoMoreInteractions(partyManagementRestClientMock);
+    }
+
+    @Test
+    void getRelationships_nullInstitutionExternalId() {
+        //given
+        String institutionInternalId = null;
+        //when
+        Executable executable = () -> partyConnector.getRelationships(institutionInternalId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
+        Mockito.verifyNoInteractions(partyProcessRestClientMock);
+    }
+
 }

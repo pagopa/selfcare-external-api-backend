@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
+import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import org.springframework.http.ResponseEntity;
 
@@ -36,4 +37,6 @@ public interface PartyConnector {
     Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode);
 
     void autoApprovalOnboarding(OnboardingData onboardingData);
+
+    Relationships getRelationships(String institutionExternalId);
 }

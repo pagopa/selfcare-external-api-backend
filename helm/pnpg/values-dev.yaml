@@ -1,0 +1,22 @@
+image:
+  repository: selcdcommonacr.azurecr.io/selfcareexternalapibackend
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://dev.selfcare.pagopa.it,http://localhost:3000"
+  tls:
+    - hosts:
+        - dev01.pnpg.internal.dev.selfcare.pagopa.it
+      secretName: dev01-pnpg-internal-dev-selfcare-pagopa-it
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+configEnvSpecific:
+  JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
+  APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
+  EXTERNAL_API_LOG_LEVEL: "DEBUG"
