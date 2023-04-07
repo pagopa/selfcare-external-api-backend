@@ -5,6 +5,7 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,10 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("createPnPgInstitution result = {}", pnPgInstitution.getId());
         log.trace("createPnPgInstitution end");
         return pnPgInstitution.getId();
+    }
+
+    @Override
+    public Institution getInstitutionByExternalId(String externalId) {
+        return null;
     }
 }
