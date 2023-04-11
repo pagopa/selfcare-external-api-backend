@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +13,5 @@ public class PnPgInstitutionIdResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.id}", required = true)
     @JsonProperty(required = true)
     @NotBlank
-    private UUID id;
+    private String id;
 }
