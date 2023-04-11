@@ -13,15 +13,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {PnPgController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
@@ -45,16 +46,14 @@ class PnPgControllerTest {
         when(institutionServiceMock.addInstitution(any()))
                 .thenReturn(institutionInternalId);
         //when
-        MvcResult result = mvc.perform(MockMvcRequestBuilders
+        mvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/institutions/add")
                         .content(objectMapper.writeValueAsString(dto))
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(jsonPath("$.id", is(institutionInternalId)));
         //then
-        String response = result.getResponse().getContentAsString();
-        assertEquals(institutionInternalId, response);
         ArgumentCaptor<CreatePnPgInstitution> createInstitutionCaptor = ArgumentCaptor.forClass(CreatePnPgInstitution.class);
         verify(institutionServiceMock, times(1))
                 .addInstitution(createInstitutionCaptor.capture());
