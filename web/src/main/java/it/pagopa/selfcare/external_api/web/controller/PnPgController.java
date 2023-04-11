@@ -38,7 +38,7 @@ public class PnPgController {
                                  CreatePnPgInstitutionDto createPnPgInstitutionDto) {
         log.trace("addInstitution start");
         log.debug("addInstitution searchInstitutionDto = {}", createPnPgInstitutionDto);
-        UUID institutionId = UUID.fromString(institutionService.addInstitution(PnPgMapper.fromDto(createPnPgInstitutionDto)));
+        String institutionId = institutionService.addInstitution(PnPgMapper.fromDto(createPnPgInstitutionDto));
         PnPgInstitutionIdResource id = new PnPgInstitutionIdResource(institutionId);
         log.debug("addInstitution result = {}", id);
         log.trace("addInstitution end");
