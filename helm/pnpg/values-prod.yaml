@@ -1,11 +1,15 @@
 image:
-  repository: selcpacr.azurecr.io/selfcareexternalapibackend
+  repository: selcpcommonacr.azurecr.io/selfcareexternalapibackend
   pullPolicy: Always # TODO change me in IfNotPresent when each build will have a different tag
   tag: 0.0.1-SNAPSHOT
 
 ingress:
   annotations:
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://selfcare.pagopa.it"
+  tls:
+    - hosts:
+        - prod01.pnpg.internal.prod.selfcare.pagopa.it
+      secretName: prod01-pnpg-internal-prod-selfcare-pagopa-it
 
 autoscaling:
   enabled: false
