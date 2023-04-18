@@ -9,6 +9,11 @@ ingress:
     - hosts:
         - uat01.pnpg.internal.uat.selfcare.pagopa.it
       secretName: uat01-pnpg-internal-uat-selfcare-pagopa-it
+  hosts:
+    - host: "uat01.pnpg.internal.uat.selfcare.pagopa.it"
+      paths:
+        - path: /external-api/v1/(.*)
+          pathType: ImplementationSpecific
 
 autoscaling:
   enabled: false
