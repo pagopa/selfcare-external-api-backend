@@ -743,7 +743,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "string"
+                  "$ref" : "#/components/schemas/PnPgInstitutionIdResource"
                 }
               }
             }
@@ -1128,7 +1128,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SCP" ]
+            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1207,7 +1207,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SCP" ]
+            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1288,7 +1288,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SCP" ]
+            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1326,6 +1326,18 @@
             "items" : {
               "$ref" : "#/components/schemas/UserDto"
             }
+          }
+        }
+      },
+      "PnPgInstitutionIdResource" : {
+        "title" : "PnPgInstitutionIdResource",
+        "required" : [ "id" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Institution's unique internal Id",
+            "format" : "uuid"
           }
         }
       },

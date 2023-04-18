@@ -5,5 +5,6 @@ public enum InstitutionType {
     GSP,
     PT,
     PSP,
-    SCP
+    SCP,
+    PG
 }

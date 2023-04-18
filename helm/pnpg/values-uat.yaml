@@ -1,10 +1,14 @@
 image:
-  repository: selcuacr.azurecr.io/selfcareexternalapibackend
+  repository: selcucommonacr.azurecr.io/selfcareexternalapibackend
   tag: 0.0.1-SNAPSHOT
 
 ingress:
   annotations:
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://uat.selfcare.pagopa.it,http://localhost:3000"
+  tls:
+    - hosts:
+        - uat01.pnpg.internal.uat.selfcare.pagopa.it
+      secretName: uat01-pnpg-internal-uat-selfcare-pagopa-it
 
 autoscaling:
   enabled: false
