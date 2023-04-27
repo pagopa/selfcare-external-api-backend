@@ -10,6 +10,11 @@ ingress:
     - hosts:
         - prod01.pnpg.internal.prod.selfcare.pagopa.it
       secretName: prod01-pnpg-internal-prod-selfcare-pagopa-it
+  hosts:
+    - host: "prod01.pnpg.internal.prod.selfcare.pagopa.it"
+      paths:
+        - path: /external-api/v1/(.*)
+          pathType: ImplementationSpecific
 
 autoscaling:
   enabled: false
