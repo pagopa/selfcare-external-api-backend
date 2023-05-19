@@ -13,6 +13,7 @@
 
     <modules>
         <module>rest</module>
+        <module>azure-storage</module>
     </modules>
     <dependencies>
         <dependency>

@@ -69,6 +69,11 @@
             </dependency>
             <dependency>
                 <groupId>it.pagopa.selfcare</groupId>
+                <artifactId>selc-external-api-connector-azure-storage</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.pagopa.selfcare</groupId>
                 <artifactId>selc-commons-connector-rest</artifactId>
                 <version>${selc-commons.version}</version>
             </dependency>
