@@ -1,56 +1,52 @@
 package it.pagopa.selfcare.external_api.connector.azure_storage;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
-import com.microsoft.azure.storage.StorageCredentials;
-import com.microsoft.azure.storage.StorageCredentialsAccountAndKey;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import it.pagopa.selfcare.external_api.api.FileStorageConnector;
-import it.pagopa.selfcare.external_api.connector.azure_storage.config.AzureStorageConfig;
 import it.pagopa.selfcare.external_api.exceptions.AzureRestClientException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 
 import static it.pagopa.selfcare.external_api.model.constant.GenericError.ERROR_DURING_DOWNLOAD_FILE;
 
-
 @Slf4j
 @Service
+@Profile("AzureStorage")
 public class AzureBlobClient implements FileStorageConnector {
 
     private final CloudBlobClient blobClient;
-    private final AzureStorageConfig azureStorageConfig;
+    private final String institutionContractContainerReference;
 
-    AzureBlobClient(AzureStorageConfig azureStorageConfig) throws URISyntaxException {
-        log.trace("AzureBlobClient.AzureBlobClient");
-        log.debug("storageConnectionString = {}", azureStorageConfig.getConnectionString());
-        this.azureStorageConfig = azureStorageConfig;
-        final CloudStorageAccount storageAccount = buildStorageAccount();
+    AzureBlobClient(@Value("${blobStorage.connectionString}") String storageConnectionString,
+                    @Value("${blobStorage.institutions.contract.containerReference}") String institutionContractContainerReference)
+            throws URISyntaxException, InvalidKeyException {
+        if (log.isDebugEnabled()) {
+            log.trace("AzureBlobClient");
+            log.debug("AzureBlobClient storageConnectionString = {}, containerReference = {}",
+                    storageConnectionString, institutionContractContainerReference);
+        }
+        final CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
         this.blobClient = storageAccount.createCloudBlobClient();
+        this.institutionContractContainerReference = institutionContractContainerReference;
     }
-
-    private CloudStorageAccount buildStorageAccount() throws URISyntaxException {
-        StorageCredentials storageCredentials = new StorageCredentialsAccountAndKey(azureStorageConfig.getAccountName(), azureStorageConfig.getAccountKey());
-        return new CloudStorageAccount(storageCredentials,
-                true,
-                azureStorageConfig.getEndpointSuffix(),
-                azureStorageConfig.getAccountName());
-    }
-
+    @Override
     public ResourceResponse getFile(String fileName) {
-        log.trace("getFile start");
-        log.debug("getFile fileName = {}", fileName);
+        log.info("START - getFile for path: {}", fileName);
         try {
             ResourceResponse response = new ResourceResponse();
-            final CloudBlobContainer blobContainer = blobClient.getContainerReference(azureStorageConfig.getContractsTemplateContainer());
+            final CloudBlobContainer blobContainer = blobClient.getContainerReference(institutionContractContainerReference);
             final CloudBlockBlob blob = blobContainer.getBlockBlobReference(fileName);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BlobProperties properties = blob.getProperties();
@@ -72,5 +68,4 @@ public class AzureBlobClient implements FileStorageConnector {
                     ERROR_DURING_DOWNLOAD_FILE.getCode());
         }
     }
-
 }

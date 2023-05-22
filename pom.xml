@@ -32,6 +32,16 @@
             </dependency>
             <dependency>
                 <groupId>it.pagopa.selfcare</groupId>
+                <artifactId>selc-external-api-connector-rest</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.pagopa.selfcare</groupId>
+                <artifactId>selc-external-api-connector-azure-storage</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.pagopa.selfcare</groupId>
                 <artifactId>selc-external-api-core</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
@@ -64,16 +74,6 @@
             </dependency>
             <dependency>
                 <groupId>it.pagopa.selfcare</groupId>
-                <artifactId>selc-external-api-connector-rest</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.pagopa.selfcare</groupId>
-                <artifactId>selc-external-api-connector-azure-storage</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.pagopa.selfcare</groupId>
                 <artifactId>selc-commons-connector-rest</artifactId>
                 <version>${selc-commons.version}</version>
             </dependency>
@@ -83,6 +83,11 @@
                 <version>${selc-commons.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-storage</artifactId>
+                <version>8.6.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
