@@ -10,6 +10,7 @@ spring:
     include:
       # TO enable specific-language documentations
       - swaggerEN
+      - AzureStorage
   zipkin:
     enabled: false
   sleuth:
@@ -29,5 +30,6 @@ logging:
   level:
     it.pagopa.selfcare: ${APP_LOG_LEVEL:DEBUG}
     io.kubernetes.client: DEBUG
+#    org.springframework: DEBUG
   pattern:
     additional-info: ",%X{X-Client-Ip:-}]"

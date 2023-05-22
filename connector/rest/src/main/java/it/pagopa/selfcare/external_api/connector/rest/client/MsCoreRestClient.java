@@ -13,7 +13,7 @@ public interface MsCoreRestClient {
     @ResponseBody
     InstitutionPnPgResponse createPnPgInstitution(@RequestBody CreatePnPgInstitutionRequest request);
 
-    @GetMapping(value = "${rest-client.ms-core.getToken}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "${rest-client.ms-core.getToken.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     Token getToken(@RequestParam(value = "institutionId")String institutionId,
                    @RequestParam(value = "productId")String productId);

@@ -5,13 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
-import it.pagopa.selfcare.external_api.web.model.document.ContractResource;
-import it.pagopa.selfcare.external_api.web.model.mapper.ContractMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -27,17 +28,20 @@ public class ContractController {
     }
 
 
-    @GetMapping(value = "/{institutionId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/{institutionId}", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
-    public ContractResource getContract(@ApiParam("${swagger.external_api.institutions.model.id}")
+    public ResponseEntity<byte[]> getContract(@ApiParam("${swagger.external_api.institutions.model.id}")
                                         @PathVariable("institutionId")String institutionId,
-                                        @ApiParam("${swagger.external_api.products.model.id}")
+                                                        @ApiParam("${swagger.external_api.products.model.id}")
                                         @RequestParam(value = "productId") String productId){
 
         ResourceResponse contract = contractService.getContract(institutionId, productId);
-        ContractResource resource = ContractMapper.toResource(contract);
-        return resource;
+        var headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM_VALUE);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + contract.getFileName());
+        log.info("contentType: {}", headers.getContentType());
+        return ResponseEntity.ok().headers(headers).body(contract.getData());
     }
 
 }

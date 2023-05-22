@@ -67,7 +67,8 @@
             "content" : {
               "application/octet-stream" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ContractResource"
+                  "type" : "string",
+                  "format" : "byte"
                 }
               }
             }
@@ -1050,16 +1051,6 @@
           "shareCapital" : {
             "type" : "string",
             "description" : "Institution's share capital value"
-          }
-        }
-      },
-      "ContractResource" : {
-        "title" : "ContractResource",
-        "type" : "object",
-        "properties" : {
-          "data" : {
-            "type" : "string",
-            "format" : "byte"
           }
         }
       },
