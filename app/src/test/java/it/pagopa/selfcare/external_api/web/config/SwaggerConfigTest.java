@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.core.ProductService;
@@ -48,6 +49,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private OnboardingService onboardingService;
+
+    @MockBean
+    private ContractService contractService;
 
     @Autowired
     WebApplicationContext context;
