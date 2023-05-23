@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 class AzureBlobClientTest {
 
     @Test
-    public void testGetFile_Success() throws Exception {
+    void testGetFile_Success() throws Exception {
         // given
         String fileName = "your_file_name";
         byte[] fileData = "your_file_data".getBytes();
