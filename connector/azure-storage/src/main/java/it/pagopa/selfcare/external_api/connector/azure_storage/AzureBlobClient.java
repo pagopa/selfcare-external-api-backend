@@ -32,15 +32,11 @@ public class AzureBlobClient implements FileStorageConnector {
     AzureBlobClient(@Value("${blobStorage.connectionString}") String storageConnectionString,
                     @Value("${blobStorage.institutions.contract.containerReference}") String institutionContractContainerReference)
             throws URISyntaxException, InvalidKeyException {
-        if (log.isDebugEnabled()) {
-            log.trace("AzureBlobClient");
-            log.debug("AzureBlobClient storageConnectionString = {}, containerReference = {}",
-                    storageConnectionString, institutionContractContainerReference);
-        }
         final CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
         this.blobClient = storageAccount.createCloudBlobClient();
         this.institutionContractContainerReference = institutionContractContainerReference;
     }
+
     @Override
     public ResourceResponse getFile(String fileName) {
         log.info("START - getFile for path: {}", fileName);
@@ -57,13 +53,13 @@ public class AzureBlobClient implements FileStorageConnector {
             response.setMimetype(properties.getContentType());
             return response;
         } catch (StorageException e) {
-            if(e.getHttpStatusCode() == 404){
+            if (e.getHttpStatusCode() == 404) {
                 throw new ResourceNotFoundException(String.format(ERROR_DURING_DOWNLOAD_FILE.getMessage(), fileName),
                         ERROR_DURING_DOWNLOAD_FILE.getCode());
             }
             throw new AzureRestClientException(String.format(ERROR_DURING_DOWNLOAD_FILE.getMessage(), fileName),
                     ERROR_DURING_DOWNLOAD_FILE.getCode());
-        }catch (URISyntaxException e){
+        } catch (URISyntaxException e) {
             throw new AzureRestClientException(String.format(ERROR_DURING_DOWNLOAD_FILE.getMessage(), fileName),
                     ERROR_DURING_DOWNLOAD_FILE.getCode());
         }
