@@ -7,7 +7,6 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +15,6 @@ public class ContractServiceImpl implements ContractService {
     private final FileStorageConnector fileStorageConnector;
     private final MsCoreConnector msCoreConnector;
 
-    @Autowired
     public ContractServiceImpl(FileStorageConnector fileStorageConnector, MsCoreConnector msCoreConnector) {
         log.trace("Initializing {}...", ContractServiceImpl.class.getSimpleName());
         this.fileStorageConnector = fileStorageConnector;
