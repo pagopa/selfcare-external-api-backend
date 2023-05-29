@@ -6,7 +6,6 @@ import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.external_api.api.FileStorageConnector;
 import it.pagopa.selfcare.external_api.exceptions.AzureRestClientException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -34,7 +33,6 @@ public class AzureBlobClient implements FileStorageConnector {
                     @Value("${blobStorage.institutions.contract.containerReference}") String institutionContractContainerReference)
             throws URISyntaxException, InvalidKeyException {
         final CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
-        log.info(LogUtils.CONFIDENTIAL_MARKER, "AzureBlobClient container reference = {}, storageConnectionString = {}", institutionContractContainerReference, storageConnectionString);
         this.blobClient = storageAccount.createCloudBlobClient();
         this.institutionContractContainerReference = institutionContractContainerReference;
     }
