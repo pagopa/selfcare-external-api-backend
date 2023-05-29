@@ -37,6 +37,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - secretRef:
+                name: product-external-api
+            - secretRef:
                 name: application-insights
             - secretRef:
                 name: common-secrets
