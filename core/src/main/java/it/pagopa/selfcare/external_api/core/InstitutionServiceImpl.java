@@ -106,7 +106,7 @@ class InstitutionServiceImpl implements InstitutionService {
         userInfoFilter.setProductRoles(productRoles);
         userInfoFilter.setAllowedState(Optional.of(EnumSet.of(RelationshipState.ACTIVE)));
         Collection<UserInfo> result = partyConnector.getUsers(userInfoFilter);
-        if (serviceType.contains(xSelfCareUid)) {
+        if (xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
             result.forEach(userInfo ->
                     userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST_FISCAL_CODE)));
         } else {

@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.core.config.CoreTestConfig;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -24,11 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
@@ -39,21 +42,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        InstitutionServiceImpl.class,
+        CoreTestConfig.class
+})
+@TestPropertySource(properties = {
+        "ALLOWED_SERVICE_TYPES=external-interceptor,onboarding-interceptor"
+})
 class InstitutionServiceImplTest {
-    @InjectMocks
+    @Autowired
     private InstitutionServiceImpl institutionService;
 
-    @Mock
+    @MockBean
     private PartyConnector partyConnectorMock;
 
-    @Mock
+    @MockBean
     private ProductsConnector productsConnectorMock;
 
-    @Mock
+    @MockBean
     private UserRegistryConnector userRegistryConnectorMock;
 
-    @Mock
+    @MockBean
     private MsCoreConnector msCoreConnectorMock;
 
     @BeforeEach
