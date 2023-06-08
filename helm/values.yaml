@@ -85,3 +85,4 @@ affinity: {}
 
 config:
   APPLICATIONINSIGHTS_ROLE_NAME: "external-api"
+  ALLOWED_SERVICE_TYPES: onboarding-interceptor,external-interceptor
