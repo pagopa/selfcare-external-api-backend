@@ -19,6 +19,7 @@ import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,16 +46,18 @@ class InstitutionServiceImpl implements InstitutionService {
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
 
-    private final static String serviceType = "onboarding-interceptor";
+    private final Set<String> serviceType;
 
     @Autowired
     InstitutionServiceImpl(PartyConnector partyConnector,
                            ProductsConnector productsConnector,
-                           MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector) {
+                           MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector,
+                           @Value("${external_api.allowed-service-types}")String[] serviceType) {
         this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
         this.msCoreConnector = msCoreConnector;
         this.userRegistryConnector = userRegistryConnector;
+        this.serviceType = Set.of(serviceType);
     }
 
     @Override
@@ -103,7 +106,7 @@ class InstitutionServiceImpl implements InstitutionService {
         userInfoFilter.setProductRoles(productRoles);
         userInfoFilter.setAllowedState(Optional.of(EnumSet.of(RelationshipState.ACTIVE)));
         Collection<UserInfo> result = partyConnector.getUsers(userInfoFilter);
-        if (serviceType.equals(xSelfCareUid)) {
+        if (xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
             result.forEach(userInfo ->
                     userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST_FISCAL_CODE)));
         } else {

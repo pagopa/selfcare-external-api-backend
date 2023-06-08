@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.core.config.CoreTestConfig;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -24,11 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
@@ -39,21 +42,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        InstitutionServiceImpl.class,
+        CoreTestConfig.class
+})
+@TestPropertySource(properties = {
+        "ALLOWED_SERVICE_TYPES=external-interceptor,onboarding-interceptor"
+})
 class InstitutionServiceImplTest {
-    @InjectMocks
+    @Autowired
     private InstitutionServiceImpl institutionService;
 
-    @Mock
+    @MockBean
     private PartyConnector partyConnectorMock;
 
-    @Mock
+    @MockBean
     private ProductsConnector productsConnectorMock;
 
-    @Mock
+    @MockBean
     private UserRegistryConnector userRegistryConnectorMock;
 
-    @Mock
+    @MockBean
     private MsCoreConnector msCoreConnectorMock;
 
     @BeforeEach
@@ -309,6 +319,57 @@ class InstitutionServiceImplTest {
                 .thenReturn(user);
         // when
         Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, usrIdParam, productRole, null);
+        // then
+        Assertions.assertNotNull(userInfos);
+        userInfos.forEach(userInfo1 -> {
+            TestUtils.checkNotNullFields(userInfo1, "products");
+            TestUtils.checkNotNullFields(userInfo1.getUser());
+        });
+        ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
+        verify(partyConnectorMock, times(1))
+                .getUsers(filterCaptor.capture());
+        UserInfo.UserInfoFilter capturedFilter = filterCaptor.getValue();
+        assertEquals(usrIdParam, capturedFilter.getRole());
+        assertEquals(institutionId, capturedFilter.getInstitutionId().get());
+        assertEquals(productId, capturedFilter.getProductId().get());
+        assertEquals(productRole, capturedFilter.getProductRoles());
+        assertEquals(Optional.empty(), capturedFilter.getUserId());
+        assertEquals(Optional.of(EnumSet.of(ACTIVE)), capturedFilter.getAllowedStates());
+        ArgumentCaptor<EnumSet<User.Fields>> filedsCaptor = ArgumentCaptor.forClass(EnumSet.class);
+        verify(userRegistryConnectorMock, times(1))
+                .getUserByInternalId(eq(userId), filedsCaptor.capture());
+        EnumSet<User.Fields> capturedFields = filedsCaptor.getValue();
+        assertTrue(capturedFields.contains(User.Fields.name));
+        assertTrue(capturedFields.contains(User.Fields.familyName));
+        assertTrue(capturedFields.contains(User.Fields.workContacts));
+        assertFalse(capturedFields.contains(User.Fields.fiscalCode));
+        verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
+        verifyNoInteractions(productsConnectorMock);
+    }
+
+    @Test
+    void getInstitutionProductUsers_case3(){
+        // given
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+        final Optional<String> usrIdParam = Optional.empty();
+        final String xSelfCareUid = "unregistered-interceptor";
+        final Optional<Set<String>> productRole = Optional.empty();
+        final UserInfo userInfo = mockInstance(new UserInfo());
+        final String userId = UUID.randomUUID().toString();
+        userInfo.setId(userId);
+        final User user = mockInstance(new User());
+        user.setId(userId);
+        WorkContact contact = mockInstance(new WorkContact());
+        Map<String, WorkContact> workContact = new HashMap<>();
+        workContact.put(institutionId, contact);
+        user.setWorkContacts(workContact);
+        when(partyConnectorMock.getUsers(any()))
+                .thenReturn(Collections.singletonList(userInfo));
+        when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
+                .thenReturn(user);
+        // when
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, usrIdParam, productRole, xSelfCareUid);
         // then
         Assertions.assertNotNull(userInfos);
         userInfos.forEach(userInfo1 -> {
