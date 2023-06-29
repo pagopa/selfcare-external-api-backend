@@ -41,6 +41,10 @@ public class InstitutionMapper {
             resource.setAssistanceContacts(toResource(model.getSupportContact()));
             resource.setPspData(toResource(model.getPaymentServiceProvider()));
             resource.setDpoData(toResource(model.getDataProtectionOfficer()));
+            resource.setSubunitCode(model.getSubunitCode());
+            resource.setSubunitType(model.getSubunitType());
+            resource.setAooParentCode(model.getAooParentCode());
+            resource.setParentDescription(model.getParentDescription());
         }
         return resource;
     }
@@ -71,6 +75,10 @@ public class InstitutionMapper {
             resource.setSupportEmail(model.getSupportEmail());
             resource.setSupportPhone(model.getSupportPhone());
             resource.setImported(model.getImported());
+            resource.setSubunitCode(model.getSubunitCode());
+            resource.setSubunitType(model.getSubunitType());
+            resource.setAooParentCode(model.getAooParentCode());
+            resource.setParentDescription(model.getParentDescription());
 
         }
         return resource;

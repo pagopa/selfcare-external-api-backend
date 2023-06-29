@@ -34,5 +34,9 @@ public class InstitutionInfo {
     private SupportContact supportContact;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
+    private String subunitCode;
+    private String subunitType;
+    private String parentDescription;
+    private String aooParentCode;
 
 }
