@@ -17,6 +17,7 @@ public interface InstitutionMapper {
     @Mapping(target = "companyInformations", source = "model.businessData", qualifiedByName = "toCompanyInformationResource")
     @Mapping(target = "assistanceContacts", source = "model.supportContact", qualifiedByName = "toAssistanceContactsResource")
     @Mapping(target = "dpoData", source = "model.dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
+    @Mapping(target = "userProductRoles", source = "model.productRoles")
     InstitutionResource toResource(InstitutionInfo model);
 
     @Mapping(target = "geographicTaxonomies", source = "model.geographicTaxonomies", qualifiedByName = "toGeographicTaxonomyResource")
