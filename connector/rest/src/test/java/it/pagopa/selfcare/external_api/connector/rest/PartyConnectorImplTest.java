@@ -217,7 +217,7 @@ class PartyConnectorImplTest {
         //then
         assertNotNull(institutions);
         assertEquals(1, institutions.size());
-        assertNull(institutions.get(0).getSubunitType());
+        assertNull(institutions.get(0).getParentDescription());
         verify(partyProcessRestClientMock, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(partyProcessRestClientMock);

@@ -44,11 +44,14 @@ public class InstitutionController {
 
     private final ContractService contractService;
 
+    private final InstitutionMapper institutionMapper;
+
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService, ContractService contractService) {
+    public InstitutionController(InstitutionService institutionService, ContractService contractService, InstitutionMapper institutionMapper) {
         this.institutionService = institutionService;
         this.contractService = contractService;
+        this.institutionMapper = institutionMapper;
     }
 
     @GetMapping(value = "")
@@ -60,7 +63,7 @@ public class InstitutionController {
         log.debug("getInstitutions productId = {}", productId);
         List<InstitutionResource> institutionResources = institutionService.getInstitutions(productId)
                 .stream()
-                .map(InstitutionMapper::toResource)
+                .map(institutionMapper::toResource)
                 .collect(Collectors.toList());
         log.debug("getInstitutions result = {}", institutionResources);
         log.trace("getInstitutions end");
@@ -137,7 +140,7 @@ public class InstitutionController {
         log.trace("getInstitutionByGeoTaxonomies start");
         log.debug("getInstitutionByGeoTaxonomies geoTaxonomies = {}, searchMode = {}", geoTaxonomies, searchMode);
         Collection<Institution> institutions = institutionService.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode.orElse(null));
-        List<InstitutionDetailResource> result = institutions.stream().map(InstitutionMapper::toResource).collect(Collectors.toList());
+        List<InstitutionDetailResource> result = institutions.stream().map(institutionMapper::toResource).collect(Collectors.toList());
         log.debug("getInstitutionByGeoTaxonomies result = {}", result);
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;
