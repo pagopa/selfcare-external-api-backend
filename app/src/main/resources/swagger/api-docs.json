@@ -965,9 +965,7 @@
         "properties" : {
           "supportEmail" : {
             "type" : "string",
-            "description" : "Institution's support email contact",
-            "format" : "email",
-            "example" : "email@example.com"
+            "description" : "Institution's support email contact"
           },
           "supportPhone" : {
             "type" : "string",
@@ -1091,7 +1089,6 @@
       },
       "DpoDataResource" : {
         "title" : "DpoDataResource",
-        "required" : [ "address", "email", "pec" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -1100,15 +1097,11 @@
           },
           "email" : {
             "type" : "string",
-            "description" : "DPO's email",
-            "format" : "email",
-            "example" : "email@example.com"
+            "description" : "DPO's email"
           },
           "pec" : {
             "type" : "string",
-            "description" : "DPO's PEC",
-            "format" : "email",
-            "example" : "email@example.com"
+            "description" : "DPO's PEC"
           }
         }
       },
@@ -1129,7 +1122,6 @@
       },
       "GeographicTaxonomyResource" : {
         "title" : "GeographicTaxonomyResource",
-        "required" : [ "code", "desc" ],
         "type" : "object",
         "properties" : {
           "code" : {
@@ -1168,7 +1160,6 @@
       },
       "InstitutionDetailResource" : {
         "title" : "InstitutionDetailResource",
-        "required" : [ "address", "description", "digitalAddress", "externalId", "geographicTaxonomies", "id", "institutionType", "origin", "originId", "taxCode", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -1231,9 +1222,7 @@
           },
           "supportEmail" : {
             "type" : "string",
-            "description" : "Institution's support email contact",
-            "format" : "email",
-            "example" : "email@example.com"
+            "description" : "Institution's support email contact"
           },
           "supportPhone" : {
             "type" : "string",
@@ -1251,7 +1240,6 @@
       },
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "address", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "status", "taxCode", "userProductRoles", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -1414,7 +1402,6 @@
       },
       "PnPgInstitutionIdResource" : {
         "title" : "PnPgInstitutionIdResource",
-        "required" : [ "id" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -1462,7 +1449,6 @@
       },
       "ProductResource" : {
         "title" : "ProductResource",
-        "required" : [ "contractTemplatePath", "contractTemplateUpdatedAt", "contractTemplateVersion", "createdAt", "id", "title" ],
         "type" : "object",
         "properties" : {
           "contractTemplatePath" : {
@@ -1608,7 +1594,6 @@
       },
       "PspDataResource" : {
         "title" : "PspDataResource",
-        "required" : [ "abiCode", "businessRegisterNumber", "legalRegisterName", "legalRegisterNumber", "vatNumberGroup" ],
         "type" : "object",
         "properties" : {
           "abiCode" : {
@@ -1666,14 +1651,11 @@
       },
       "UserResource" : {
         "title" : "UserResource",
-        "required" : [ "email", "id", "name", "role", "roles", "surname" ],
         "type" : "object",
         "properties" : {
           "email" : {
             "type" : "string",
-            "description" : "User's institutional email",
-            "format" : "email",
-            "example" : "email@example.com"
+            "description" : "User's institutional email"
           },
           "fiscalCode" : {
             "type" : "string",
