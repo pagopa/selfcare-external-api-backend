@@ -84,4 +84,13 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData}")
     @Valid
     private DpoDataResource dpoData;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
+    private String subunitCode;
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitType}")
+    private String subunitType;
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.parentDescription}")
+    private String parentDescription;
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.aooParentCode}")
+    private String aooParentCode;
 }

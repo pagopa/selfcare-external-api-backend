@@ -199,6 +199,32 @@ class PartyConnectorImplTest {
     }
 
     @Test
+    void getOnboardedInstitutions_parentInstitution(){
+        //given
+        final String productId = "productId";
+        OnBoardingInfo onBoardingInfo = new OnBoardingInfo();
+        ProductInfo product1 = mockInstance(new ProductInfo(), 1);
+        product1.setId(productId);
+        OnboardingResponseData onboardingData1 = mockInstance(new OnboardingResponseData(), 1, "setState", "setRole", "setSubunitCode", "setSubunitType", "setAooParentCode");
+        onboardingData1.setState(ACTIVE);
+        onboardingData1.setRole(PartyRole.OPERATOR);
+        onboardingData1.setProductInfo(product1);
+        onBoardingInfo.setInstitutions(List.of(onboardingData1));
+        when(partyProcessRestClientMock.getOnBoardingInfo(any(), any()))
+                .thenReturn(onBoardingInfo);
+        //when
+        List<InstitutionInfo>institutions = new ArrayList<>(partyConnector.getOnBoardedInstitutions(productId));
+        //then
+        assertNotNull(institutions);
+        assertEquals(1, institutions.size());
+        assertNull(institutions.get(0).getParentDescription());
+        verify(partyProcessRestClientMock, times(1))
+                .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+        verifyNoInteractions(partyManagementRestClientMock);
+    }
+
+    @Test
     void getInstitutionUserProducts_nullInstitutionId() {
         //given
         String institutionId = null;
