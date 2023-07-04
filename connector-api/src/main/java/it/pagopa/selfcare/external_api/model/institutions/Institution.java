@@ -28,4 +28,8 @@ public class Institution {
     private String supportEmail;
     private String supportPhone;
     private Boolean imported;
+    private String subunitCode;
+    private String subunitType;
+    private String parentDescription;
+    private String aooParentCode;
 }

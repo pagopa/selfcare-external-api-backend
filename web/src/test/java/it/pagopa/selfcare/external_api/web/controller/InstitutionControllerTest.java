@@ -18,9 +18,13 @@ import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,15 +47,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {InstitutionController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {InstitutionController.class, WebTestConfig.class})
+@ContextConfiguration(classes = {InstitutionController.class, WebTestConfig.class, InstitutionMapperImpl.class})
 class InstitutionControllerTest {
     private static final String BASE_URL = "/institutions";
 
     @Autowired
     protected MockMvc mvc;
 
+    @InjectMocks
+    private InstitutionController institutionController;
+
     @Autowired
-    protected ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
+    @Spy
+    private InstitutionMapper institutionMapper = new InstitutionMapperImpl();
 
     @MockBean
     private InstitutionService institutionServiceMock;

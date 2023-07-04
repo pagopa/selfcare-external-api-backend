@@ -32,4 +32,7 @@ public class OnboardingResponseData {
     private SupportContact supportContact;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
+    private String subunitCode;
+    private String subunitType;
+    private String aooParentCode;
 }

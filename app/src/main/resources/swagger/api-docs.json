@@ -1166,6 +1166,10 @@
             "type" : "string",
             "description" : "Institution's physical address"
           },
+          "aooParentCode" : {
+            "type" : "string",
+            "description" : "AOO unit parent institution Code"
+          },
           "businessRegisterPlace" : {
             "type" : "string",
             "description" : "Institution's business register place"
@@ -1212,6 +1216,10 @@
             "type" : "string",
             "description" : "Institution's details origin Id"
           },
+          "parentDescription" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit parent's description"
+          },
           "rea" : {
             "type" : "string",
             "description" : "Institution's REA"
@@ -1219,6 +1227,14 @@
           "shareCapital" : {
             "type" : "string",
             "description" : "Institution's share capital value"
+          },
+          "subunitCode" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit Code"
+          },
+          "subunitType" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit type"
           },
           "supportEmail" : {
             "type" : "string",
@@ -1245,6 +1261,10 @@
           "address" : {
             "type" : "string",
             "description" : "Institution's physical address"
+          },
+          "aooParentCode" : {
+            "type" : "string",
+            "description" : "AOO unit parent institution Code"
           },
           "assistanceContacts" : {
             "description" : "Institution's assistance contacts",
@@ -1288,6 +1308,10 @@
             "type" : "string",
             "description" : "Institution's details origin Id"
           },
+          "parentDescription" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit parent's description"
+          },
           "pspData" : {
             "description" : "Payment Service Provider (PSP) specific data",
             "$ref" : "#/components/schemas/PspDataResource"
@@ -1299,6 +1323,14 @@
           "status" : {
             "type" : "string",
             "description" : "Institution onboarding status"
+          },
+          "subunitCode" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit Code"
+          },
+          "subunitType" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit type"
           },
           "taxCode" : {
             "type" : "string",
