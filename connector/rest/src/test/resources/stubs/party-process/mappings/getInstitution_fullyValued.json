@@ -22,6 +22,10 @@
       "supportEmail": "string",
       "supportPhone": "string",
       "imported": true,
+      "subunitCode": "string",
+      "subunitType": "UO",
+      "aooParentCode": "string",
+      "parentDescription": "string",
       "products": {
         "additionalProp1": {
           "product": "string",
