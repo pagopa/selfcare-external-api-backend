@@ -1,46 +1,30 @@
 package it.pagopa.selfcare.external_api.web.model.products;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.EnumMap;
 
 @Data
 public class ProductResource {
-    @ApiModelProperty(value = "${swagger.external_api.products.model.id}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.products.model.id}")
     private String id;
 
-    @ApiModelProperty(value = "${swagger.external_api.products.model.title}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.products.model.title}")
     private String title;
 
-    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplatePath}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplatePath}")
     private String contractTemplatePath;
 
-    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateUpdatedAt}", required = true)
-    @JsonProperty(required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateUpdatedAt}")
     private Instant contractTemplateUpdatedAt;
 
-    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateVersion}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateVersion}")
     private String contractTemplateVersion;
 
-    @ApiModelProperty(value = "${swagger.external_api.products.model.createdAt}", required = true)
-    @JsonProperty(required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.products.model.createdAt}")
     private Instant createdAt;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.description}")
@@ -68,12 +52,9 @@ public class ProductResource {
     private String parentId;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.roleMappings}")
-    @Valid
     private EnumMap<PartyRole, ProductRoleInfo> roleMappings;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.roleManagementURL}")
     private String roleManagementURL;
-
-
 
 }

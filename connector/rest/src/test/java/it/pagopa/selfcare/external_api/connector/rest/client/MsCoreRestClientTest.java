@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.connector.rest.config.MsCoreRestClientTes
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
+import it.pagopa.selfcare.external_api.model.token.Token;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,18 @@ class MsCoreRestClientTest extends BaseFeignRestClientTest {
         //then
         assertNotNull(response);
         checkNotNullFields(response);
+    }
+
+    @Test
+    void getToken(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        //when
+        Token token = restClient.getToken(institutionId, productId);
+        //then
+        assertNotNull(token);
+        checkNotNullFields(token);
     }
 
 }

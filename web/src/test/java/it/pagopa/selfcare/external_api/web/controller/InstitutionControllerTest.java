@@ -3,7 +3,9 @@ package it.pagopa.selfcare.external_api.web.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.commons.utils.TestUtils;
+import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
@@ -16,13 +18,19 @@ import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -36,21 +44,30 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {InstitutionController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {InstitutionController.class, WebTestConfig.class})
+@ContextConfiguration(classes = {InstitutionController.class, WebTestConfig.class, InstitutionMapperImpl.class})
 class InstitutionControllerTest {
     private static final String BASE_URL = "/institutions";
 
     @Autowired
     protected MockMvc mvc;
 
+    @InjectMocks
+    private InstitutionController institutionController;
+
     @Autowired
-    protected ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
+    @Spy
+    private InstitutionMapper institutionMapper = new InstitutionMapperImpl();
 
     @MockBean
     private InstitutionService institutionServiceMock;
+
+    @MockBean
+    private ContractService contractService;
 
     @Test
     void getInstitutions() throws Exception {
@@ -281,6 +298,29 @@ class InstitutionControllerTest {
         verify(institutionServiceMock, times(1))
                 .getInstitutionsByGeoTaxonomies(Set.of(geoTaxIds), searchMode);
         verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    void getContract() throws Exception{
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        ResourceResponse response = mockInstance(new ResourceResponse());
+        byte[] mockData = "mock".getBytes();
+        response.setData(mockData);
+        when(contractService.getContract(any(), any())).thenReturn(response);
+        //when
+        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
+                        .param("productId", productId)
+                        .accept(MediaType.APPLICATION_OCTET_STREAM))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", response.getFileName())))
+                .andExpect(content().bytes(response.getData()));
+        //then
+        verify(contractService, times(1)).getContract(institutionId, productId);
+        verifyNoMoreInteractions(contractService);
+
     }
 
 

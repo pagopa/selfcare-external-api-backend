@@ -7,7 +7,7 @@
     <parent>
         <groupId>it.pagopa.selfcare</groupId>
         <artifactId>selc-starter-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
         <!-- lookup parent from repository -->
     </parent>
     <artifactId>selc-external-api</artifactId>
@@ -29,6 +29,16 @@
                 <artifactId>selc-external-api-connector-api</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>it.pagopa.selfcare</groupId>
+                <artifactId>selc-external-api-connector-rest</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.pagopa.selfcare</groupId>
+                <artifactId>selc-external-api-connector-azure-storage</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.pagopa.selfcare</groupId>
@@ -64,11 +74,6 @@
             </dependency>
             <dependency>
                 <groupId>it.pagopa.selfcare</groupId>
-                <artifactId>selc-external-api-connector-rest</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.pagopa.selfcare</groupId>
                 <artifactId>selc-commons-connector-rest</artifactId>
                 <version>${selc-commons.version}</version>
             </dependency>
@@ -78,6 +83,11 @@
                 <version>${selc-commons.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-storage</artifactId>
+                <version>8.6.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

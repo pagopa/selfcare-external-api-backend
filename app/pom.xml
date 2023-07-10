@@ -15,12 +15,17 @@
             <groupId>it.pagopa.selfcare</groupId>
             <artifactId>selc-external-api-web</artifactId>
         </dependency>
-                                <dependency>
+        <dependency>
             <groupId>it.pagopa.selfcare</groupId>
             <artifactId>selc-external-api-connector-rest</artifactId>
             <scope>runtime</scope>
         </dependency>
-            </dependencies>
+        <dependency>
+            <groupId>it.pagopa.selfcare</groupId>
+            <artifactId>selc-external-api-connector-azure-storage</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

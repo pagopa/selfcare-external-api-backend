@@ -4,6 +4,7 @@ import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
+import it.pagopa.selfcare.external_api.model.token.Token;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -42,6 +43,22 @@ class MsCoreConnectorImplTest {
         CreatePnPgInstitutionRequest capturedRequest = requestCaptor.getValue();
         assertEquals(request.getExternalId(), capturedRequest.getTaxId());
         assertEquals(request.getDescription(), capturedRequest.getDescription());
+
+    }
+
+    @Test
+    void getToken(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        Token token = mockInstance(new Token());
+        when(msCoreRestClient.getToken(any(), any())).thenReturn(token);
+        //when
+        Token result = msCoreConnector.getToken(institutionId, productId);
+        //then
+        assertEquals(token, result);
+        verify(msCoreRestClient, times(1)).getToken(institutionId, productId);
+        verifyNoMoreInteractions(msCoreRestClient);
 
     }
 }

@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.core.ProductService;
@@ -35,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @EnableOpenApi
 @EnableWebMvc
-@ComponentScan(basePackages = "it.pagopa.selfcare.external_api.web.controller")
+@ComponentScan(basePackages = {"it.pagopa.selfcare.external_api.web.controller","it.pagopa.selfcare.external_api.web.model" })
 @TestPropertySource(locations = "classpath:config/application.yml")
 @Slf4j
 class SwaggerConfigTest {
@@ -48,6 +49,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private OnboardingService onboardingService;
+
+    @MockBean
+    private ContractService contractService;
 
     @Autowired
     WebApplicationContext context;
