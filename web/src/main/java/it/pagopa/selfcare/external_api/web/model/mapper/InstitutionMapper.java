@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface InstitutionMapper {
 
-    @Mapping(target =  "recipientCode", source = "model.billing.recipientCode")
+    @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
     @Mapping(target = "pspData", source = "model.paymentServiceProvider", qualifiedByName = "toPspDataResource")
     @Mapping(target = "companyInformations", source = "model.businessData", qualifiedByName = "toCompanyInformationResource")
     @Mapping(target = "assistanceContacts", source = "model.supportContact", qualifiedByName = "toAssistanceContactsResource")

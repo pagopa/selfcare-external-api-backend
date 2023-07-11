@@ -130,9 +130,7 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSupportContact(onboardingData.getSupportContact());
         institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
         institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
-        if (onboardingData.getSubunitType()!=null){
-            institutionInfo.setParentDescription(onboardingData.getDescription());
-        }
+        institutionInfo.setParentDescription(onboardingData.getParentDescription());
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
