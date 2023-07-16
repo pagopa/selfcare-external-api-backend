@@ -1,10 +1,7 @@
 package it.pagopa.selfcare.external_api.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.pagopa.selfcare.external_api.core.ContractService;
-import it.pagopa.selfcare.external_api.core.InstitutionService;
-import it.pagopa.selfcare.external_api.core.OnboardingService;
-import it.pagopa.selfcare.external_api.core.ProductService;
+import it.pagopa.selfcare.external_api.core.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +49,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private ContractService contractService;
+
+    @MockBean
+    private UserService userService;
 
     @Autowired
     WebApplicationContext context;
