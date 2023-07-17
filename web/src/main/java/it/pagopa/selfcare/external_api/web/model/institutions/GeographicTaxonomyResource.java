@@ -1,20 +1,13 @@
 package it.pagopa.selfcare.external_api.web.model.institutions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 public class GeographicTaxonomyResource {
-    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.code}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.code}")
     private String code;
 
-    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.desc}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.desc}")
     private String desc;
 }

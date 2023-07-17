@@ -198,6 +198,7 @@ class PartyConnectorImplTest {
         verifyNoInteractions(partyManagementRestClientMock);
     }
 
+
     @Test
     void getInstitutionUserProducts_nullInstitutionId() {
         //given

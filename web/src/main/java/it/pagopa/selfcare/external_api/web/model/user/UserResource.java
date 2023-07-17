@@ -12,53 +12,35 @@
 
 package it.pagopa.selfcare.external_api.web.model.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 public class UserResource {
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.id}", required = true)
-    @JsonProperty(required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.user.model.id}")
     private UUID id;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.name}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.user.model.name}")
     private String name;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.surname}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.user.model.surname}")
     private String surname;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.institutionalEmail}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
-    @Email
+    @ApiModelProperty(value = "${swagger.external_api.user.model.institutionalEmail}")
     private String email;
 
     @ApiModelProperty(value = "${swagger.external_api.user.model.fiscalCode}")
     private String fiscalCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.productRoles}", required = true)
-    @JsonProperty(required = true)
-    @NotEmpty
+    @ApiModelProperty(value = "${swagger.external_api.user.model.productRoles}")
     private List<String> roles;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.role}", required = true)
-    @JsonProperty(required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.user.model.role}")
     private PartyRole role;
 
 }

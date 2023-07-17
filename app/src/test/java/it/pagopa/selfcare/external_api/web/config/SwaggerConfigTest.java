@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @EnableOpenApi
 @EnableWebMvc
-@ComponentScan(basePackages = "it.pagopa.selfcare.external_api.web.controller")
+@ComponentScan(basePackages = {"it.pagopa.selfcare.external_api.web.controller","it.pagopa.selfcare.external_api.web.model" })
 @TestPropertySource(locations = "classpath:config/application.yml")
 @Slf4j
 class SwaggerConfigTest {

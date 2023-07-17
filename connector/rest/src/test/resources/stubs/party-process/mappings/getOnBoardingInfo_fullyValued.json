@@ -24,6 +24,10 @@
           "zipCode": "string",
           "state": "PENDING",
           "role": "MANAGER",
+          "subunitCode": "string",
+          "subunitType": "UO",
+          "aooParentCode": "string",
+          "parentDescription": "string",
           "productInfo": {
             "id": "string",
             "role": "string",
