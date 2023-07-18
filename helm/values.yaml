@@ -86,4 +86,5 @@ affinity: {}
 config:
   APPLICATIONINSIGHTS_ROLE_NAME: "external-api"
   ALLOWED_SERVICE_TYPES: onboarding-interceptor,external-interceptor
-  REST_CLIENT_CONNECT_TIMEOUT: 20000
+  REST_CLIENT_READ_TIMEOUT: "30000"
+  REST_CLIENT_CONNECT_TIMEOUT: "30000"
