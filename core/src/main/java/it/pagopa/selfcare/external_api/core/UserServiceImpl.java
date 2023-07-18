@@ -22,15 +22,12 @@ public class UserServiceImpl implements UserService {
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
     private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
-    private final JwtService jwtExternalService;
 
     @Autowired
     public UserServiceImpl(UserRegistryConnector userRegistryConnector,
-                           MsCoreConnector msCoreConnector,
-                           JwtService jwtExternalService) {
+                           MsCoreConnector msCoreConnector) {
         this.userRegistryConnector = userRegistryConnector;
         this.msCoreConnector = msCoreConnector;
-        this.jwtExternalService = jwtExternalService;
     }
 
     @Override
@@ -45,11 +42,10 @@ public class UserServiceImpl implements UserService {
 
         //Add user uuid into claims
         User user = searchResult.get();
-        jwtExternalService.putUserIntoSecurityContext(user);
 
-        OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getOnboardingInfo();
+        OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getInstitutionProductsInfo(user.getId());
         UserInfoWrapper result = UserInfoWrapper.builder()
-                .userInfo(user)
+                .user(user)
                 .onboardedInstitutions(onboardingInfoResponse.getInstitutions())
                 .build();
 

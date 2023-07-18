@@ -45,11 +45,12 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     }
 
     @Override
-    public OnboardingInfoResponse getOnboardingInfo() {
-        log.trace("getOnboardingInfo start");
-        OnboardingInfoResponse onboardingInfo = restClient.getOnboardingInfo();
-        log.debug("getOnboardingInfo result = {}", onboardingInfo);
-        log.trace("getOnboardingInfo end");
+    public OnboardingInfoResponse getInstitutionProductsInfo(String userId) {
+        log.trace("getInstitutionProductsInfo start");
+        log.debug("getInstitutionProductsInfo userId = {}", userId);
+        OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId);
+        log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
+        log.trace("getInstitutionProductsInfo end");
         return onboardingInfo;
     }
 }

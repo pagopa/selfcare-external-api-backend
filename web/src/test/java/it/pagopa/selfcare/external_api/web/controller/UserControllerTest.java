@@ -3,8 +3,12 @@ package it.pagopa.selfcare.external_api.web.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.UserService;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
-import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.external_api.model.user.Certification;
+import it.pagopa.selfcare.external_api.model.user.CertifiedField;
+import it.pagopa.selfcare.external_api.model.user.User;
+import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
@@ -22,9 +26,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,7 +53,7 @@ class UserControllerTest {
         SearchUserDto searchUserDto = new SearchUserDto();
         searchUserDto.setFiscalCode(fiscalCode);
         UserInfoWrapper userWrapper = new UserInfoWrapper();
-        userWrapper.setUserInfo(this.buildUser());
+        userWrapper.setUser(this.buildUser());
         userWrapper.setOnboardedInstitutions(List.of(new OnboardedInstitutionResponse()));
         when(userService.getUserInfo(anyString()))
                 .thenReturn(userWrapper);
@@ -66,9 +71,18 @@ class UserControllerTest {
                 new TypeReference<>() {
                 });
         assertNotNull(response);
-        assertNotNull(userWrapper.getUserInfo());
+        assertNotNull(userWrapper.getUser());
         assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals("testName", userWrapper.getUserInfo().getName().getValue());
+        assertEquals(response.getUser().getName(), userWrapper.getUser().getName().getValue());
+        assertEquals(response.getUser().getEmail(), userWrapper.getUser().getEmail().getValue());
+    }
+
+    @Test
+    void getUserInfoThrowsResourceNotFound() {
+        when(userService.getUserInfo("12"))
+                .thenThrow(new ResourceNotFoundException("User with fiscal code" + 12 + " not found"));
+        assertThrows(ResourceNotFoundException.class, () -> userService.getUserInfo("12"));
+        verify(userService).getUserInfo(any());
     }
 
     private User buildUser() {
@@ -77,7 +91,11 @@ class UserControllerTest {
         CertifiedField<String> fieldName = new CertifiedField<>();
         fieldName.setCertification(Certification.SPID);
         fieldName.setValue("testName");
+        CertifiedField<String> fieldEmail = new CertifiedField<>();
+        fieldName.setCertification(Certification.SPID);
+        fieldName.setValue("email");
         user.setName(fieldName);
+        user.setEmail(fieldEmail);
         return user;
     }
 }

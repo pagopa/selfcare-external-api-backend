@@ -8,6 +8,6 @@ public interface MsCoreConnector {
 
     String createPnPgInstitution(CreatePnPgInstitution request);
     Token getToken(String institutionId, String productId);
-    OnboardingInfoResponse getOnboardingInfo();
+    OnboardingInfoResponse getInstitutionProductsInfo(String userId);
 
 }

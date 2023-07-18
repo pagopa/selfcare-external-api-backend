@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserInfoWrapper {
 
-    private User userInfo;
+    private User user;
     private List<OnboardedInstitutionResponse> onboardedInstitutions;
 
 }
