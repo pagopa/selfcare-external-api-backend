@@ -5,6 +5,7 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class MsCoreConnectorImpl implements MsCoreConnector {
+
     private final MsCoreRestClient restClient;
 
     @Autowired
@@ -40,5 +42,15 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("getToken result = {}", token);
         log.trace("getToken end");
         return token;
+    }
+
+    @Override
+    public OnboardingInfoResponse getInstitutionProductsInfo(String userId) {
+        log.trace("getInstitutionProductsInfo start");
+        log.debug("getInstitutionProductsInfo userId = {}", userId);
+        OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId);
+        log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
+        log.trace("getInstitutionProductsInfo end");
+        return onboardingInfo;
     }
 }
