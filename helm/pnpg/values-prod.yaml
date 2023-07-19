@@ -8,10 +8,10 @@ ingress:
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://selfcare.pagopa.it"
   tls:
     - hosts:
-        - prod01.pnpg.internal.prod.selfcare.pagopa.it
-      secretName: prod01-pnpg-internal-prod-selfcare-pagopa-it
+        - prod01.pnpg.internal.selfcare.pagopa.it
+      secretName: prod01-pnpg-internal-selfcare-pagopa-it
   hosts:
-    - host: "prod01.pnpg.internal.prod.selfcare.pagopa.it"
+    - host: "prod01.pnpg.internal.selfcare.pagopa.it"
       paths:
         - path: /external-api/v1/(.*)
           pathType: ImplementationSpecific

@@ -35,4 +35,5 @@ public class OnboardingResponseData {
     private String subunitCode;
     private String subunitType;
     private String aooParentCode;
+    private String parentDescription;
 }
