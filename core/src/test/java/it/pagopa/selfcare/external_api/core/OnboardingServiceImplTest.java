@@ -11,9 +11,8 @@ import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrateg
 import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedException;
 import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.Product;
@@ -3036,6 +3035,15 @@ class OnboardingServiceImplTest {
         }};
         Institution institution = mockInstance(new Institution());
         institution.setId(UUID.randomUUID().toString());
+        CompanyInformations companyInformations = new CompanyInformations();
+        companyInformations.setRea("rea");
+        companyInformations.setShareCapital("capital");
+        companyInformations.setBusinessRegisterPlace("road");
+        institution.setCompanyInformations(companyInformations);
+        AssistanceContacts assistanceContacts = new AssistanceContacts();
+        assistanceContacts.setSupportEmail("email@email.com");
+        assistanceContacts.setSupportPhone("0000");
+        institution.setAssistanceContacts(assistanceContacts);
         when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),anyString()))
                 .thenThrow(ResourceNotFoundException.class);
         when(partyConnectorMock.createInstitutionFromIpa(anyString(),anyString(),anyString()))

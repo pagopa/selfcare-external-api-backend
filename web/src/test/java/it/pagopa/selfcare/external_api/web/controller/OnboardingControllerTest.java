@@ -120,6 +120,20 @@ class OnboardingControllerTest {
     }
 
     @Test
+    void onboardingInvalidPspOnboardingProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+        // then
+        verifyNoInteractions(onboardingServiceMock);
+    }
+
+    @Test
     void onboardingPspValidRequest(@Value("classpath:stubs/validPspOnboardingDto.json") Resource onboardingDto) throws Exception {
         // given
         String institutionId = "institutionId";
