@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface InstitutionMapper {
+public interface InstitutionResourceMapper {
 
     @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
     @Mapping(target = "pspData", source = "model.paymentServiceProvider", qualifiedByName = "toPspDataResource")

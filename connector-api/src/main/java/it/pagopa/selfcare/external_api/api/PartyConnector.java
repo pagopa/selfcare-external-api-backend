@@ -24,9 +24,15 @@ public interface PartyConnector {
 
     ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId);
 
+    ResponseEntity<Void> verifyOnboarding(String taxCode, String subunitCode, String productId);
+
     Institution getInstitutionByExternalId(String externalInstitutionId);
 
+    List<Institution> getInstitutionsByTaxCodeAndSubunitCode(String taxCode, String subunitCode);
+
     Institution createInstitutionUsingExternalId(String institutionExternalId);
+
+    Institution createInstitutionFromIpa(String taxCode, String subunitCode, String subunitType);
 
     Institution createInstitutionRaw(OnboardingData onboardingData);
 

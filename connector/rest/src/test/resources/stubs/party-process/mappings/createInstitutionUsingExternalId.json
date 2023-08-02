@@ -50,7 +50,16 @@
       "subunitCode": "string",
       "subunitType": "UO",
       "aooParentCode": "string",
-      "parentDescription": "string"
+      "parentDescription": "string",
+      "companyInformations" : {
+        "rea": "string",
+        "shareCapital": "10000",
+        "businessRegisterPlace": "Rome"
+      },
+      "assistanceContacts" : {
+        "supportEmail": "string",
+        "supportPhone": "string"
+      }
     },
     "headers": {
       "Content-Type": "application/json"
