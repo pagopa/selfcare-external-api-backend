@@ -11,8 +11,9 @@ import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrateg
 import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedException;
 import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.Product;
@@ -3035,15 +3036,6 @@ class OnboardingServiceImplTest {
         }};
         Institution institution = mockInstance(new Institution());
         institution.setId(UUID.randomUUID().toString());
-        CompanyInformations companyInformations = new CompanyInformations();
-        companyInformations.setRea("rea");
-        companyInformations.setShareCapital("capital");
-        companyInformations.setBusinessRegisterPlace("road");
-        institution.setCompanyInformations(companyInformations);
-        AssistanceContacts assistanceContacts = new AssistanceContacts();
-        assistanceContacts.setSupportEmail("email@email.com");
-        assistanceContacts.setSupportPhone("0000");
-        institution.setAssistanceContacts(assistanceContacts);
         when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),anyString()))
                 .thenThrow(ResourceNotFoundException.class);
         when(partyConnectorMock.createInstitutionFromIpa(anyString(),anyString(),anyString()))
@@ -3088,6 +3080,62 @@ class OnboardingServiceImplTest {
             assertNotNull(userInfo.getId());
         });
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
+
+    @Test
+    void onboardingProduct_PhaseOutException() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        onboardingData.setProductId("id");
+        onboardingData.setInstitutionExternalId("externalId");
+        Product product = new Product();
+        product.setId("id");
+        product.setStatus(ProductStatus.PHASE_OUT);
+
+        when(productsConnectorMock.getProduct(anyString(), any()))
+                .thenReturn(product);
+        // when
+        Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
+        // then
+        ValidationException e = assertThrows(ValidationException.class, executable);
+        assertEquals(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+                        onboardingData.getInstitutionExternalId(),
+                        product.getId()),
+                e.getMessage());
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, msPartyRegistryProxyConnectorMock);
+    }
+
+    @Test
+    void onboardingParentProduct_PhaseOutException() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        onboardingData.setProductId("id");
+        onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setTaxCode("taxCode");
+        onboardingData.setInstitutionType(InstitutionType.PT);
+        Product product = new Product();
+        product.setId("id");
+        product.setStatus(ProductStatus.ACTIVE);
+        product.setParentId("parentId");
+        Product parent = new Product();
+        parent.setParentId("parentId");
+        parent.setStatus(ProductStatus.PHASE_OUT);
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
+                .thenReturn(product);
+        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
+
+
+        // when
+        Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
+        // then
+        ValidationException e = assertThrows(ValidationException.class, executable);
+        assertEquals(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s', the base product is dismissed.",
+                        onboardingData.getTaxCode(),
+                        parent.getId()),
+                e.getMessage());
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, msPartyRegistryProxyConnectorMock);
     }
 
 }

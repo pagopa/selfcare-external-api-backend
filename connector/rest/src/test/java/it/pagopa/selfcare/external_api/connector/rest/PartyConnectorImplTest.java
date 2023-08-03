@@ -14,10 +14,7 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionsResponse;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -1023,7 +1020,14 @@ class PartyConnectorImplTest {
         final String taxCode = "taxCode";
         final String subunitCode = "subunitCode";
         InstitutionsResponse institutionsResponse = new InstitutionsResponse();
-        institutionsResponse.setInstitutions(List.of());
+        InstitutionResponse institutionResponse = new InstitutionResponse();
+        institutionResponse.setTaxCode(taxCode);
+        institutionResponse.setRea("rea");
+        institutionResponse.setShareCapital("capital");
+        institutionResponse.setBusinessRegisterPlace("place");
+        institutionResponse.setSupportPhone("0000");
+        institutionResponse.setSupportEmail("email@email.com");
+        institutionsResponse.setInstitutions(List.of(institutionResponse));
         when(partyProcessRestClientMock.getInstitutions(anyString(), anyString())).thenReturn(institutionsResponse);
         // when
         final Executable executable = () -> partyConnector.getInstitutionsByTaxCodeAndSubunitCode(taxCode, subunitCode);
@@ -1043,6 +1047,25 @@ class PartyConnectorImplTest {
         final Exception e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(REQUIRED_INSTITUTION_TAX_CODE_MESSAGE, e.getMessage());
         verifyNoInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void createInstitutionFromIpa() {
+        // given
+        final String taxCode = "taxcode";
+        final String subUnitCode = "subunitCode";
+        final String subUnitType = "subunitType";
+        // when
+        final Executable executable = () -> partyConnector.createInstitutionFromIpa(taxCode, subUnitCode, subUnitType);
+        assertDoesNotThrow(executable);
+        InstitutionFromIpaPost institutionFromIpaPost = new InstitutionFromIpaPost();
+        institutionFromIpaPost.setTaxCode(taxCode);
+        institutionFromIpaPost.setSubunitCode(subUnitCode);
+        institutionFromIpaPost.setSubunitType(subUnitType);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionFromIpa(institutionFromIpaPost);
+        // then
+        verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 
 }
