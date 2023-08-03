@@ -283,7 +283,7 @@ class OnboardingServiceImpl implements OnboardingService {
             }
             validateOnboarding(onboardingData.getTaxCode(), baseProduct.getId());
             try {
-                ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), baseProduct.getId());
+                ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingData.getTaxCode(), onboardingData.getSubUnitCode(), baseProduct.getId());
                 if (responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
                     log.debug((String.format("autoApprovalOnboardingProduct: the institution with external id %s is already onboarded on the product %s",
                             onboardingData.getInstitutionExternalId(),
@@ -318,7 +318,7 @@ class OnboardingServiceImpl implements OnboardingService {
 
         Institution institution;
         try {
-            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode())
+            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubUnitCode())
                     .stream()
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
@@ -326,7 +326,7 @@ class OnboardingServiceImpl implements OnboardingService {
             if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
                     (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
                             && onboardingData.getOrigin().equals("IPA"))) {
-                institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
+                institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubUnitCode(), onboardingData.getSubUnitType());
             } else {
                 institution = partyConnector.createInstitutionRaw(onboardingData);
             }

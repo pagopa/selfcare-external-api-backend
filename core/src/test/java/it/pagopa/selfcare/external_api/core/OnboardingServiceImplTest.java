@@ -2985,7 +2985,7 @@ class OnboardingServiceImplTest {
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
         verify(partyConnectorMock, times(1))
-                .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode());
+                .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubUnitCode());
         verify(partyConnectorMock, times(1))
                 .createInstitutionRaw(onboardingData);
         verify(productsConnectorMock, times(1))
@@ -3055,9 +3055,9 @@ class OnboardingServiceImplTest {
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
         verify(partyConnectorMock, times(1))
-                .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode());
+                .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubUnitCode());
         verify(partyConnectorMock, times(1))
-                .createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
+                .createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubUnitCode(), onboardingData.getSubUnitType());
         verify(productsConnectorMock, times(1))
                 .getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
         verify(onboardingValidationStrategyMock, times(1))
@@ -3178,7 +3178,7 @@ class OnboardingServiceImplTest {
         onboardingData.setProductId("id");
         onboardingData.setInstitutionExternalId("externalId");
         onboardingData.setTaxCode("taxCode");
-        onboardingData.setSubunitCode("subunitCode");
+        onboardingData.setSubUnitCode("subunitCode");
         onboardingData.setInstitutionType(InstitutionType.PT);
         Product product = new Product();
         product.setId("id");
