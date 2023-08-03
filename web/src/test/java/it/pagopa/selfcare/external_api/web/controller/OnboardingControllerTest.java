@@ -120,7 +120,23 @@ class OnboardingControllerTest {
     }
 
     @Test
-    void onboardingInvalidPspOnboardingProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
+    void onboardingValidPspProductRequest(@Value("classpath:stubs/validOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingProduct(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingInvalidPspProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
         // when
         mvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL)

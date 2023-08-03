@@ -48,6 +48,8 @@ class OnboardingServiceImpl implements OnboardingService {
     protected static final String MORE_THAN_ONE_PRODUCT_ROLE_AVAILABLE = "More than one Product role related to %s Party role is available. Cannot automatically set the Product role";
     protected static final String ROLE_MAPPINGS_REQUIRED = "Role mappings is required";
     protected static final String PRODUCT_OBJECT_REQUIRED = "Product is required";
+    protected static final String INSTITUTION_ALREADY_ONBOARDED = "The institution with external id %s is already onboarded on the product %s";
+    protected static final String PRODUCT_DISMSIDDED = "Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.";
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(User.Fields.name, User.Fields.familyName, User.Fields.workContacts);
 
     private final PartyConnector partyConnector;
@@ -81,7 +83,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 log.debug((String.format("oldContractOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
+                throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId()));
             }
@@ -108,7 +110,7 @@ class OnboardingServiceImpl implements OnboardingService {
             Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
 
             if (product.getStatus() == ProductStatus.PHASE_OUT) {
-                throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+                throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
                         onboardingImportData.getInstitutionExternalId(),
                         product.getId()));
             }
@@ -186,7 +188,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 log.debug((String.format("autoApprovalOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
+                throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId()));
             }
@@ -199,7 +201,7 @@ class OnboardingServiceImpl implements OnboardingService {
             Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
 
             if (product.getStatus() == ProductStatus.PHASE_OUT) {
-                throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+                throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
                         onboardingData.getInstitutionExternalId(),
                         product.getId()));
             }
@@ -263,7 +265,7 @@ class OnboardingServiceImpl implements OnboardingService {
         Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
 
         if (product.getStatus() == ProductStatus.PHASE_OUT) {
-            throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+            throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
                     onboardingData.getInstitutionExternalId(),
                     product.getId()));
         }
@@ -286,7 +288,7 @@ class OnboardingServiceImpl implements OnboardingService {
                     log.debug((String.format("autoApprovalOnboardingProduct: the institution with external id %s is already onboarded on the product %s",
                             onboardingData.getInstitutionExternalId(),
                             onboardingData.getProductId())));
-                    throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
+                    throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
                             onboardingData.getInstitutionExternalId(),
                             onboardingData.getProductId()));
                 }
