@@ -10,5 +10,7 @@ public interface OnboardingService {
 
     void autoApprovalOnboarding(OnboardingData onboardingData);
 
+    void autoApprovalOnboardingProduct(OnboardingData onboardingData);
+
     ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId);
 }

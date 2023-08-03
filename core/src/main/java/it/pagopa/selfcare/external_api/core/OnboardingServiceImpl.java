@@ -46,7 +46,10 @@ class OnboardingServiceImpl implements OnboardingService {
     private static final String ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE = "Institution with external id '%s' is not allowed to onboard '%s' product";
     protected static final String ATLEAST_ONE_PRODUCT_ROLE_REQUIRED = "At least one Product role related to %s Party role is required";
     protected static final String MORE_THAN_ONE_PRODUCT_ROLE_AVAILABLE = "More than one Product role related to %s Party role is available. Cannot automatically set the Product role";
-
+    protected static final String ROLE_MAPPINGS_REQUIRED = "Role mappings is required";
+    protected static final String PRODUCT_OBJECT_REQUIRED = "Product is required";
+    protected static final String INSTITUTION_ALREADY_ONBOARDED = "The institution with external id %s is already onboarded on the product %s";
+    protected static final String PRODUCT_DISMSIDDED = "Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.";
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(User.Fields.name, User.Fields.familyName, User.Fields.workContacts);
 
     private final PartyConnector partyConnector;
@@ -80,7 +83,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 log.debug((String.format("oldContractOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
+                throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
                         onboardingImportData.getInstitutionExternalId(),
                         onboardingImportData.getProductId()));
             }
@@ -104,10 +107,10 @@ class OnboardingServiceImpl implements OnboardingService {
             }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
-            Assert.notNull(product, "Product is required");
+            Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
 
             if (product.getStatus() == ProductStatus.PHASE_OUT) {
-                throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+                throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
                         onboardingImportData.getInstitutionExternalId(),
                         product.getId()));
             }
@@ -121,7 +124,7 @@ class OnboardingServiceImpl implements OnboardingService {
 
 
             onboardingImportData.setProductName(product.getTitle());
-            Assert.notNull(roleMappings, "Role mappings is required");
+            Assert.notNull(roleMappings, ROLE_MAPPINGS_REQUIRED);
             onboardingImportData.getUsers().forEach(userInfo -> {
                 Assert.notNull(roleMappings.get(userInfo.getRole()),
                         String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
@@ -185,7 +188,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 log.debug((String.format("autoApprovalOnboarding: the institution with external id %s is already onboarded on the product %s",
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId())));
-                throw new InstitutionAlreadyOnboardedException(String.format("The institution with external id %s is already onboarded on the product %s",
+                throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
                         onboardingData.getInstitutionExternalId(),
                         onboardingData.getProductId()));
             }
@@ -195,10 +198,10 @@ class OnboardingServiceImpl implements OnboardingService {
                     onboardingData.getProductId()));
 
             Product product = productsConnector.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
-            Assert.notNull(product, "Product is required");
+            Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
 
             if (product.getStatus() == ProductStatus.PHASE_OUT) {
-                throw new ValidationException(String.format("Unable to complete the onboarding for institution with external id '%s' to product '%s', the product is dismissed.",
+                throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
                         onboardingData.getInstitutionExternalId(),
                         product.getId()));
             }
@@ -209,7 +212,7 @@ class OnboardingServiceImpl implements OnboardingService {
             final EnumMap<PartyRole, ProductRoleInfo> roleMappings = getRoleMappings(product, onboardingData.getInstitutionExternalId());
 
             onboardingData.setProductName(product.getTitle());
-            Assert.notNull(roleMappings, "Role mappings is required");
+            Assert.notNull(roleMappings, ROLE_MAPPINGS_REQUIRED);
             onboardingData.getUsers().forEach(userInfo -> {
                 Assert.notNull(roleMappings.get(userInfo.getRole()),
                         String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
@@ -244,6 +247,108 @@ class OnboardingServiceImpl implements OnboardingService {
             partyConnector.autoApprovalOnboarding(onboardingData);
             log.trace("autoApprovalOnboarding end");
         }
+    }
+
+    @Override
+    public void autoApprovalOnboardingProduct(OnboardingData onboardingData) {
+        log.trace("autoApprovalOnboardingProduct start");
+        log.debug("autoApprovalOnboardingProduct = {}", onboardingData);
+        Assert.notNull(onboardingData, REQUIRED_ONBOARDING_DATA_MESSAGE);
+        Assert.notNull(onboardingData.getBilling(), REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE);
+        Assert.notNull(onboardingData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
+
+        log.debug(String.format("autoApprovalOnboardingProduct: starting onboarding process for institution %s on product %s",
+                onboardingData.getInstitutionExternalId(),
+                onboardingData.getProductId()));
+
+        Product product = productsConnector.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
+        Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
+
+        if (product.getStatus() == ProductStatus.PHASE_OUT) {
+            throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
+                    onboardingData.getInstitutionExternalId(),
+                    product.getId()));
+        }
+
+        onboardingData.setContractPath(product.getContractTemplatePath());
+        onboardingData.setContractVersion(product.getContractTemplateVersion());
+
+        final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
+        if (product.getParentId() != null) {
+            final Product baseProduct = productsConnector.getProduct(product.getParentId(), null);
+            if(baseProduct.getStatus() == ProductStatus.PHASE_OUT){
+                throw new ValidationException(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s', the base product is dismissed.",
+                        onboardingData.getTaxCode(),
+                        baseProduct.getId()));
+            }
+            validateOnboarding(onboardingData.getTaxCode(), baseProduct.getId());
+            try {
+                ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), baseProduct.getId());
+                if (responseEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                    log.debug((String.format("autoApprovalOnboardingProduct: the institution with external id %s is already onboarded on the product %s",
+                            onboardingData.getInstitutionExternalId(),
+                            onboardingData.getProductId())));
+                    throw new InstitutionAlreadyOnboardedException(String.format(INSTITUTION_ALREADY_ONBOARDED,
+                            onboardingData.getInstitutionExternalId(),
+                            onboardingData.getProductId()));
+                }
+            } catch (RuntimeException e) {
+                throw new ValidationException(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
+                        onboardingData.getTaxCode(),
+                        product.getId(),
+                        baseProduct.getId()));
+            }
+            roleMappings = baseProduct.getRoleMappings();
+        } else {
+            validateOnboarding(onboardingData.getTaxCode(), product.getId());
+            roleMappings = product.getRoleMappings();
+        }
+
+        onboardingData.setProductName(product.getTitle());
+        Assert.notNull(roleMappings, ROLE_MAPPINGS_REQUIRED);
+        onboardingData.getUsers().forEach(userInfo -> {
+            Assert.notNull(roleMappings.get(userInfo.getRole()),
+                    String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
+            Assert.notEmpty(roleMappings.get(userInfo.getRole()).getRoles(),
+                    String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
+            Assert.state(roleMappings.get(userInfo.getRole()).getRoles().size() == 1,
+                    String.format(MORE_THAN_ONE_PRODUCT_ROLE_AVAILABLE, userInfo.getRole()));
+            userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
+        });
+
+        Institution institution;
+        try {
+            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode())
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(ResourceNotFoundException::new);
+        } catch (ResourceNotFoundException e) {
+            if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
+                            && onboardingData.getOrigin().equals("IPA"))) {
+                institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
+            } else {
+                institution = partyConnector.createInstitutionRaw(onboardingData);
+            }
+        }
+
+        String finalInstitutionInternalId = institution.getId();
+        onboardingData.getUsers().forEach(user -> {
+
+            final Optional<User> searchResult =
+                    userConnector.search(user.getTaxCode(), USER_FIELD_LIST);
+            searchResult.ifPresentOrElse(foundUser -> {
+                Optional<MutableUserFieldsDto> updateRequest = createUpdateRequest(user, foundUser, finalInstitutionInternalId);
+                updateRequest.ifPresent(mutableUserFieldsDto ->
+                        userConnector.updateUser(UUID.fromString(foundUser.getId()), mutableUserFieldsDto));
+                user.setId(foundUser.getId());
+            }, () -> user.setId(userConnector.saveUser(UserMapper.toSaveUserDto(user, finalInstitutionInternalId))
+                    .getId().toString()));
+        });
+
+        onboardingData.setInstitutionExternalId(institution.getExternalId());
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        log.trace("autoApprovalOnboardingProduct end");
     }
 
     @Override

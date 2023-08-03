@@ -6,6 +6,7 @@ import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
+import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {OnboardingController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {OnboardingController.class, WebTestConfig.class})
+@ContextConfiguration(classes = {OnboardingController.class, WebTestConfig.class, OnboardingResourceMapperImpl.class})
 class OnboardingControllerTest {
 
     private static final String BASE_URL = "/onboarding";
@@ -100,6 +101,52 @@ class OnboardingControllerTest {
         verify(onboardingServiceMock, times(1))
                 .autoApprovalOnboarding(any(OnboardingData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingSubunit(@Value("classpath:stubs/onboardingSubunitDto.json") Resource onboardingSubunitDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingSubunitDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingProduct(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingValidPspProductRequest(@Value("classpath:stubs/validOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingProduct(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingInvalidPspProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+        // then
+        verifyNoInteractions(onboardingServiceMock);
     }
 
     @Test
