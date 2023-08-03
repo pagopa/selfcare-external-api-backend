@@ -3174,7 +3174,7 @@ class OnboardingServiceImplTest {
     @Test
     void onboardingValidationExceptionForProduct() {
         // given
-        OnboardingData onboardingData = new OnboardingData();
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
         onboardingData.setProductId("id");
         onboardingData.setInstitutionExternalId("externalId");
         onboardingData.setTaxCode("taxCode");
