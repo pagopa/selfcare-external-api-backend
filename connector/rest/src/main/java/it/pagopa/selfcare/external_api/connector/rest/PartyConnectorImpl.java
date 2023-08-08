@@ -11,10 +11,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.Instituti
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
-import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
@@ -131,7 +128,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSupportContact(onboardingData.getSupportContact());
         institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
         institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
-        institutionInfo.setParentDescription(onboardingData.getParentDescription());
+        RootParent rootParent = new RootParent();
+        rootParent.setDescription(onboardingData.getParentDescription());
+        institutionInfo.setRootParent(rootParent);
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
