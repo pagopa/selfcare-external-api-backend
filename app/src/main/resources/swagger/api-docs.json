@@ -1454,10 +1454,6 @@
             "type" : "string",
             "description" : "Institution's details origin Id"
           },
-          "parentDescription" : {
-            "type" : "string",
-            "description" : "Institutions AOO/UO unit parent's description"
-          },
           "pspData" : {
             "description" : "Payment Service Provider (PSP) specific data",
             "$ref" : "#/components/schemas/PspDataResource"
@@ -1465,6 +1461,10 @@
           "recipientCode" : {
             "type" : "string",
             "description" : "Billing recipient code"
+          },
+          "rootParent" : {
+            "description" : "Institution AOO/UO root institutionDescription",
+            "$ref" : "#/components/schemas/RootParentResource"
           },
           "status" : {
             "type" : "string",
@@ -1915,6 +1915,20 @@
             "type" : "boolean",
             "description" : "PSP's Vat Number group",
             "example" : false
+          }
+        }
+      },
+      "RootParentResource" : {
+        "title" : "RootParentResource",
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string",
+            "description" : "swagger.external_api.institutions.model.parentDescription"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "Institution's unique internal Id"
           }
         }
       },

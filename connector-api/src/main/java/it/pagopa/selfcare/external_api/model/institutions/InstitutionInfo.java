@@ -36,7 +36,7 @@ public class InstitutionInfo {
     private DataProtectionOfficer dataProtectionOfficer;
     private String subunitCode;
     private String subunitType;
-    private String parentDescription;
+    private RootParent rootParent;
     private String aooParentCode;
 
 }
