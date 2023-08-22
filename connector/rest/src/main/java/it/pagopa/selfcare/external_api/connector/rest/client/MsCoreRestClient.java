@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -17,4 +18,8 @@ public interface MsCoreRestClient {
     @ResponseBody
     Token getToken(@RequestParam(value = "institutionId")String institutionId,
                    @RequestParam(value = "productId")String productId);
+
+    @GetMapping(value = "${rest-client.ms-core.onboardingInfo.path}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    OnboardingInfoResponse getInstitutionProductsInfo(@PathVariable(value = "userId") String userId);
 }

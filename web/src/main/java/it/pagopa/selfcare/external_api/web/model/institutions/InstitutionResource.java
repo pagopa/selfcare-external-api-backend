@@ -66,8 +66,8 @@ public class InstitutionResource {
     private String subunitCode;
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitType}")
     private String subunitType;
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.parentDescription}")
-    private String parentDescription;
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.rootParent}")
+    private RootParentResource rootParent;
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.aooParentCode}")
     private String aooParentCode;
 }

@@ -4,18 +4,14 @@ import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
-import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
@@ -49,9 +45,11 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
+    protected static final String REQUIRED_INSTITUTION_TAX_CODE_MESSAGE = "An Institution tax code is required";
 
     private final PartyProcessRestClient partyProcessRestClient;
     private final PartyManagementRestClient partyManagementRestClient;
+    private final InstitutionMapper institutionMapper;
 
     private static final BinaryOperator<InstitutionInfo> MERGE_FUNCTION =
             (inst1, inst2) -> {
@@ -130,7 +128,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSupportContact(onboardingData.getSupportContact());
         institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
         institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
-        institutionInfo.setParentDescription(onboardingData.getParentDescription());
+        RootParent rootParent = new RootParent();
+        rootParent.setDescription(onboardingData.getParentDescription());
+        institutionInfo.setRootParent(rootParent);
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
@@ -146,9 +146,13 @@ public class PartyConnectorImpl implements PartyConnector {
 
 
     @Autowired
-    public PartyConnectorImpl(PartyProcessRestClient partyProcessRestClient, PartyManagementRestClient partyManagementRestClient) {
+    public PartyConnectorImpl(PartyProcessRestClient partyProcessRestClient,
+                              PartyManagementRestClient partyManagementRestClient,
+                              InstitutionMapper institutionMapper) {
         this.partyProcessRestClient = partyProcessRestClient;
         this.partyManagementRestClient = partyManagementRestClient;
+        this.institutionMapper = institutionMapper;
+
     }
 
 
@@ -249,11 +253,36 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
+    public ResponseEntity<Void> verifyOnboarding(String taxCode, String subunitCode, String productId) {
+        log.trace("verifyOnboarding start");
+        log.debug("verifyOnboarding taxCode = {}, subunitCode = {}, productId = {}", taxCode, subunitCode, productId);
+        Assert.hasText(taxCode, REQUIRED_INSTITUTION_TAX_CODE_MESSAGE);
+        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
+        ResponseEntity<Void> responseEntity = partyProcessRestClient.verifyOnboarding(taxCode, subunitCode, productId);
+        log.trace("verifyOnboarding end");
+        return responseEntity;
+    }
+
+    @Override
     public Institution getInstitutionByExternalId(String externalInstitutionId) {
         log.trace("getInstitution start");
         log.debug("getInstitution externalInstitutionId = {}", externalInstitutionId);
         Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
         Institution result = partyProcessRestClient.getInstitutionByExternalId(externalInstitutionId);
+        log.debug("getInstitution result = {}", result);
+        log.trace("getInstitution end");
+        return result;
+    }
+
+    @Override
+    public List<Institution> getInstitutionsByTaxCodeAndSubunitCode(String taxCode, String subunitCode) {
+        log.trace("getInstitution start");
+        log.debug("getInstitution taxCode = {}, subunitCode = {}", taxCode, subunitCode);
+        Assert.hasText(taxCode, REQUIRED_INSTITUTION_TAX_CODE_MESSAGE);
+        InstitutionsResponse partyInstitutionResponse = partyProcessRestClient.getInstitutions(taxCode, subunitCode);
+        List<Institution> result = partyInstitutionResponse.getInstitutions().stream()
+                .map(institutionMapper::toEntity)
+                .collect(Collectors.toList());
         log.debug("getInstitution result = {}", result);
         log.trace("getInstitution end");
         return result;
@@ -267,6 +296,22 @@ public class PartyConnectorImpl implements PartyConnector {
         Institution result = partyProcessRestClient.createInstitutionUsingExternalId(institutionExternalId);
         log.debug("createInstitutionUsingExternalId result = {}", result);
         log.trace("createInstitutionUsingExternalId end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionFromIpa(String taxCode, String subunitCode, String subunitType) {
+        log.trace("createInstitutionFromIpa start");
+        log.debug("createInstitutionFromIpa taxCode = {}, subunitCode = {}, subunitType = {}", taxCode, subunitCode, subunitType);
+        Assert.hasText(taxCode, REQUIRED_INSTITUTION_TAX_CODE_MESSAGE);
+        InstitutionFromIpaPost institutionFromIpaPost = new InstitutionFromIpaPost();
+        institutionFromIpaPost.setSubunitCode(subunitCode);
+        institutionFromIpaPost.setTaxCode(taxCode);
+        institutionFromIpaPost.setSubunitType(subunitType);
+        InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromIpa(institutionFromIpaPost);
+        Institution result = institutionMapper.toEntity(partyInstitutionResponse);
+        log.debug("createInstitutionFromIpa result = {}", result);
+        log.trace("createInstitutionFromIpa end");
         return result;
     }
 

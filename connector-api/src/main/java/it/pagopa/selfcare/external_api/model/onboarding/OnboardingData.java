@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import it.pagopa.selfcare.external_api.model.institutions.RootParent;
 import lombok.Data;
 
 import java.util.Collections;
@@ -10,6 +11,9 @@ import java.util.Optional;
 public class OnboardingData {
 
     private String institutionExternalId;
+    private String taxCode;
+    private String subunitCode;
+    private String subunitType;
     private String productId;
     private String productName;
     private List<User> users;
@@ -20,6 +24,7 @@ public class OnboardingData {
     private InstitutionType institutionType;
     private String origin;
     private String pricingPlan;
+    private RootParent rootParent;
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());

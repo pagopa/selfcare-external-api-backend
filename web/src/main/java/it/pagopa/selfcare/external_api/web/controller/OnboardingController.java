@@ -12,8 +12,10 @@ import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,10 +36,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 public class OnboardingController {
 
     private final OnboardingService onboardingService;
+    private final OnboardingResourceMapper onboardingResourceMapper;
 
     @Autowired
-    public OnboardingController(OnboardingService onboardingService) {
+    public OnboardingController(OnboardingService onboardingService,
+                                OnboardingResourceMapper onboardingResourceMapper) {
         this.onboardingService = onboardingService;
+        this.onboardingResourceMapper = onboardingResourceMapper;
     }
 
     @ApiResponses(value = {
@@ -72,6 +77,26 @@ public class OnboardingController {
         log.trace("oldContractonboarding end");
     }
 
+    @ApiResponse(responseCode = "403",
+            description = "Forbidden",
+            content = {
+                    @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                            schema = @Schema(implementation = Problem.class))
+            })
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.subunit}")
+    public void onboarding(@RequestBody @Valid OnboardingProductDto request) {
+        log.trace("onboarding start");
+        log.debug("onboarding request = {}", request);
+        if (InstitutionType.PSP.equals(request.getInstitutionType()) && request.getPspData() == null) {
+            throw new ValidationException("Field 'pspData' is required for PSP institution onboarding");
+        }
+        onboardingService.autoApprovalOnboardingProduct(onboardingResourceMapper.toEntity(request));
+        log.trace("onboarding end");
+    }
+
+    @Deprecated
     @ApiResponses(value = {
             @ApiResponse(responseCode = "409",
                     description = "Conflict",

@@ -13,7 +13,7 @@ import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomy
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.GeographicTaxonomyMapper;
-import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
@@ -44,14 +44,14 @@ public class InstitutionController {
 
     private final ContractService contractService;
 
-    private final InstitutionMapper institutionMapper;
+    private final InstitutionResourceMapper institutionResourceMapper;
 
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService, ContractService contractService, InstitutionMapper institutionMapper) {
+    public InstitutionController(InstitutionService institutionService, ContractService contractService, InstitutionResourceMapper institutionResourceMapper) {
         this.institutionService = institutionService;
         this.contractService = contractService;
-        this.institutionMapper = institutionMapper;
+        this.institutionResourceMapper = institutionResourceMapper;
     }
 
     @GetMapping(value = "")
@@ -63,7 +63,7 @@ public class InstitutionController {
         log.debug("getInstitutions productId = {}", productId);
         List<InstitutionResource> institutionResources = institutionService.getInstitutions(productId)
                 .stream()
-                .map(institutionMapper::toResource)
+                .map(institutionResourceMapper::toResource)
                 .collect(Collectors.toList());
         log.debug("getInstitutions result = {}", institutionResources);
         log.trace("getInstitutions end");
@@ -140,7 +140,7 @@ public class InstitutionController {
         log.trace("getInstitutionByGeoTaxonomies start");
         log.debug("getInstitutionByGeoTaxonomies geoTaxonomies = {}, searchMode = {}", geoTaxonomies, searchMode);
         Collection<Institution> institutions = institutionService.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode.orElse(null));
-        List<InstitutionDetailResource> result = institutions.stream().map(institutionMapper::toResource).collect(Collectors.toList());
+        List<InstitutionDetailResource> result = institutions.stream().map(institutionResourceMapper::toResource).collect(Collectors.toList());
         log.debug("getInstitutionByGeoTaxonomies result = {}", result);
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;
