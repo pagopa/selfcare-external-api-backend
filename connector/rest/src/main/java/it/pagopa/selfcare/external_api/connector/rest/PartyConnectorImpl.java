@@ -129,6 +129,7 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setPaymentServiceProvider(onboardingData.getPaymentServiceProvider());
         institutionInfo.setDataProtectionOfficer(onboardingData.getDataProtectionOfficer());
         RootParent rootParent = new RootParent();
+        rootParent.setId(onboardingData.getRootParentId());
         rootParent.setDescription(onboardingData.getParentDescription());
         institutionInfo.setRootParent(rootParent);
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());

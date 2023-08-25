@@ -17,13 +17,18 @@ public interface InstitutionResourceMapper {
     @Mapping(target = "companyInformations", source = "model.businessData", qualifiedByName = "toCompanyInformationResource")
     @Mapping(target = "assistanceContacts", source = "model.supportContact", qualifiedByName = "toAssistanceContactsResource")
     @Mapping(target = "dpoData", source = "model.dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
+    @Mapping(target = "rootParent", source = "model.rootParent", qualifiedByName = "toRootParentResource")
     @Mapping(target = "userProductRoles", source = "model.productRoles")
     InstitutionResource toResource(InstitutionInfo model);
 
     @Mapping(target = "geographicTaxonomies", source = "model.geographicTaxonomies", qualifiedByName = "toGeographicTaxonomyResource")
     InstitutionDetailResource toResource(Institution model);
+
     @Named("toPspDataResource")
     PspDataResource toResource(PaymentServiceProvider model);
+
+    @Named("toRootParentResource")
+    RootParentResource toResource(RootParent model);
 
     @Named("toCompanyInformationResource")
     CompanyInformationsResource toResource(BusinessData model);
