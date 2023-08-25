@@ -61,7 +61,6 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData}")
     private DpoDataResource dpoData;
 
-
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
     private String subunitCode;
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitType}")

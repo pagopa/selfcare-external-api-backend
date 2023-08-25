@@ -28,6 +28,7 @@
           "subunitType": "UO",
           "aooParentCode": "string",
           "parentDescription": "string",
+          "rootParentId": "1111111",
           "productInfo": {
             "id": "string",
             "role": "string",
