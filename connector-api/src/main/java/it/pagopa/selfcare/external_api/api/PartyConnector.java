@@ -36,6 +36,8 @@ public interface PartyConnector {
 
     Institution createInstitutionRaw(OnboardingData onboardingData);
 
+    Institution createInstitution(OnboardingData onboardingData);
+
     void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);

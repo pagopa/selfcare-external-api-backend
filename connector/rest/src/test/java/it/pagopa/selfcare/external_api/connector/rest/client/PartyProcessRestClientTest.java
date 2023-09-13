@@ -6,6 +6,7 @@ import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.PartyProcessRestClientTestConfig;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
@@ -275,6 +276,18 @@ class PartyProcessRestClientTest extends BaseFeignRestClientTest {
         institutionSeed.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
         //when
         Institution response = restClient.createInstitutionRaw(externalId, institutionSeed);
+        //then
+        assertNotNull(response);
+        checkNotNullFields(response);
+    }
+
+    @Test
+    void createInstitution() {
+        //given
+        InstitutionSeed institutionSeed = mockInstance(new InstitutionSeed());
+        institutionSeed.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
+        //when
+        InstitutionResponse response = restClient.createInstitution(institutionSeed);
         //then
         assertNotNull(response);
         checkNotNullFields(response);

@@ -328,7 +328,7 @@ class OnboardingServiceImpl implements OnboardingService {
                             && onboardingData.getOrigin().equals("IPA"))) {
                 institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
             } else {
-                institution = partyConnector.createInstitutionRaw(onboardingData);
+                institution = partyConnector.createInstitution(onboardingData);
             }
         }
 
