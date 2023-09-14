@@ -2969,7 +2969,7 @@ class OnboardingServiceImplTest {
 
         when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),anyString()))
                 .thenThrow(ResourceNotFoundException.class);
-        when(partyConnectorMock.createInstitutionRaw(any())).thenReturn(institution);
+        when(partyConnectorMock.createInstitution(any())).thenReturn(institution);
 
         when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
                 .thenReturn(productMock);
@@ -2987,7 +2987,7 @@ class OnboardingServiceImplTest {
         verify(partyConnectorMock, times(1))
                 .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode());
         verify(partyConnectorMock, times(1))
-                .createInstitutionRaw(onboardingData);
+                .createInstitution(onboardingData);
         verify(productsConnectorMock, times(1))
                 .getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
         verify(onboardingValidationStrategyMock, times(1))
