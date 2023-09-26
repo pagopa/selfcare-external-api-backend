@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
+import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,24 @@ public class UserController {
         log.trace("getUserInfo end");
         return userInfoResource;
     }
+
+    @GetMapping(value = "/{id}/onboarded-product")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserProductInfo}")
+    public UserDetailsResource getUserProductInfo(@ApiParam("${swagger.external_api.user.model.id}")
+                                                            @PathVariable("id") String userId,
+                                                  @ApiParam("${swagger.external-api.product.model.id}")
+                                                            @RequestParam("productId") String productId,
+                                                  @ApiParam("${swagger.external_api.institutions.model.id}")
+                                                            @RequestParam("institutionId")
+                                                            String institutionId) {
+        log.trace("getUserProductInfo start");
+        log.debug("getUserProductInfo userId = {}, productId = {}, institutionId = {}", userId, productId, institutionId);
+        UserDetailsResource userDetailsResource = userInfoResourceMapper.toResource(userService.getUserOnboardedProductDetails(userId, institutionId, productId));
+        log.debug("getUserProductInfo result = {}", userDetailsResource);
+        log.trace("getUserProductInfo end");
+        return userDetailsResource;
+    }
+
 
 }

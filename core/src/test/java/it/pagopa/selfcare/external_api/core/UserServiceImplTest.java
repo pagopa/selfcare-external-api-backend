@@ -1,14 +1,13 @@
 package it.pagopa.selfcare.external_api.core;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
-import it.pagopa.selfcare.external_api.model.user.Certification;
-import it.pagopa.selfcare.external_api.model.user.CertifiedField;
-import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,10 +20,12 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import java.util.List;
 import java.util.Optional;
 
+import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
+import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -104,5 +105,52 @@ class UserServiceImplTest {
         institutionResponse.setAddress("address");
         response.setInstitutions(List.of(institutionResponse));
         return response;
+    }
+
+    @Test
+    void getUserOnboardedProductDetails(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        String userId = "userId";
+        OnboardingInfoResponse onboardingInfoResponse = new OnboardingInfoResponse();
+        onboardingInfoResponse.setUserId(userId);
+        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
+        institutionResponse.setId(institutionId);
+        ProductInfo productInfo = mockInstance(new ProductInfo());
+        productInfo.setId(productId);
+        institutionResponse.setProductInfo(productInfo);
+        institutionResponse.setRole(PartyRole.MANAGER);
+        onboardingInfoResponse.setInstitutions(List.of(institutionResponse));
+        when(msCoreConnector.getInstitutionProductsInfo(anyString())).thenReturn(onboardingInfoResponse);
+        //when
+        UserDetailsWrapper result = userService.getUserOnboardedProductDetails(userId, institutionId, productId);
+        //then
+        checkNotNullFields(result);
+        verify(msCoreConnector, times(1)).getInstitutionProductsInfo(userId);
+    }
+
+    @Test
+    void getUserOnboardedProduct_noMatch(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        String userId = "userId";
+        OnboardingInfoResponse onboardingInfoResponse = new OnboardingInfoResponse();
+        onboardingInfoResponse.setUserId(userId);
+        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
+        institutionResponse.setId("id");
+        ProductInfo productInfo = mockInstance(new ProductInfo());
+        productInfo.setId(productId);
+        institutionResponse.setProductInfo(productInfo);
+        institutionResponse.setRole(PartyRole.MANAGER);
+        onboardingInfoResponse.setInstitutions(List.of(institutionResponse));
+        when(msCoreConnector.getInstitutionProductsInfo(anyString())).thenReturn(onboardingInfoResponse);
+        //when
+        UserDetailsWrapper result = userService.getUserOnboardedProductDetails(userId, institutionId, productId);
+        //then
+        assertNull(result.getProductDetails());
+        verify(msCoreConnector, times(1)).getInstitutionProductsInfo(userId);
+
     }
 }
