@@ -1080,4 +1080,16 @@ class PartyConnectorImplTest {
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }
 
+    @Test
+    void createInstitutionFromANAC() {
+        final OnboardingData onboardingData = mockInstance(new OnboardingData());
+        final Executable executable = () -> partyConnector.createInstitutionFromANAC(onboardingData);
+        assertDoesNotThrow(executable);
+        InstitutionSeed institutionSeed = new InstitutionSeed(onboardingData);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionFromANAC(institutionSeed);
+        // then
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
 }
