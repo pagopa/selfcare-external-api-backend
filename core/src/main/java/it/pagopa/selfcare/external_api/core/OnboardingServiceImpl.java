@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
@@ -14,7 +15,6 @@ import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
 import it.pagopa.selfcare.external_api.model.product.Product;
@@ -35,6 +35,8 @@ import org.springframework.util.Assert;
 import javax.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+;
 
 @Service
 @Slf4j
@@ -98,12 +100,12 @@ class OnboardingServiceImpl implements OnboardingService {
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
                 if (institution.getInstitutionType() == null) {
-                    setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
+                    setInstitutionType(onboardingImportData, ipaInstitutionResource);
                 } else {
                     onboardingImportData.setInstitutionType(institution.getInstitutionType());
                 }
             } catch (ResourceNotFoundException e) {
-                setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
+                setInstitutionType(onboardingImportData, ipaInstitutionResource);
             }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
@@ -323,7 +325,10 @@ class OnboardingServiceImpl implements OnboardingService {
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
         } catch (ResourceNotFoundException e) {
-            if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+            if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
+                institution = partyConnector.createInstitutionFromANAC(onboardingData);
+            }
+             else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
                     (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
                             && onboardingData.getOrigin().equals("IPA"))) {
                 institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
@@ -410,8 +415,8 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private void setInstitutionType(OnboardingImportData onboardingImportData, String institutionCategory) {
-        if (institutionCategory.equals("L37")) {
+    private void setInstitutionType(OnboardingImportData onboardingImportData, InstitutionResource institutionResource) {
+        if (institutionResource.getCategory().equals("L37")) {
             onboardingImportData.setInstitutionType(InstitutionType.GSP);
         } else {
             onboardingImportData.setInstitutionType(InstitutionType.PA);
@@ -467,7 +472,10 @@ class OnboardingServiceImpl implements OnboardingService {
 
     private Institution createInstitution(OnboardingData onboardingData) {
         Institution institution;
-        if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+        if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
+            institution = partyConnector.createInstitutionFromANAC(onboardingData);
+        }
+         else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
                 (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
                         && onboardingData.getOrigin().equals("IPA"))) {
             institution = partyConnector.createInstitutionUsingExternalId(onboardingData.getInstitutionExternalId());

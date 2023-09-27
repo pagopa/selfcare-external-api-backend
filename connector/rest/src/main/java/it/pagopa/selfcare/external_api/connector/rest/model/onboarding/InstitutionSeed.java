@@ -1,15 +1,17 @@
 package it.pagopa.selfcare.external_api.connector.rest.model.onboarding;
 
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+;
 
 @Data
 @NoArgsConstructor

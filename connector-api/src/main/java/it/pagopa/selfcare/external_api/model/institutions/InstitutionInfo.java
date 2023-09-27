@@ -1,14 +1,16 @@
 package it.pagopa.selfcare.external_api.model.institutions;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Collection;
+
+;
 
 @Data
 @EqualsAndHashCode

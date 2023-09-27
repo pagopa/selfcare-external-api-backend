@@ -1,10 +1,10 @@
 package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.ProductsRestClientTestConfig;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;

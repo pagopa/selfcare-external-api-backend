@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import lombok.Data;
@@ -10,6 +10,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
+;
 
 @Data
 public class OnboardingDto {
