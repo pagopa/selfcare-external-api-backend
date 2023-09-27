@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-;
 
 @FeignClient(name = "${rest-client.products.serviceCode}", url = "${rest-client.products.base-url}")
 public interface ProductsRestClient extends ProductsConnector {
