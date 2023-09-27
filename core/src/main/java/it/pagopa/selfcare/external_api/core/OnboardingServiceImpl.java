@@ -100,12 +100,12 @@ class OnboardingServiceImpl implements OnboardingService {
             try {
                 institution = partyConnector.getInstitutionByExternalId(onboardingImportData.getInstitutionExternalId());
                 if (institution.getInstitutionType() == null) {
-                    setInstitutionType(onboardingImportData, ipaInstitutionResource);
+                    setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
                 } else {
                     onboardingImportData.setInstitutionType(institution.getInstitutionType());
                 }
             } catch (ResourceNotFoundException e) {
-                setInstitutionType(onboardingImportData, ipaInstitutionResource);
+                setInstitutionType(onboardingImportData, ipaInstitutionResource.getCategory());
             }
 
             Product product = productsConnector.getProduct(onboardingImportData.getProductId(), onboardingImportData.getInstitutionType());
@@ -415,8 +415,8 @@ class OnboardingServiceImpl implements OnboardingService {
         }
     }
 
-    private void setInstitutionType(OnboardingImportData onboardingImportData, InstitutionResource institutionResource) {
-        if (institutionResource.getCategory().equals("L37")) {
+    private void setInstitutionType(OnboardingImportData onboardingImportData, String institutionCategory) {
+        if (institutionCategory.equals("L37")) {
             onboardingImportData.setInstitutionType(InstitutionType.GSP);
         } else {
             onboardingImportData.setInstitutionType(InstitutionType.PA);
