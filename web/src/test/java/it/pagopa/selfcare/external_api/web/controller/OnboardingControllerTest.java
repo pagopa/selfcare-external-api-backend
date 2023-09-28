@@ -197,4 +197,19 @@ class OnboardingControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void onboardingInvalidSaOnboardingRequest(@Value("classpath:stubs/invalidSaOnboardingProductDto.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Field 'recipientCode' is required")));
+
+        // then
+        verifyNoInteractions(onboardingServiceMock);
+    }
+
 }
