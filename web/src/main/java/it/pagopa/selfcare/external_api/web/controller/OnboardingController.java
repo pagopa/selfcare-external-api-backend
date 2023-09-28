@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
@@ -92,6 +93,8 @@ public class OnboardingController {
         log.debug("onboarding request = {}", request);
         if (InstitutionType.PSP.equals(request.getInstitutionType()) && request.getPspData() == null) {
             throw new ValidationException("Field 'pspData' is required for PSP institution onboarding");
+        } else if (!InstitutionType.SA.equals(request.getInstitutionType()) && Objects.isNull(request.getBillingData().getRecipientCode())){
+            throw new ValidationException("Field 'recipientCode' is required");
         }
         onboardingService.autoApprovalOnboardingProduct(onboardingResourceMapper.toEntity(request));
         log.trace("onboarding end");
