@@ -47,4 +47,6 @@ public interface PartyConnector {
     void autoApprovalOnboarding(OnboardingData onboardingData);
 
     Relationships getRelationships(String institutionExternalId);
+
+    Institution createInstitutionFromANAC(OnboardingData onboardingData);
 }

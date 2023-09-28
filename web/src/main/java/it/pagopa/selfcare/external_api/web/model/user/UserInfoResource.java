@@ -1,11 +1,13 @@
 package it.pagopa.selfcare.external_api.web.model.user;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import lombok.Data;
 
 import java.util.List;
+
+;
 
 @Data
 public class UserInfoResource {

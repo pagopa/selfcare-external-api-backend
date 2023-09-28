@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.model.institutions;
 
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import lombok.Data;
+
+;
 
 @Data
 public class InstitutionUpdate {

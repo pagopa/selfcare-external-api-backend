@@ -1,11 +1,13 @@
 package it.pagopa.selfcare.external_api.web.model.institutions;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
+
+;
 
 @Data
 public class InstitutionDetailResource {

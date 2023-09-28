@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
@@ -28,6 +28,7 @@ import java.time.OffsetDateTime;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
+
 
 @Slf4j
 @RestController

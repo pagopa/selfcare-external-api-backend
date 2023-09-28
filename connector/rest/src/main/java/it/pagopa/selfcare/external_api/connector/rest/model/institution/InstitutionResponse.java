@@ -1,13 +1,15 @@
 package it.pagopa.selfcare.external_api.connector.rest.model.institution;
 
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import lombok.Data;
 
 import java.util.List;
+
+;
 
 @Data
 public class InstitutionResponse {
