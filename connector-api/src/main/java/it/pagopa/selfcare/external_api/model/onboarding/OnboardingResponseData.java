@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.BusinessData;
 import it.pagopa.selfcare.external_api.model.institutions.SupportContact;
@@ -35,5 +36,6 @@ public class OnboardingResponseData {
     private String subunitCode;
     private String subunitType;
     private String aooParentCode;
+    private String rootParentId;
     private String parentDescription;
 }

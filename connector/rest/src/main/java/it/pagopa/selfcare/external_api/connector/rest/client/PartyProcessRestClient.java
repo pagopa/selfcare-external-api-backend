@@ -78,4 +78,11 @@ public interface PartyProcessRestClient {
     InstitutionsResponse getInstitutions(@RequestParam("taxCode") String taxCode,
                                          @RequestParam(value = "subunitCode", required = false) String subunitCode);
 
+    @PostMapping(value = "${rest-client.party-process.createInstitution.path}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    InstitutionResponse createInstitution(@RequestBody InstitutionSeed institutionSeed);
+
+    @PostMapping(value = "${rest-client.party-process.createInstitutionFromAnac.path}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    InstitutionResponse createInstitutionFromANAC(@RequestBody InstitutionSeed institutionSeed);
 }

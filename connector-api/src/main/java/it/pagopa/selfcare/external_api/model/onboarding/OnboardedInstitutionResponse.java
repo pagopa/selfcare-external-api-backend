@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import lombok.Data;
 
 @Data

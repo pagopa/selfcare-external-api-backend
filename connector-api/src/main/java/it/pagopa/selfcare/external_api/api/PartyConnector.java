@@ -36,6 +36,8 @@ public interface PartyConnector {
 
     Institution createInstitutionRaw(OnboardingData onboardingData);
 
+    Institution createInstitution(OnboardingData onboardingData);
+
     void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
@@ -45,4 +47,6 @@ public interface PartyConnector {
     void autoApprovalOnboarding(OnboardingData onboardingData);
 
     Relationships getRelationships(String institutionExternalId);
+
+    Institution createInstitutionFromANAC(OnboardingData onboardingData);
 }

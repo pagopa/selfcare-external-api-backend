@@ -40,8 +40,6 @@ public class BillingDataDto {
     private String vatNumber;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.recipientCode}", required = true)
-    @JsonProperty(required = true)
-    @NotBlank
     private String recipientCode;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.publicServices}")

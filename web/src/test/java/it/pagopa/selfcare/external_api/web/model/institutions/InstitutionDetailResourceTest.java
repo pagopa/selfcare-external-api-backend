@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.web.model.institutions;
 
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+;
 
 class InstitutionDetailResourceTest {
     private Validator validator;

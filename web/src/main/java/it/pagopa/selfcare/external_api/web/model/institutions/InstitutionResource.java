@@ -1,11 +1,13 @@
 package it.pagopa.selfcare.external_api.web.model.institutions;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import lombok.Data;
 
 import java.util.Collection;
 import java.util.UUID;
+
+;
 
 @Data
 public class InstitutionResource {
@@ -60,7 +62,6 @@ public class InstitutionResource {
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData}")
     private DpoDataResource dpoData;
-
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
     private String subunitCode;

@@ -2,16 +2,15 @@ package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
-import it.pagopa.selfcare.external_api.model.user.Certification;
-import it.pagopa.selfcare.external_api.model.user.CertifiedField;
-import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
+import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
+import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,6 +78,34 @@ class UserControllerTest {
     }
 
     @Test
+    void getUserProductInfo() throws Exception {
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        String userId = "userId";
+        UserDetailsWrapper userDetailsWrapper = new UserDetailsWrapper();
+        userDetailsWrapper.setUserId(userId);
+        userDetailsWrapper.setInstitutionId(institutionId);
+        userDetailsWrapper.setProductDetails(buildProductDetails());
+        when(userService.getUserOnboardedProductDetails(anyString(), anyString(), anyString())).thenReturn(userDetailsWrapper);
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/{id}/onboarded-product", userId)
+                        .queryParam("institutionId", institutionId)
+                        .queryParam("productId", productId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+        UserDetailsResource response =  objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(response);
+        assertNotNull(response.getOnboardedProductDetails());
+    }
+    @Test
     void getUserInfoThrowsResourceNotFound() {
         when(userService.getUserInfo("12"))
                 .thenThrow(new ResourceNotFoundException("User with fiscal code" + 12 + " not found"));
@@ -97,5 +125,14 @@ class UserControllerTest {
         user.setName(fieldName);
         user.setEmail(fieldEmail);
         return user;
+    }
+
+    private ProductDetails buildProductDetails(){
+        ProductDetails product = new ProductDetails();
+        product.setProductId("productId");
+        product.setRoles(List.of("role"));
+        product.setRole(PartyRole.MANAGER);
+        product.setCreatedAt(OffsetDateTime.now());
+        return product;
     }
 }

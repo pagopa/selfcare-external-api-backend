@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import lombok.Data;
 
