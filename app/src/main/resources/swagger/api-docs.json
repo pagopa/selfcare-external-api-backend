@@ -1443,7 +1443,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1535,7 +1535,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1624,7 +1624,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "productInfo" : {
             "description" : "Products' info of onboardings",
@@ -1694,7 +1694,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1762,7 +1762,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
