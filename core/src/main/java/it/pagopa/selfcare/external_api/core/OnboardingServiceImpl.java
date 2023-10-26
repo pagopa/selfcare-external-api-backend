@@ -14,15 +14,14 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
 import it.pagopa.selfcare.external_api.model.product.ProductStatus;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.mapper.CertifiedFieldMapper;
 import it.pagopa.selfcare.external_api.model.user.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +35,8 @@ import javax.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.pagopa.selfcare.external_api.model.onboarding.OnboardingDataMapper.toOnboardingData;
+
 
 @Service
 @Slf4j
@@ -43,6 +44,8 @@ class OnboardingServiceImpl implements OnboardingService {
 
     protected static final String REQUIRED_INSTITUTION_TYPE_MESSAGE = "An institution type is required";
     protected static final String REQUIRED_ONBOARDING_DATA_MESSAGE = "Onboarding data is required";
+
+    protected static final String REQUIRED_INJESTION_TYPE_MESSAGE = "injectiontype is required";
     protected static final String REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE = "Institution's billing data are required";
     private static final String ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE = "Institution with external id '%s' is not allowed to onboard '%s' product";
     protected static final String ATLEAST_ONE_PRODUCT_ROLE_REQUIRED = "At least one Product role related to %s Party role is required";
@@ -248,6 +251,79 @@ class OnboardingServiceImpl implements OnboardingService {
             partyConnector.autoApprovalOnboarding(onboardingData);
             log.trace("autoApprovalOnboarding end");
         }
+    }
+
+    @Override
+    public void autoApprovalOnboardingFromPda(PdaOnboardingData pdaOnboardingData, String injectionInstitutionType) {
+        log.trace("autoApprovalOnboardingProductFromPda start");
+        log.debug("autoApprovalOnboardingProductFromPda = {}", pdaOnboardingData);
+        Assert.notNull(injectionInstitutionType, REQUIRED_INJESTION_TYPE_MESSAGE);
+        Assert.notNull(pdaOnboardingData, REQUIRED_ONBOARDING_DATA_MESSAGE);
+        Assert.notNull(pdaOnboardingData.getBilling(), REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE);
+
+        log.debug(String.format("autoApprovalOnboardingProductFromPda: starting onboarding process for institution %s on product %s",
+                pdaOnboardingData.getInstitutionExternalId(),
+                pdaOnboardingData.getProductId()));
+
+        Product product = productsConnector.getProduct(pdaOnboardingData.getProductId(), null);
+        Assert.notNull(product, PRODUCT_OBJECT_REQUIRED);
+
+        if (product.getStatus() == ProductStatus.PHASE_OUT) {
+            throw new ValidationException(String.format(PRODUCT_DISMSIDDED,
+                    pdaOnboardingData.getInstitutionExternalId(),
+                    product.getId()));
+        }
+
+        final EnumMap<PartyRole, ProductRoleInfo> roleMappings;
+
+        validateOnboarding(pdaOnboardingData.getTaxCode(), product.getId());
+        roleMappings = product.getRoleMappings();
+
+        pdaOnboardingData.setProductName(product.getTitle());
+        Assert.notNull(roleMappings, ROLE_MAPPINGS_REQUIRED);
+        pdaOnboardingData.getUsers().forEach(userInfo -> {
+            Assert.notNull(roleMappings.get(userInfo.getRole()),
+                    String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
+            Assert.notEmpty(roleMappings.get(userInfo.getRole()).getRoles(),
+                    String.format(ATLEAST_ONE_PRODUCT_ROLE_REQUIRED, userInfo.getRole()));
+            Assert.state(roleMappings.get(userInfo.getRole()).getRoles().size() == 1,
+                    String.format(MORE_THAN_ONE_PRODUCT_ROLE_AVAILABLE, userInfo.getRole()));
+            userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
+        });
+
+        Institution institution;
+        try {
+            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(pdaOnboardingData.getTaxCode(), null)
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(ResourceNotFoundException::new);
+        } catch (ResourceNotFoundException e) {
+            pdaOnboardingData.setInjectionInstitutionType(injectionInstitutionType);
+            institution = partyConnector.createInstitutionFromPda(pdaOnboardingData);
+        }
+
+        String finalInstitutionInternalId = institution.getId();
+        pdaOnboardingData.getUsers().forEach(user -> {
+
+            final Optional<User> searchResult =
+                    userConnector.search(user.getTaxCode(), USER_FIELD_LIST);
+            searchResult.ifPresentOrElse(foundUser -> {
+                Optional<MutableUserFieldsDto> updateRequest = createUpdateRequest(user, foundUser, finalInstitutionInternalId);
+                updateRequest.ifPresent(mutableUserFieldsDto ->
+                        userConnector.updateUser(UUID.fromString(foundUser.getId()), mutableUserFieldsDto));
+                user.setId(foundUser.getId());
+            }, () -> user.setId(userConnector.saveUser(UserMapper.toSaveUserDto(user, finalInstitutionInternalId))
+                    .getId().toString()));
+        });
+
+        pdaOnboardingData.setInstitutionExternalId(institution.getExternalId());
+        pdaOnboardingData.setInstitutionType(institution.getInstitutionType());
+        pdaOnboardingData.setOrigin(institution.getOrigin());
+        OnboardingData onboardingData = toOnboardingData(pdaOnboardingData);
+
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        log.trace("autoApprovalOnboardingProductFromPda end");
+
     }
 
     @Override

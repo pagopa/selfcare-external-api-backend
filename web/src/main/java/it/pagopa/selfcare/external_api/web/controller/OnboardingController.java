@@ -13,6 +13,7 @@ import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
+import it.pagopa.selfcare.external_api.web.model.onboarding.PdaOnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
@@ -100,6 +101,19 @@ public class OnboardingController {
         log.trace("onboarding end");
     }
 
+    @PostMapping(value = "/pda/{injectionInstitutionType}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.injectionAutoApprovalOnboarding}")
+    public void autoApprovalOnboardingFromPda(@ApiParam("${swagger.external_api.institutions.model.injectionInstitutionType}")
+                                              @PathVariable("injectionInstitutionType")
+                                              String injectionInstitutionType,
+                                              @RequestBody @Valid PdaOnboardingDto request) {
+        log.trace("onboarding start");
+        log.debug("onboarding request = {}", request);
+        onboardingService.autoApprovalOnboardingFromPda(onboardingResourceMapper.toEntity(request), injectionInstitutionType);
+        log.trace("onboarding end");
+    }
+
     @Deprecated
     @ApiResponses(value = {
             @ApiResponse(responseCode = "409",
@@ -115,9 +129,10 @@ public class OnboardingController {
                                     schema = @Schema(implementation = Problem.class))
                     })
     })
+
     @PostMapping(value = "/{externalInstitutionId}/products/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.autoApprovalOnboarding}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.pdaAutoApprovalOnboarding}")
     public void autoApprovalOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
                                        @PathVariable("externalInstitutionId")
                                        String externalInstitutionId,

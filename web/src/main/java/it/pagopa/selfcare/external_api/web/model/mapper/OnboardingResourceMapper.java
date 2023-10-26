@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
+import it.pagopa.selfcare.external_api.web.model.onboarding.PdaOnboardingDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,6 +22,13 @@ public interface OnboardingResourceMapper {
     @Mapping(source = "assistanceContacts.supportEmail", target = "institutionUpdate.supportEmail")
     @Mapping(source = "assistanceContacts.supportPhone", target = "institutionUpdate.supportPhone")
     OnboardingData toEntity(OnboardingProductDto dto);
+
+    @Mapping(source = "taxCode", target = "institutionExternalId")
+    @Mapping(source = "taxCode", target = "taxCode")
+    @Mapping(source = "businessName", target = "description")
+    @Mapping(source = "vatNumber", target = "billing.vatNumber")
+    @Mapping(source = "recipientCode", target = "billing.recipientCode")
+    PdaOnboardingData toEntity(PdaOnboardingDto dto);
 
 
 }
