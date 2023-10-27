@@ -3362,4 +3362,213 @@ class OnboardingServiceImplTest {
 
     }
 
+    @Test
+    void shouldOnboardingPdaInstitutionForEc1() {
+        // given
+        String productRole = "role";
+        PdaOnboardingData onboardingData = mockInstance(new PdaOnboardingData(), "setInstitutionType", "setUsers");
+        onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+
+        ProductRoleInfo productRoleInfo1 = mockInstance(new ProductRoleInfo(), 1, "setRoles");
+        ProductRoleInfo.ProductRole productRole1 = mockInstance(new ProductRoleInfo.ProductRole(), 1);
+        productRole1.setCode(productRole);
+        productRoleInfo1.setRoles(List.of(productRole1));
+        ProductRoleInfo productRoleInfo2 = mockInstance(new ProductRoleInfo(), 2, "setRoles");
+        ProductRoleInfo.ProductRole productRole2 = mockInstance(new ProductRoleInfo.ProductRole(), 2);
+        productRole2.setCode(productRole);
+        productRoleInfo2.setRoles(List.of(productRole2));
+        EnumMap<PartyRole, ProductRoleInfo> roleMappings = new EnumMap<>(PartyRole.class) {{
+            put(PartyRole.MANAGER, productRoleInfo1);
+            put(PartyRole.DELEGATE, productRoleInfo2);
+        }};
+
+        Product productMock = new Product();
+        productMock.setId(onboardingData.getProductId());
+        productMock.setRoleMappings(roleMappings);
+
+        Institution institution = mockInstance(new Institution());
+        institution.setId(UUID.randomUUID().toString());
+        institution.setInstitutionType(InstitutionType.PA);
+
+        when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),any()))
+                .thenThrow(ResourceNotFoundException.class);
+        when(partyConnectorMock.createInstitutionFromPda(any())).thenReturn(institution);
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), null))
+                .thenReturn(productMock);
+        when(userRegistryConnectorMock.saveUser(any()))
+                .thenAnswer(invocation -> {
+                    UserId userId = new UserId();
+                    userId.setId(UUID.randomUUID());
+                    return userId;
+                });
+        when(onboardingValidationStrategyMock.validate(any(), any()))
+                .thenReturn(true);
+        // when
+        onboardingServiceImpl.autoApprovalOnboardingFromPda(onboardingData, "EC");
+        // then
+        verify(partyConnectorMock, times(1))
+                .createInstitutionFromPda(onboardingData);
+        verify(productsConnectorMock, times(1))
+                .getProduct(onboardingData.getProductId(), null);
+        verify(onboardingValidationStrategyMock, times(1))
+                .validate(onboardingData.getProductId(), onboardingData.getTaxCode());
+        verify(partyConnectorMock, times(1))
+                .autoApprovalOnboarding(onboardingDataCaptor.capture());
+        ArgumentCaptor<SaveUserDto> saveUserCaptor = ArgumentCaptor.forClass(SaveUserDto.class);
+        onboardingData.getUsers().forEach(user ->
+                verify(userRegistryConnectorMock, times(1))
+                        .search(user.getTaxCode(), EnumSet.of(name, familyName, workContacts)));
+        verify(userRegistryConnectorMock, times(2))
+                .saveUser(saveUserCaptor.capture());
+        List<SaveUserDto> savedUsers = saveUserCaptor.getAllValues();
+        savedUsers.forEach(saveUserDto -> assertTrue(saveUserDto.getWorkContacts().containsKey(institution.getId())));
+        OnboardingData captured = onboardingDataCaptor.getValue();
+        assertNotNull(captured.getUsers());
+        assertEquals(2, captured.getUsers().size());
+        captured.getUsers().forEach(userInfo -> {
+            assertEquals(productRole, userInfo.getProductRole());
+            assertNotNull(userInfo.getId());
+        });
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
+    @Test
+    void shouldOnboardingPdaInstitutionForEc2() {
+        // given
+        String productRole = "role";
+        PdaOnboardingData onboardingData = mockInstance(new PdaOnboardingData(), "setInstitutionType", "setUsers");
+        onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+
+        ProductRoleInfo productRoleInfo1 = mockInstance(new ProductRoleInfo(), 1, "setRoles");
+        ProductRoleInfo.ProductRole productRole1 = mockInstance(new ProductRoleInfo.ProductRole(), 1);
+        productRole1.setCode(productRole);
+        productRoleInfo1.setRoles(List.of(productRole1));
+        ProductRoleInfo productRoleInfo2 = mockInstance(new ProductRoleInfo(), 2, "setRoles");
+        ProductRoleInfo.ProductRole productRole2 = mockInstance(new ProductRoleInfo.ProductRole(), 2);
+        productRole2.setCode(productRole);
+        productRoleInfo2.setRoles(List.of(productRole2));
+        EnumMap<PartyRole, ProductRoleInfo> roleMappings = new EnumMap<>(PartyRole.class) {{
+            put(PartyRole.MANAGER, productRoleInfo1);
+            put(PartyRole.DELEGATE, productRoleInfo2);
+        }};
+
+        Product productMock = new Product();
+        productMock.setId(onboardingData.getProductId());
+        productMock.setRoleMappings(roleMappings);
+
+        Institution institution = mockInstance(new Institution());
+        institution.setId(UUID.randomUUID().toString());
+        institution.setInstitutionType(InstitutionType.PA);
+
+        when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),any()))
+                .thenReturn(List.of(institution));
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), null))
+                .thenReturn(productMock);
+        when(userRegistryConnectorMock.saveUser(any()))
+                .thenAnswer(invocation -> {
+                    UserId userId = new UserId();
+                    userId.setId(UUID.randomUUID());
+                    return userId;
+                });
+        when(onboardingValidationStrategyMock.validate(any(), any()))
+                .thenReturn(true);
+        // when
+        onboardingServiceImpl.autoApprovalOnboardingFromPda(onboardingData, "EC");
+        verify(productsConnectorMock, times(1))
+                .getProduct(onboardingData.getProductId(), null);
+        verify(onboardingValidationStrategyMock, times(1))
+                .validate(onboardingData.getProductId(), onboardingData.getTaxCode());
+        verify(partyConnectorMock, times(1))
+                .autoApprovalOnboarding(onboardingDataCaptor.capture());
+        ArgumentCaptor<SaveUserDto> saveUserCaptor = ArgumentCaptor.forClass(SaveUserDto.class);
+        onboardingData.getUsers().forEach(user ->
+                verify(userRegistryConnectorMock, times(1))
+                        .search(user.getTaxCode(), EnumSet.of(name, familyName, workContacts)));
+        verify(userRegistryConnectorMock, times(2))
+                .saveUser(saveUserCaptor.capture());
+        List<SaveUserDto> savedUsers = saveUserCaptor.getAllValues();
+        savedUsers.forEach(saveUserDto -> assertTrue(saveUserDto.getWorkContacts().containsKey(institution.getId())));
+        OnboardingData captured = onboardingDataCaptor.getValue();
+        assertNotNull(captured.getUsers());
+        assertEquals(2, captured.getUsers().size());
+        captured.getUsers().forEach(userInfo -> {
+            assertEquals(productRole, userInfo.getProductRole());
+            assertNotNull(userInfo.getId());
+        });
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
+    @Test
+    void shouldOnboardingPdaInstitutionForPt() {
+        // given
+        String productRole = "role";
+        PdaOnboardingData onboardingData = mockInstance(new PdaOnboardingData(), "setInstitutionType", "setUsers");
+        onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+
+        ProductRoleInfo productRoleInfo1 = mockInstance(new ProductRoleInfo(), 1, "setRoles");
+        ProductRoleInfo.ProductRole productRole1 = mockInstance(new ProductRoleInfo.ProductRole(), 1);
+        productRole1.setCode(productRole);
+        productRoleInfo1.setRoles(List.of(productRole1));
+        ProductRoleInfo productRoleInfo2 = mockInstance(new ProductRoleInfo(), 2, "setRoles");
+        ProductRoleInfo.ProductRole productRole2 = mockInstance(new ProductRoleInfo.ProductRole(), 2);
+        productRole2.setCode(productRole);
+        productRoleInfo2.setRoles(List.of(productRole2));
+        EnumMap<PartyRole, ProductRoleInfo> roleMappings = new EnumMap<>(PartyRole.class) {{
+            put(PartyRole.MANAGER, productRoleInfo1);
+            put(PartyRole.DELEGATE, productRoleInfo2);
+        }};
+
+        Product productMock = new Product();
+        productMock.setId(onboardingData.getProductId());
+        productMock.setRoleMappings(roleMappings);
+
+        Institution institution = mockInstance(new Institution());
+        institution.setId(UUID.randomUUID().toString());
+        institution.setInstitutionType(InstitutionType.PT);
+
+        when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),any()))
+                .thenThrow(ResourceNotFoundException.class);
+        when(partyConnectorMock.createInstitutionFromPda(any())).thenReturn(institution);
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), null))
+                .thenReturn(productMock);
+        when(userRegistryConnectorMock.saveUser(any()))
+                .thenAnswer(invocation -> {
+                    UserId userId = new UserId();
+                    userId.setId(UUID.randomUUID());
+                    return userId;
+                });
+        when(onboardingValidationStrategyMock.validate(any(), any()))
+                .thenReturn(true);
+        // when
+        onboardingServiceImpl.autoApprovalOnboardingFromPda(onboardingData, "PT");
+        // then
+        verify(partyConnectorMock, times(1))
+                .createInstitutionFromPda(onboardingData);
+        verify(productsConnectorMock, times(1))
+                .getProduct(onboardingData.getProductId(), null);
+        verify(onboardingValidationStrategyMock, times(1))
+                .validate(onboardingData.getProductId(), onboardingData.getTaxCode());
+        verify(partyConnectorMock, times(1))
+                .autoApprovalOnboarding(onboardingDataCaptor.capture());
+        ArgumentCaptor<SaveUserDto> saveUserCaptor = ArgumentCaptor.forClass(SaveUserDto.class);
+        onboardingData.getUsers().forEach(user ->
+                verify(userRegistryConnectorMock, times(1))
+                        .search(user.getTaxCode(), EnumSet.of(name, familyName, workContacts)));
+        verify(userRegistryConnectorMock, times(2))
+                .saveUser(saveUserCaptor.capture());
+        List<SaveUserDto> savedUsers = saveUserCaptor.getAllValues();
+        savedUsers.forEach(saveUserDto -> assertTrue(saveUserDto.getWorkContacts().containsKey(institution.getId())));
+        OnboardingData captured = onboardingDataCaptor.getValue();
+        assertNotNull(captured.getUsers());
+        assertEquals(2, captured.getUsers().size());
+        captured.getUsers().forEach(userInfo -> {
+            assertEquals(productRole, userInfo.getProductRole());
+            assertNotNull(userInfo.getId());
+        });
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
 }

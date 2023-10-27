@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
@@ -116,6 +117,40 @@ class OnboardingControllerTest {
         // then
         verify(onboardingServiceMock, times(1))
                 .autoApprovalOnboardingProduct(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingECFromPDA(@Value("classpath:stubs/onboardingFromPDA.json") Resource onboardingSubunitDto) throws Exception {
+        String injectionInstitutionType = "PT";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/pda/{injectionInstitutionType}",injectionInstitutionType)
+                        .content(onboardingSubunitDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingFromPda(any(PdaOnboardingData.class), any());
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingPTFromPDA(@Value("classpath:stubs/onboardingFromPDA.json") Resource onboardingSubunitDto) throws Exception {
+        String injectionInstitutionType = "PT";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/pda/{injectionInstitutionType}",injectionInstitutionType)
+                        .content(onboardingSubunitDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingFromPda(any(PdaOnboardingData.class), any());
         verifyNoMoreInteractions(onboardingServiceMock);
     }
 

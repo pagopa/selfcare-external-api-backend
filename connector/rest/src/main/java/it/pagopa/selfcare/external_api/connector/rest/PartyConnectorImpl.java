@@ -6,16 +6,11 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
-import it.pagopa.selfcare.external_api.model.onboarding.User;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
@@ -491,4 +486,13 @@ public class PartyConnectorImpl implements PartyConnector {
         return result;
     }
 
+    @Override
+    public Institution createInstitutionFromPda(PdaOnboardingData onboardingData) {
+        log.trace("createInstitutionFromPda start");
+        Assert.notNull(onboardingData.getTaxCode(), "TaxCode is required");
+        Institution result = partyProcessRestClient.createInstitutionFromPda(new PdaInstitutionSeed(onboardingData));
+        log.debug("createInstitutionFromPda result = {}", result);
+        log.trace("createInstitutionFromPda end");
+        return result;
+    }
 }
