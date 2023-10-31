@@ -51,5 +51,7 @@ public interface PartyConnector {
 
     Institution createInstitutionFromANAC(OnboardingData onboardingData);
 
+    Institution createInstitutionFromIVASS(OnboardingData onboardingData);
+
     Institution createInstitutionFromPda(PdaOnboardingData onboardingData);
 }

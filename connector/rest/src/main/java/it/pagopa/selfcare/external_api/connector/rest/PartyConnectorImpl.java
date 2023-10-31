@@ -487,6 +487,17 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
+    public Institution createInstitutionFromIVASS(OnboardingData onboardingData) {
+        log.trace("createInstitutionFromIVASS start");
+        Assert.notNull(onboardingData, "An OnboardingData is required");
+        InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromIVASS(new InstitutionSeed(onboardingData));
+        Institution result = institutionMapper.toEntity(partyInstitutionResponse);
+        log.debug("createInstitutionFromIVASS result = {}", result);
+        log.trace("createInstitutionFromIVASS end");
+        return result;
+    }
+
+    @Override
     public Institution createInstitutionFromPda(PdaOnboardingData onboardingData) {
         log.trace("createInstitutionFromPda start");
         Assert.notNull(onboardingData.getTaxCode(), "TaxCode is required");
