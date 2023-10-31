@@ -37,8 +37,7 @@ import javax.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.pagopa.selfcare.commons.base.utils.Origin.ANAC;
-import static it.pagopa.selfcare.commons.base.utils.Origin.IPA;
+import static it.pagopa.selfcare.commons.base.utils.Origin.*;
 import static it.pagopa.selfcare.commons.base.utils.ProductId.PROD_INTEROP;
 import static it.pagopa.selfcare.external_api.model.onboarding.OnboardingDataMapper.toOnboardingData;
 
@@ -408,7 +407,7 @@ class OnboardingServiceImpl implements OnboardingService {
             if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(ANAC.getValue())){
                 institution = partyConnector.createInstitutionFromANAC(onboardingData);
             }
-            else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("IVASS")){
+            else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(IVASS.getValue())){
                 institution = partyConnector.createInstitutionFromIVASS(onboardingData);
             }
             else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
@@ -558,7 +557,7 @@ class OnboardingServiceImpl implements OnboardingService {
         if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(ANAC.getValue())){
             institution = partyConnector.createInstitutionFromANAC(onboardingData);
         }
-        else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("IVASS")){
+        else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(IVASS.getValue())){
             institution = partyConnector.createInstitutionFromIVASS(onboardingData);
         }
         else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
