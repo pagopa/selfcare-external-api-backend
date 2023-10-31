@@ -3,6 +3,8 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
+
 @RequiredArgsConstructor(access = AccessLevel.NONE)
 public class OnboardingDataMapper {
 
@@ -32,6 +34,7 @@ public class OnboardingDataMapper {
         institutionUpdate.setAddress(pdaOnboardingData.getAddress());
         institutionUpdate.setTaxCode(pdaOnboardingData.getTaxCode());
         institutionUpdate.setZipCode(pdaOnboardingData.getZipCode());
+        institutionUpdate.setGeographicTaxonomies(Collections.emptyList());
         return institutionUpdate;
     }
 }
