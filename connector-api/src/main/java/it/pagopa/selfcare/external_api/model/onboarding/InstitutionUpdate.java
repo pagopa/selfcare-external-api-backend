@@ -13,6 +13,9 @@ public class InstitutionUpdate {
     private String description;
     private String digitalAddress;
     private String address;
+    private String city;
+    private String county;
+    private String country;
     private String taxCode;
     private String zipCode;
     private PaymentServiceProvider paymentServiceProvider;

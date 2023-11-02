@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.Origin;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
@@ -3025,6 +3026,7 @@ class OnboardingServiceImplTest {
         OnboardingData onboardingData = mockInstance(new OnboardingData(), "setInstitutionType", "setUsers");
         onboardingData.setInstitutionType(InstitutionType.PSP);
         onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+        onboardingData.setOrigin(Origin.INFOCAMERE.getValue());
 
         ProductRoleInfo productRoleInfo1 = mockInstance(new ProductRoleInfo(), 1, "setRoles");
         ProductRoleInfo.ProductRole productRole1 = mockInstance(new ProductRoleInfo.ProductRole(), 1);
@@ -3098,6 +3100,8 @@ class OnboardingServiceImplTest {
 
         OnboardingData onboardingData = mockInstance(new OnboardingData(), "setInstitutionType", "setUsers");
         onboardingData.setInstitutionType(InstitutionType.PA);
+        onboardingData.setOrigin(Origin.IPA.getValue());
+        onboardingData.setLocation(new InstitutionLocation());
         onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
         Product productMock = mockInstance(new Product(), "setRoleMappings", "setParentId", "setId");
         productMock.setId(onboardingData.getProductId());
@@ -3239,6 +3243,7 @@ class OnboardingServiceImplTest {
         OnboardingData onboardingData = mockInstance(new OnboardingData());
         onboardingData.setProductId("id");
         onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setOrigin(Origin.SELC.getValue());
         Product product = new Product();
         product.setId("id");
         product.setStatus(ProductStatus.PHASE_OUT);
@@ -3263,6 +3268,7 @@ class OnboardingServiceImplTest {
         onboardingData.setProductId("id");
         onboardingData.setInstitutionExternalId("externalId");
         onboardingData.setTaxCode("taxCode");
+        onboardingData.setOrigin(Origin.IPA.getValue());
         onboardingData.setInstitutionType(InstitutionType.PT);
         Product product = new Product();
         product.setId("id");
@@ -3295,6 +3301,7 @@ class OnboardingServiceImplTest {
         onboardingData.setProductId("id");
         onboardingData.setInstitutionExternalId("externalId");
         onboardingData.setTaxCode("taxCode");
+        onboardingData.setOrigin(Origin.SELC.getValue());
         onboardingData.setInstitutionType(InstitutionType.PT);
         Product product = new Product();
         product.setId("id");
@@ -3329,6 +3336,7 @@ class OnboardingServiceImplTest {
         onboardingData.setInstitutionExternalId("externalId");
         onboardingData.setTaxCode("taxCode");
         onboardingData.setSubunitCode("subunitCode");
+        onboardingData.setOrigin(null);
         onboardingData.setInstitutionType(InstitutionType.PT);
         Product product = new Product();
         product.setId("id");

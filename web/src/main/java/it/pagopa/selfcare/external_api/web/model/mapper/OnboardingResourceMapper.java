@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface OnboardingResourceMapper {
 
     @Mapping(source = "billingData", target = "billing")
+    @Mapping(source = "institutionLocationData", target = "location")
     @Mapping(source = "billingData.businessName", target = "institutionUpdate.description")
     @Mapping(source = "billingData.registeredOffice", target = "institutionUpdate.address")
     @Mapping(source = "pspData", target = "institutionUpdate.paymentServiceProvider")

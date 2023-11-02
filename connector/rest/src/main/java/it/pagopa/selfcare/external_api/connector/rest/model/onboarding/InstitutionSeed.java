@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +21,9 @@ public class InstitutionSeed {
         digitalAddress = onboardingData.getInstitutionUpdate().getDigitalAddress();
         address = onboardingData.getInstitutionUpdate().getAddress();
         zipCode = onboardingData.getInstitutionUpdate().getZipCode();
+        city = onboardingData.getLocation().getCity();
+        county= onboardingData.getLocation().getCounty();
+        country = onboardingData.getLocation().getCountry();
         taxCode = onboardingData.getInstitutionUpdate().getTaxCode();
         institutionType = onboardingData.getInstitutionType();
         attributes = List.of();
@@ -51,4 +53,7 @@ public class InstitutionSeed {
     private String businessRegisterPlace;
     private String supportEmail;
     private String supportPhone;
+    private String city;
+    private String county;
+    private String country;
 }

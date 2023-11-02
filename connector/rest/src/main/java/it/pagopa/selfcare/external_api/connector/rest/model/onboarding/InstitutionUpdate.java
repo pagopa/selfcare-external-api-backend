@@ -27,5 +27,8 @@ public class InstitutionUpdate {
     private String supportEmail;
     private String supportPhone;
     private Boolean imported;
+    private String city;
+    private String county;
+    private String country;
 
 }

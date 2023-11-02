@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.Origin;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
@@ -30,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
 import java.util.*;
@@ -44,7 +46,7 @@ class OnboardingServiceImpl implements OnboardingService {
 
     protected static final String REQUIRED_INSTITUTION_TYPE_MESSAGE = "An institution type is required";
     protected static final String REQUIRED_ONBOARDING_DATA_MESSAGE = "Onboarding data is required";
-
+    protected static final String LOCATION_INFO_IS_REQUIRED = "Location infos are required";
     protected static final String REQUIRED_INJESTION_TYPE_MESSAGE = "injectiontype is required";
     protected static final String REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE = "Institution's billing data are required";
     private static final String ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE = "Institution with external id '%s' is not allowed to onboard '%s' product";
@@ -157,6 +159,9 @@ class OnboardingServiceImpl implements OnboardingService {
             onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
             onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
             onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
+            onboardingImportData.getInstitutionUpdate().setCity(institution.getCity());
+            onboardingImportData.getInstitutionUpdate().setCountry(institution.getCountry());
+            onboardingImportData.getInstitutionUpdate().setCounty(institution.getCounty());
             onboardingImportData.setOrigin(institution.getOrigin());
 
             String finalInstitutionInternalId = institution.getId();
@@ -333,6 +338,10 @@ class OnboardingServiceImpl implements OnboardingService {
         Assert.notNull(onboardingData, REQUIRED_ONBOARDING_DATA_MESSAGE);
         Assert.notNull(onboardingData.getBilling(), REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE);
         Assert.notNull(onboardingData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
+
+        if (StringUtils.hasText(onboardingData.getOrigin()) && !Origin.IPA.equals(Origin.fromValue(onboardingData.getOrigin())) && onboardingData.getLocation() == null){
+            throw new ValidationException(LOCATION_INFO_IS_REQUIRED);
+        }
 
         log.debug(String.format("autoApprovalOnboardingProduct: starting onboarding process for institution %s on product %s",
                 onboardingData.getInstitutionExternalId(),

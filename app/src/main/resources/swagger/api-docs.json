@@ -1476,6 +1476,18 @@
             "type" : "string",
             "description" : "Institution's business register place"
           },
+          "city" : {
+            "type" : "string",
+            "description" : "Institution's physical address city"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Institution's physical address country"
+          },
+          "county" : {
+            "type" : "string",
+            "description" : "Institution's physical address county"
+          },
           "description" : {
             "type" : "string",
             "description" : "Institution's legal name"
@@ -1556,6 +1568,25 @@
           }
         }
       },
+      "InstitutionLocationDataDto" : {
+        "title" : "InstitutionLocationDataDto",
+        "required" : [ "city", "country", "county" ],
+        "type" : "object",
+        "properties" : {
+          "city" : {
+            "type" : "string",
+            "description" : "Institution's physical address city"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Institution's physical address country"
+          },
+          "county" : {
+            "type" : "string",
+            "description" : "Institution's physical address county"
+          }
+        }
+      },
       "InstitutionResource" : {
         "title" : "InstitutionResource",
         "type" : "object",
@@ -1572,9 +1603,21 @@
             "description" : "Institution's assistance contacts",
             "$ref" : "#/components/schemas/AssistanceContactsResource"
           },
+          "city" : {
+            "type" : "string",
+            "description" : "Institution's physical address city"
+          },
           "companyInformations" : {
             "description" : "GPS, SCP, PT optional data",
             "$ref" : "#/components/schemas/CompanyInformationsResource"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Institution's physical address country"
+          },
+          "county" : {
+            "type" : "string",
+            "description" : "Institution's physical address county"
           },
           "description" : {
             "type" : "string",
@@ -1823,6 +1866,10 @@
             "items" : {
               "$ref" : "#/components/schemas/GeographicTaxonomyDto0"
             }
+          },
+          "institutionLocationData" : {
+            "description" : "Institution's location Data",
+            "$ref" : "#/components/schemas/InstitutionLocationDataDto"
           },
           "institutionType" : {
             "type" : "string",

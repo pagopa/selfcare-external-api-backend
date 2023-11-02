@@ -130,6 +130,14 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
+        InstitutionLocation institutionLocation = new InstitutionLocation();
+        if(onboardingData.getInstitutionLocation() != null) {
+            institutionLocation.setCity(onboardingData.getInstitutionLocation().getCity());
+            institutionLocation.setCountry(onboardingData.getInstitutionLocation().getCountry());
+            institutionLocation.setCounty(onboardingData.getInstitutionLocation().getCounty());
+        }
+        institutionInfo.setInstitutionLocation(institutionLocation);
+
         return institutionInfo;
     };
 
@@ -363,6 +371,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingImportData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingImportData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingImportData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingImportData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCountry(onboardingImportData.getInstitutionUpdate().getCountry());
+        institutionUpdate.setCounty(onboardingImportData.getInstitutionUpdate().getCounty());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         OnboardingContract onboardingContract = new OnboardingContract();
