@@ -319,6 +319,8 @@ class OnboardingServiceImpl implements OnboardingService {
         pdaOnboardingData.setInstitutionExternalId(institution.getExternalId());
         pdaOnboardingData.setInstitutionType(institution.getInstitutionType());
         pdaOnboardingData.setOrigin(institution.getOrigin());
+        pdaOnboardingData.setContractPath("import-from-pda");
+        pdaOnboardingData.setContractVersion("0.0");
         OnboardingData onboardingData = toOnboardingData(pdaOnboardingData);
 
         partyConnector.autoApprovalOnboarding(onboardingData);

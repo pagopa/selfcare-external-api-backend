@@ -24,6 +24,9 @@ public class PdaOnboardingData {
     private String description;
     private Billing billing;
 
+    private String contractPath;
+    private String contractVersion;
+
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());
     }
