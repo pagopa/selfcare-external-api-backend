@@ -174,7 +174,11 @@ class OnboardingControllerTest {
     @Test
     void onboardingInvalidPspProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
         // when
-        performOnboardingCall(onboardingDto)
+        mvc.perform(MockMvcRequestBuilders
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
         // then
@@ -232,7 +236,11 @@ class OnboardingControllerTest {
     @Test
     void onboardingInvalidSaOnboardingRequest(@Value("classpath:stubs/invalidSaOnboardingProductDto.json") Resource onboardingDto) throws Exception {
         // when
-        performOnboardingCall(onboardingDto)
+        mvc.perform(MockMvcRequestBuilders
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Field 'recipientCode' is required")));
 
@@ -243,18 +251,14 @@ class OnboardingControllerTest {
     @Test
     void onboardingInvalidOnboardingRequestNotIPA(@Value("classpath:stubs/invalidOnboardingNotIPA.json") Resource onboardingDto) throws Exception {
         // when
-        performOnboardingCall(onboardingDto)
+        mvc.perform(MockMvcRequestBuilders
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Validation failed")));
         // then
         verifyNoInteractions(onboardingServiceMock);
-    }
-
-    private ResultActions performOnboardingCall(Resource onboardingDto) throws Exception {
-        return mvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE));
     }
 }
