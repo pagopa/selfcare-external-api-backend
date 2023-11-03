@@ -23,6 +23,9 @@
           "description": "AGENCY X",
           "digitalAddress": "email@pec.mail.org",
           "address": "via del campo",
+          "city": "Roma",
+          "county": "rm",
+          "country": "Italia",
           "taxCode": "string"
         },
         "billing": {

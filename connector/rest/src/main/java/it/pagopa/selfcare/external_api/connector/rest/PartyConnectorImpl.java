@@ -453,6 +453,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCounty(onboardingData.getInstitutionUpdate().geCounty());
+        institutionUpdate.setCountry(onboardingData.getInstitutionUpdate().getCountry());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         onboardingInstitutionRequest.setUsers(onboardingData.getUsers().stream()
