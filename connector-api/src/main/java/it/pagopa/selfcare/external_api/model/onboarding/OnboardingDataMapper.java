@@ -18,7 +18,8 @@ public class OnboardingDataMapper {
         onboardingData.setOrigin(pdaOnboardingData.getOrigin());
         onboardingData.setUsers(pdaOnboardingData.getUsers());
         onboardingData.setBilling(pdaOnboardingData.getBilling());
-
+        onboardingData.setContractVersion(pdaOnboardingData.getContractVersion());
+        onboardingData.setContractPath(pdaOnboardingData.getContractPath());
         InstitutionUpdate institutionUpdate = getInstitutionUpdate(pdaOnboardingData);
         onboardingData.setInstitutionUpdate(institutionUpdate);
 
