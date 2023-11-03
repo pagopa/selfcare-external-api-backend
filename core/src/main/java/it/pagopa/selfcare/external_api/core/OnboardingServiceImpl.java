@@ -46,7 +46,6 @@ class OnboardingServiceImpl implements OnboardingService {
 
     protected static final String REQUIRED_INSTITUTION_TYPE_MESSAGE = "An institution type is required";
     protected static final String REQUIRED_ONBOARDING_DATA_MESSAGE = "Onboarding data is required";
-    protected static final String LOCATION_INFO_IS_REQUIRED = "Location infos are required";
     protected static final String REQUIRED_INJESTION_TYPE_MESSAGE = "injectiontype is required";
     protected static final String REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE = "Institution's billing data are required";
     private static final String ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE = "Institution with external id '%s' is not allowed to onboard '%s' product";
@@ -338,10 +337,6 @@ class OnboardingServiceImpl implements OnboardingService {
         Assert.notNull(onboardingData, REQUIRED_ONBOARDING_DATA_MESSAGE);
         Assert.notNull(onboardingData.getBilling(), REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE);
         Assert.notNull(onboardingData.getInstitutionType(), REQUIRED_INSTITUTION_TYPE_MESSAGE);
-
-        if (StringUtils.hasText(onboardingData.getOrigin()) && !Origin.IPA.equals(Origin.fromValue(onboardingData.getOrigin())) && onboardingData.getLocation() == null){
-            throw new ValidationException(LOCATION_INFO_IS_REQUIRED);
-        }
 
         log.debug(String.format("autoApprovalOnboardingProduct: starting onboarding process for institution %s on product %s",
                 onboardingData.getInstitutionExternalId(),
