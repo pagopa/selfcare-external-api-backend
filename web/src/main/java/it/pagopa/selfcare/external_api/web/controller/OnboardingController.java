@@ -121,7 +121,10 @@ public class OnboardingController {
         log.trace("onboarding end");
     }
 
-    @Deprecated
+    /**
+     * @deprecated (to be removed)
+     */
+    @Deprecated(forRemoval = true)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "409",
                     description = "Conflict",
