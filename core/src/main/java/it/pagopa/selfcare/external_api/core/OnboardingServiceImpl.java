@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
 import java.util.*;
@@ -295,6 +296,7 @@ class OnboardingServiceImpl implements OnboardingService {
         try {
             institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(pdaOnboardingData.getTaxCode(), null)
                     .stream()
+                    .filter(foundInstitution -> !StringUtils.hasText(foundInstitution.getSubunitCode()))
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
         } catch (ResourceNotFoundException e) {
@@ -321,6 +323,7 @@ class OnboardingServiceImpl implements OnboardingService {
         pdaOnboardingData.setOrigin(institution.getOrigin());
         pdaOnboardingData.setContractPath("import-from-pda");
         pdaOnboardingData.setContractVersion("0.0");
+        pdaOnboardingData.setSendCompleteOnboardingEmail(Boolean.FALSE);
         OnboardingData onboardingData = toOnboardingData(pdaOnboardingData);
 
         partyConnector.autoApprovalOnboarding(onboardingData);

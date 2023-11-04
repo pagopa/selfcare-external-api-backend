@@ -460,6 +460,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingContract.setPath(onboardingData.getContractPath());
         onboardingContract.setVersion(onboardingData.getContractVersion());
         onboardingInstitutionRequest.setContract(onboardingContract);
+        onboardingInstitutionRequest.setSendCompleteOnboardingEmail(onboardingData.getSendCompleteOnboardingEmail());
 
         partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
