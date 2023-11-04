@@ -39,6 +39,8 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
+
+    protected static final String ONBOARDING_DATA_IS_REQUIRED = "An OnboardingData is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
     protected static final String REQUIRED_INSTITUTION_TAX_CODE_MESSAGE = "An Institution tax code is required";
 
@@ -314,7 +316,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitutionRaw(OnboardingData onboardingData) {
         log.trace("createInstitutionUsingExternalId start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         Institution result = partyProcessRestClient.createInstitutionRaw(onboardingData.getInstitutionExternalId(), new InstitutionSeed(onboardingData));
         log.debug("createInstitutionUsingExternalId result = {}", result);
         log.trace("createInstitutionUsingExternalId end");
@@ -324,7 +326,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitution(OnboardingData onboardingData) {
         log.trace("createInstitution start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitution(new InstitutionSeed(onboardingData));
         Institution result = institutionMapper.toEntity(partyInstitutionResponse);
         log.debug("createInstitution result = {}", result);
@@ -479,7 +481,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitutionFromANAC(OnboardingData onboardingData) {
         log.trace("createInstitutionFromAnac start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromANAC(new InstitutionSeed(onboardingData));
         Institution result = institutionMapper.toEntity(partyInstitutionResponse);
         log.debug("createInstitutionFromAnac result = {}", result);

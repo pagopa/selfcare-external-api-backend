@@ -398,24 +398,7 @@ class OnboardingServiceImpl implements OnboardingService {
             userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
         });
 
-        Institution institution;
-        try {
-            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode())
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(ResourceNotFoundException::new);
-        } catch (ResourceNotFoundException e) {
-            if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
-                institution = partyConnector.createInstitutionFromANAC(onboardingData);
-            }
-             else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
-                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
-                            && onboardingData.getOrigin().equals("IPA"))) {
-                institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
-            } else {
-                institution = partyConnector.createInstitution(onboardingData);
-            }
-        }
+        Institution institution = retrieveInstitution(onboardingData);
 
         String finalInstitutionInternalId = institution.getId();
         onboardingData.getUsers().forEach(user -> {
@@ -434,6 +417,28 @@ class OnboardingServiceImpl implements OnboardingService {
         onboardingData.setInstitutionExternalId(institution.getExternalId());
         partyConnector.autoApprovalOnboarding(onboardingData);
         log.trace("autoApprovalOnboardingProduct end");
+    }
+
+    private Institution retrieveInstitution(OnboardingData onboardingData) {
+        Institution institution;
+        try {
+            institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode())
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(ResourceNotFoundException::new);
+        } catch (ResourceNotFoundException e) {
+            if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
+                institution = partyConnector.createInstitutionFromANAC(onboardingData);
+            }
+             else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
+                            && onboardingData.getOrigin().equals("IPA"))) {
+                institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
+            } else {
+                institution = partyConnector.createInstitution(onboardingData);
+            }
+        }
+        return institution;
     }
 
     @Override
