@@ -1094,6 +1094,18 @@ class PartyConnectorImplTest {
     }
 
     @Test
+    void createInstitutionFromIVASS() {
+        final OnboardingData onboardingData = mockInstance(new OnboardingData());
+        final Executable executable = () -> partyConnector.createInstitutionFromIVASS(onboardingData);
+        assertDoesNotThrow(executable);
+        InstitutionSeed institutionSeed = new InstitutionSeed(onboardingData);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionFromIVASS(institutionSeed);
+        // then
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
     void createInstitutionFromPDA() {
         final PdaOnboardingData onboardingData = mockInstance(new PdaOnboardingData());
         final Executable executable = () -> partyConnector.createInstitutionFromPda(onboardingData);
