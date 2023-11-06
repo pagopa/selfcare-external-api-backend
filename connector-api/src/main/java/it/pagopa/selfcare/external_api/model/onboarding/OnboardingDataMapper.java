@@ -22,6 +22,7 @@ public class OnboardingDataMapper {
         onboardingData.setContractPath(pdaOnboardingData.getContractPath());
         InstitutionUpdate institutionUpdate = getInstitutionUpdate(pdaOnboardingData);
         onboardingData.setInstitutionUpdate(institutionUpdate);
+        onboardingData.setSendCompleteOnboardingEmail(pdaOnboardingData.getSendCompleteOnboardingEmail());
 
         return onboardingData;
     }

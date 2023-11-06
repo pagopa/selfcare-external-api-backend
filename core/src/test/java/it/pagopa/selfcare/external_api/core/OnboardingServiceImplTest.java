@@ -3606,7 +3606,7 @@ class OnboardingServiceImplTest {
         productMock.setId(onboardingData.getProductId());
         productMock.setRoleMappings(roleMappings);
 
-        Institution institution = mockInstance(new Institution());
+        Institution institution = mockInstance(new Institution(), "setSubunitCode");
         institution.setId(UUID.randomUUID().toString());
         institution.setInstitutionType(InstitutionType.PA);
 

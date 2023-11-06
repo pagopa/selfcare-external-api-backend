@@ -26,6 +26,7 @@ public class OnboardingData {
     private String origin;
     private String pricingPlan;
     private RootParent rootParent;
+    private Boolean sendCompleteOnboardingEmail;
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());

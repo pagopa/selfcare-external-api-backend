@@ -26,6 +26,8 @@ public class PdaOnboardingData {
 
     private String contractPath;
     private String contractVersion;
+    private Boolean sendCompleteOnboardingEmail;
+
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());

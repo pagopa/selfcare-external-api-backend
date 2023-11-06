@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
 import java.util.*;
@@ -299,6 +300,7 @@ class OnboardingServiceImpl implements OnboardingService {
         try {
             institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(pdaOnboardingData.getTaxCode(), null)
                     .stream()
+                    .filter(foundInstitution -> !StringUtils.hasText(foundInstitution.getSubunitCode()))
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
         } catch (ResourceNotFoundException e) {
@@ -325,6 +327,7 @@ class OnboardingServiceImpl implements OnboardingService {
         pdaOnboardingData.setOrigin(institution.getOrigin());
         pdaOnboardingData.setContractPath("import-from-pda");
         pdaOnboardingData.setContractVersion("0.0");
+        pdaOnboardingData.setSendCompleteOnboardingEmail(Boolean.FALSE);
         OnboardingData onboardingData = toOnboardingData(pdaOnboardingData);
 
         partyConnector.autoApprovalOnboarding(onboardingData);
@@ -399,6 +402,28 @@ class OnboardingServiceImpl implements OnboardingService {
             userInfo.setProductRole(roleMappings.get(userInfo.getRole()).getRoles().get(0).getCode());
         });
 
+        Institution institution = retrieveInstitution(onboardingData);
+
+        String finalInstitutionInternalId = institution.getId();
+        onboardingData.getUsers().forEach(user -> {
+
+            final Optional<User> searchResult =
+                    userConnector.search(user.getTaxCode(), USER_FIELD_LIST);
+            searchResult.ifPresentOrElse(foundUser -> {
+                Optional<MutableUserFieldsDto> updateRequest = createUpdateRequest(user, foundUser, finalInstitutionInternalId);
+                updateRequest.ifPresent(mutableUserFieldsDto ->
+                        userConnector.updateUser(UUID.fromString(foundUser.getId()), mutableUserFieldsDto));
+                user.setId(foundUser.getId());
+            }, () -> user.setId(userConnector.saveUser(UserMapper.toSaveUserDto(user, finalInstitutionInternalId))
+                    .getId().toString()));
+        });
+
+        onboardingData.setInstitutionExternalId(institution.getExternalId());
+        partyConnector.autoApprovalOnboarding(onboardingData);
+        log.trace("autoApprovalOnboardingProduct end");
+    }
+
+    private Institution retrieveInstitution(OnboardingData onboardingData) {
         Institution institution;
         try {
             institution = partyConnector.getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode())
@@ -420,24 +445,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 institution = partyConnector.createInstitution(onboardingData);
             }
         }
-
-        String finalInstitutionInternalId = institution.getId();
-        onboardingData.getUsers().forEach(user -> {
-
-            final Optional<User> searchResult =
-                    userConnector.search(user.getTaxCode(), USER_FIELD_LIST);
-            searchResult.ifPresentOrElse(foundUser -> {
-                Optional<MutableUserFieldsDto> updateRequest = createUpdateRequest(user, foundUser, finalInstitutionInternalId);
-                updateRequest.ifPresent(mutableUserFieldsDto ->
-                        userConnector.updateUser(UUID.fromString(foundUser.getId()), mutableUserFieldsDto));
-                user.setId(foundUser.getId());
-            }, () -> user.setId(userConnector.saveUser(UserMapper.toSaveUserDto(user, finalInstitutionInternalId))
-                    .getId().toString()));
-        });
-
-        onboardingData.setInstitutionExternalId(institution.getExternalId());
-        partyConnector.autoApprovalOnboarding(onboardingData);
-        log.trace("autoApprovalOnboardingProduct end");
+        return institution;
     }
 
     @Override
