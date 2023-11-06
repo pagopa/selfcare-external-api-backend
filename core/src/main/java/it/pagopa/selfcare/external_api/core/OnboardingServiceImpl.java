@@ -15,14 +15,16 @@ import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistExcepti
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
 import it.pagopa.selfcare.external_api.model.product.ProductStatus;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.*;
-import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.mapper.CertifiedFieldMapper;
 import it.pagopa.selfcare.external_api.model.user.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,8 @@ import javax.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.pagopa.selfcare.commons.base.utils.Origin.*;
+import static it.pagopa.selfcare.commons.base.utils.ProductId.PROD_INTEROP;
 import static it.pagopa.selfcare.external_api.model.onboarding.OnboardingDataMapper.toOnboardingData;
 
 
@@ -406,12 +410,15 @@ class OnboardingServiceImpl implements OnboardingService {
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
         } catch (ResourceNotFoundException e) {
-            if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
+            if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(ANAC.getValue())){
                 institution = partyConnector.createInstitutionFromANAC(onboardingData);
             }
-             else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
-                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
-                            && onboardingData.getOrigin().equals("IPA"))) {
+            else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(IVASS.getValue())){
+                institution = partyConnector.createInstitutionFromIVASS(onboardingData);
+            }
+            else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+                    (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals(PROD_INTEROP.getValue())
+                            && onboardingData.getOrigin().equals(IPA.getValue()))) {
                 institution = partyConnector.createInstitutionFromIpa(onboardingData.getTaxCode(), onboardingData.getSubunitCode(), onboardingData.getSubunitType());
             } else {
                 institution = partyConnector.createInstitution(onboardingData);
@@ -553,12 +560,15 @@ class OnboardingServiceImpl implements OnboardingService {
 
     private Institution createInstitution(OnboardingData onboardingData) {
         Institution institution;
-        if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase("ANAC")){
+        if(InstitutionType.SA.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(ANAC.getValue())){
             institution = partyConnector.createInstitutionFromANAC(onboardingData);
         }
-         else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
-                (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals("prod-interop")
-                        && onboardingData.getOrigin().equals("IPA"))) {
+        else if(InstitutionType.AS.equals(onboardingData.getInstitutionType()) && onboardingData.getOrigin().equalsIgnoreCase(IVASS.getValue())){
+            institution = partyConnector.createInstitutionFromIVASS(onboardingData);
+        }
+        else if (InstitutionType.PA.equals(onboardingData.getInstitutionType()) ||
+                (InstitutionType.GSP.equals(onboardingData.getInstitutionType()) && onboardingData.getProductId().equals(PROD_INTEROP.getValue())
+                        && onboardingData.getOrigin().equals(IPA.getValue()))) {
             institution = partyConnector.createInstitutionUsingExternalId(onboardingData.getInstitutionExternalId());
         } else {
             institution = partyConnector.createInstitutionRaw(onboardingData);
