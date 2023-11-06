@@ -9,7 +9,6 @@ import lombok.Data;
 
 import java.util.List;
 
-;
 
 @Data
 public class InstitutionResponse {
@@ -34,5 +33,8 @@ public class InstitutionResponse {
     private String supportEmail;
     private String supportPhone;
     private Boolean imported;
+    private String country;
+    private String county;
+    private String city;
 
 }

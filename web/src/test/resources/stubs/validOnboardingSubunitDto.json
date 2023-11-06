@@ -10,7 +10,7 @@
     "zipCode": "string"
   },
   "institutionType": "PSP",
-  "origin": "string",
+  "origin": "SELC",
   "pricingPlan": "string",
   "productId": "string",
   "taxCode": "string",
@@ -27,6 +27,11 @@
     "legalRegisterName": "string",
     "legalRegisterNumber": "string",
     "vatNumberGroup": false
+  },
+  "institutionLocationData": {
+    "city": "city",
+    "country": "country",
+    "county": "county"
   },
   "users": [
     {

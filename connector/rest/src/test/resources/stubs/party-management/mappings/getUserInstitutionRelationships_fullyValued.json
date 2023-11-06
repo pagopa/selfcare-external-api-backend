@@ -49,7 +49,10 @@
             "digitalAddress": "email@pec.mail.org",
             "address": "via del campo",
             "zipCode": "20100",
-            "taxCode": "string"
+            "taxCode": "string",
+            "city": "Roma",
+            "county": "rm",
+            "country": "Italia"
           },
           "billing": {
             "vatNumber": "string",

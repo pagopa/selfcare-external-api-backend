@@ -17,5 +17,8 @@ public class InstitutionResource {
     private String address;
     private String zipCode;
     private Origin origin;
+    private String country;
+    private String county;
+    private String city;
 
 }

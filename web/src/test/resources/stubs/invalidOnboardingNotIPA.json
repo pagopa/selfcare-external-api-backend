@@ -9,13 +9,9 @@
     "vatNumber": "string",
     "zipCode": "string"
   },
-  "institutionType": "PA",
-  "origin": "IPA",
+  "institutionType": "GSP",
+  "origin": "string",
   "pricingPlan": "string",
-  "productId": "string",
-  "taxCode": "string",
-  "subunitCode": "string",
-  "subunitType": "AOO",
   "users": [
     {
       "email": "email@example.com",

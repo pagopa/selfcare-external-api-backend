@@ -132,6 +132,14 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
+        InstitutionLocation institutionLocation = new InstitutionLocation();
+        if(onboardingData.getInstitutionLocation() != null) {
+            institutionLocation.setCity(onboardingData.getInstitutionLocation().getCity());
+            institutionLocation.setCountry(onboardingData.getInstitutionLocation().getCountry());
+            institutionLocation.setCounty(onboardingData.getInstitutionLocation().getCounty());
+        }
+        institutionInfo.setInstitutionLocation(institutionLocation);
+
         return institutionInfo;
     };
 
@@ -336,7 +344,7 @@ public class PartyConnectorImpl implements PartyConnector {
 
     @Override
     public void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData) {
-        Assert.notNull(onboardingImportData, "Onboarding data is required");
+        Assert.notNull(onboardingImportData, ONBOARDING_DATA_IS_REQUIRED);
         OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
         onboardingInstitutionRequest.setInstitutionExternalId(onboardingImportData.getInstitutionExternalId());
         onboardingInstitutionRequest.setPricingPlan(onboardingImportData.getPricingPlan());
@@ -365,6 +373,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingImportData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingImportData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingImportData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingImportData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCountry(onboardingImportData.getInstitutionUpdate().getCountry());
+        institutionUpdate.setCounty(onboardingImportData.getInstitutionUpdate().getCounty());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         OnboardingContract onboardingContract = new OnboardingContract();
@@ -420,7 +431,7 @@ public class PartyConnectorImpl implements PartyConnector {
 
     @Override
     public void autoApprovalOnboarding(OnboardingData onboardingData) {
-        Assert.notNull(onboardingData, "Onboarding data is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
         onboardingInstitutionRequest.setInstitutionExternalId(onboardingData.getInstitutionExternalId());
         onboardingInstitutionRequest.setPricingPlan(onboardingData.getPricingPlan());
@@ -444,6 +455,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCounty(onboardingData.getInstitutionUpdate().getCounty());
+        institutionUpdate.setCountry(onboardingData.getInstitutionUpdate().getCountry());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         onboardingInstitutionRequest.setUsers(onboardingData.getUsers().stream()

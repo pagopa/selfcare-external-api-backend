@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.commons.base.utils.Origin;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
@@ -49,7 +50,6 @@ class OnboardingServiceImpl implements OnboardingService {
 
     protected static final String REQUIRED_INSTITUTION_TYPE_MESSAGE = "An institution type is required";
     protected static final String REQUIRED_ONBOARDING_DATA_MESSAGE = "Onboarding data is required";
-
     protected static final String REQUIRED_INJESTION_TYPE_MESSAGE = "injectiontype is required";
     protected static final String REQUIRED_INSTITUTION_BILLING_DATA_MESSAGE = "Institution's billing data are required";
     private static final String ONBOARDING_NOT_ALLOWED_ERROR_MESSAGE_TEMPLATE = "Institution with external id '%s' is not allowed to onboard '%s' product";
@@ -162,6 +162,9 @@ class OnboardingServiceImpl implements OnboardingService {
             onboardingImportData.getInstitutionUpdate().setRea(institution.getRea());
             onboardingImportData.getInstitutionUpdate().setShareCapital(institution.getShareCapital());
             onboardingImportData.getInstitutionUpdate().setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
+            onboardingImportData.getInstitutionUpdate().setCity(institution.getCity());
+            onboardingImportData.getInstitutionUpdate().setCountry(institution.getCountry());
+            onboardingImportData.getInstitutionUpdate().setCounty(institution.getCounty());
             onboardingImportData.setOrigin(institution.getOrigin());
 
             String finalInstitutionInternalId = institution.getId();

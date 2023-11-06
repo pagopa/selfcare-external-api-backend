@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-;
-
 @Data
 @EqualsAndHashCode(of = "id")
 public class Institution {
@@ -19,6 +17,9 @@ public class Institution {
     private String digitalAddress;
     private String address;
     private String zipCode;
+    private String country;
+    private String county;
+    private String city;
     private String taxCode;
     private String origin;
     private InstitutionType institutionType;
