@@ -19,6 +19,6 @@ public class OnboardingImportInstitutionRequest {
     private Billing billing;
     private OnboardingImportContract contractImported;
     private OnboardingContract contract;
-
+    private Boolean sendCompleteOnboardingEmail;
 
 }

@@ -476,6 +476,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingContract.setPath(onboardingData.getContractPath());
         onboardingContract.setVersion(onboardingData.getContractVersion());
         onboardingInstitutionRequest.setContract(onboardingContract);
+        onboardingInstitutionRequest.setSendCompleteOnboardingEmail(onboardingData.getSendCompleteOnboardingEmail());
 
         partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
@@ -499,6 +500,17 @@ public class PartyConnectorImpl implements PartyConnector {
         Institution result = institutionMapper.toEntity(partyInstitutionResponse);
         log.debug("createInstitutionFromAnac result = {}", result);
         log.trace("createInstitutionFromAnac end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionFromIVASS(OnboardingData onboardingData) {
+        log.trace("createInstitutionFromIVASS start");
+        Assert.notNull(onboardingData, "An OnboardingData is required");
+        InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromIVASS(new InstitutionSeed(onboardingData));
+        Institution result = institutionMapper.toEntity(partyInstitutionResponse);
+        log.debug("createInstitutionFromIVASS result = {}", result);
+        log.trace("createInstitutionFromIVASS end");
         return result;
     }
 
