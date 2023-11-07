@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.connector.rest.model.institution;
 
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
+import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
@@ -36,5 +38,10 @@ public class InstitutionResponse {
     private String country;
     private String county;
     private String city;
-
+    private String subunitCode;
+    private String subunitType;
+    private String parentDescription;
+    private String aooParentCode;
+    private CompanyInformations companyInformations;
+    private AssistanceContacts assistanceContacts;
 }
