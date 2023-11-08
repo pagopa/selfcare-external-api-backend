@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.OffsetDateTime;
@@ -120,6 +122,40 @@ class OnboardingControllerTest {
     }
 
     @Test
+    void onboardingECFromPDA(@Value("classpath:stubs/onboardingFromPDA.json") Resource onboardingSubunitDto) throws Exception {
+        String injectionInstitutionType = "PT";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/pda/{injectionInstitutionType}",injectionInstitutionType)
+                        .content(onboardingSubunitDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingFromPda(any(PdaOnboardingData.class), any());
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
+    void onboardingPTFromPDA(@Value("classpath:stubs/onboardingFromPDA.json") Resource onboardingSubunitDto) throws Exception {
+        String injectionInstitutionType = "PT";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/pda/{injectionInstitutionType}",injectionInstitutionType)
+                        .content(onboardingSubunitDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingFromPda(any(PdaOnboardingData.class), any());
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
+
+    @Test
     void onboardingValidPspProductRequest(@Value("classpath:stubs/validOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
         // when
         mvc.perform(MockMvcRequestBuilders
@@ -139,10 +175,10 @@ class OnboardingControllerTest {
     void onboardingInvalidPspProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
         // when
         mvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
         // then
@@ -201,10 +237,10 @@ class OnboardingControllerTest {
     void onboardingInvalidSaOnboardingRequest(@Value("classpath:stubs/invalidSaOnboardingProductDto.json") Resource onboardingDto) throws Exception {
         // when
         mvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail", is("Field 'recipientCode' is required")));
 
@@ -212,4 +248,17 @@ class OnboardingControllerTest {
         verifyNoInteractions(onboardingServiceMock);
     }
 
+    @Test
+    void onboardingInvalidOnboardingRequestNotIPA(@Value("classpath:stubs/invalidOnboardingNotIPA.json") Resource onboardingDto) throws Exception {
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                .post(BASE_URL)
+                .content(onboardingDto.getInputStream().readAllBytes())
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", is("Validation failed")));
+        // then
+        verifyNoInteractions(onboardingServiceMock);
+    }
 }

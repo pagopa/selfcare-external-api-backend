@@ -19,6 +19,9 @@
       "address": "via del campo",
       "zipCode": "20100",
       "taxCode": "string",
+      "city": "Roma",
+      "county": "rm",
+      "country": "Italia",
       "origin": "IPA",
       "institutionType": "PA",
       "attributes": [

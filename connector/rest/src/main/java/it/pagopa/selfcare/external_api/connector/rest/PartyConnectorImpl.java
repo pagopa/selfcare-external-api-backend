@@ -6,16 +6,11 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
-import it.pagopa.selfcare.external_api.model.onboarding.User;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
@@ -44,6 +39,8 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
+
+    protected static final String ONBOARDING_DATA_IS_REQUIRED = "An OnboardingData is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
     protected static final String REQUIRED_INSTITUTION_TAX_CODE_MESSAGE = "An Institution tax code is required";
 
@@ -135,6 +132,14 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionInfo.setSubunitCode(onboardingData.getSubunitCode());
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
+        InstitutionLocation institutionLocation = new InstitutionLocation();
+        if(onboardingData.getInstitutionLocation() != null) {
+            institutionLocation.setCity(onboardingData.getInstitutionLocation().getCity());
+            institutionLocation.setCountry(onboardingData.getInstitutionLocation().getCountry());
+            institutionLocation.setCounty(onboardingData.getInstitutionLocation().getCounty());
+        }
+        institutionInfo.setInstitutionLocation(institutionLocation);
+
         return institutionInfo;
     };
 
@@ -319,7 +324,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitutionRaw(OnboardingData onboardingData) {
         log.trace("createInstitutionUsingExternalId start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         Institution result = partyProcessRestClient.createInstitutionRaw(onboardingData.getInstitutionExternalId(), new InstitutionSeed(onboardingData));
         log.debug("createInstitutionUsingExternalId result = {}", result);
         log.trace("createInstitutionUsingExternalId end");
@@ -329,7 +334,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitution(OnboardingData onboardingData) {
         log.trace("createInstitution start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitution(new InstitutionSeed(onboardingData));
         Institution result = institutionMapper.toEntity(partyInstitutionResponse);
         log.debug("createInstitution result = {}", result);
@@ -339,7 +344,7 @@ public class PartyConnectorImpl implements PartyConnector {
 
     @Override
     public void oldContractOnboardingOrganization(OnboardingImportData onboardingImportData) {
-        Assert.notNull(onboardingImportData, "Onboarding data is required");
+        Assert.notNull(onboardingImportData, ONBOARDING_DATA_IS_REQUIRED);
         OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
         onboardingInstitutionRequest.setInstitutionExternalId(onboardingImportData.getInstitutionExternalId());
         onboardingInstitutionRequest.setPricingPlan(onboardingImportData.getPricingPlan());
@@ -368,6 +373,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingImportData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingImportData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingImportData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingImportData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCountry(onboardingImportData.getInstitutionUpdate().getCountry());
+        institutionUpdate.setCounty(onboardingImportData.getInstitutionUpdate().getCounty());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         OnboardingContract onboardingContract = new OnboardingContract();
@@ -423,7 +431,7 @@ public class PartyConnectorImpl implements PartyConnector {
 
     @Override
     public void autoApprovalOnboarding(OnboardingData onboardingData) {
-        Assert.notNull(onboardingData, "Onboarding data is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         OnboardingImportInstitutionRequest onboardingInstitutionRequest = new OnboardingImportInstitutionRequest();
         onboardingInstitutionRequest.setInstitutionExternalId(onboardingData.getInstitutionExternalId());
         onboardingInstitutionRequest.setPricingPlan(onboardingData.getPricingPlan());
@@ -447,6 +455,9 @@ public class PartyConnectorImpl implements PartyConnector {
         institutionUpdate.setSupportEmail(onboardingData.getInstitutionUpdate().getSupportEmail());
         institutionUpdate.setSupportPhone(onboardingData.getInstitutionUpdate().getSupportPhone());
         institutionUpdate.setImported(onboardingData.getInstitutionUpdate().getImported());
+        institutionUpdate.setCity(onboardingData.getInstitutionUpdate().getCity());
+        institutionUpdate.setCounty(onboardingData.getInstitutionUpdate().getCounty());
+        institutionUpdate.setCountry(onboardingData.getInstitutionUpdate().getCountry());
         onboardingInstitutionRequest.setInstitutionUpdate(institutionUpdate);
 
         onboardingInstitutionRequest.setUsers(onboardingData.getUsers().stream()
@@ -465,6 +476,7 @@ public class PartyConnectorImpl implements PartyConnector {
         onboardingContract.setPath(onboardingData.getContractPath());
         onboardingContract.setVersion(onboardingData.getContractVersion());
         onboardingInstitutionRequest.setContract(onboardingContract);
+        onboardingInstitutionRequest.setSendCompleteOnboardingEmail(onboardingData.getSendCompleteOnboardingEmail());
 
         partyProcessRestClient.onboardingOrganization(onboardingInstitutionRequest);
     }
@@ -483,7 +495,7 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public Institution createInstitutionFromANAC(OnboardingData onboardingData) {
         log.trace("createInstitutionFromAnac start");
-        Assert.notNull(onboardingData, "An OnboardingData is required");
+        Assert.notNull(onboardingData, ONBOARDING_DATA_IS_REQUIRED);
         InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromANAC(new InstitutionSeed(onboardingData));
         Institution result = institutionMapper.toEntity(partyInstitutionResponse);
         log.debug("createInstitutionFromAnac result = {}", result);
@@ -491,4 +503,24 @@ public class PartyConnectorImpl implements PartyConnector {
         return result;
     }
 
+    @Override
+    public Institution createInstitutionFromIVASS(OnboardingData onboardingData) {
+        log.trace("createInstitutionFromIVASS start");
+        Assert.notNull(onboardingData, "An OnboardingData is required");
+        InstitutionResponse partyInstitutionResponse = partyProcessRestClient.createInstitutionFromIVASS(new InstitutionSeed(onboardingData));
+        Institution result = institutionMapper.toEntity(partyInstitutionResponse);
+        log.debug("createInstitutionFromIVASS result = {}", result);
+        log.trace("createInstitutionFromIVASS end");
+        return result;
+    }
+
+    @Override
+    public Institution createInstitutionFromPda(PdaOnboardingData onboardingData) {
+        log.trace("createInstitutionFromPda start");
+        Assert.notNull(onboardingData.getTaxCode(), "TaxCode is required");
+        Institution result = partyProcessRestClient.createInstitutionFromPda(new PdaInstitutionSeed(onboardingData));
+        log.debug("createInstitutionFromPda result = {}", result);
+        log.trace("createInstitutionFromPda end");
+        return result;
+    }
 }

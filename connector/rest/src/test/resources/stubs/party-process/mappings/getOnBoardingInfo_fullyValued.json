@@ -41,6 +41,11 @@
             "recipientCode": "string",
             "publicServices": true
           },
+          "institutionLocation": {
+            "city": "Roma",
+            "county": "rm",
+            "country": "Italia"
+          },
           "origin": "IPA",
           "attributes": [
             {

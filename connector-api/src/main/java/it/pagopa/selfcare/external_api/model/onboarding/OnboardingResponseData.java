@@ -38,4 +38,5 @@ public class OnboardingResponseData {
     private String aooParentCode;
     private String rootParentId;
     private String parentDescription;
+    private InstitutionLocation institutionLocation;
 }
