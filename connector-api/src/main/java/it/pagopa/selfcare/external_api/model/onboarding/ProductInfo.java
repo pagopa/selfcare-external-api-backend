@@ -11,4 +11,5 @@ public class ProductInfo {
     private String id;
     private String role;
     private OffsetDateTime createdAt;
+    private String status;
 }
