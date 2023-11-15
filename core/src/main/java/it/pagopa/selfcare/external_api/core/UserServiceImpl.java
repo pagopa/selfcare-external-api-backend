@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User with fiscal code " + fiscalCode + " not found");
         }
 
-        //Add user uuid into claims
         User user = searchResult.get();
 
         OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getInstitutionProductsInfo(user.getId());
