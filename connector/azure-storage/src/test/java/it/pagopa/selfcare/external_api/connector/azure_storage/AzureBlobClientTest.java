@@ -15,7 +15,6 @@ import org.junit.jupiter.api.function.Executable;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
@@ -163,11 +162,6 @@ class AzureBlobClientTest {
     private void mockCloudBlobClient(AzureBlobClient blobClient, CloudBlobClient blobClientMock) throws NoSuchFieldException, IllegalAccessException {
         Field field = AzureBlobClient.class.getDeclaredField("blobClient");
         field.setAccessible(true);
-
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(blobClient, blobClientMock);
     }
 
