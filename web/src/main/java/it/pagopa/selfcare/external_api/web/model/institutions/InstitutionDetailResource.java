@@ -7,8 +7,6 @@ import lombok.Data;
 import java.util.List;
 import java.util.UUID;
 
-;
-
 @Data
 public class InstitutionDetailResource {
 
@@ -63,13 +61,24 @@ public class InstitutionDetailResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.imported}")
     private Boolean imported;
 
-
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
     private String subunitCode;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitType}")
     private String subunitType;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.parentDescription}")
     private String parentDescription;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.aooParentCode}")
     private String aooParentCode;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.country}")
+    private String country;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.county}")
+    private String county;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.city}")
+    private String city;
 }

@@ -17,6 +17,7 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperIm
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.PdaInstitutionSeed;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
@@ -1088,6 +1089,30 @@ class PartyConnectorImplTest {
         InstitutionSeed institutionSeed = new InstitutionSeed(onboardingData);
         verify(partyProcessRestClientMock, times(1))
                 .createInstitutionFromANAC(institutionSeed);
+        // then
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void createInstitutionFromIVASS() {
+        final OnboardingData onboardingData = mockInstance(new OnboardingData());
+        final Executable executable = () -> partyConnector.createInstitutionFromIVASS(onboardingData);
+        assertDoesNotThrow(executable);
+        InstitutionSeed institutionSeed = new InstitutionSeed(onboardingData);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionFromIVASS(institutionSeed);
+        // then
+        verifyNoMoreInteractions(partyProcessRestClientMock);
+    }
+
+    @Test
+    void createInstitutionFromPDA() {
+        final PdaOnboardingData onboardingData = mockInstance(new PdaOnboardingData());
+        final Executable executable = () -> partyConnector.createInstitutionFromPda(onboardingData);
+        assertDoesNotThrow(executable);
+        PdaInstitutionSeed institutionSeed = new PdaInstitutionSeed(onboardingData);
+        verify(partyProcessRestClientMock, times(1))
+                .createInstitutionFromPda(institutionSeed);
         // then
         verifyNoMoreInteractions(partyProcessRestClientMock);
     }

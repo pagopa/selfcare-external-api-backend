@@ -4,6 +4,7 @@ import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.PdaInstitutionSeed;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
@@ -85,4 +86,12 @@ public interface PartyProcessRestClient {
     @PostMapping(value = "${rest-client.party-process.createInstitutionFromAnac.path}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     InstitutionResponse createInstitutionFromANAC(@RequestBody InstitutionSeed institutionSeed);
+
+    @PostMapping(value = "${rest-client.party-process.createInstitutionFromIvass.path}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    InstitutionResponse createInstitutionFromIVASS(@RequestBody InstitutionSeed institutionSeed);
+
+    @PostMapping(value = "${rest-client.party-process.createInstitutionFromPda.path}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    Institution createInstitutionFromPda(@RequestBody PdaInstitutionSeed institutionSeed);
 }

@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.web.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionLocationDataDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import lombok.Data;
 
@@ -9,8 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
-;
 
 @Data
 public class OnboardingProductDto {
@@ -24,6 +23,9 @@ public class OnboardingProductDto {
     @NotNull
     @Valid
     private BillingDataDto billingData;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.locationData}")
+    private InstitutionLocationDataDto institutionLocationData;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.institutionType}", required = true)
     @NotNull
