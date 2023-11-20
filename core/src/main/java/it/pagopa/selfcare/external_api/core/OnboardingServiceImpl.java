@@ -2,7 +2,6 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
-import it.pagopa.selfcare.commons.base.utils.Origin;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
@@ -37,7 +36,6 @@ import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.base.utils.Origin.*;
 import static it.pagopa.selfcare.commons.base.utils.ProductId.PROD_INTEROP;
@@ -328,6 +326,7 @@ class OnboardingServiceImpl implements OnboardingService {
         pdaOnboardingData.setInstitutionExternalId(institution.getExternalId());
         pdaOnboardingData.setInstitutionType(institution.getInstitutionType());
         pdaOnboardingData.setOrigin(institution.getOrigin());
+        pdaOnboardingData.setDescription(institution.getDescription());
         pdaOnboardingData.setContractPath("import-from-pda");
         pdaOnboardingData.setContractVersion("0.0");
         pdaOnboardingData.setSendCompleteOnboardingEmail(Boolean.FALSE);
@@ -549,7 +548,7 @@ class OnboardingServiceImpl implements OnboardingService {
     private Billing createBilling(Relationships relationships, InstitutionResource ipaInstitutionResource) {
         Billing billing = null;
         if (relationships.getItems() != null && !relationships.getItems().isEmpty()) {
-            List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).collect(Collectors.toList());
+            List<Relationship> relationshipsWithBilling = relationships.getItems().stream().filter(relationship -> relationship.getBilling() != null).toList();
             if (!relationshipsWithBilling.isEmpty()) {
                 billing = relationshipsWithBilling.get(0).getBilling();
             }
