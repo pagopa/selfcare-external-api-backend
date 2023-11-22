@@ -4,6 +4,15 @@ image:
 ingress:
   annotations:
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://dev.selfcare.pagopa.it,http://localhost:3000"
+  tls:
+    - hosts:
+        - selc.internal.dev.selfcare.pagopa.it
+      secretName: selc-internal-dev-selfcare-pagopa-it
+  hosts:
+    - host: selc.internal.dev.selfcare.pagopa.it
+      paths:
+        - path: /external-api/v1/(.*)
+          pathType: ImplementationSpecific
 
 autoscaling:
   enabled: false
@@ -11,6 +20,9 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+pdb:
+  enabled: false
 
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
