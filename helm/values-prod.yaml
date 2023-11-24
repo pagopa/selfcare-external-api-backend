@@ -1,3 +1,5 @@
+replicaCount: 2
+
 image:
   repository: selcpacr.azurecr.io/selfcareexternalapibackend
   pullPolicy: Always # TODO change me in IfNotPresent when each build will have a different tag
@@ -24,8 +26,8 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdb:
-  enabled: false
-  minAvailable: 2
+  enabled: true
+  minAvailable: 1
 
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
