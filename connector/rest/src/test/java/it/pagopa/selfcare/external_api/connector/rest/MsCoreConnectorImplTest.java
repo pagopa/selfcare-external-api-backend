@@ -7,6 +7,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResp
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -85,6 +86,25 @@ class MsCoreConnectorImplTest {
         assertEquals("address", result.getInstitutions().get(0).getAddress());
         verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId");
         verifyNoMoreInteractions(msCoreRestClient);
+    }
 
+    @Test
+    void getOnboardingInfoWithStatus() {
+        //given
+        OnboardingInfoResponse response = new OnboardingInfoResponse();
+        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
+        institutionResponse.setId("id");
+        institutionResponse.setAddress("address");
+        response.setInstitutions(List.of(institutionResponse));
+        when(msCoreRestClient.getInstitutionProductsInfo(anyString(), any())).thenReturn(response);
+        //when
+        OnboardingInfoResponse result = msCoreConnector.getInstitutionProductsInfo("userId", List.of(RelationshipState.PENDING));
+        //then
+        assertEquals(response, result);
+        assertNotNull(result.getInstitutions());
+        assertEquals(1, result.getInstitutions().size());
+        assertEquals("address", result.getInstitutions().get(0).getAddress());
+        verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , new String[]{"PENDING"});
+        verifyNoMoreInteractions(msCoreRestClient);
     }
 }

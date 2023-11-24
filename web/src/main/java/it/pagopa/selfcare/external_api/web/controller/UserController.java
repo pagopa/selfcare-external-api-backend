@@ -51,12 +51,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserProductInfo}")
     public UserDetailsResource getUserProductInfo(@ApiParam("${swagger.external_api.user.model.id}")
-                                                            @PathVariable("id") String userId,
+                                                  @PathVariable("id") String userId,
                                                   @ApiParam("${swagger.external-api.product.model.id}")
-                                                            @RequestParam("productId") String productId,
+                                                  @RequestParam("productId") String productId,
                                                   @ApiParam("${swagger.external_api.institutions.model.id}")
-                                                            @RequestParam("institutionId")
-                                                            String institutionId) {
+                                                  @RequestParam("institutionId")
+                                                  String institutionId) {
         log.trace("getUserProductInfo start");
         log.debug("getUserProductInfo userId = {}, productId = {}, institutionId = {}", userId, productId, institutionId);
         UserDetailsResource userDetailsResource = userInfoResourceMapper.toResource(userService.getUserOnboardedProductDetails(userId, institutionId, productId));
@@ -64,6 +64,5 @@ public class UserController {
         log.trace("getUserProductInfo end");
         return userDetailsResource;
     }
-
 
 }
