@@ -70,8 +70,8 @@ class UserServiceImplTest {
         when(userRegistryConnector.search(anyString(), any()))
                 .thenReturn(optUser);
         OnboardingInfoResponse onboardingInfoResponse = buildOnboardingInfoResponse();
-        when(msCoreConnector.getInstitutionProductsInfo("id")).thenReturn(onboardingInfoResponse);
-        UserInfoWrapper userWrapper = userService.getUserInfo(fiscalCode);
+        when(msCoreConnector.getInstitutionProductsInfo("id", List.of(RelationshipState.ACTIVE))).thenReturn(onboardingInfoResponse);
+        UserInfoWrapper userWrapper = userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
         // then
         assertNotNull(userWrapper);
         assertNotNull(userWrapper.getUser());
@@ -91,7 +91,7 @@ class UserServiceImplTest {
         when(userRegistryConnector.search(anyString(), any()))
                 .thenReturn(optUser);
 
-        Executable executable = () -> userService.getUserInfo(fiscalCode);
+        Executable executable = () -> userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
         // then
         ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
         assertEquals("User with fiscal code " + fiscalCode + " not found", e.getMessage());

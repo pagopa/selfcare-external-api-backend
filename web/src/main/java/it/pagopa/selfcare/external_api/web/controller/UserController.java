@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import it.pagopa.selfcare.external_api.core.UserService;
+import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
@@ -36,11 +37,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo}")
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
-                                        @RequestBody
-                                        @Valid SearchUserDto searchUserDto) {
+                                        @RequestBody @Valid SearchUserDto searchUserDto) {
         log.trace("getUserInfo start");
         log.debug("getUserInfo searchUserDto = {}", searchUserDto);
-        UserInfoResource userInfoResource = userInfoResourceMapper.toResource(userService.getUserInfo(searchUserDto.getFiscalCode()));
+        UserInfoWrapper userInfo = userService.getUserInfo(searchUserDto.getFiscalCode(), searchUserDto.getStatuses());
+        UserInfoResource userInfoResource = userInfoResourceMapper.toResource(userInfo);
         log.debug("getUserInfo result = {}", userInfoResource);
         log.trace("getUserInfo end");
         return userInfoResource;

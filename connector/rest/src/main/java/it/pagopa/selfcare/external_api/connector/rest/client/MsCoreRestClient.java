@@ -22,4 +22,9 @@ public interface MsCoreRestClient {
     @GetMapping(value = "${rest-client.ms-core.onboardingInfo.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     OnboardingInfoResponse getInstitutionProductsInfo(@PathVariable(value = "userId") String userId);
+
+    @GetMapping(value = "${rest-client.ms-core.onboardingInfo.path}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    OnboardingInfoResponse getInstitutionProductsInfo(@PathVariable(value = "userId") String userId,
+                                                      @RequestParam(value="states") String[] states);
 }
