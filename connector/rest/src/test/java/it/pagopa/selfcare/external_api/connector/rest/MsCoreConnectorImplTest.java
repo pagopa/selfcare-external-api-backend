@@ -107,4 +107,21 @@ class MsCoreConnectorImplTest {
         verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , new String[]{"PENDING"});
         verifyNoMoreInteractions(msCoreRestClient);
     }
+
+    @Test
+    void getOnboardingInfoWithNullStatus() {
+        //given
+        OnboardingInfoResponse response = new OnboardingInfoResponse();
+        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
+        response.setInstitutions(List.of(institutionResponse));
+        when(msCoreRestClient.getInstitutionProductsInfo(anyString(), any())).thenReturn(response);
+        //when
+        OnboardingInfoResponse result = msCoreConnector.getInstitutionProductsInfo("userId", null);
+        //then
+        assertEquals(response, result);
+        assertNotNull(result.getInstitutions());
+        assertEquals(1, result.getInstitutions().size());
+        verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , null);
+        verifyNoMoreInteractions(msCoreRestClient);
+    }
 }

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
@@ -80,7 +81,33 @@ class UserServiceImplTest {
         assertEquals(optUser.get().getName().getValue(),  userWrapper.getUser().getName().getValue());
         assertEquals(optUser.get().getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
         assertEquals(onboardingInfoResponse.getInstitutions().get(0).getAddress(), userWrapper.getOnboardedInstitutions().get(0).getAddress());
+    }
 
+    @Test
+    void getUserInfoWithWorkContacts() {
+        //given
+        WorkContact workContact = new WorkContact();
+        CertifiedField<String> email = new CertifiedField<>();
+        email.setValue("test@test.it");
+        workContact.setEmail(email);
+        dummyUser.setWorkContacts(Map.of("id", workContact));
+        Optional<User> optUser = Optional.of(dummyUser);
+
+        // when
+        when(userRegistryConnector.search(anyString(), any()))
+                .thenReturn(optUser);
+        OnboardingInfoResponse onboardingInfoResponse = buildOnboardingInfoResponse();
+        when(msCoreConnector.getInstitutionProductsInfo("id", List.of(RelationshipState.ACTIVE))).thenReturn(onboardingInfoResponse);
+        UserInfoWrapper userWrapper = userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
+        // then
+        assertNotNull(userWrapper);
+        assertNotNull(userWrapper.getUser());
+        assertNotNull(userWrapper.getOnboardedInstitutions());
+        assertEquals(1, userWrapper.getOnboardedInstitutions().size());
+        assertEquals(optUser.get().getName().getValue(),  userWrapper.getUser().getName().getValue());
+        assertEquals(optUser.get().getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
+        assertEquals(onboardingInfoResponse.getInstitutions().get(0).getAddress(), userWrapper.getOnboardedInstitutions().get(0).getAddress());
+        assertEquals("test@test.it", userWrapper.getOnboardedInstitutions().get(0).getUserEmail());
     }
 
     @Test
