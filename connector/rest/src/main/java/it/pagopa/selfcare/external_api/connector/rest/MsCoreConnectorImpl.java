@@ -8,9 +8,15 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPg
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -49,6 +55,17 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.trace("getInstitutionProductsInfo start");
         log.debug("getInstitutionProductsInfo userId = {}", userId);
         OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId);
+        log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
+        log.trace("getInstitutionProductsInfo end");
+        return onboardingInfo;
+    }
+
+    @Override
+    public OnboardingInfoResponse getInstitutionProductsInfo(String userId, List<RelationshipState> userStatuses) {
+        log.trace("getInstitutionProductsInfo start");
+        log.debug("getInstitutionProductsInfo userId = {}", userId);
+        OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId, Objects.nonNull(userStatuses)
+                ? userStatuses.stream().map(RelationshipState::name).toArray(String[]::new) : null);
         log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
         log.trace("getInstitutionProductsInfo end");
         return onboardingInfo;

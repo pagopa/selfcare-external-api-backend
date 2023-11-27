@@ -31,10 +31,14 @@ public class UserInfoResource {
         private String digitalAddress;
         @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.address}")
         private String address;
+        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.state}")
+        private String state;
         @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.zipCode}")
         private String zipCode;
         @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.taxCode}")
         private String taxCode;
+        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.userEmail}")
+        private String userEmail;
         @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.productInfo}")
         private ProductInfo productInfo;
 
