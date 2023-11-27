@@ -55,7 +55,7 @@ class UserControllerTest {
         UserInfoWrapper userWrapper = new UserInfoWrapper();
         userWrapper.setUser(this.buildUser());
         userWrapper.setOnboardedInstitutions(List.of(new OnboardedInstitutionResponse()));
-        when(userService.getUserInfo(anyString()))
+        when(userService.getUserInfo(anyString(), any()))
                 .thenReturn(userWrapper);
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -107,10 +107,10 @@ class UserControllerTest {
     }
     @Test
     void getUserInfoThrowsResourceNotFound() {
-        when(userService.getUserInfo("12"))
+        when(userService.getUserInfo("12", List.of()))
                 .thenThrow(new ResourceNotFoundException("User with fiscal code" + 12 + " not found"));
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserInfo("12"));
-        verify(userService).getUserInfo(any());
+        assertThrows(ResourceNotFoundException.class, () -> userService.getUserInfo("12", List.of()));
+        verify(userService).getUserInfo(any(), any());
     }
 
     private User buildUser() {

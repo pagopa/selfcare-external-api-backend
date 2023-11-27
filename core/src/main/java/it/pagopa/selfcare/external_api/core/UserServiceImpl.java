@@ -6,17 +6,12 @@ import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
-import it.pagopa.selfcare.external_api.model.user.ProductDetails;
-import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
-import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
+import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -25,6 +20,7 @@ import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 public class UserServiceImpl implements UserService {
 
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
+    private static final List<RelationshipState> DEFAULT_USER_STATUSES =  new ArrayList<>(Arrays.asList(RelationshipState.values()));
     private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
 
@@ -36,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoWrapper getUserInfo(String fiscalCode) {
+    public UserInfoWrapper getUserInfo(String fiscalCode, List<RelationshipState> userStatuses) {
 
         log.trace("geUserInfo start");
         log.debug("geUserInfo fiscalCode = {}", fiscalCode);
@@ -47,7 +43,12 @@ public class UserServiceImpl implements UserService {
 
         User user = searchResult.get();
 
-        OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getInstitutionProductsInfo(user.getId());
+        OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getInstitutionProductsInfo(user.getId(), Objects.nonNull(userStatuses) ? userStatuses : DEFAULT_USER_STATUSES);
+        onboardingInfoResponse.getInstitutions().forEach(obj -> {
+            if(Objects.nonNull(user.getWorkContacts()) && user.getWorkContacts().containsKey(obj.getId()))
+                obj.setUserEmail(user.getWorkContact(obj.getId()).getEmail().getValue());
+        });
+
         UserInfoWrapper result = UserInfoWrapper.builder()
                 .user(user)
                 .onboardedInstitutions(onboardingInfoResponse.getInstitutions())
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public UserDetailsWrapper getUserOnboardedProductDetails(String userId, String institutionId, String productId) {
         log.trace("getUserOnboardedProductDetails start");
         log.debug("getUserOnboardedProductDetails userId = {}, institutionId = {}, productId = {}", userId, institutionId, productId);
-        UserDetailsWrapper result = null;
+        UserDetailsWrapper result;
         OnboardingInfoResponse onboardingInfoResponse = msCoreConnector.getInstitutionProductsInfo(userId);
         Optional<OnboardedInstitutionResponse> institutionResponse = onboardingInfoResponse.getInstitutions().stream()
                 .filter(onboardedInstitutionResponse -> institutionId.equals(onboardedInstitutionResponse.getId())
