@@ -1076,7 +1076,7 @@
     },
     "/users" : {
       "post" : {
-        "tags" : [ "users" ],
+        "tags" : [ "support" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him",
         "operationId" : "getUserInfoUsingPOST",
