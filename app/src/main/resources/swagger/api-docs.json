@@ -38,7 +38,7 @@
   "paths" : {
     "/institutions" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutions",
         "description" : "The service retrieves all the onboarded institutions related to the logged user",
         "operationId" : "getInstitutionsUsingGET",
@@ -114,7 +114,7 @@
     },
     "/institutions/byGeoTaxonomies" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionsByGeoTaxonomies",
         "description" : "The service retrieves all the institutions based on given a list of geotax ids and a searchMode",
         "operationId" : "getInstitutionsByGeoTaxonomiesUsingGET",
@@ -201,7 +201,7 @@
     },
     "/institutions/{institutionId}/contract" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2", "support" ],
         "summary" : "getContract",
         "description" : "Service to retrieve a contract given institutionId and productId",
         "operationId" : "getContractUsingGET",
@@ -284,7 +284,7 @@
     },
     "/institutions/{institutionId}/geographicTaxonomy" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionGeographicTaxonomies",
         "description" : "The service retrieve the institution's geographic taxonomy",
         "operationId" : "getInstitutionGeographicTaxonomiesUsingGET",
@@ -360,7 +360,7 @@
     },
     "/institutions/{institutionId}/products" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionUserProducts",
         "description" : "Service to retrieve all active products for given institution and logged user",
         "operationId" : "getInstitutionUserProductsUsingGET",
@@ -436,7 +436,7 @@
     },
     "/institutions/{institutionId}/products/{productId}/users" : {
       "get" : {
-        "tags" : [ "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionProductsUsers",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionProductsUsersUsingGET",
@@ -1076,7 +1076,7 @@
     },
     "/users" : {
       "post" : {
-        "tags" : [ "support" ],
+        "tags" : [ "external-v2", "support" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him",
         "operationId" : "getUserInfoUsingPOST",
