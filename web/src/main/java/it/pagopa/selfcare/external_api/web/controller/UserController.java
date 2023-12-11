@@ -35,7 +35,7 @@ public class UserController {
         this.userInfoResourceMapper = userInfoResourceMapper;
     }
 
-    @Tags({@Tag(name = "support"), @Tag(name = "external-v2")})
+    @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo}")

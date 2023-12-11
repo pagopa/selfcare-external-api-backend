@@ -56,7 +56,7 @@ public class InstitutionController {
         this.institutionResourceMapper = institutionResourceMapper;
     }
 
-    @Tag(name = "external-v2")
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
@@ -73,7 +73,7 @@ public class InstitutionController {
         return institutionResources;
     }
 
-    @Tag(name = "external-v2")
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
@@ -90,7 +90,7 @@ public class InstitutionController {
         return productResources;
     }
 
-    @Tag(name = "external-v2")
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
@@ -117,7 +117,7 @@ public class InstitutionController {
         return result;
     }
 
-    @Tag(name = "external-v2")
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/geographicTaxonomy")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionGeographicTaxonomy}")
@@ -135,7 +135,7 @@ public class InstitutionController {
         return geographicTaxonomies;
     }
 
-    @Tag(name = "external-v2")
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/byGeoTaxonomies")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionByGeoTaxonomies}")
@@ -152,7 +152,7 @@ public class InstitutionController {
         return result;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "support")})
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
