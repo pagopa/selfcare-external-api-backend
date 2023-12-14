@@ -45,9 +45,9 @@ public interface PartyProcessRestClient {
 
     @RequestMapping(method = HEAD, value = "${rest-client.party-process.verifyOnboarding.path}")
     @ResponseBody
-    ResponseEntity<Void> verifyOnboarding(@PathVariable("taxCode") String taxCode,
-                                          @PathVariable("subunitCode") String subunitCode,
-                                          @PathVariable("productId") String productId);
+    ResponseEntity<Void> verifyOnboarding(@RequestParam("taxCode") String taxCode,
+                                          @RequestParam("subunitCode") String subunitCode,
+                                          @RequestParam("productId") String productId);
 
     @GetMapping(value = "${rest-client.party-process.getInstitutionByExternalId.path}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
