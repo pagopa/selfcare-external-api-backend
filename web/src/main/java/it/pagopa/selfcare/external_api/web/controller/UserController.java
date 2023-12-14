@@ -3,6 +3,8 @@ package it.pagopa.selfcare.external_api.web.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapper;
@@ -33,7 +35,8 @@ public class UserController {
         this.userInfoResourceMapper = userInfoResourceMapper;
     }
 
-    @PostMapping(value = "")
+    @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo}")
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
