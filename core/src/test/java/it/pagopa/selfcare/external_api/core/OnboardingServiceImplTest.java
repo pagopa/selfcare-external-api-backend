@@ -3140,6 +3140,8 @@ class OnboardingServiceImplTest {
                 });
         when(onboardingValidationStrategyMock.validate(any(), any()))
                 .thenReturn(true);
+
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenThrow(ResourceNotFoundException.class);
         // when
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
@@ -3213,6 +3215,7 @@ class OnboardingServiceImplTest {
         when(onboardingValidationStrategyMock.validate(any(), any()))
                 .thenReturn(true);
         // when
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenThrow(ResourceNotFoundException.class);
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
         verify(partyConnectorMock, times(1))
@@ -3284,6 +3287,7 @@ class OnboardingServiceImplTest {
         when(onboardingValidationStrategyMock.validate(any(), any()))
                 .thenReturn(true);
         // when
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenThrow(ResourceNotFoundException.class);
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
         verify(partyConnectorMock, times(1))
@@ -3354,6 +3358,8 @@ class OnboardingServiceImplTest {
                 });
         when(onboardingValidationStrategyMock.validate(any(), any()))
                 .thenReturn(true);
+
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenThrow(ResourceNotFoundException.class);
         // when
         onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
@@ -3431,8 +3437,8 @@ class OnboardingServiceImplTest {
                 .thenReturn(product);
         when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
 
-
         // when
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenThrow(ResourceNotFoundException.class);
         Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
         ValidationException e = assertThrows(ValidationException.class, executable);
@@ -3441,6 +3447,109 @@ class OnboardingServiceImplTest {
                         parent.getId()),
                 e.getMessage());
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, msPartyRegistryProxyConnectorMock);
+    }
+
+    @Test
+    void onboardingParentProduct_verifyParentProductOnboarding_exception() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        onboardingData.setProductId("id");
+        onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setTaxCode("taxCode");
+        onboardingData.setOrigin(Origin.IPA.getValue());
+        onboardingData.setInstitutionType(InstitutionType.PT);
+        Product product = new Product();
+        product.setId("id");
+        product.setStatus(ProductStatus.ACTIVE);
+        product.setParentId("parentId");
+        Product parent = new Product();
+        parent.setId("parentId");
+        parent.setStatus(ProductStatus.TESTING);
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
+                .thenReturn(product);
+        when(onboardingValidationStrategyMock.validate(any(), any())).thenReturn(true);
+        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
+
+        // when
+        when(partyConnectorMock.verifyOnboarding("taxCode", "setSubunitCode", "id")).thenThrow(ResourceNotFoundException.class);
+        when(partyConnectorMock.verifyOnboarding("taxCode", "setSubunitCode", "parentId")).thenThrow(ResourceNotFoundException.class);
+        Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
+        // then
+        ValidationException e = assertThrows(ValidationException.class, executable);
+        assertEquals(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
+                        onboardingData.getTaxCode(),
+                        product.getId(),
+                        parent.getId()),
+                e.getMessage());
+    }
+
+    @Test
+    void onboardingParentProduct_verifyParentProductOnboarding_ok() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData());
+        onboardingData.setProductId("id");
+        onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setTaxCode("taxCode");
+        onboardingData.setOrigin(Origin.IPA.getValue());
+        onboardingData.setInstitutionType(InstitutionType.PT);
+        Product product = new Product();
+        product.setId("id");
+        product.setStatus(ProductStatus.ACTIVE);
+        product.setParentId("parentId");
+        Product parent = new Product();
+        parent.setId("parentId");
+        parent.setStatus(ProductStatus.TESTING);
+
+        String productRole = "role";
+        ProductRoleInfo productRoleInfo1 = mockInstance(new ProductRoleInfo(), 1, "setRoles");
+        ProductRoleInfo.ProductRole productRole1 = mockInstance(new ProductRoleInfo.ProductRole(), 1);
+        productRole1.setCode(productRole);
+        productRoleInfo1.setRoles(List.of(productRole1));
+        ProductRoleInfo productRoleInfo2 = mockInstance(new ProductRoleInfo(), 2, "setRoles");
+        ProductRoleInfo.ProductRole productRole2 = mockInstance(new ProductRoleInfo.ProductRole(), 2);
+        productRole2.setCode(productRole);
+        productRoleInfo2.setRoles(List.of(productRole2));
+        EnumMap<PartyRole, ProductRoleInfo> roleMappings = new EnumMap<>(PartyRole.class) {{
+            put(PartyRole.MANAGER, productRoleInfo1);
+            put(PartyRole.DELEGATE, productRoleInfo2);
+        }};
+        product.setRoleMappings(roleMappings);
+        parent.setRoleMappings(roleMappings);
+
+        Institution institution = mockInstance(new Institution());
+        institution.setId(UUID.randomUUID().toString());
+        when(partyConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(),anyString()))
+                .thenReturn(List.of(institution));
+
+        when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
+                .thenReturn(product);
+        when(onboardingValidationStrategyMock.validate(any(), any())).thenReturn(true);
+        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
+
+        // when
+        when(partyConnectorMock.verifyOnboarding("taxCode", "setSubunitCode", "id")).thenThrow(ResourceNotFoundException.class);
+
+
+        ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        when(partyConnectorMock.verifyOnboarding("taxCode", "setSubunitCode", "parentId")).thenReturn(responseEntity);
+        onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
+        // then
+        verify(partyConnectorMock, times(1))
+                .getInstitutionsByTaxCodeAndSubunitCode(onboardingData.getTaxCode(), onboardingData.getSubunitCode());
+        verify(productsConnectorMock, times(1))
+                .getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType());
+
+        ArgumentCaptor<SaveUserDto> saveUserCaptor = ArgumentCaptor.forClass(SaveUserDto.class);
+        onboardingData.getUsers().forEach(user ->
+                verify(userRegistryConnectorMock, times(1))
+                        .search(user.getTaxCode(), EnumSet.of(name, familyName, workContacts)));
+
+        verify(partyConnectorMock, times(1))
+                .autoApprovalOnboarding(onboardingDataCaptor.capture());
+        OnboardingData captured = onboardingDataCaptor.getValue();
+        assertNotNull(captured.getUsers());
+        verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
     }
 
     @Test
@@ -3462,17 +3571,19 @@ class OnboardingServiceImplTest {
         //when
         when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
                 .thenReturn(product);
-        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
-        when(onboardingValidationStrategyMock.validate(any(), any()))
-                .thenReturn(true);
+//        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
+//        when(onboardingValidationStrategyMock.validate(any(), any()))
+//                .thenReturn(true);
+        ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenReturn(responseEntity);
         Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
-        ValidationException e = assertThrows(ValidationException.class, executable);
-        assertEquals(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
-                        onboardingData.getTaxCode(),
-                        product.getId(),
-                        parent.getId()),
-                e.getMessage());
+        InstitutionAlreadyOnboardedException e = assertThrows(InstitutionAlreadyOnboardedException.class, executable);
+//        assertEquals(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
+//                        onboardingData.getTaxCode(),
+//                        product.getId(),
+//                        parent.getId()),
+//                e.getMessage());
 
         verifyNoMoreInteractions(productsConnectorMock, msPartyRegistryProxyConnectorMock, onboardingValidationStrategyMock);
     }
@@ -3497,26 +3608,18 @@ class OnboardingServiceImplTest {
 
         when(productsConnectorMock.getProduct(onboardingData.getProductId(), onboardingData.getInstitutionType()))
                 .thenReturn(product);
-        when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
-        when(onboardingValidationStrategyMock.validate(any(), any()))
-                .thenReturn(true);
+        //when(productsConnectorMock.getProduct("parentId", null)).thenReturn(parent);
+        //when(onboardingValidationStrategyMock.validate(any(), any()))
+        //        .thenReturn(true);
         ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
         when(partyConnectorMock.verifyOnboarding(anyString(), anyString(), any())).thenReturn(responseEntity);
 
         // when
         Executable executable = () -> onboardingServiceImpl.autoApprovalOnboardingProduct(onboardingData);
         // then
-        ValidationException e = assertThrows(ValidationException.class, executable);
-        assertEquals(String.format("Unable to complete the onboarding for institution with taxCode '%s' to product '%s'. Please onboard first the '%s' product for the same institution",
-                        onboardingData.getTaxCode(),
-                        product.getId(),
-                        parent.getId()),
-                e.getMessage());
+        InstitutionAlreadyOnboardedException e = assertThrows(InstitutionAlreadyOnboardedException.class, executable);
 
         verifyNoMoreInteractions(productsConnectorMock, msPartyRegistryProxyConnectorMock, onboardingValidationStrategyMock);
-
-
-
     }
 
     @Test
