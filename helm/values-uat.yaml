@@ -17,6 +17,14 @@ ingress:
         - path: /external-api/v1/(.*)
           pathType: ImplementationSpecific
 
+resources:
+  requests:
+    cpu: 300m
+    memory: 500M
+  limits:
+    cpu: 600m
+    memory: 600M
+
 autoscaling:
   enabled: false
   minReplicas: 1
