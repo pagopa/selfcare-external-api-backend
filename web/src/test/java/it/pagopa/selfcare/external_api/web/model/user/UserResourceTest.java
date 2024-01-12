@@ -15,6 +15,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
@@ -63,6 +64,9 @@ class UserResourceTest {
         UserResource resource = mockInstance(new UserResource(), "setRoles");
         resource.setEmail("email@example.com");
         resource.setRoles(List.of("admin"));
+        resource.setId(UUID.randomUUID());
+        resource.setName("name");
+        resource.setSurname("surname");
         // when
         Set<ConstraintViolation<Object>> violations = validator.validate(resource);
         // then

@@ -1589,6 +1589,7 @@
       },
       "InstitutionResource" : {
         "title" : "InstitutionResource",
+        "required" : [ "id", "origin", "originId", "taxCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -2023,6 +2024,7 @@
       },
       "ProductResource" : {
         "title" : "ProductResource",
+        "required" : [ "contractTemplatePath", "contractTemplateVersion", "description", "id", "roleMappings", "title", "urlBO" ],
         "type" : "object",
         "properties" : {
           "contractTemplatePath" : {
@@ -2293,6 +2295,7 @@
       },
       "UserResource" : {
         "title" : "UserResource",
+        "required" : [ "id", "name", "surname" ],
         "type" : "object",
         "properties" : {
           "email" : {
