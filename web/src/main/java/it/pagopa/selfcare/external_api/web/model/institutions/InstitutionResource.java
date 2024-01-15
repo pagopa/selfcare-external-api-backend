@@ -4,13 +4,16 @@ import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.UUID;
 
 @Data
 public class InstitutionResource {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.id}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.id}", required = true)
+    @NotNull
     private UUID id;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.name}")
@@ -19,7 +22,8 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.externalId}")
     private String externalId;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.originId}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.originId}", required = true)
+    @NotBlank
     private String originId;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.institutionType}")
@@ -37,10 +41,12 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.zipCode}")
     private String zipCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}", required = true)
+    @NotBlank
     private String taxCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}")
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}", required = true)
+    @NotBlank
     private String origin;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.productRoles}")

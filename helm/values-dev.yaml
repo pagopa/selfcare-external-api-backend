@@ -1,3 +1,5 @@
+replicaCount: 2
+
 image:
   repository: selcdacr.azurecr.io/selfcareexternalapibackend
 
@@ -30,7 +32,7 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdb:
-  enabled: false
+  enabled: true
 
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"

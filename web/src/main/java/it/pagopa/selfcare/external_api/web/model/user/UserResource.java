@@ -16,19 +16,24 @@ import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 public class UserResource {
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.id}")
+    @ApiModelProperty(value = "${swagger.external_api.user.model.id}", required = true)
+    @NotNull
     private UUID id;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.name}")
+    @ApiModelProperty(value = "${swagger.external_api.user.model.name}", required = true)
+    @NotBlank
     private String name;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.surname}")
+    @ApiModelProperty(value = "${swagger.external_api.user.model.surname}", required = true)
+    @NotBlank
     private String surname;
 
     @ApiModelProperty(value = "${swagger.external_api.user.model.institutionalEmail}")
