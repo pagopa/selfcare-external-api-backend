@@ -1,11 +1,13 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 
+import io.jsonwebtoken.lang.Assert;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.web.model.onboarding.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,6 +21,12 @@ public class OnboardingMapper {
             resource.setFilePath(model.getFilePath());
             resource.setContractType(model.getContractType());
             resource.setCreatedAt(model.getOnboardingDate());
+            if( model.getOnboardingDate() != null) {
+                resource.setActivatedAt(model.getOnboardingDate());
+            }
+            else {
+                resource.setActivatedAt(OffsetDateTime.now());
+            }
         }
         return resource;
     }
