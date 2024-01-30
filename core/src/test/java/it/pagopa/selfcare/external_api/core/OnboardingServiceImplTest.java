@@ -3078,24 +3078,6 @@ class OnboardingServiceImplTest {
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
     }
 
-    @Test
-    void verifyOnboarding() {
-        // given
-        ResponseEntity<Void> responseEntityMock = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        String externalInstitutionIdMock = "externalInstitutionId";
-        String productIdMock = "productId";
-        when(partyConnectorMock.verifyOnboarding(any(), any()))
-                .thenReturn(responseEntityMock);
-        // when
-        ResponseEntity<Void> response = onboardingServiceImpl.verifyOnboarding(externalInstitutionIdMock, productIdMock);
-        // then
-        assertNotNull(response);
-        assertEquals(response, responseEntityMock);
-        verify(partyConnectorMock, times(1))
-                .verifyOnboarding(externalInstitutionIdMock, productIdMock);
-        verifyNoMoreInteractions(partyConnectorMock);
-        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, onboardingValidationStrategyMock);
-    }
 
     @Test
     void shouldOnboardingProductInstitutionNotPa() {

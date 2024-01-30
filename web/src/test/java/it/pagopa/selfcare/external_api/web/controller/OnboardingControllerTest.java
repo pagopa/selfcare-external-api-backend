@@ -19,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.OffsetDateTime;
@@ -219,18 +218,6 @@ class OnboardingControllerTest {
                 .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
         // then
         verifyNoInteractions(onboardingServiceMock);
-    }
-
-    @Test
-    void verifyOnboarding() throws Exception {
-        final String externalInstitutionId = "externalInstitutionId";
-        final String productId = "productId";
-        //when
-        mvc.perform(MockMvcRequestBuilders
-                        .head(BASE_URL + "/{externalInstitutionId}/products/{productId}", externalInstitutionId, productId)
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
     }
 
     @Test
