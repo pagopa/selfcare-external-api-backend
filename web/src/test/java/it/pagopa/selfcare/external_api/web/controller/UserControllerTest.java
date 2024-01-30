@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {UserController.class, WebTestConfig.class, UserInfoResourceMapperImpl.class})
 class UserControllerTest {
 
-    private static final String BASE_URL = "/users";
+    private static final String BASE_URL = "/v1/users";
     private static final String fiscalCode = "MNCCSD01R13A757G";
 
     @Autowired

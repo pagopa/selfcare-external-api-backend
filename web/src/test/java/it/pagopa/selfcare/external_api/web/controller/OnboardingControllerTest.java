@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {OnboardingController.class, WebTestConfig.class, OnboardingResourceMapperImpl.class})
 class OnboardingControllerTest {
 
-    private static final String BASE_URL = "/onboarding";
+    private static final String BASE_URL = "/v1/onboarding";
     public static final String FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING = "Field 'pspData' is required for PSP institution onboarding";
 
     @Autowired

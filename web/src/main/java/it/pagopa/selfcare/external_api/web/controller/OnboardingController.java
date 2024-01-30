@@ -35,7 +35,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/onboarding", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/onboarding", produces = APPLICATION_JSON_VALUE)
 @Api(tags = "onboarding")
 public class OnboardingController {
 
