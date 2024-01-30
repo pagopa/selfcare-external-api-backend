@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OnboardingControllerTest {
 
     private static final String BASE_URL = "/onboarding";
+    public static final String FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING = "Field 'pspData' is required for PSP institution onboarding";
 
     @Autowired
     protected MockMvc mvc;
@@ -179,7 +180,7 @@ class OnboardingControllerTest {
                 .contentType(APPLICATION_JSON_VALUE)
                 .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+                .andExpect(jsonPath("$.detail", is(FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING)));
         // then
         verifyNoInteractions(onboardingServiceMock);
     }
@@ -215,7 +216,7 @@ class OnboardingControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+                .andExpect(jsonPath("$.detail", is(FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING)));
         // then
         verifyNoInteractions(onboardingServiceMock);
     }
