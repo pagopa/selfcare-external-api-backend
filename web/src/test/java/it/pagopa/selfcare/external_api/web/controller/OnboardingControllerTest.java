@@ -19,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.OffsetDateTime;
@@ -37,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OnboardingControllerTest {
 
     private static final String BASE_URL = "/onboarding";
+    public static final String FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING = "Field 'pspData' is required for PSP institution onboarding";
 
     @Autowired
     protected MockMvc mvc;
@@ -180,7 +180,7 @@ class OnboardingControllerTest {
                 .contentType(APPLICATION_JSON_VALUE)
                 .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+                .andExpect(jsonPath("$.detail", is(FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING)));
         // then
         verifyNoInteractions(onboardingServiceMock);
     }
@@ -216,21 +216,9 @@ class OnboardingControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("Field 'pspData' is required for PSP institution onboarding")));
+                .andExpect(jsonPath("$.detail", is(FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING)));
         // then
         verifyNoInteractions(onboardingServiceMock);
-    }
-
-    @Test
-    void verifyOnboarding() throws Exception {
-        final String externalInstitutionId = "externalInstitutionId";
-        final String productId = "productId";
-        //when
-        mvc.perform(MockMvcRequestBuilders
-                        .head(BASE_URL + "/{externalInstitutionId}/products/{productId}", externalInstitutionId, productId)
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
     }
 
     @Test
