@@ -38,7 +38,7 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/institutions", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/institutions", produces = APPLICATION_JSON_VALUE)
 @Api(tags = "institutions")
 public class InstitutionController {
 

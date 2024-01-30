@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {ProductController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration(classes = {ProductController.class, WebTestConfig.class})
 public class ProductControllerTest {
-    private static final String BASE_URL = "/products";
+    private static final String BASE_URL = "/v1/products";
 
     @Autowired
     protected MockMvc mvc;

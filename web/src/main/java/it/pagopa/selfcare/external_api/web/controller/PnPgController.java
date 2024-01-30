@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/pn-pg", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/pn-pg", produces = APPLICATION_JSON_VALUE)
 @Api(tags = "institutions-pnpg")
 public class PnPgController {
     private final InstitutionService institutionService;

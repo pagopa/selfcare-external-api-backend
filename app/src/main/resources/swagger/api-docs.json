@@ -36,7 +36,7 @@
     "description" : "User Controller"
   } ],
   "paths" : {
-    "/institutions" : {
+    "/v1/institutions" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
         "summary" : "getInstitutions",
@@ -112,7 +112,7 @@
         } ]
       }
     },
-    "/institutions/byGeoTaxonomies" : {
+    "/v1/institutions/byGeoTaxonomies" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
         "summary" : "getInstitutionsByGeoTaxonomies",
@@ -199,7 +199,7 @@
         } ]
       }
     },
-    "/institutions/{institutionId}/contract" : {
+    "/v1/institutions/{institutionId}/contract" : {
       "get" : {
         "tags" : [ "external-v2", "institutions", "support" ],
         "summary" : "getContract",
@@ -282,7 +282,7 @@
         } ]
       }
     },
-    "/institutions/{institutionId}/geographicTaxonomy" : {
+    "/v1/institutions/{institutionId}/geographicTaxonomy" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
         "summary" : "getInstitutionGeographicTaxonomies",
@@ -358,7 +358,7 @@
         } ]
       }
     },
-    "/institutions/{institutionId}/products" : {
+    "/v1/institutions/{institutionId}/products" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
         "summary" : "getInstitutionUserProducts",
@@ -434,7 +434,7 @@
         } ]
       }
     },
-    "/institutions/{institutionId}/products/{productId}/users" : {
+    "/v1/institutions/{institutionId}/products/{productId}/users" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
         "summary" : "getInstitutionProductsUsers",
@@ -546,7 +546,7 @@
         } ]
       }
     },
-    "/onboarding" : {
+    "/v1/onboarding" : {
       "post" : {
         "tags" : [ "onboarding" ],
         "summary" : "onboarding",
@@ -611,7 +611,7 @@
         } ]
       }
     },
-    "/onboarding/pda/{injectionInstitutionType}" : {
+    "/v1/onboarding/pda/{injectionInstitutionType}" : {
       "post" : {
         "tags" : [ "onboarding" ],
         "summary" : "autoApprovalOnboardingFromPda",
@@ -676,7 +676,7 @@
         } ]
       }
     },
-    "/onboarding/{externalInstitutionId}" : {
+    "/v1/onboarding/{externalInstitutionId}" : {
       "post" : {
         "tags" : [ "onboarding" ],
         "summary" : "oldContractOnboarding",
@@ -761,7 +761,7 @@
         } ]
       }
     },
-    "/onboarding/{externalInstitutionId}/products/{productId}" : {
+    "/v1/onboarding/{externalInstitutionId}/products/{productId}" : {
       "post" : {
         "tags" : [ "onboarding" ],
         "summary" : "autoApprovalOnboarding",
@@ -856,7 +856,7 @@
         } ]
       }
     },
-    "/pn-pg/institutions/add" : {
+    "/v1/pn-pg/institutions/add" : {
       "post" : {
         "tags" : [ "institutions-pnpg" ],
         "summary" : "addInstitution",
@@ -918,7 +918,7 @@
         } ]
       }
     },
-    "/products/{productId}" : {
+    "/v1/products/{productId}" : {
       "get" : {
         "tags" : [ "product" ],
         "summary" : "getProduct",
@@ -991,7 +991,7 @@
         } ]
       }
     },
-    "/users" : {
+    "/v1/users" : {
       "post" : {
         "tags" : [ "external-v2", "support", "users" ],
         "summary" : "getUserInfo",
@@ -1053,7 +1053,7 @@
         } ]
       }
     },
-    "/users/{id}/onboarded-product" : {
+    "/v1/users/{id}/onboarded-product" : {
       "get" : {
         "tags" : [ "users" ],
         "summary" : "getUserProductInfo",
