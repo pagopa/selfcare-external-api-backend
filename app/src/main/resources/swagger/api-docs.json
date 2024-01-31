@@ -606,6 +606,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -851,6 +852,71 @@
           }
         },
         "deprecated" : true,
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
+    "/v2/onboarding" : {
+      "post" : {
+        "tags" : [ "onboarding" ],
+        "summary" : "onboarding",
+        "description" : "The service allows the onboarding of Users to a subunit of an Institution",
+        "operationId" : "onboardingUsingPOST_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingProductDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -1790,7 +1856,7 @@
             "type" : "array",
             "description" : "List of geographic Taxonomies",
             "items" : {
-              "$ref" : "#/components/schemas/GeographicTaxonomyDto0"
+              "$ref" : "#/components/schemas/GeographicTaxonomyDto"
             }
           },
           "institutionLocationData" : {
