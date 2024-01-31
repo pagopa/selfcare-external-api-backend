@@ -152,6 +152,7 @@ public class InstitutionController {
         return result;
     }
 
+    @Deprecated(forRemoval = true)
     @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
