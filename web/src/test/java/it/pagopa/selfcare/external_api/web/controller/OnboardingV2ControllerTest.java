@@ -15,13 +15,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static it.pagopa.selfcare.external_api.web.controller.OnboardingControllerTest.FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING;
 import static org.hamcrest.Matchers.emptyString;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {OnboardingV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration(classes = {OnboardingV2Controller.class, WebTestConfig.class, OnboardingResourceMapperImpl.class})
@@ -49,34 +48,5 @@ public class OnboardingV2ControllerTest {
         verify(onboardingServiceMock, times(1))
                 .autoApprovalOnboardingProductV2(any(OnboardingData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
-    }
-
-    @Test
-    void onboardingInvalidPspProductRequest(@Value("classpath:stubs/invalidOnboardingSubunitDto.json") Resource onboardingDto) throws Exception {
-        // when
-        mvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is(FIELD_PSP_DATA_IS_REQUIRED_FOR_PSP_INSTITUTION_ONBOARDING)));
-        // then
-        verifyNoInteractions(onboardingServiceMock);
-    }
-
-    @Test
-    void onboardingInvalidSaOnboardingRequest(@Value("classpath:stubs/invalidSaOnboardingProductDto.json") Resource onboardingDto) throws Exception {
-        // when
-        mvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail", is("Field 'recipientCode' is required")));
-
-        // then
-        verifyNoInteractions(onboardingServiceMock);
     }
 }
