@@ -443,15 +443,6 @@ class OnboardingServiceImpl implements OnboardingService {
         return institution;
     }
 
-    @Override
-    public ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId) {
-        log.trace("verifyOnboarding start");
-        log.debug("verifyOnboarding externalInstitutionId = {}", externalInstitutionId);
-        ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(externalInstitutionId, productId);
-        log.trace("verifyOnboarding end");
-        return responseEntity;
-    }
-
     private Optional<MutableUserFieldsDto> createUpdateRequest(it.pagopa.selfcare.external_api.model.onboarding.User user, User foundUser, String institutionInternalId) {
         Optional<MutableUserFieldsDto> mutableUserFieldsDto = Optional.empty();
         if (isFieldToUpdate(foundUser.getName(), user.getName())) {

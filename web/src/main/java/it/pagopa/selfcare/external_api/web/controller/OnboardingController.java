@@ -14,10 +14,10 @@ import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
-import it.pagopa.selfcare.external_api.web.model.onboarding.PdaOnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
+import it.pagopa.selfcare.external_api.web.model.onboarding.PdaOnboardingDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +31,11 @@ import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/onboarding", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/onboarding", produces = APPLICATION_JSON_VALUE)
 @Api(tags = "onboarding")
 public class OnboardingController {
 
@@ -159,27 +158,6 @@ public class OnboardingController {
         }
         onboardingService.autoApprovalOnboarding(OnboardingMapper.toOnboardingData(externalInstitutionId, productId, request));
         log.trace("autoApprovalOnboarding end");
-    }
-
-    @ApiResponse(responseCode = "403",
-            description = "Forbidden",
-            content = {
-                    @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-                            schema = @Schema(implementation = Problem.class))
-            })
-    @RequestMapping(method = HEAD, value = "/{externalInstitutionId}/products/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.verifyOnboarding}")
-    public void verifyOnboarding(@ApiParam("${swagger.external_api.institutions.model.externalId}")
-                                 @PathVariable("externalInstitutionId")
-                                 String externalInstitutionId,
-                                 @ApiParam("${swagger.external_api.products.model.id}")
-                                 @PathVariable("productId")
-                                 String productId) {
-        log.trace("verifyOnboarding start");
-        log.debug("verifyOnboarding externalInstitutionId = {}, productId = {}", externalInstitutionId, productId);
-        onboardingService.verifyOnboarding(externalInstitutionId, productId);
-        log.trace("verifyOnboarding end");
     }
 
 }

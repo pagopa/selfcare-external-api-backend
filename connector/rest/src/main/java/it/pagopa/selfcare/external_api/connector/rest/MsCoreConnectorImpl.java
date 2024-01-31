@@ -1,10 +1,15 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
@@ -15,18 +20,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
 public class MsCoreConnectorImpl implements MsCoreConnector {
 
     private final MsCoreRestClient restClient;
+    private final MsCoreInstitutionApiClient institutionApiClient;
+
+    private final InstitutionMapper institutionMapper;
 
     @Autowired
-    public MsCoreConnectorImpl(MsCoreRestClient restClient) {
+    public MsCoreConnectorImpl(MsCoreRestClient restClient, MsCoreInstitutionApiClient institutionApiClient, InstitutionMapper institutionMapper) {
         this.restClient = restClient;
+        this.institutionApiClient = institutionApiClient;
+        this.institutionMapper = institutionMapper;
     }
 
     @Override
@@ -69,5 +77,22 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
         log.trace("getInstitutionProductsInfo end");
         return onboardingInfo;
+    }
+
+    @Override
+    public InstitutionOnboarding getInstitutionOnboardings(String institutionId, String productId) {
+        log.trace("getInstitutionOnboardings start");
+        log.debug("getInstitutionOnboardings institutionId = {}, productId = {}", institutionId, productId);
+        List<OnboardingResponse> onboardings = Objects.requireNonNull(institutionApiClient.
+                        _getOnboardingsInstitutionUsingGET(institutionId, productId)
+                        .getBody())
+                .getOnboardings();
+
+        log.trace("getInstitutionOnboardings end");
+
+        return onboardings.stream()
+                .findFirst()
+                .map(institutionMapper::toEntity)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 }
