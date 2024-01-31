@@ -69,7 +69,7 @@ class OnboardingServiceImplTest {
     private MsPartyRegistryProxyConnector msPartyRegistryProxyConnectorMock;
 
     @Mock
-    private MsOnboardingMsConnector msOnboardingMsConnectorMock;
+    private OnboardingMsConnector onboardingMsConnectorMock;
 
     @Captor
     private ArgumentCaptor<OnboardingImportData> onboardingImportDataCaptor;
@@ -3822,7 +3822,7 @@ class OnboardingServiceImplTest {
         // when
         onboardingServiceImpl.autoApprovalOnboardingProductV2(onboardingData);
         // then
-        verify(msOnboardingMsConnectorMock, times(1))
+        verify(onboardingMsConnectorMock, times(1))
                 .onboarding(any());
     }
 

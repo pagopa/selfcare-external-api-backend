@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
-import it.pagopa.selfcare.external_api.api.MsOnboardingMsConnector;
+import it.pagopa.selfcare.external_api.api.OnboardingMsConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingTokenControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapper;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class OnboardingMsConnectorImpl implements MsOnboardingMsConnector {
+public class OnboardingMsConnectorImpl implements OnboardingMsConnector {
 
     private final MsOnboardingTokenControllerApi tokenControllerApi;
     private final MsOnboardingControllerApi onboardingControllerApi;

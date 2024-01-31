@@ -61,7 +61,7 @@ class OnboardingServiceImpl implements OnboardingService {
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userConnector;
     private final OnboardingValidationStrategy onboardingValidationStrategy;
-    private final MsOnboardingMsConnector onboardingMsConnector;
+    private final OnboardingMsConnector onboardingMsConnector;
 
     @Autowired
     OnboardingServiceImpl(PartyConnector partyConnector,
@@ -69,7 +69,7 @@ class OnboardingServiceImpl implements OnboardingService {
                           UserRegistryConnector userConnector,
                           OnboardingValidationStrategy onboardingValidationStrategy,
                           MsPartyRegistryProxyConnector registryProxyConnector,
-                          MsOnboardingMsConnector onboardingMsConnector) {
+                          OnboardingMsConnector onboardingMsConnector) {
         this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
         this.userConnector = userConnector;
