@@ -84,6 +84,7 @@ public class OnboardingController {
         log.trace("oldContractonboarding end");
     }
 
+    @Deprecated(forRemoval = true)
     @ApiResponse(responseCode = "403",
             description = "Forbidden",
             content = {

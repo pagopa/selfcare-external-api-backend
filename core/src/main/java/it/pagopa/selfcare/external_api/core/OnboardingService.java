@@ -13,4 +13,6 @@ public interface OnboardingService {
     void autoApprovalOnboardingFromPda(PdaOnboardingData onboardingData, String injestionInstitutionType);
 
     void autoApprovalOnboardingProduct(OnboardingData onboardingData);
+
+    void autoApprovalOnboardingProductV2(OnboardingData onboardingData);
 }

@@ -3,10 +3,7 @@ package it.pagopa.selfcare.external_api.core;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.commons.base.utils.Origin;
-import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
-import it.pagopa.selfcare.external_api.api.PartyConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
@@ -70,6 +67,9 @@ class OnboardingServiceImplTest {
 
     @Mock
     private MsPartyRegistryProxyConnector msPartyRegistryProxyConnectorMock;
+
+    @Mock
+    private OnboardingMsConnector onboardingMsConnectorMock;
 
     @Captor
     private ArgumentCaptor<OnboardingImportData> onboardingImportDataCaptor;
@@ -3811,6 +3811,19 @@ class OnboardingServiceImplTest {
             assertNotNull(userInfo.getId());
         });
         verifyNoMoreInteractions(productsConnectorMock, partyConnectorMock, userRegistryConnectorMock, onboardingValidationStrategyMock);
+    }
+
+    @Test
+    void onboardingProductAsync() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData(), "setInstitutionType", "setUsers");
+        onboardingData.setInstitutionType(InstitutionType.PA);
+        onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+        // when
+        onboardingServiceImpl.autoApprovalOnboardingProductV2(onboardingData);
+        // then
+        verify(onboardingMsConnectorMock, times(1))
+                .onboarding(any());
     }
 
 }
