@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 
-import io.jsonwebtoken.lang.Assert;
+import it.pagopa.selfcare.commons.base.utils.ProductId;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.web.model.onboarding.*;
 import lombok.AccessLevel;
@@ -49,7 +49,24 @@ public class OnboardingMapper {
         if (model != null) {
             resource = new OnboardingImportData();
             resource.setInstitutionExternalId(externalId);
-            resource.setProductId("prod-io");
+            resource.setProductId(ProductId.PROD_IO.getValue());
+            resource.setUsers(model.getUsers().stream()
+                    .map(UserMapper::toUser)
+                    .collect(Collectors.toList()));
+            resource.setContractImported(fromDto(model.getImportContract()));
+            resource.setBilling(new Billing());
+            resource.setInstitutionUpdate(new InstitutionUpdate());
+            resource.getInstitutionUpdate().setImported(true);
+        }
+        return resource;
+    }
+
+    public static OnboardingData toOnboardingData(String externalId, OnboardingImportDto model) {
+        OnboardingData resource = null;
+        if (model != null) {
+            resource = new OnboardingData();
+            resource.setInstitutionExternalId(externalId);
+            resource.setProductId(ProductId.PROD_IO.getValue());
             resource.setUsers(model.getUsers().stream()
                     .map(UserMapper::toUser)
                     .collect(Collectors.toList()));

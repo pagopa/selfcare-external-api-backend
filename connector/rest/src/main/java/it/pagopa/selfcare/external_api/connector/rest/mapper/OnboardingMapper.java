@@ -10,6 +10,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,14 +20,21 @@ import java.util.stream.Collectors;
 public interface OnboardingMapper {
 
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
+    @Mapping(target = "contractImported", ignore = true)
     OnboardingPaRequest toOnboardingPaRequest(OnboardingData onboardingData);
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionPsp")
+    @Mapping(target = "contractImported", ignore = true)
     OnboardingPspRequest toOnboardingPspRequest(OnboardingData onboardingData);
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
+    @Mapping(target = "contractImported.createdAt", source = "contractImported.createdAt", qualifiedByName = "convertDate")
     OnboardingDefaultRequest toOnboardingDefaultRequest(OnboardingData onboardingData);
 
     GeographicTaxonomyDto toGeographicTaxonomyDto(GeographicTaxonomy geographicTaxonomy);
 
+    @Named("convertDate")
+    default LocalDateTime convertDate(OffsetDateTime date) {
+        return date.toLocalDateTime();
+    }
     @Named("toInstitutionBase")
     default InstitutionBaseRequest toInstitutionBase(OnboardingData onboardingData) {
         InstitutionBaseRequest institution = new InstitutionBaseRequest();
