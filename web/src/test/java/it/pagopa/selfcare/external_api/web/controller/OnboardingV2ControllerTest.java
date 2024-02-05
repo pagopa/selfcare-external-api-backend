@@ -49,4 +49,22 @@ public class OnboardingV2ControllerTest {
                 .autoApprovalOnboardingProductV2(any(OnboardingData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
     }
+
+    @Test
+    void oldContractOnboarding(@Value("classpath:stubs/onboardingImportDto.json") Resource onboardingImportDto) throws Exception {
+        // given
+        String institutionId = "institutionId";
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/{institutionId}", institutionId)
+                        .content(onboardingImportDto.getInputStream().readAllBytes())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(emptyString()));
+        // then
+        verify(onboardingServiceMock, times(1))
+                .autoApprovalOnboardingProductV2(any(OnboardingData.class));
+        verifyNoMoreInteractions(onboardingServiceMock);
+    }
 }

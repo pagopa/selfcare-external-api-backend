@@ -52,6 +52,7 @@ public class OnboardingController {
         this.onboardingResourceMapper = onboardingResourceMapper;
     }
 
+    @Deprecated(forRemoval = true)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "409",
                     description = "Conflict",

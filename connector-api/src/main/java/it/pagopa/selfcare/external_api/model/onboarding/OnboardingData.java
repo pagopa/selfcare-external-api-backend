@@ -28,6 +28,7 @@ public class OnboardingData {
     private RootParent rootParent;
     private Boolean sendCompleteOnboardingEmail;
     private InstitutionLocation location;
+    private OnboardingImportContract contractImported;
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());
