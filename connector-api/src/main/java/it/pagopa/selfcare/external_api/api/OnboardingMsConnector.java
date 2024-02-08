@@ -9,4 +9,6 @@ public interface OnboardingMsConnector {
 
     List<Token> getToken(String onboardingId);
     void onboarding(OnboardingData onboardingData);
+    List<Token> getOnboardings(String productId, int page, int size);
+
 }
