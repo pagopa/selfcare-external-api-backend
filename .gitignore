@@ -46,3 +46,12 @@ app/src/main/.DS_Store
 app/src/.DS_Store
 app/.DS_Store
 .DS_Store
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+**/.tfsec/*
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
