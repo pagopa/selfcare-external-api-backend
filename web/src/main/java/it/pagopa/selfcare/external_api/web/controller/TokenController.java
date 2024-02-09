@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.core.TokenService;
 import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.tokens.TokensResource;
@@ -39,7 +40,7 @@ public class TokenController {
     }
 
     /**
-     * Retrieve institutions with productId onboarded
+     * Retrieve tokens from productId in input
      *
      * @param productId String
      * @param page      Integer
@@ -51,15 +52,15 @@ public class TokenController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}")
     @GetMapping(value = "/products/{productId}")
-    public ResponseEntity<TokensResource> findFromProduct(@ApiParam("${swagger.mscore.institutions.model.productId}")
+    public ResponseEntity<TokensResource> findFromProduct(@ApiParam("${swagger.external_api.api.tokens.productId}")
                                                           @PathVariable(value = "productId") String productId,
-                                                          @ApiParam("${swagger.mscore.page.number}")
+                                                          @ApiParam("${swagger.external_api.page.number}")
                                                           @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                          @ApiParam("${swagger.mscore.page.size}")
+                                                          @ApiParam("${swagger.external_api.page.size}")
                                                           @RequestParam(name = "size", defaultValue = "100") Integer size) {
         log.trace("findFromProduct start");
         log.debug("findFromProduct productId = {}", productId);
-        List<Token> tokens = tokenService.findByProductId(productId, page, size);
+        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(productId, page, size);
 
         TokensResource tokenListResponse = new TokensResource(
                 tokens.stream()

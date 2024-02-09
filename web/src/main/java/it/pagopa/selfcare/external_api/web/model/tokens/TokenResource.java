@@ -19,7 +19,7 @@ import java.util.List;
 public class TokenResource {
     private String id;
     private String checksum;
-    //private List<LegalsResponse> legals = new ArrayList<>();
+    private List<LegalsResource> legals = new ArrayList<>();
     private RelationshipState status;
     private String institutionId;
     private String productId;

@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest.mapper;
 
 import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGet;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
 import org.mapstruct.Mapper;
@@ -12,7 +13,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TokenUserMapper.class)
 public interface TokenMapper {
 
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "toOffsetDateTime")
@@ -21,7 +22,7 @@ public interface TokenMapper {
     Token toEntity(TokenResponse response);
 
     @Mapping(source = "institution", target = "institutionUpdate")
-    Token toEntity(OnboardingGet response);
+    TokenOnboardedUsers toEntity(OnboardingGet response);
 
     @Named("toOffsetDateTime")
     default OffsetDateTime map(LocalDateTime localDateTime) {
