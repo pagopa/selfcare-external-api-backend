@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {InstitutionController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration(classes = {InstitutionController.class, WebTestConfig.class, InstitutionResourceMapperImpl.class})
 class InstitutionControllerTest {
-    private static final String BASE_URL = "/institutions";
+    private static final String BASE_URL = "/v1/institutions";
 
     @Autowired
     protected MockMvc mvc;

@@ -17,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OnboardingMapperTest {
 
+    private static final String PROD_IO = "prod-io";
+    private static final String INSTITUTION_ID = "institutionId";
+
     @Test
     void fromDtoImportContract() {
         //given
@@ -42,20 +45,19 @@ class OnboardingMapperTest {
     @Test
     void toOnboardingImportData() {
         //given
-        String institutionId = "institutionId";
         List<UserDto> userDtos = List.of(mockInstance(new UserDto()));
         ImportContractDto importContractDto = mockInstance(new ImportContractDto());
         OnboardingImportDto model = mockInstance(new OnboardingImportDto());
         model.setUsers(userDtos);
         model.setImportContract(importContractDto);
         //when
-        OnboardingImportData resource = OnboardingMapper.toOnboardingImportData(institutionId, model);
+        OnboardingImportData resource = OnboardingMapper.toOnboardingImportData(INSTITUTION_ID, model);
         //then
         assertNotNull(resource);
         assertEquals(model.getUsers().size(), resource.getUsers().size());
-        assertEquals(institutionId, resource.getInstitutionExternalId());
+        assertEquals(INSTITUTION_ID, resource.getInstitutionExternalId());
         assertTrue(resource.getInstitutionUpdate().getImported());
-        assertEquals("prod-io", resource.getProductId());
+        assertEquals(PROD_IO, resource.getProductId());
         assertTrue(resource.getInstitutionUpdate().getImported());
         assertNull(resource.getInstitutionType());
         reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0));
@@ -63,12 +65,33 @@ class OnboardingMapperTest {
     }
 
     @Test
+    void toOnboardingDataWithContract() {
+        //given
+        List<UserDto> users = List.of(mockInstance(new UserDto()));
+        ImportContractDto importContractDto = mockInstance(new ImportContractDto());
+        OnboardingImportDto model = mockInstance(new OnboardingImportDto());
+        model.setUsers(users);
+        model.setImportContract(importContractDto);
+        //when
+        OnboardingData resource = OnboardingMapper.toOnboardingData(INSTITUTION_ID, model);
+        //then
+        assertNotNull(resource);
+        assertEquals(model.getUsers().size(), resource.getUsers().size());
+        assertEquals(INSTITUTION_ID, resource.getInstitutionExternalId());
+        assertTrue(resource.getInstitutionUpdate().getImported());
+        assertEquals(PROD_IO, resource.getProductId());
+        assertTrue(resource.getInstitutionUpdate().getImported());
+        assertNull(resource.getInstitutionType());
+        reflectionEqualsByName(users.get(0), resource.getUsers().get(0));
+        reflectionEqualsByName(importContractDto, resource.getContractImported());
+    }
+
+    @Test
     void toOnboardingImportData_null() {
         //given
-        String institutionId = "institutionId";
         OnboardingImportDto onboardingDto = null;
         //when
-        OnboardingImportData resource = OnboardingMapper.toOnboardingImportData(institutionId, onboardingDto);
+        OnboardingImportData resource = OnboardingMapper.toOnboardingImportData(INSTITUTION_ID, onboardingDto);
         //then
         assertNull(resource);
     }
@@ -97,8 +120,7 @@ class OnboardingMapperTest {
     @Test
     void toOnboardingData() {
         //given
-        String institutionId = "institutionId";
-        String productId = "productId";
+        String productId = PROD_IO;
         List<UserDto> userDtos = List.of(mockInstance(new UserDto()));
         OnboardingDto model = mockInstance(new OnboardingDto());
         BillingDataDto billingDataDto = mockInstance(new BillingDataDto());
@@ -109,12 +131,12 @@ class OnboardingMapperTest {
         model.setPspData(pspDataDto);
         model.setGeographicTaxonomies(geographicTaxonomyDtos);
         //when
-        OnboardingData resource = OnboardingMapper.toOnboardingData(institutionId, productId, model);
+        OnboardingData resource = OnboardingMapper.toOnboardingData(INSTITUTION_ID, productId, model);
         //then
         assertNotNull(resource);
         assertEquals(model.getUsers().size(), resource.getUsers().size());
         assertEquals(model.getGeographicTaxonomies().size(), resource.getInstitutionUpdate().getGeographicTaxonomies().size());
-        assertEquals(institutionId, resource.getInstitutionExternalId());
+        assertEquals(INSTITUTION_ID, resource.getInstitutionExternalId());
         assertEquals(productId, resource.getProductId());
         reflectionEqualsByName(billingDataDto, resource.getBilling());
         reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0));

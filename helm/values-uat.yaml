@@ -14,8 +14,16 @@ ingress:
   hosts:
     - host: selc.internal.uat.selfcare.pagopa.it
       paths:
-        - path: /external-api/v1/(.*)
+        - path: /external-api/(.*)
           pathType: ImplementationSpecific
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 500M
+  limits:
+    cpu: 600m
+    memory: 600M
 
 autoscaling:
   enabled: false
@@ -31,3 +39,4 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
+  MS_ONBOARDING_URL: "https://selc-u-onboarding-ms-ca.livelycliff-d5875f6a.westeurope.azurecontainerapps.io"

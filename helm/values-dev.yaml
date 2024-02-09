@@ -1,3 +1,5 @@
+replicaCount: 2
+
 image:
   repository: selcdacr.azurecr.io/selfcareexternalapibackend
 
@@ -11,7 +13,7 @@ ingress:
   hosts:
     - host: selc.internal.dev.selfcare.pagopa.it
       paths:
-        - path: /external-api/v1/(.*)
+        - path: /external-api/(.*)
           pathType: ImplementationSpecific
 
 resources:
@@ -30,9 +32,10 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 pdb:
-  enabled: false
+  enabled: true
 
 configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
+  MS_ONBOARDING_URL: "https://selc-d-onboarding-ms-ca.gentleflower-c63e62fe.westeurope.azurecontainerapps.io"

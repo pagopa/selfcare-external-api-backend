@@ -1,25 +1,34 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +40,12 @@ class MsCoreConnectorImplTest {
 
     @Mock
     private MsCoreRestClient msCoreRestClient;
+
+    @Mock
+    private MsCoreInstitutionApiClient institutionApiClient;
+
+    @Spy
+    InstitutionMapper institutionMapper = new InstitutionMapperImpl();
 
     @Test
     void createPnPgInstitution() {
@@ -123,5 +138,25 @@ class MsCoreConnectorImplTest {
         assertEquals(1, result.getInstitutions().size());
         verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , null);
         verifyNoMoreInteractions(msCoreRestClient);
+    }
+
+
+
+    @Test
+    void getInstitutionOnboardings(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        OnboardingsResponse onboardingsResponse = new OnboardingsResponse();
+        onboardingsResponse.setOnboardings(List.of(new OnboardingResponse()));
+        when(institutionApiClient._getOnboardingsInstitutionUsingGET(institutionId, productId))
+                .thenReturn(ResponseEntity.of(Optional.of(onboardingsResponse)));
+        //when
+        InstitutionOnboarding result = msCoreConnector.getInstitutionOnboardings(institutionId, productId);
+        //then
+        assertNotNull(result);
+        verify(institutionApiClient, times(1))._getOnboardingsInstitutionUsingGET(institutionId, productId);
+        verifyNoMoreInteractions(institutionApiClient);
+
     }
 }
