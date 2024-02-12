@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +32,14 @@ public class TokenServiceImpl implements TokenService {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
         final List<TokenOnboardedUsers> tokens = onboardingMsConnector.getOnboardings(productId, page, size);
-        tokens.forEach(token -> token.setOnboardedUsers(msCoreConnector.getOnboarderUsers(token.getUsers())));
+        tokens.forEach(token -> {
+            try {
+                token.setOnboardedUsers(msCoreConnector.getOnboarderUsers(token.getUsers()));
+            } catch (Exception e) {
+                log.debug("Impossible to retrieve users for token with ID: {}", token.getId());
+                token.setOnboardedUsers(Collections.emptyList());
+            }
+        });
         log.trace("findByProductId end");
         return tokens;
     }
