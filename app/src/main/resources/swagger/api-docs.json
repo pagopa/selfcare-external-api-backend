@@ -2660,7 +2660,8 @@
             "type" : "string"
           },
           "status" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "ACTIVE", "DELETED", "PENDING", "REJECTED", "SUSPENDED", "TOBEVALIDATED" ]
           },
           "updatedAt" : {
             "type" : "string",

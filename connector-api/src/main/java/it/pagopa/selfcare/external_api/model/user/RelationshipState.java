@@ -5,5 +5,6 @@ public enum RelationshipState {
     ACTIVE,
     SUSPENDED,
     DELETED,
-    REJECTED;
+    REJECTED,
+    TOBEVALIDATED;
 }
