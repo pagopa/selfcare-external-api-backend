@@ -20,7 +20,7 @@ public class TokenResource {
     private String id;
     private String checksum;
     private List<LegalsResource> legals = new ArrayList<>();
-    private RelationshipState status;
+    private String status;
     private String institutionId;
     private String productId;
     private OffsetDateTime expiringDate;
