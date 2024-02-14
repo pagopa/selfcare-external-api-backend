@@ -9,7 +9,6 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGetResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +50,11 @@ public class OnboardingMsConnectorImpl implements OnboardingMsConnector {
         } else {
             onboardingControllerApi._v1OnboardingCompletionPost(onboardingMapper.toOnboardingDefaultRequest(onboardingData));
         }
+    }
+
+    @Override
+    public void onboardingImportPA(OnboardingData onboardingData) {
+        onboardingControllerApi._v1OnboardingPaImportPost(onboardingMapper.toOnboardingImportRequest(onboardingData));
     }
 
     @Override

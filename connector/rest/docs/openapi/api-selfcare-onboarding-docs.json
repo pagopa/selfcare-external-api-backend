@@ -113,6 +113,46 @@
         } ]
       }
     },
+    "/v1/onboarding/pa/import": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Perform onboarding as /onboarding/pa but create token and completing the onboarding request to COMPLETED phase.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
+      }
+    },
     "/v1/onboarding/completion" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
@@ -1264,6 +1304,103 @@
           },
           "productRole" : {
             "type" : "string"
+          }
+        }
+      },
+      "InstitutionImportRequest": {
+        "required": [
+          "taxCode"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionType": {
+            "$ref": "#/components/schemas/InstitutionType"
+          },
+          "taxCode": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "$ref": "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto"
+            }
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "imported": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OnboardingImportRequest": {
+        "required": [
+          "institution",
+          "productId",
+          "users",
+          "contractImported"
+        ],
+        "type": "object",
+        "properties": {
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionImportRequest"
+          },
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "contractImported": {
+            "$ref": "#/components/schemas/OnboardingImportContract"
           }
         }
       },

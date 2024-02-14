@@ -64,7 +64,7 @@ public class OnboardingV2ControllerTest {
                 .andExpect(content().string(emptyString()));
         // then
         verify(onboardingServiceMock, times(1))
-                .autoApprovalOnboardingProductV2(any(OnboardingData.class));
+                .oldContractOnboardingV2(any(OnboardingData.class));
         verifyNoMoreInteractions(onboardingServiceMock);
     }
 }
