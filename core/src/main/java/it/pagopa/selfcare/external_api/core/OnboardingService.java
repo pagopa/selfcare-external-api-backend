@@ -8,6 +8,8 @@ public interface OnboardingService {
 
     void oldContractOnboarding(OnboardingImportData onboardingData);
 
+    void oldContractOnboardingV2(OnboardingData onboardingData);
+
     void autoApprovalOnboarding(OnboardingData onboardingData);
 
     void autoApprovalOnboardingFromPda(PdaOnboardingData onboardingData, String injestionInstitutionType);

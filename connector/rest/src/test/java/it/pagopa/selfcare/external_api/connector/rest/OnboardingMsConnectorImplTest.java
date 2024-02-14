@@ -8,10 +8,7 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImp
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingDefaultRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPaRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPspRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -135,6 +132,26 @@ public class OnboardingMsConnectorImplTest {
         assertEquals(actual.getInstitution().getTaxCode(), institutionUpdate.getTaxCode());
         assertNotNull(actual.getInstitution().getPaymentServiceProvider());
         assertNotNull(actual.getInstitution().getDataProtectionOfficer());
+        verifyNoMoreInteractions(onboardingControllerApi);
+    }
+
+    @Test
+    void onboarding_importPa() {
+        // given
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setTaxCode("taxCode");
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setTaxCode("taxCode");
+        onboardingData.setUsers(List.of(mockInstance(new User())));
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+        // when
+        onboardingMsConnector.onboardingImportPA(onboardingData);
+        // then
+        ArgumentCaptor<OnboardingImportRequest> onboardingRequestCaptor = ArgumentCaptor.forClass(OnboardingImportRequest.class);
+        verify(onboardingControllerApi, times(1))
+                ._v1OnboardingPaImportPost(onboardingRequestCaptor.capture());
+        OnboardingImportRequest actual = onboardingRequestCaptor.getValue();
+        assertEquals(actual.getInstitution().getTaxCode(), institutionUpdate.getTaxCode());
         verifyNoMoreInteractions(onboardingControllerApi);
     }
 }
