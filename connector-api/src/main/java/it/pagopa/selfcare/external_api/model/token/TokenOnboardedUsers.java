@@ -19,5 +19,4 @@ public class TokenOnboardedUsers {
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
     private OffsetDateTime closedAt;
-    private List<UserProducts> onboardedUsers;
 }

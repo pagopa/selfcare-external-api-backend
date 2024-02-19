@@ -60,7 +60,7 @@ public class TokenServiceImplTest {
         productToken.setProductId(productId);
         bindings.setProducts(List.of(productToken));
         userProducts.setBindings(List.of(bindings));
-        when(msCoreConnector.getOnboarderUsers(any())).thenReturn(List.of(userProducts));
+
         // when
         List<TokenOnboardedUsers> tokens = tokenService.findByProductId(productId, 1, 10);
         // then

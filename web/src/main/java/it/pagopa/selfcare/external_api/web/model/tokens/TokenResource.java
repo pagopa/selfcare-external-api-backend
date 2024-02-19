@@ -28,7 +28,6 @@ public class TokenResource {
     private String contractTemplate;
     private String contractSigned;
     private String contentType;
-    private List<TokenUser> users;
     private InstitutionUpdate institutionUpdate;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;

@@ -20,13 +20,10 @@ import java.util.stream.Collectors;
 public interface OnboardingMapper {
 
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
-    @Mapping(target = "contractImported", ignore = true)
     OnboardingPaRequest toOnboardingPaRequest(OnboardingData onboardingData);
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionPsp")
-    @Mapping(target = "contractImported", ignore = true)
     OnboardingPspRequest toOnboardingPspRequest(OnboardingData onboardingData);
     @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
-    @Mapping(target = "contractImported.createdAt", source = "contractImported.createdAt", qualifiedByName = "convertDate")
     OnboardingDefaultRequest toOnboardingDefaultRequest(OnboardingData onboardingData);
     @Mapping(target = "institution", source = "institutionUpdate")
     @Mapping(target = "institution.institutionType", ignore = true)

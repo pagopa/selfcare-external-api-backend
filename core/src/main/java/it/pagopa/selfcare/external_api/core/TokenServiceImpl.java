@@ -18,13 +18,10 @@ import java.util.stream.Collectors;
 public class TokenServiceImpl implements TokenService {
 
     private final OnboardingMsConnector onboardingMsConnector;
-    private final MsCoreConnector msCoreConnector;
 
     @Autowired
-    TokenServiceImpl(OnboardingMsConnector onboardingMsConnector,
-                     MsCoreConnector msCoreConnector) {
+    TokenServiceImpl(OnboardingMsConnector onboardingMsConnector) {
         this.onboardingMsConnector = onboardingMsConnector;
-        this.msCoreConnector = msCoreConnector;
     }
 
     @Override
@@ -32,14 +29,6 @@ public class TokenServiceImpl implements TokenService {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
         final List<TokenOnboardedUsers> tokens = onboardingMsConnector.getOnboardings(productId, page, size);
-        tokens.forEach(token -> {
-            try {
-                token.setOnboardedUsers(msCoreConnector.getOnboarderUsers(token.getUsers()));
-            } catch (Exception e) {
-                log.debug("Impossible to retrieve users for token with ID: {}", token.getId());
-                token.setOnboardedUsers(Collections.emptyList());
-            }
-        });
         log.trace("findByProductId end");
         return tokens;
     }

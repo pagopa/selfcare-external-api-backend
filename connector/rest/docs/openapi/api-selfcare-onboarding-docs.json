@@ -113,46 +113,6 @@
         } ]
       }
     },
-    "/v1/onboarding/pa/import": {
-      "post": {
-        "tags": [
-          "Onboarding Controller"
-        ],
-        "summary": "Perform onboarding as /onboarding/pa but create token and completing the onboarding request to COMPLETED phase.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OnboardingImportRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "SecurityScheme": []
-          }
-        ]
-      }
-    },
     "/v1/onboarding/completion" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
@@ -234,6 +194,42 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/OnboardingPaRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/pa/import" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform onboarding as /onboarding/pa but create token and completing the onboarding request to COMPLETED phase.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingImportRequest"
               }
             }
           }
@@ -438,6 +434,52 @@
       "put" : {
         "tags" : [ "Onboarding Controller" ],
         "summary" : "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
+        "parameters" : [ {
+          "name" : "onboardingId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "contract" : {
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/{onboardingId}/consume" : {
+      "put" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
         "parameters" : [ {
           "name" : "onboardingId",
           "in" : "path",
@@ -699,19 +741,6 @@
           }
         }
       },
-      "ContractRequest" : {
-        "required" : [ "path" ],
-        "type" : "object",
-        "properties" : {
-          "version" : {
-            "type" : "string"
-          },
-          "path" : {
-            "minLength" : 1,
-            "type" : "string"
-          }
-        }
-      },
       "DataProtectionOfficerRequest" : {
         "type" : "object",
         "properties" : {
@@ -771,6 +800,73 @@
           },
           "digitalAddress" : {
             "minLength" : 1,
+            "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/GeographicTaxonomyDto"
+            }
+          },
+          "rea" : {
+            "type" : "string"
+          },
+          "shareCapital" : {
+            "type" : "string"
+          },
+          "businessRegisterPlace" : {
+            "type" : "string"
+          },
+          "supportEmail" : {
+            "type" : "string"
+          },
+          "supportPhone" : {
+            "type" : "string"
+          },
+          "imported" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "InstitutionImportRequest" : {
+        "required" : [ "taxCode" ],
+        "type" : "object",
+        "properties" : {
+          "institutionType" : {
+            "$ref" : "#/components/schemas/InstitutionType"
+          },
+          "taxCode" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "subunitType" : {
+            "$ref" : "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin" : {
+            "$ref" : "#/components/schemas/Origin"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "county" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "digitalAddress" : {
             "type" : "string"
           },
           "address" : {
@@ -886,6 +982,9 @@
       "InstitutionResponse" : {
         "type" : "object",
         "properties" : {
+          "id" : {
+            "type" : "string"
+          },
           "institutionType" : {
             "$ref" : "#/components/schemas/InstitutionType"
           },
@@ -952,18 +1051,13 @@
         }
       },
       "InstitutionType" : {
-        "enum" : [ "PA", "PG", "GSP", "SA", "PT", "SCP", "PSP", "AS" ],
+        "enum" : [ "PA", "PG", "GSP", "SA", "PT", "SCP", "PSP", "AS", "REC", "CON" ],
         "type" : "string"
       },
       "LocalDateTime" : {
         "format" : "date-time",
         "type" : "string",
         "example" : "2022-03-10T12:15:50"
-      },
-      "OffsetDateTime" : {
-        "format" : "date-time",
-        "type" : "string",
-        "example" : "2022-03-10T12:15:50-04:00"
       },
       "OnboardingDefaultRequest" : {
         "required" : [ "productId", "users", "institution", "billing" ],
@@ -983,17 +1077,8 @@
           "pricingPlan" : {
             "type" : "string"
           },
-          "contract" : {
-            "$ref" : "#/components/schemas/ContractRequest"
-          },
-          "contractImported" : {
-            "$ref" : "#/components/schemas/OnboardingImportContract"
-          },
           "signContract" : {
             "type" : "boolean"
-          },
-          "userRequestUid" : {
-            "type" : "string"
           },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionBaseRequest"
@@ -1039,6 +1124,15 @@
           "additionalInformations" : {
             "$ref" : "#/components/schemas/AdditionalInformationsDto"
           },
+          "createdAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "updatedAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "expiringDate" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
           "status" : {
             "type" : "string"
           },
@@ -1063,19 +1157,45 @@
         }
       },
       "OnboardingImportContract" : {
+        "required" : [ "fileName", "filePath", "createdAt" ],
         "type" : "object",
         "properties" : {
           "fileName" : {
+            "minLength" : 1,
             "type" : "string"
           },
           "filePath" : {
+            "minLength" : 1,
             "type" : "string"
           },
           "contractType" : {
             "type" : "string"
           },
           "createdAt" : {
-            "$ref" : "#/components/schemas/OffsetDateTime"
+            "$ref" : "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "OnboardingImportRequest" : {
+        "required" : [ "institution", "productId", "users", "contractImported" ],
+        "type" : "object",
+        "properties" : {
+          "institution" : {
+            "$ref" : "#/components/schemas/InstitutionImportRequest"
+          },
+          "productId" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "users" : {
+            "minItems" : 1,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRequest"
+            }
+          },
+          "contractImported" : {
+            "$ref" : "#/components/schemas/OnboardingImportContract"
           }
         }
       },
@@ -1097,17 +1217,8 @@
           "pricingPlan" : {
             "type" : "string"
           },
-          "contract" : {
-            "$ref" : "#/components/schemas/ContractRequest"
-          },
-          "contractImported" : {
-            "$ref" : "#/components/schemas/OnboardingImportContract"
-          },
           "signContract" : {
             "type" : "boolean"
-          },
-          "userRequestUid" : {
-            "type" : "string"
           },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionBaseRequest"
@@ -1147,9 +1258,6 @@
           "digitalAddress" : {
             "pattern" : "\\S",
             "type" : "string"
-          },
-          "userRequestUid" : {
-            "type" : "string"
           }
         }
       },
@@ -1171,17 +1279,8 @@
           "pricingPlan" : {
             "type" : "string"
           },
-          "contract" : {
-            "$ref" : "#/components/schemas/ContractRequest"
-          },
-          "contractImported" : {
-            "$ref" : "#/components/schemas/OnboardingImportContract"
-          },
           "signContract" : {
             "type" : "boolean"
-          },
-          "userRequestUid" : {
-            "type" : "string"
           },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionPspRequest"
@@ -1194,11 +1293,17 @@
       "OnboardingResponse" : {
         "type" : "object",
         "properties" : {
-          "institution" : {
-            "$ref" : "#/components/schemas/InstitutionResponse"
+          "id" : {
+            "type" : "string"
           },
           "productId" : {
             "type" : "string"
+          },
+          "workflowType" : {
+            "type" : "string"
+          },
+          "institution" : {
+            "$ref" : "#/components/schemas/InstitutionResponse"
           },
           "pricingPlan" : {
             "type" : "string"
@@ -1206,11 +1311,17 @@
           "users" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/UserResponse"
+              "$ref" : "#/components/schemas/UserOnboardingResponse"
             }
           },
           "billing" : {
             "$ref" : "#/components/schemas/BillingResponse"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "additionalInformations" : {
+            "$ref" : "#/components/schemas/AdditionalInformationsDto"
           },
           "userRequestUid" : {
             "type" : "string"
@@ -1277,12 +1388,32 @@
           },
           "closedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "deletedAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
           }
         }
       },
       "TokenType" : {
         "enum" : [ "INSTITUTION", "LEGALS" ],
         "type" : "string"
+      },
+      "UserOnboardingResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "role" : {
+            "$ref" : "#/components/schemas/PartyRole"
+          },
+          "productRole" : {
+            "type" : "string"
+          },
+          "userMailUuid" : {
+            "type" : "string"
+          }
+        }
       },
       "UserRequest" : {
         "type" : "object",
@@ -1301,106 +1432,6 @@
           },
           "role" : {
             "$ref" : "#/components/schemas/PartyRole"
-          },
-          "productRole" : {
-            "type" : "string"
-          }
-        }
-      },
-      "InstitutionImportRequest": {
-        "required": [
-          "taxCode"
-        ],
-        "type": "object",
-        "properties": {
-          "institutionType": {
-            "$ref": "#/components/schemas/InstitutionType"
-          },
-          "taxCode": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "subunitCode": {
-            "type": "string"
-          },
-          "subunitType": {
-            "$ref": "#/components/schemas/InstitutionPaSubunitType"
-          },
-          "origin": {
-            "$ref": "#/components/schemas/Origin"
-          },
-          "city": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "county": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "digitalAddress": {
-            "type": "string"
-          },
-          "address": {
-            "type": "string"
-          },
-          "zipCode": {
-            "type": "string"
-          },
-          "geographicTaxonomies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GeographicTaxonomyDto"
-            }
-          },
-          "rea": {
-            "type": "string"
-          },
-          "shareCapital": {
-            "type": "string"
-          },
-          "businessRegisterPlace": {
-            "type": "string"
-          },
-          "supportEmail": {
-            "type": "string"
-          },
-          "supportPhone": {
-            "type": "string"
-          },
-          "imported": {
-            "type": "boolean"
-          }
-        }
-      },
-      "OnboardingImportRequest": {
-        "required": [
-          "institution",
-          "productId",
-          "users",
-          "contractImported"
-        ],
-        "type": "object",
-        "properties": {
-          "institution": {
-            "$ref": "#/components/schemas/InstitutionImportRequest"
-          },
-          "productId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "users": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRequest"
-            }
-          },
-          "contractImported": {
-            "$ref": "#/components/schemas/OnboardingImportContract"
           }
         }
       },
@@ -1424,6 +1455,9 @@
           },
           "role" : {
             "$ref" : "#/components/schemas/PartyRole"
+          },
+          "productRole" : {
+            "type" : "string"
           }
         }
       }
