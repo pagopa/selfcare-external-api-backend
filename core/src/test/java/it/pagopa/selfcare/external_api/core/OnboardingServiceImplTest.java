@@ -3826,4 +3826,16 @@ class OnboardingServiceImplTest {
                 .onboarding(any());
     }
 
+    @Test
+    void onboardingImportPa() {
+        // given
+        OnboardingData onboardingData = mockInstance(new OnboardingData(), "setInstitutionType", "setUsers");
+        onboardingData.setUsers(List.of(dummyManager, dummyDelegate));
+        // when
+        onboardingServiceImpl.oldContractOnboardingV2(onboardingData);
+        // then
+        verify(onboardingMsConnectorMock, times(1))
+                .onboardingImportPA(any());
+    }
+
 }

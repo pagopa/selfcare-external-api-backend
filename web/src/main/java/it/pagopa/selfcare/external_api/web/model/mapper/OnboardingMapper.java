@@ -73,6 +73,7 @@ public class OnboardingMapper {
             resource.setContractImported(fromDto(model.getImportContract()));
             resource.setBilling(new Billing());
             resource.setInstitutionUpdate(new InstitutionUpdate());
+            resource.getInstitutionUpdate().setTaxCode(externalId);
             resource.getInstitutionUpdate().setImported(true);
         }
         return resource;
