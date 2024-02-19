@@ -3,8 +3,10 @@ package it.pagopa.selfcare.external_api.web.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.TokenService;
+import it.pagopa.selfcare.external_api.model.token.ProductToken;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.external_api.model.user.InstitutionProducts;
 import it.pagopa.selfcare.external_api.model.user.UserProducts;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapperImpl;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,9 +50,20 @@ class TokenControllerTest {
         TokenOnboardedUsers token = new TokenOnboardedUsers();
         token.setId("id");
         token.setProductId(productId);
+        token.setInstitutionId("institutionId");
+
         UserProducts userProduct = new UserProducts();
-        userProduct.setBindings(new ArrayList<>());
+        // Item ignored because institutionId is empty
+        InstitutionProducts institutionProductsIgnored = new InstitutionProducts();
+
+        InstitutionProducts institutionProducts = new InstitutionProducts();
+        ProductToken productToken = new ProductToken();
+        productToken.setProductId(productId);
+        institutionProducts.setInstitutionId(token.getInstitutionId());
+        institutionProducts.setProducts(List.of(productToken));
+        userProduct.setBindings(List.of(institutionProductsIgnored, institutionProducts));
         token.setOnboardedUsers(List.of(userProduct));
+
         when(tokenService.findByProductId("productId", 1, 10))
                 .thenReturn(List.of(token));
         //when
@@ -68,5 +82,6 @@ class TokenControllerTest {
                 });
         assertNotNull(response);
         assertNotNull(response.getItems());
+        assertEquals(1, response.getItems().size());
     }
 }
