@@ -12,7 +12,7 @@ ingress:
   hosts:
     - host: "uat01.pnpg.internal.uat.selfcare.pagopa.it"
       paths:
-        - path: /external-api/v1/(.*)
+        - path: /external-api/(.*)
           pathType: ImplementationSpecific
 
 autoscaling:
@@ -26,3 +26,4 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
+  MS_ONBOARDING_URL: "https://selc-u-pnpg-onboarding-ms-ca.redground-be752d1f.westeurope.azurecontainerapps.io"

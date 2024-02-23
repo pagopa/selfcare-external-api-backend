@@ -2,10 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
-import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
-import it.pagopa.selfcare.external_api.api.PartyConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
@@ -64,18 +61,21 @@ class OnboardingServiceImpl implements OnboardingService {
     private final ProductsConnector productsConnector;
     private final UserRegistryConnector userConnector;
     private final OnboardingValidationStrategy onboardingValidationStrategy;
+    private final OnboardingMsConnector onboardingMsConnector;
 
     @Autowired
     OnboardingServiceImpl(PartyConnector partyConnector,
                           ProductsConnector productsConnector,
                           UserRegistryConnector userConnector,
                           OnboardingValidationStrategy onboardingValidationStrategy,
-                          MsPartyRegistryProxyConnector registryProxyConnector) {
+                          MsPartyRegistryProxyConnector registryProxyConnector,
+                          OnboardingMsConnector onboardingMsConnector) {
         this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
         this.userConnector = userConnector;
         this.onboardingValidationStrategy = onboardingValidationStrategy;
         this.registryProxyConnector = registryProxyConnector;
+        this.onboardingMsConnector = onboardingMsConnector;
     }
 
     @Override
@@ -187,6 +187,14 @@ class OnboardingServiceImpl implements OnboardingService {
     }
 
     @Override
+    public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
+        log.trace("oldContractOnboarding start");
+        log.debug("oldContractOnboarding = {}", onboardingImportData);
+        onboardingMsConnector.onboardingImportPA(onboardingImportData);
+        log.trace("oldContractOnboarding end");
+    }
+
+    @Override
     public void autoApprovalOnboarding(OnboardingData onboardingData) {
         log.trace("autoApprovalOnboarding start");
         log.debug("autoApprovalOnboarding = {}", onboardingData);
@@ -259,6 +267,14 @@ class OnboardingServiceImpl implements OnboardingService {
             partyConnector.autoApprovalOnboarding(onboardingData);
             log.trace("autoApprovalOnboarding end");
         }
+    }
+
+    @Override
+    public void autoApprovalOnboardingProductV2(OnboardingData onboardingData) {
+        log.trace("autoApprovalOnboarding start");
+        log.debug("autoApprovalOnboarding = {}", onboardingData);
+        onboardingMsConnector.onboarding(onboardingData);
+        log.trace("autoApprovalOnboarding end");
     }
 
     @Override
@@ -441,15 +457,6 @@ class OnboardingServiceImpl implements OnboardingService {
             }
         }
         return institution;
-    }
-
-    @Override
-    public ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId) {
-        log.trace("verifyOnboarding start");
-        log.debug("verifyOnboarding externalInstitutionId = {}", externalInstitutionId);
-        ResponseEntity<Void> responseEntity = partyConnector.verifyOnboarding(externalInstitutionId, productId);
-        log.trace("verifyOnboarding end");
-        return responseEntity;
     }
 
     private Optional<MutableUserFieldsDto> createUpdateRequest(it.pagopa.selfcare.external_api.model.onboarding.User user, User foundUser, String institutionInternalId) {

@@ -36,7 +36,7 @@ class PnPgControllerTest {
 
     @MockBean
     private InstitutionService institutionServiceMock;
-    private final static String BASE_URL = "/pn-pg";
+    private final static String BASE_URL = "/v1/pn-pg";
 
     @Test
     void addInstitution() throws Exception {

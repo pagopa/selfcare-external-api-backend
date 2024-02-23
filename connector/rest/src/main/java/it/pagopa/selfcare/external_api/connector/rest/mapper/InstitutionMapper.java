@@ -4,6 +4,8 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institut
 import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
 import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -33,5 +35,7 @@ public interface InstitutionMapper {
         assistanceContacts.setSupportPhone(dto.getSupportPhone());
         return assistanceContacts;
     }
+
+    InstitutionOnboarding toEntity(OnboardingResponse response);
 
 }

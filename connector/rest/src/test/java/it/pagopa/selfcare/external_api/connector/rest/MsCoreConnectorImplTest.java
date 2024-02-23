@@ -1,21 +1,37 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedUsersResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingsResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.UserProductsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreUserApiClient;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserProductMapper;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserProductMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.token.TokenUser;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
+import it.pagopa.selfcare.external_api.model.user.UserProducts;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +47,19 @@ class MsCoreConnectorImplTest {
 
     @Mock
     private MsCoreRestClient msCoreRestClient;
+
+    @Mock
+    private MsCoreInstitutionApiClient institutionApiClient;
+
+    @Mock
+    private MsCoreUserApiClient userApiClient;
+
+    @Spy
+    InstitutionMapper institutionMapper = new InstitutionMapperImpl();
+
+    @Spy
+    UserProductMapper userProductMapper = new UserProductMapperImpl();
+
 
     @Test
     void createPnPgInstitution() {
@@ -123,5 +152,44 @@ class MsCoreConnectorImplTest {
         assertEquals(1, result.getInstitutions().size());
         verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , null);
         verifyNoMoreInteractions(msCoreRestClient);
+    }
+
+    @Test
+    void getInstitutionOnboardings(){
+        //given
+        String institutionId = "institutionId";
+        String productId = "productId";
+        OnboardingsResponse onboardingsResponse = new OnboardingsResponse();
+        onboardingsResponse.setOnboardings(List.of(new OnboardingResponse()));
+        when(institutionApiClient._getOnboardingsInstitutionUsingGET(institutionId, productId))
+                .thenReturn(ResponseEntity.of(Optional.of(onboardingsResponse)));
+        //when
+        InstitutionOnboarding result = msCoreConnector.getInstitutionOnboardings(institutionId, productId);
+        //then
+        assertNotNull(result);
+        verify(institutionApiClient, times(1))._getOnboardingsInstitutionUsingGET(institutionId, productId);
+        verifyNoMoreInteractions(institutionApiClient);
+
+    }
+
+    @Test
+    void getOnboardedUsers(){
+        //given
+        var onboardedUsersResponse = new OnboardedUsersResponse();
+        var userProductsResponse = new UserProductsResponse();
+        userProductsResponse.setId("userId");
+        onboardedUsersResponse.users(List.of());
+        final String userId = "userId";
+        when(userApiClient._getOnboardedUsersUsingGET(List.of(userId)))
+                .thenReturn(ResponseEntity.of(Optional.of(onboardedUsersResponse)));
+        //when
+        TokenUser tokenUser = new TokenUser();
+        tokenUser.setUserId(userId);
+        List<UserProducts> result = msCoreConnector.getOnboarderUsers(List.of(tokenUser));
+        //then
+        assertNotNull(result);
+        verify(userApiClient, times(1))._getOnboardedUsersUsingGET(List.of(userId));
+        verifyNoMoreInteractions(userApiClient);
+
     }
 }
