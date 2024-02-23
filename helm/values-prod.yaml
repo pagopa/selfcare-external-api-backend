@@ -41,3 +41,4 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "INFO"
+  MS_ONBOARDING_URL: "https://selc-p-onboarding-ms-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"

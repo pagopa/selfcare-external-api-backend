@@ -53,6 +53,9 @@ class SwaggerConfigTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private TokenService tokenService;
+
     @Autowired
     WebApplicationContext context;
 

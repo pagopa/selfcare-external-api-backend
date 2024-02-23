@@ -187,6 +187,14 @@ class OnboardingServiceImpl implements OnboardingService {
     }
 
     @Override
+    public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
+        log.trace("oldContractOnboarding start");
+        log.debug("oldContractOnboarding = {}", onboardingImportData);
+        onboardingMsConnector.onboardingImportPA(onboardingImportData);
+        log.trace("oldContractOnboarding end");
+    }
+
+    @Override
     public void autoApprovalOnboarding(OnboardingData onboardingData) {
         log.trace("autoApprovalOnboarding start");
         log.debug("autoApprovalOnboarding = {}", onboardingData);
