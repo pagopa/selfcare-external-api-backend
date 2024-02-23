@@ -4,6 +4,15 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+/.terraform/
+/.identity/.terraform/
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
 ### STS ###
 .apt_generated
 .classpath
@@ -37,3 +46,12 @@ app/src/main/.DS_Store
 app/src/.DS_Store
 app/.DS_Store
 .DS_Store
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+**/.tfsec/*
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
