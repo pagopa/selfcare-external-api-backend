@@ -29,8 +29,65 @@ container_app = {
   memory = "2.5Gi"
 }
 
+
 app_settings = [
+  
+  {
+    name  = "APPLICATIONINSIGHTS_ROLE_NAME"
+    value = "external-api"
+  },
+  {
+    name  = "ALLOWED_SERVICE_TYPES"
+    value = "onboarding-interceptor,external-interceptor"
+  },
+  {
+    name  = "REST_CLIENT_READ_TIMEOUT"
+    value = "60000"
+  },
+  {
+    name  = "REST_CLIENT_CONNECT_TIMEOUT"
+    value = "60000"
+  },
+  {
+    name  = "JAVA_TOOL_OPTIONS"
+    value = "-javaagent:applicationinsights-agent.jar"
+  },
+  {
+    name  = "APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL"
+    value = "OFF"
+  },
+  {
+    name  = "EXTERNAL_API_LOG_LEVEL"
+    value = "INFO"
+  },
+  {
+    name  = "MS_ONBOARDING_URL"
+    value = "https://selc-p-onboarding-ms-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "MS_CORE_URL"
+    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
+    value = "https://selc-p-party-reg-proxy-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "USERVICE_PARTY_PROCESS_URL"
+    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "MS_PRODUCT_URL"
+    value = "https://selc.internal.pagopa.it/ms-product/v1"
+  },
+  {
+    name  = "USERVICE_USER_REGISTRY_URL"
+    value = "https://api.pdv.pagopa.it/user-registry/v1"
+  }
 ]
 
-secrets_names = [
-]
+secrets_names = {
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"           = "appinsights-connection-string"
+    "BLOB_STORAGE_CONN_STRING"                        = "web-storage-connection-string"
+    "USER_REGISTRY_API_KEY"                           = "user-registry-api-key"
+}
