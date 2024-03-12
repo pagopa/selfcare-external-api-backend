@@ -1,7 +1,15 @@
-name: Release PNPG ms-external-api-backend
+name: Release - PNPG ms-external-api-backend
 
 on:
   workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Environment
+        options: 
+        - dev
+        - uat
+        - prod
 
   push:
     branches:
