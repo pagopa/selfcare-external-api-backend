@@ -33,7 +33,7 @@ jobs:
     secrets: inherit
     with:
       environment: dev
-      tf_environment: dev-pnpg
+      tf_environment: dev
       dir: 'infra/container_apps'
 
   release_uat:
@@ -53,5 +53,5 @@ jobs:
     secrets: inherit
     with:
       environment: prod
-      tf_environment: prod-pnpg
+      tf_environment: prod
       dir: 'infra/container_apps'
