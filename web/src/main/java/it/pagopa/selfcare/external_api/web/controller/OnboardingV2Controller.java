@@ -34,6 +34,9 @@ public class OnboardingV2Controller {
     private final OnboardingService onboardingService;
     private final OnboardingResourceMapper onboardingResourceMapper;
 
+    protected static final String LOCATION_INFO_IS_REQUIRED = "Field 'Location' is required";
+
+
     @Autowired
     public OnboardingV2Controller(OnboardingService onboardingService,
                                   OnboardingResourceMapper onboardingResourceMapper) {
