@@ -1,7 +1,15 @@
-name: Release PNPG external-api-backend
+name: Release - PNPG ms-external-api-backend
 
 on:
   workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Environment
+        options: 
+        - dev
+        - uat
+        - prod
 
   push:
     branches:
@@ -12,38 +20,38 @@ on:
       - '!helm/**'
       - '!**.md'
       - '!**ignore'
-      - '!infra/**'
+      - '!infra/repository/**'
       - '!.terraform-version'
       - '!CODEOWNERS'
 
 jobs:
 
   release_dev:
-    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@EC-149-template-git-hub-workflows
-    name: '[Dev] ExternalApiBackend Release'
-    if: startsWith(github.ref_name, 'releases/') != true
+    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@main
+    name: '[Dev] ExternalInterceptor ms Release'
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
     secrets: inherit
     with:
       environment: dev
       tf_environment: dev-pnpg
-      dir: 'infra'
+      dir: 'infra/container_apps'
 
   release_uat:
-    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@EC-149-template-git-hub-workflows
-    name: '[UAT] ExternalApiBackend Release'
-    if: startsWith(github.ref_name, 'releases/')
+    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@main
+    name: '[UAT] ExternalInterceptor ms Release'
+    if: ${{ (startsWith(github.ref_name, 'releases/') == true && inputs.env == null) || inputs.env == 'uat' }}
     secrets: inherit
     with:
       environment: uat
       tf_environment: uat-pnpg
-      dir: 'infra'
+      dir: 'infra/container_apps'
 
   release_prod:
-    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@EC-149-template-git-hub-workflows
-    name: '[Prod] ExternalApiBackend Release'
-    if: startsWith(github.ref_name, 'releases/')
+    uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@main
+    name: '[Prod] ExternalInterceptor ms Release'
+    if: ${{ inputs.env == 'prod' }}
     secrets: inherit
     with:
       environment: prod
       tf_environment: prod-pnpg
-      dir: 'infra'
+      dir: 'infra/container_apps'
