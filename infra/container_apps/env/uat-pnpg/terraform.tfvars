@@ -71,6 +71,10 @@ app_settings = [
   {
     name  = "USERVICE_USER_REGISTRY_URL"
     value = "https://api.uat.pdv.pagopa.it/user-registry/v1"
+  },
+  {
+    name  = "USERVICE_PARTY_MANAGEMENT_URL"
+    value = "https://selc-u-pnpg-ms-core-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
   }
 ]
 
