@@ -83,6 +83,10 @@ app_settings = [
   {
     name  = "USERVICE_USER_REGISTRY_URL"
     value = "https://api.pdv.pagopa.it/user-registry/v1"
+  },
+  {
+    name  = "USERVICE_PARTY_MANAGEMENT_URL"
+    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
   }
 ]
 
