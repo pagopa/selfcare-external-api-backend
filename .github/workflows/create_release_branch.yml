@@ -26,6 +26,7 @@ jobs:
     steps:
 
       - name: Create Release Branch
+        id: create_branch
         uses: pagopa/selfcare-commons/github-actions-template/create-release@main
         with:
           version_bump: ${{ inputs.version-bump }}
@@ -34,10 +35,10 @@ jobs:
       - name: Trigger release ms UAT Release
         run: |
           gh workflow run release_ms.yml \
-            --ref $NEW_BRANCH_NAME
+            --ref ${{ steps.create_branch.outputs.new_branch_name }}
 
       - name: Trigger PNPG release ms UAT Release
         run: |
           gh workflow run release_ms_pnpg.yml \
-            --ref $NEW_BRANCH_NAME
+            --ref ${{ steps.create_branch.outputs.new_branch_name }}
         
