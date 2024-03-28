@@ -87,12 +87,16 @@ app_settings = [
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
     value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "STORAGE_CONTAINER"
+    value = "selc-p-contracts-blob"
   }
 ]
 
 secrets_names = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"           = "appinsights-connection-string"
-    "BLOB_STORAGE_CONN_STRING"                        = "web-storage-connection-string"
+    "BLOB_STORAGE_CONN_STRING"                        = "blob-storage-contract-connection-string"
     "USERVICE_USER_REGISTRY_API_KEY"                  = "user-registry-api-key"
     "JWT_TOKEN_PUBLIC_KEY"                            = "jwt-public-key"
 }
