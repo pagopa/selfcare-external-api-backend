@@ -2,48 +2,21 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
-import it.pagopa.selfcare.commons.base.utils.Origin;
 import it.pagopa.selfcare.external_api.api.*;
-import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
-import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
-import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedException;
-import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
-import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.product.ProductRoleInfo;
-import it.pagopa.selfcare.external_api.model.product.ProductStatus;
-import it.pagopa.selfcare.external_api.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.model.relationship.Relationships;
-import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.TestSecurityContextHolder;
-
-import javax.validation.ValidationException;
 import java.util.*;
-
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.external_api.core.OnboardingServiceImpl.*;
-import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -54,7 +27,7 @@ class OnboardingServiceImplTest {
     private OnboardingServiceImpl onboardingServiceImpl;
 
     @Mock
-    private PartyConnector partyConnectorMock;
+    private MsCoreConnector partyConnectorMock;
 
     @Mock
     private ProductsConnector productsConnectorMock;

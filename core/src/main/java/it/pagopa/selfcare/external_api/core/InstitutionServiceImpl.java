@@ -3,7 +3,6 @@ package it.pagopa.selfcare.external_api.core;
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
-import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -39,8 +38,6 @@ class InstitutionServiceImpl implements InstitutionService {
     private static final EnumSet<User.Fields> USER_FIELD_LIST_FISCAL_CODE = EnumSet.of(name, familyName, workContacts, fiscalCode);
 
     static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
-    protected static final String EXTERNAL_INSTITUTION_ID_IS_REQUIRED = "An external institution id is required";
-    private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
 
     private final MsCoreConnector msCoreConnector;
@@ -49,11 +46,9 @@ class InstitutionServiceImpl implements InstitutionService {
     private final Set<String> serviceType;
 
     @Autowired
-    InstitutionServiceImpl(PartyConnector partyConnector,
-                           ProductsConnector productsConnector,
+    InstitutionServiceImpl(ProductsConnector productsConnector,
                            MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector,
                            @Value("${external_api.allowed-service-types}")String[] serviceType) {
-        this.partyConnector = partyConnector;
         this.productsConnector = productsConnector;
         this.msCoreConnector = msCoreConnector;
         this.userRegistryConnector = userRegistryConnector;
@@ -64,7 +59,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public Collection<InstitutionInfo> getInstitutions(String productId) {
         log.trace("getInstitutions start");
         log.debug("getInstitutions productId = {}", productId);
-        Collection<InstitutionInfo> result = partyConnector.getOnBoardedInstitutions(productId);
+        Collection<InstitutionInfo> result = msCoreConnector.getOnBoardedInstitutions(productId);
         log.debug("getInstitutions result = {}", result);
         log.trace("getInstitutions end");
         return result;
@@ -81,7 +76,7 @@ class InstitutionServiceImpl implements InstitutionService {
         SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
         List<Product> products = productsConnector.getProducts();
         if (!products.isEmpty()) {
-            Map<String, PartyProduct> institutionUserProducts = partyConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
+            Map<String, PartyProduct> institutionUserProducts = msCoreConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
                     .collect(Collectors.toMap(PartyProduct::getId, Function.identity(), (partyProduct, partyProduct2) -> partyProduct));
             products = products.stream()
                     .filter(product -> institutionUserProducts.containsKey(product.getId()))
@@ -105,7 +100,7 @@ class InstitutionServiceImpl implements InstitutionService {
         userInfoFilter.setUserId(userId);
         userInfoFilter.setProductRoles(productRoles);
         userInfoFilter.setAllowedState(Optional.of(EnumSet.of(RelationshipState.ACTIVE)));
-        Collection<UserInfo> result = partyConnector.getUsers(userInfoFilter);
+        Collection<UserInfo> result = msCoreConnector.getUsers(userInfoFilter);
         if (xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
             result.forEach(userInfo ->
                     userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST_FISCAL_CODE)));
@@ -123,7 +118,7 @@ class InstitutionServiceImpl implements InstitutionService {
         log.trace("getGeographicTaxonomyList start");
         log.debug("getGeographicTaxonomyList externalInstitutionId = {}", institutionId);
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
-        List<GeographicTaxonomy> result = partyConnector.getGeographicTaxonomyList(institutionId);
+        List<GeographicTaxonomy> result = msCoreConnector.getGeographicTaxonomyList(institutionId);
         log.debug("getGeographicTaxonomyList result = {}", result);
         log.trace("getGeographicTaxonomyList end");
         return result;
@@ -135,7 +130,7 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
         Assert.notEmpty(geoTaxIds, "GeoTaxonomy ids are required in order to retrieve the institutions");
         String geoIds = String.join(",", geoTaxIds);
-        Collection<Institution> institutions = partyConnector.getInstitutionsByGeoTaxonomies(geoIds, searchMode);
+        Collection<Institution> institutions = msCoreConnector.getInstitutionsByGeoTaxonomies(geoIds, searchMode);
         log.debug("getInstitutionByGeoTaxonomy result = {}", "null)");
         log.trace("getInstitutionByGeoTaxonomy end");
         return institutions;
@@ -147,7 +142,7 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug("addInstitution request = {}", request);
         String institutionInternalId = null;
         try {
-            institutionInternalId = partyConnector.getInstitutionByExternalId(request.getExternalId()).getId();
+            institutionInternalId = msCoreConnector.getInstitutionByExternalId(request.getExternalId()).getId();
         } catch (ResourceNotFoundException e) {
             institutionInternalId = msCoreConnector.createPnPgInstitution(request);
         }

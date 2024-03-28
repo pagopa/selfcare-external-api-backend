@@ -69,16 +69,5 @@ class MsCoreRestClientTest extends BaseFeignRestClientTest {
         checkNotNullFields(response);
     }
 
-    @Test
-    void getToken(){
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        //when
-        Token token = restClient.getToken(institutionId, productId);
-        //then
-        assertNotNull(token);
-        checkNotNullFields(token);
-    }
 
 }

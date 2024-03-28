@@ -81,21 +81,6 @@ class MsCoreConnectorImplTest {
 
     }
 
-    @Test
-    void getToken(){
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        Token token = mockInstance(new Token());
-        when(msCoreRestClient.getToken(any(), any())).thenReturn(token);
-        //when
-        Token result = msCoreConnector.getToken(institutionId, productId);
-        //then
-        assertEquals(token, result);
-        verify(msCoreRestClient, times(1)).getToken(institutionId, productId);
-        verifyNoMoreInteractions(msCoreRestClient);
-
-    }
 
     @Test
     void getOnboardingInfo() {
@@ -169,27 +154,6 @@ class MsCoreConnectorImplTest {
         assertNotNull(result);
         verify(institutionApiClient, times(1))._getOnboardingsInstitutionUsingGET(institutionId, productId);
         verifyNoMoreInteractions(institutionApiClient);
-
-    }
-
-    @Test
-    void getOnboardedUsers(){
-        //given
-        var onboardedUsersResponse = new OnboardedUsersResponse();
-        var userProductsResponse = new UserProductsResponse();
-        userProductsResponse.setId("userId");
-        onboardedUsersResponse.users(List.of());
-        final String userId = "userId";
-        when(userApiClient._getOnboardedUsersUsingGET(List.of(userId)))
-                .thenReturn(ResponseEntity.of(Optional.of(onboardedUsersResponse)));
-        //when
-        TokenUser tokenUser = new TokenUser();
-        tokenUser.setUserId(userId);
-        List<UserProducts> result = msCoreConnector.getOnboarderUsers(List.of(tokenUser));
-        //then
-        assertNotNull(result);
-        verify(userApiClient, times(1))._getOnboardedUsersUsingGET(List.of(userId));
-        verifyNoMoreInteractions(userApiClient);
 
     }
 }
