@@ -55,3 +55,9 @@ variable "secrets_names" {
   type        = map(string)
   description = "KeyVault secrets to get values from"
 }
+
+variable "workload_profile_name" {
+  type        = string
+  description = "Workload Profile name to use"
+  default     = "Consumption"
+}
