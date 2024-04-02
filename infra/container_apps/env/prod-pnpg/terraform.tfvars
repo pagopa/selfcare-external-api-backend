@@ -30,8 +30,6 @@ container_app = {
   memory = "2.5Gi"
 }
 
-workload_profile_name = null
-
 app_settings = [
   
   {

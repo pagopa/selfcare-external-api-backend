@@ -39,4 +39,4 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
-  MS_ONBOARDING_URL: "https://selc-u-onboarding-ms-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+  MS_ONBOARDING_URL: "https://selc-u-onboarding-ms-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
