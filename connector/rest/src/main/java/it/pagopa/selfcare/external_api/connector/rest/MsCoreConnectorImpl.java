@@ -6,20 +6,14 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.*;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingContract;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
@@ -28,7 +22,6 @@ import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -49,12 +42,10 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     private final MsCoreInstitutionApiClient institutionApiClient;
     private final InstitutionMapper institutionMapper;
     private final MsCoreRestClient msCoreRestClient;
-    private final PartyManagementRestClient partyManagementRestClient;
 
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
-    protected static final String ONBOARDING_DATA_IS_REQUIRED = "An OnboardingData is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
 
 
@@ -274,7 +265,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
                     .collect(Collectors.toCollection(() -> EnumSet.noneOf(PartyRole.class)));
         }
 
-        Relationships relationships = partyManagementRestClient.getRelationships(
+        Relationships relationships = msCoreRestClient.getRelationships(
                 userInfoFilter.getUserId().orElse(null),
                 userInfoFilter.getInstitutionId().orElse(null),
                 roles,
@@ -326,7 +317,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     public Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode) {
         log.trace("getInstitutionByGeoTaxonomy start");
         log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
-        Collection<Institution> institutions = partyManagementRestClient.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode).getItems();
+        Collection<Institution> institutions = msCoreRestClient.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode).getItems();
         if (institutions == null) {
             throw new ResourceNotFoundException(String.format("No institutions where found for given taxIds = %s", geoTaxIds));
         }

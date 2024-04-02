@@ -11,22 +11,18 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -44,7 +40,6 @@ import static it.pagopa.selfcare.commons.base.security.PartyRole.MANAGER;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.ADMIN;
 import static it.pagopa.selfcare.commons.base.security.SelfCareAuthority.LIMITED;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
 import static it.pagopa.selfcare.external_api.connector.rest.MsCoreConnectorImpl.*;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.SUSPENDED;
@@ -75,9 +70,6 @@ class PartyConnectorImplTest {
 
     @Mock
     private MsCoreRestClient msCoreRestClient;
-
-    @Mock
-    private PartyManagementRestClient partyManagementRestClientMock;
 
     @Captor
     ArgumentCaptor<OnboardingImportInstitutionRequest> onboardingImportRequestCaptor;
@@ -112,7 +104,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -152,7 +144,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -167,7 +159,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), isNotNull());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -180,7 +172,7 @@ class PartyConnectorImplTest {
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("A productId is required", e.getMessage());
-        verifyNoInteractions(msCoreRestClient, partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient, msCoreRestClient);
     }
 
     @Test
@@ -198,7 +190,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), isNotNull());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -213,7 +205,7 @@ class PartyConnectorImplTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
         verifyNoInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -227,7 +219,7 @@ class PartyConnectorImplTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
         verifyNoInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -248,7 +240,7 @@ class PartyConnectorImplTest {
                         isNull(),
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -277,7 +269,7 @@ class PartyConnectorImplTest {
                         isNull(),
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -295,7 +287,7 @@ class PartyConnectorImplTest {
         relationship2.setFrom(id);
         Relationships relationships = new Relationships();
         relationships.setItems(List.of(relationship1, relationship2));
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         // when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -319,9 +311,9 @@ class PartyConnectorImplTest {
         assertNotNull(userInfo.getRole());
         assertEquals(1, userInfo.getProducts().size());
         assertNotNull(productInfoMap.keySet());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(isNull(), isNull(), notNull(), notNull(), isNull(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -330,15 +322,15 @@ class PartyConnectorImplTest {
     void getUsers_nullRelationships() {
         //given
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(null);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
         //then
         assertTrue(userInfos.isEmpty());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -347,15 +339,15 @@ class PartyConnectorImplTest {
     void getUsers_nullRelationshipsItems() {
         //given
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(new Relationships());
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
         //then
         assertTrue(userInfos.isEmpty());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -366,7 +358,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_multi-role.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -377,9 +369,9 @@ class PartyConnectorImplTest {
         assertEquals(2, productInfoMap.values().size());
         assertEquals(2, productInfoMap.get("prod-io").getRoleInfos().size());
         assertEquals(1, productInfoMap.get("prod-pn").getRoleInfos().size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -390,7 +382,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_higher-role-active.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -401,9 +393,9 @@ class PartyConnectorImplTest {
         assertEquals(ADMIN, userInfo.getRole());
         assertEquals("ACTIVE", userInfo.getStatus());
         assertEquals(2, userInfo.getProducts().size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -414,7 +406,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_merge.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -425,9 +417,9 @@ class PartyConnectorImplTest {
         assertNull(userInfo.getUser());
         assertEquals(ADMIN, userInfo.getRole());
         assertEquals("PENDING", userInfo.getStatus());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -438,7 +430,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_higher-role-pending.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -448,9 +440,9 @@ class PartyConnectorImplTest {
         assertEquals(ADMIN, userInfo.getRole());
         assertEquals("PENDING", userInfo.getStatus());
         assertEquals(1, userInfos.size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -461,7 +453,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_active-role-different-status.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -471,9 +463,9 @@ class PartyConnectorImplTest {
         assertEquals(LIMITED, userInfo.getRole());
         assertEquals("ACTIVE", userInfo.getStatus());
         assertEquals(1, userInfos.size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -484,7 +476,7 @@ class PartyConnectorImplTest {
         UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/getUsers_active-role-different-status-2.json");
         Relationships relationships = mapper.readValue(stub, Relationships.class);
-        when(partyManagementRestClientMock.getRelationships(any(), any(), any(), any(), any(), any()))
+        when(msCoreRestClient.getRelationships(any(), any(), any(), any(), any(), any()))
                 .thenReturn(relationships);
         //when
         Collection<UserInfo> userInfos = partyConnector.getUsers(userInfoFilter);
@@ -494,9 +486,9 @@ class PartyConnectorImplTest {
         assertEquals(ADMIN, userInfo.getRole());
         assertEquals("ACTIVE", userInfo.getStatus());
         assertEquals(1, userInfos.size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
@@ -548,7 +540,7 @@ class PartyConnectorImplTest {
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
-        verifyNoInteractions(msCoreRestClient, partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient, msCoreRestClient);
     }
 
     @Test
@@ -566,7 +558,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getInstitution(institutionId);
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -587,7 +579,7 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getInstitution(institutionId);
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(partyManagementRestClientMock);
+        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -598,7 +590,7 @@ class PartyConnectorImplTest {
         File stub = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/institutions.json");
         Institutions institutions = mapper.readValue(stub, Institutions.class);
 
-        when(partyManagementRestClientMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
+        when(msCoreRestClient.getInstitutionsByGeoTaxonomies(anyString(), any()))
                 .thenReturn(institutions);
         //when
         Collection<Institution> results = partyConnector.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
@@ -606,10 +598,10 @@ class PartyConnectorImplTest {
         assertNotNull(results);
         assertFalse(results.isEmpty());
         assertEquals(2, results.size());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
         verifyNoInteractions(msCoreRestClient);
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
     }
 
     @Test
@@ -617,16 +609,16 @@ class PartyConnectorImplTest {
         //given
         String geoTax = "geoTaxIds";
         SearchMode searchMode = SearchMode.any;
-        when(partyManagementRestClientMock.getInstitutionsByGeoTaxonomies(any(), any()))
+        when(msCoreRestClient.getInstitutionsByGeoTaxonomies(any(), any()))
                 .thenReturn(new Institutions());
         //when
         Executable executable = () -> partyConnector.getInstitutionsByGeoTaxonomies(geoTax, searchMode);
         //then
         ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
         assertEquals(String.format("No institutions where found for given taxIds = %s", geoTax), e.getMessage());
-        verify(partyManagementRestClientMock, times(1))
+        verify(msCoreRestClient, times(1))
                 .getInstitutionsByGeoTaxonomies(geoTax, searchMode);
-        verifyNoMoreInteractions(partyManagementRestClientMock);
+        verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
     }
 
