@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
+import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -23,12 +25,14 @@ public class UserServiceImpl implements UserService {
     private static final List<RelationshipState> DEFAULT_USER_STATUSES =  new ArrayList<>(Arrays.asList(RelationshipState.values()));
     private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
+    private final UserMsConnector userMsConnector;
 
     @Autowired
     public UserServiceImpl(UserRegistryConnector userRegistryConnector,
-                           MsCoreConnector msCoreConnector) {
+                           MsCoreConnector msCoreConnector, UserMsConnector userMsConnector) {
         this.userRegistryConnector = userRegistryConnector;
         this.msCoreConnector = msCoreConnector;
+        this.userMsConnector = userMsConnector;
     }
 
     @Override
@@ -57,6 +61,17 @@ public class UserServiceImpl implements UserService {
         log.debug("geUserInfo result = {}", result);
         log.trace("geUserInfo end");
         return result;
+    }
+
+    @Override
+    public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
+        log.trace("geUserInfo start");
+        final User user = userMsConnector.searchUserByExternalId(fiscalCode);
+        List<OnboardedInstitutionResponse> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        UserInfoWrapper infoWrapper = new UserInfoWrapper();
+        infoWrapper.setUser(user);
+        infoWrapper.setOnboardedInstitutions(onboardedInstitutions);
+        return infoWrapper;
     }
 
     @Override
@@ -89,6 +104,28 @@ public class UserServiceImpl implements UserService {
         log.debug("getUserOnboardedProductDetails result = {}", result);
         log.trace("getUserOnboardedProductDetails end");
         return result;
+    }
+
+    public List<OnboardedInstitutionResponse> getOnboardedInstitutionsDetails(String userId){
+        List<UserInstitutions> institutions = userMsConnector.getUsersInstitutions(userId);
+        List<OnboardedInstitutionResponse> response = new ArrayList<>();
+
+        institutions.stream().forEach(institution -> {
+            List<OnboardedInstitutionResponse> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
+            onboardedInstitutionResponse.stream()
+                    .filter(el -> el.getId().equals(institution.getInstitutionId()))
+                    .map(el -> {
+                        el.getProductInfo().setRole(institution.getProducts().stream()
+                                .filter(product -> product.getProductId().equals(el.getProductInfo().getId()) &&
+                                        product.getStatus().equals(el.getProductInfo().getStatus()))
+                                .map(OnboardedProductResponse::getProductRole).toString());
+                        return  el;
+                    })
+                    .collect(Collectors.toList());
+            response.addAll(onboardedInstitutionResponse);
+        });
+
+        return response;
     }
 
 }

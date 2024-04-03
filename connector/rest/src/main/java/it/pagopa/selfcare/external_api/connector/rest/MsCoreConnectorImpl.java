@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.UserProductsResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
@@ -13,7 +14,9 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInsti
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenUser;
@@ -21,8 +24,10 @@ import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserProducts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -119,5 +124,21 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
         log.trace("getOnboarderUsers end");
         return onboardedUsers.stream().map(userProductMapper::toEntity).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OnboardedInstitutionResponse> getInstitutionDetails(String institutionId) {
+        ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+        if (Objects.nonNull(responseEntity) && Objects.nonNull(responseEntity.getBody())){
+            InstitutionResponse response = responseEntity.getBody();
+            return response.getOnboarding().stream().map(onboardedProductResponse -> {
+                OnboardedInstitutionResponse onboardedInstitutionResponse = institutionMapper.toOnboardedInstitution(response);
+                ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+                onboardedInstitutionResponse.setProductInfo(productInfo);
+                onboardedInstitutionResponse.setState(productInfo.getStatus());
+                return onboardedInstitutionResponse;
+            }).toList();
+        }
+        return Collections.emptyList();
     }
 }
