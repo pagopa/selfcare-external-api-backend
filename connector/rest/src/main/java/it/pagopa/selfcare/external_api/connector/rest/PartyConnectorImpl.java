@@ -6,8 +6,8 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
@@ -174,7 +174,6 @@ public class PartyConnectorImpl implements PartyConnector {
         return result;
     }
 
-
     @Override
     public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
@@ -193,6 +192,23 @@ public class PartyConnectorImpl implements PartyConnector {
         return products;
     }
 
+    @Override
+    public List<PartyProduct> getInstitutionUserProductsV2(String institutionId, String userId) {
+        log.trace("getInstitutionUserProducts start");
+        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}", institutionId, userId);
+        Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
+        Assert.hasText(userId, USER_ID_IS_REQUIRED);
+        List<PartyProduct> products = Collections.emptyList();
+        RelationshipsResponse response = partyProcessRestClient.getUserInstitutionRelationships(institutionId, EnumSet.allOf(PartyRole.class), EnumSet.of(ACTIVE), null, null, userId);
+        if (response != null) {
+            products = response.stream()
+                    .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
+                    .collect(Collectors.toList());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts start");
+        return products;
+    }
 
     private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo, String productId) {
         log.trace("parseOnBoardingInfo start");

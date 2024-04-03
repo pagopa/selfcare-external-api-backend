@@ -21,6 +21,8 @@ public interface PartyConnector {
 
     List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId);
 
+    List<PartyProduct> getInstitutionUserProductsV2(String institutionId, String userId);
+
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
 
     ResponseEntity<Void> verifyOnboarding(String externalInstitutionId, String productId);

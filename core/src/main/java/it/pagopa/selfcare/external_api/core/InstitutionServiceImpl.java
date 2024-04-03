@@ -92,6 +92,28 @@ class InstitutionServiceImpl implements InstitutionService {
         return products;
     }
 
+    @Override
+    public List<Product> getInstitutionUserProductsV2(String institutionId) {
+        log.trace("getInstitutionUserProducts start");
+        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Assert.state(authentication != null, "Authentication is required");
+        Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
+        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+        List<Product> products = productsConnector.getProducts();
+        if (!products.isEmpty()) {
+            Map<String, PartyProduct> institutionUserProducts = partyConnector.getInstitutionUserProductsV2(institutionId, user.getId()).stream()
+                    .collect(Collectors.toMap(PartyProduct::getId, Function.identity(), (partyProduct, partyProduct2) -> partyProduct));
+            products = products.stream()
+                    .filter(product -> institutionUserProducts.containsKey(product.getId()))
+                    .collect(Collectors.toList());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts end");
+        return products;
+    }
+
 
     @Override
     public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
