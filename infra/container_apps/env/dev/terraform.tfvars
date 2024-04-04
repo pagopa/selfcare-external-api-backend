@@ -90,6 +90,10 @@ app_settings = [
   {
     name  = "STORAGE_CONTAINER"
     value = "selc-d-contracts-blob"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-d-user-ms-ca.livelydesert-633675bb.westeurope.azurecontainerapps.io"
   }
 ]
 
