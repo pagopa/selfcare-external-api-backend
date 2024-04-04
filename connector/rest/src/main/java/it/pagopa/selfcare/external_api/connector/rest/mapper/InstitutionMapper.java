@@ -8,7 +8,7 @@ import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
 import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -48,7 +48,7 @@ public interface InstitutionMapper {
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
     @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "convertInstitutionType")
-    OnboardedInstitutionResponse toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
+    OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
 
     @Mapping(target = "id", source = "productId")
     @Mapping(target = "status", expression = "java(onboardedProductResponse.getStatus().name())")

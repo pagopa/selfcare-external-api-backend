@@ -14,7 +14,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInsti
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
@@ -127,16 +127,16 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     }
 
     @Override
-    public List<OnboardedInstitutionResponse> getInstitutionDetails(String institutionId) {
+    public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
         ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
         if (Objects.nonNull(responseEntity) && Objects.nonNull(responseEntity.getBody())){
             InstitutionResponse response = responseEntity.getBody();
             return response.getOnboarding().stream().map(onboardedProductResponse -> {
-                OnboardedInstitutionResponse onboardedInstitutionResponse = institutionMapper.toOnboardedInstitution(response);
+                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(response);
                 ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-                onboardedInstitutionResponse.setProductInfo(productInfo);
-                onboardedInstitutionResponse.setState(productInfo.getStatus());
-                return onboardedInstitutionResponse;
+                onboardedInstitutionInfo.setProductInfo(productInfo);
+                onboardedInstitutionInfo.setState(productInfo.getStatus());
+                return onboardedInstitutionInfo;
             }).toList();
         }
         return Collections.emptyList();

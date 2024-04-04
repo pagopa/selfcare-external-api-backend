@@ -4,9 +4,11 @@ import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,15 @@ public class UserServiceImpl implements UserService {
     private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
     private final UserMsConnector userMsConnector;
+    private final OnboardingInstitutionMapper onboardingInstitutionMapper;
 
     @Autowired
     public UserServiceImpl(UserRegistryConnector userRegistryConnector,
-                           MsCoreConnector msCoreConnector, UserMsConnector userMsConnector) {
+                           MsCoreConnector msCoreConnector, UserMsConnector userMsConnector, OnboardingInstitutionMapper onboardingInstitutionMapper) {
         this.userRegistryConnector = userRegistryConnector;
         this.msCoreConnector = msCoreConnector;
         this.userMsConnector = userMsConnector;
+        this.onboardingInstitutionMapper = onboardingInstitutionMapper;
     }
 
     @Override
@@ -67,10 +71,25 @@ public class UserServiceImpl implements UserService {
     public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
         log.trace("geUserInfo start");
         final User user = userMsConnector.searchUserByExternalId(fiscalCode);
-        List<OnboardedInstitutionResponse> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        List<OnboardedInstitutionResponse> onboardedInstitutionResponses =
+                onboardedInstitutions.stream()
+                        .filter(onboardedInstitutionInfo -> {
+                            if(userStatuses != null) {
+                                List<String> userStatusesString = userStatuses.stream().map(RelationshipState::toString).toList();
+                                return userStatusesString.isEmpty() || userStatusesString.contains(onboardedInstitutionInfo.getState());
+                            } else {
+                                return true;
+                            }
+                        })
+                        .map(onboardedInstitution -> {
+                    OnboardedInstitutionResponse onboardedInstitutionResponse = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
+                    onboardedInstitutionResponse.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
+                    return  onboardedInstitutionResponse;
+        }).toList();
         UserInfoWrapper infoWrapper = new UserInfoWrapper();
         infoWrapper.setUser(user);
-        infoWrapper.setOnboardedInstitutions(onboardedInstitutions);
+        infoWrapper.setOnboardedInstitutions(onboardedInstitutionResponses);
         return infoWrapper;
     }
 
@@ -106,26 +125,27 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    public List<OnboardedInstitutionResponse> getOnboardedInstitutionsDetails(String userId){
+    public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId){
         List<UserInstitutions> institutions = userMsConnector.getUsersInstitutions(userId);
-        List<OnboardedInstitutionResponse> response = new ArrayList<>();
+        List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
         institutions.stream().forEach(institution -> {
-            List<OnboardedInstitutionResponse> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
+            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
             onboardedInstitutionResponse.stream()
-                    .filter(el -> el.getId().equals(institution.getInstitutionId()))
-                    .map(el -> {
-                        el.getProductInfo().setRole(institution.getProducts().stream()
-                                .filter(product -> product.getProductId().equals(el.getProductInfo().getId()) &&
-                                        product.getStatus().equals(el.getProductInfo().getStatus()))
+                    .filter(onboardedInstitution -> onboardedInstitution.getId().equals(institution.getInstitutionId()))
+                    .map(onboardedInstitution -> {
+                        onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
+                                .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
+                                        product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
                                 .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
-                        return  el;
+                        onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
+                        return  onboardedInstitution;
                     })
                     .collect(Collectors.toList());
-            response.addAll(onboardedInstitutionResponse);
+            onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse);
         });
 
-        return response;
+        return onboardedInstitutionsInfo;
     }
 
 }
