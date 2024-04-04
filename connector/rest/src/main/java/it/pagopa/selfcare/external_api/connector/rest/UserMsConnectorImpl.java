@@ -1,10 +1,10 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.connector.rest.client.MsUserControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInstitutions;
+import it.pagopa.selfcare.user.generated.openapi.v1.api.UserControllerApi;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ import java.util.Objects;
 @Slf4j
 public class UserMsConnectorImpl implements UserMsConnector {
 
-    private final MsUserControllerApi userControllerApi;
+    private final UserControllerApi userControllerApi;
 
     private final UserMapper userMapper;
 
-    public UserMsConnectorImpl(MsUserControllerApi userControllerApi,
+    public UserMsConnectorImpl(UserControllerApi userControllerApi,
                                UserMapper userMapper) {
         this.userControllerApi = userControllerApi;
         this.userMapper = userMapper;
