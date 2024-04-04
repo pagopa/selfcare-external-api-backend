@@ -41,7 +41,6 @@ public class UserV2Controller {
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
                                         @RequestBody @Valid SearchUserDto searchUserDto) {
         log.trace("getUserInfo start");
-        log.debug("getUserInfo searchUserDto = {}", searchUserDto);
         UserInfoWrapper userInfo = userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses());
         UserInfoResource userInfoResource = userInfoResourceMapper.toResource(userInfo);
         log.debug("getUserInfo result = {}", userInfoResource);
