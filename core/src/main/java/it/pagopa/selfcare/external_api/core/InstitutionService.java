@@ -19,6 +19,8 @@ public interface InstitutionService {
 
     List<Product> getInstitutionUserProducts(String institutionId);
 
+    List<Product> getInstitutionUserProductsV2(String institutionId);
+
     Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
