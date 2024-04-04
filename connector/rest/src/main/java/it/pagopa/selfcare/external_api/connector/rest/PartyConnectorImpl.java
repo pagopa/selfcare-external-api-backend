@@ -199,7 +199,6 @@ public class PartyConnectorImpl implements PartyConnector {
     @Override
     public List<String> getInstitutionUserProductsV2(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}", institutionId, userId);
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         Set<String> products = new HashSet<>();

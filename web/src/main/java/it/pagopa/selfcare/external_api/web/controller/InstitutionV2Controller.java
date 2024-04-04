@@ -65,7 +65,6 @@ public class InstitutionV2Controller {
     public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                             @PathVariable("institutionId") String institutionId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId)
                 .stream()
                 .map(ProductsMapper::toResource)

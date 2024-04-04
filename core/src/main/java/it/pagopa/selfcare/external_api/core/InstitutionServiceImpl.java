@@ -91,7 +91,6 @@ class InstitutionServiceImpl implements InstitutionService {
     @Override
     public List<Product> getInstitutionUserProductsV2(String institutionId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.state(authentication != null, "Authentication is required");

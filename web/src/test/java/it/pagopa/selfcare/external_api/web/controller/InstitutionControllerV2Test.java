@@ -31,7 +31,6 @@ import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -81,6 +80,9 @@ public class InstitutionControllerV2Test {
         verifyNoMoreInteractions(contractService);
     }
 
+    /**
+     * Method under test: {@link InstitutionV2Controller#getInstitutionUserProducts(String)}
+     */
     @Test
     void getInstitutionUserProducts() throws Exception {
         //given
