@@ -3,7 +3,7 @@ package it.pagopa.selfcare.external_api.connector.rest;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInstitutions;
+import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.user.generated.openapi.v1.api.UserControllerApi;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     }
 
     @Override
-    public List<UserInstitutions> getUsersInstitutions(String userId) {
+    public List<UserInstitution> getUsersInstitutions(String userId) {
         return Objects.requireNonNull(userControllerApi._usersGet(
                 null, null, null, null,
                 null, null, null, userId).getBody())

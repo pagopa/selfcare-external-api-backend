@@ -6,7 +6,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Data
-public class UserInstitutions {
+public class UserInstitution {
     private String institutionId;
 
     private String userMailUuid;

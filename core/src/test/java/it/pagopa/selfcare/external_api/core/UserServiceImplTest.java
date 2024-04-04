@@ -2,11 +2,14 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
+import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +39,12 @@ class UserServiceImplTest {
 
     @Mock
     private UserRegistryConnector userRegistryConnector;
+
+    @Mock
+    private UserMsConnector userMsConnector;
+
+    @Mock
+    private OnboardingInstitutionMapper onboardingInstitutionMapper;
 
     @Mock
     private MsCoreConnector msCoreConnector;
@@ -179,5 +188,36 @@ class UserServiceImplTest {
         assertNull(result.getProductDetails());
         verify(msCoreConnector, times(1)).getInstitutionProductsInfo(userId);
 
+    }
+
+    @Test
+    void getUserInfoV2() {
+        //given
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId("id");
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId("prod-io");
+        onboardedProductResponse.setStatus("ACTIVE");
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
+        onboardedInstitutionInfo.setId("id");
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setId("prod-io");
+        onboardedInstitutionInfo.setProductInfo(productInfo);
+        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
+        onboardedInstitutionResponse.setId("id");
+        // when
+        when(userMsConnector.searchUserByExternalId(anyString()))
+                .thenReturn(dummyUser);
+        when(userMsConnector.getUsersInstitutions(anyString())).thenReturn(List.of(userInstitution));
+        when(msCoreConnector.getInstitutionDetails(anyString())).thenReturn(List.of(onboardedInstitutionInfo));
+
+        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
+        // then
+        assertNotNull(userWrapper);
+        assertNotNull(userWrapper.getUser());
+        assertNotNull(userWrapper.getOnboardedInstitutions());
+        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
+        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
     }
 }

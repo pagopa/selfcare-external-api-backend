@@ -125,8 +125,8 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId){
-        List<UserInstitutions> institutions = userMsConnector.getUsersInstitutions(userId);
+    private List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId){
+        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId);
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
         institutions.stream().forEach(institution -> {
