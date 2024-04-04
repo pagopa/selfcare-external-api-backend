@@ -37,15 +37,11 @@ class InstitutionServiceImpl implements InstitutionService {
 
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
     private static final EnumSet<User.Fields> USER_FIELD_LIST_FISCAL_CODE = EnumSet.of(name, familyName, workContacts, fiscalCode);
-
     static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
-    protected static final String EXTERNAL_INSTITUTION_ID_IS_REQUIRED = "An external institution id is required";
     private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
-
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
-
     private final Set<String> serviceType;
 
     @Autowired
@@ -85,6 +81,26 @@ class InstitutionServiceImpl implements InstitutionService {
                     .collect(Collectors.toMap(PartyProduct::getId, Function.identity(), (partyProduct, partyProduct2) -> partyProduct));
             products = products.stream()
                     .filter(product -> institutionUserProducts.containsKey(product.getId()))
+                    .collect(Collectors.toList());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts end");
+        return products;
+    }
+
+    @Override
+    public List<Product> getInstitutionUserProductsV2(String institutionId) {
+        log.trace("getInstitutionUserProducts start");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Assert.state(authentication != null, "Authentication is required");
+        Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
+        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+        List<Product> products = productsConnector.getProducts();
+        if (!products.isEmpty()) {
+            List<String> productIds = partyConnector.getInstitutionUserProductsV2(institutionId, user.getId());
+            products = products.stream()
+                    .filter(product -> productIds.contains(product.getId()))
                     .collect(Collectors.toList());
         }
         log.debug("getInstitutionUserProducts result = {}", products);
@@ -145,7 +161,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
         log.debug("addInstitution request = {}", request);
-        String institutionInternalId = null;
+        String institutionInternalId;
         try {
             institutionInternalId = partyConnector.getInstitutionByExternalId(request.getExternalId()).getId();
         } catch (ResourceNotFoundException e) {

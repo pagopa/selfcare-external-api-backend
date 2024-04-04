@@ -264,6 +264,44 @@ class InstitutionServiceImplTest {
         verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
     }
 
+    @Test
+    void getInstitutionUserProducts_V2() {
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final SelfCareUser selfCareUser = SelfCareUser.builder(userId)
+                .email("test@example.com")
+                .name("name")
+                .surname("surname")
+                .build();
+        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
+        final Product product1 = mockInstance(new Product(), 1);
+        final Product product2 = mockInstance(new Product(), 2);
+        final Product product3 = mockInstance(new Product(), 3);
+        final Product product4 = mockInstance(new Product(), 4);
+        product1.setId("prod-io");
+        product2.setId("prod-interop");
+        product3.setId("id3");
+        product4.setId("id4");
+        final List<String> productIds = List.of("prod-io", "prod-interop");
+        final List<Product> products = List.of(product1, product2, product3, product4);
+        when(partyConnectorMock.getInstitutionUserProductsV2(any(), any()))
+                .thenReturn(productIds);
+        when(productsConnectorMock.getProducts())
+                .thenReturn(products);
+        //when
+        List<Product> result = institutionService.getInstitutionUserProductsV2(institutionId);
+        //then
+        assertEquals(2, result.size());
+        verify(partyConnectorMock, times(1))
+                .getInstitutionUserProductsV2(institutionId, userId);
+        verify(productsConnectorMock, times(1))
+                .getProducts();
+        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+    }
+
+
+
 
     @Test
     void getInstitutionProductUsers_nullInstitutionId() {

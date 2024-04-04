@@ -119,7 +119,7 @@
                 <version>6.3.0</version>
                 <executions>
                     <execution>
-                        <id>selfcare-ms-user</id>
+                        <id>user-ms</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -146,7 +146,6 @@
                                 <openApiNullable>false</openApiNullable>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
-                                <java8>true</java8>
                             </configOptions>
                         </configuration>
                     </execution>
