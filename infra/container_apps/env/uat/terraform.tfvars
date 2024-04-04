@@ -65,7 +65,7 @@ app_settings = [
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc.internal.uat.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-u-product-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
