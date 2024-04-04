@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
                         el.getProductInfo().setRole(institution.getProducts().stream()
                                 .filter(product -> product.getProductId().equals(el.getProductInfo().getId()) &&
                                         product.getStatus().equals(el.getProductInfo().getStatus()))
-                                .map(OnboardedProductResponse::getProductRole).toString());
+                                .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
                         return  el;
                     })
                     .collect(Collectors.toList());
