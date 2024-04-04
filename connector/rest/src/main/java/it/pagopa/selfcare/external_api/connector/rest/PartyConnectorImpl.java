@@ -6,8 +6,8 @@ import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRest
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.*;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
@@ -39,11 +39,9 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
-
     protected static final String ONBOARDING_DATA_IS_REQUIRED = "An OnboardingData is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
     protected static final String REQUIRED_INSTITUTION_TAX_CODE_MESSAGE = "An Institution tax code is required";
-
     private final PartyProcessRestClient partyProcessRestClient;
     private final PartyManagementRestClient partyManagementRestClient;
     private final InstitutionMapper institutionMapper;
@@ -161,7 +159,6 @@ public class PartyConnectorImpl implements PartyConnector {
 
     }
 
-
     @Override
     public Collection<InstitutionInfo> getOnBoardedInstitutions(String productId) {
         log.trace("getOnBoardedInstitutions start");
@@ -174,6 +171,17 @@ public class PartyConnectorImpl implements PartyConnector {
         return result;
     }
 
+    @Override
+    public List<InstitutionInfo> getOnBoardedInstitutionsV2(String productId) {
+        log.trace("getOnBoardedInstitutions start");
+        log.debug("getOnboardedInstitutions productId = {}", productId);
+        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
+        OnBoardingInfo onBoardingInfo = partyProcessRestClient.getOnBoardingInfo(null, EnumSet.of(ACTIVE));
+        Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo, productId);
+        log.debug("getOnBoardedInstitutions result = {}", result);
+        log.trace("getOnBoardedInstitutions end");
+        return List.of();
+    }
 
     @Override
     public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {

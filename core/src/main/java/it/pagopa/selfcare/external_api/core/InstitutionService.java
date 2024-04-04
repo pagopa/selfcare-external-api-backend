@@ -17,6 +17,8 @@ public interface InstitutionService {
 
     Collection<InstitutionInfo> getInstitutions(String productId);
 
+    List<InstitutionInfo> getInstitutionsV2(String productId);
+
     List<Product> getInstitutionUserProducts(String institutionId);
 
     Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid);

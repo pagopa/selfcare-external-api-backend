@@ -1,10 +1,13 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
 import org.junit.jupiter.api.Test;
@@ -18,17 +21,25 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Collections;
+import java.util.List;
+
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
+import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {InstitutionV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration(classes = {InstitutionV2Controller.class, WebTestConfig.class, InstitutionResourceMapperImpl.class})
 public class InstitutionControllerV2Test {
-
 
     private static final String BASE_URL = "/v2/institutions";
 
@@ -47,6 +58,44 @@ public class InstitutionControllerV2Test {
     @Autowired
     protected MockMvc mvc;
 
+    @Test
+    void getInstitutions() throws Exception {
+        //given
+        final String productId = "productId";
+        InstitutionInfo institutionInfo = mockInstance(new InstitutionInfo(), "setId");
+        institutionInfo.setId(randomUUID().toString());
+        institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
+        institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
+        institutionInfo.getSupportContact().setSupportEmail("spportEmail@example.com");
+        when(institutionServiceMock.getInstitutionsV2(anyString()))
+                .thenReturn(Collections.singletonList(institutionInfo));
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "")
+                        .param("productId", productId)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+        List<InstitutionResource> response = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(institutionInfo.getId(), response.get(0).getId().toString());
+        assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
+        assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
+        assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
+        reflectionEqualsByName(institutionInfo.getSupportContact(), response.get(0).getAssistanceContacts());
+        reflectionEqualsByName(institutionInfo.getBusinessData(), response.get(0).getCompanyInformations());
+        reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
+        reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
+        verify(institutionServiceMock, times(1))
+                .getInstitutionsV2(productId);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
 
     @MockBean
     private ContractService contractService;

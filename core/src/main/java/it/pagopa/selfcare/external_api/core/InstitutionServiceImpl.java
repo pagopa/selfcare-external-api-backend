@@ -37,15 +37,11 @@ class InstitutionServiceImpl implements InstitutionService {
 
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
     private static final EnumSet<User.Fields> USER_FIELD_LIST_FISCAL_CODE = EnumSet.of(name, familyName, workContacts, fiscalCode);
-
     static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
-    protected static final String EXTERNAL_INSTITUTION_ID_IS_REQUIRED = "An external institution id is required";
     private final PartyConnector partyConnector;
     private final ProductsConnector productsConnector;
-
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
-
     private final Set<String> serviceType;
 
     @Autowired
@@ -65,6 +61,16 @@ class InstitutionServiceImpl implements InstitutionService {
         log.trace("getInstitutions start");
         log.debug("getInstitutions productId = {}", productId);
         Collection<InstitutionInfo> result = partyConnector.getOnBoardedInstitutions(productId);
+        log.debug("getInstitutions result = {}", result);
+        log.trace("getInstitutions end");
+        return result;
+    }
+
+    @Override
+    public List<InstitutionInfo> getInstitutionsV2(String productId) {
+        log.trace("getInstitutions start");
+        log.debug("getInstitutions productId = {}", productId);
+        List<InstitutionInfo> result = partyConnector.getOnBoardedInstitutionsV2(productId);
         log.debug("getInstitutions result = {}", result);
         log.trace("getInstitutions end");
         return result;

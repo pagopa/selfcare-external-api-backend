@@ -19,6 +19,8 @@ public interface PartyConnector {
 
     Collection<InstitutionInfo> getOnBoardedInstitutions(String productId);
 
+    List<InstitutionInfo> getOnBoardedInstitutionsV2(String productId);
+
     List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId);
 
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
