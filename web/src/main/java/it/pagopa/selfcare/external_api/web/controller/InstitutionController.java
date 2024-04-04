@@ -151,26 +151,4 @@ public class InstitutionController {
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;
     }
-
-    @Deprecated(forRemoval = true)
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
-    @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
-    public ResponseEntity<byte[]> getContract(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                              @PathVariable("institutionId")String institutionId,
-                                              @ApiParam("${swagger.external_api.products.model.id}")
-                                              @RequestParam(value = "productId") String productId){
-        log.trace("getContract start");
-        log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
-        ResourceResponse contract = contractService.getContract(institutionId, productId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM_VALUE);
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + contract.getFileName());
-        log.info("contentType: {}", headers.getContentType());
-        log.debug("getContract result = {}", contract);
-        log.trace("getContract end");
-        return ResponseEntity.ok().headers(headers).body(contract.getData());
-    }
-
 }
