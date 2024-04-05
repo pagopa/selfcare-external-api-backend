@@ -72,21 +72,21 @@ public class UserServiceImpl implements UserService {
         log.trace("geUserInfo start");
         final User user = userMsConnector.searchUserByExternalId(fiscalCode);
         List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        List<String> userStatusesString = userStatuses == null ? Collections.emptyList()
+                : userStatuses.stream().map(RelationshipState::toString).toList();
+
         List<OnboardedInstitutionResponse> onboardedInstitutionResponses =
                 onboardedInstitutions.stream()
-                        .filter(onboardedInstitutionInfo -> {
-                            if(userStatuses != null) {
-                                List<String> userStatusesString = userStatuses.stream().map(RelationshipState::toString).toList();
-                                return userStatusesString.isEmpty() || userStatusesString.contains(onboardedInstitutionInfo.getState());
-                            } else {
-                                return true;
-                            }
-                        })
+                        .filter(institution -> userStatusesString.isEmpty() || userStatusesString.contains(institution.getState()))
                         .map(onboardedInstitution -> {
-                    OnboardedInstitutionResponse onboardedInstitutionResponse = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
-                    onboardedInstitutionResponse.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
-                    return  onboardedInstitutionResponse;
-        }).toList();
+                            OnboardedInstitutionResponse response = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
+                            if(user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null){
+                                response.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
+                            }
+                            return response;
+                        })
+                        .toList();
+
         UserInfoWrapper infoWrapper = new UserInfoWrapper();
         infoWrapper.setUser(user);
         infoWrapper.setOnboardedInstitutions(onboardedInstitutionResponses);

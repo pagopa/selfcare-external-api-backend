@@ -129,19 +129,15 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
         ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
-        if (Objects.nonNull(responseEntity)) {
-            InstitutionResponse response = responseEntity.getBody();
-            if (Objects.nonNull(response) && Objects.nonNull(response.getOnboarding())) {
-                return response.getOnboarding().stream().map(onboardedProductResponse -> {
-                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(response);
-                    ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-                    onboardedInstitutionInfo.setProductInfo(productInfo);
-                    onboardedInstitutionInfo.setState(productInfo.getStatus());
-                    return onboardedInstitutionInfo;
-                }).toList();
-            }
+        if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+            OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+            ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+            onboardedInstitutionInfo.setProductInfo(productInfo);
+            onboardedInstitutionInfo.setState(productInfo.getStatus());
+            return onboardedInstitutionInfo;
+        }).toList();
     }
-
 }

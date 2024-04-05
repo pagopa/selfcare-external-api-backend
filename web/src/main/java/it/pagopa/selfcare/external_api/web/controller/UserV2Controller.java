@@ -11,7 +11,6 @@ import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,6 @@ public class UserV2Controller {
     private final UserService userService;
     private final UserInfoResourceMapper userInfoResourceMapper;
 
-    @Autowired
     public UserV2Controller(UserService userService, UserInfoResourceMapper userInfoResourceMapper) {
         this.userService = userService;
         this.userInfoResourceMapper = userInfoResourceMapper;
