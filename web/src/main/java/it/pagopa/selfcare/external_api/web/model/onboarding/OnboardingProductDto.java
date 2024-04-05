@@ -19,8 +19,7 @@ public class OnboardingProductDto {
     @Valid
     private List<UserDto> users;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.billingData}", required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.billingData}")
     @Valid
     private BillingDataDto billingData;
 
@@ -58,8 +57,7 @@ public class OnboardingProductDto {
     @NotNull
     private String productId;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}", required = true)
-    @NotNull
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}")
     private String taxCode;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
