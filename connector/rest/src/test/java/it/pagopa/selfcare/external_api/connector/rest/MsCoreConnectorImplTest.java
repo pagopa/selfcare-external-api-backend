@@ -1,9 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
-import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedUsersResponse;
-import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
-import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingsResponse;
-import it.pagopa.selfcare.core.generated.openapi.v1.dto.UserProductsResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.*;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreUserApiClient;
@@ -14,6 +11,7 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.UserProductMapperIm
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
@@ -191,5 +189,26 @@ class MsCoreConnectorImplTest {
         verify(userApiClient, times(1))._getOnboardedUsersUsingGET(List.of(userId));
         verifyNoMoreInteractions(userApiClient);
 
+    }
+
+    @Test
+    void getInstitutionDetails(){
+        //given
+        InstitutionResponse institutionResponse = new InstitutionResponse();
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        institutionResponse.setOnboarding(List.of(onboardedProductResponse));
+        institutionResponse.setInstitutionType(InstitutionResponse.InstitutionTypeEnum.PA);
+        final String userId = "userId";
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(anyString()))
+                .thenReturn(ResponseEntity.of(Optional.of(institutionResponse)));
+        //when
+        TokenUser tokenUser = new TokenUser();
+        tokenUser.setUserId(userId);
+        List<OnboardedInstitutionInfo> result = msCoreConnector.getInstitutionDetails("id");
+        //then
+        assertNotNull(result);
+        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET("id");
+        verifyNoMoreInteractions(institutionApiClient);
     }
 }

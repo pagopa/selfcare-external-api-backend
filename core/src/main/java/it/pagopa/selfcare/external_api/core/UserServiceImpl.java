@@ -1,17 +1,21 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
+import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -23,12 +27,16 @@ public class UserServiceImpl implements UserService {
     private static final List<RelationshipState> DEFAULT_USER_STATUSES =  new ArrayList<>(Arrays.asList(RelationshipState.values()));
     private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
+    private final UserMsConnector userMsConnector;
+    private final OnboardingInstitutionMapper onboardingInstitutionMapper;
 
     @Autowired
     public UserServiceImpl(UserRegistryConnector userRegistryConnector,
-                           MsCoreConnector msCoreConnector) {
+                           MsCoreConnector msCoreConnector, UserMsConnector userMsConnector, OnboardingInstitutionMapper onboardingInstitutionMapper) {
         this.userRegistryConnector = userRegistryConnector;
         this.msCoreConnector = msCoreConnector;
+        this.userMsConnector = userMsConnector;
+        this.onboardingInstitutionMapper = onboardingInstitutionMapper;
     }
 
     @Override
@@ -57,6 +65,32 @@ public class UserServiceImpl implements UserService {
         log.debug("geUserInfo result = {}", result);
         log.trace("geUserInfo end");
         return result;
+    }
+
+    @Override
+    public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
+        log.trace("geUserInfo start");
+        final User user = userMsConnector.searchUserByExternalId(fiscalCode);
+        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        List<String> userStatusesString = userStatuses == null ? Collections.emptyList()
+                : userStatuses.stream().map(RelationshipState::toString).toList();
+
+        List<OnboardedInstitutionResponse> onboardedInstitutionResponses =
+                onboardedInstitutions.stream()
+                        .filter(institution -> userStatusesString.isEmpty() || userStatusesString.contains(institution.getState()))
+                        .map(onboardedInstitution -> {
+                            OnboardedInstitutionResponse response = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
+                            if(user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null){
+                                response.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
+                            }
+                            return response;
+                        })
+                        .toList();
+
+        UserInfoWrapper infoWrapper = new UserInfoWrapper();
+        infoWrapper.setUser(user);
+        infoWrapper.setOnboardedInstitutions(onboardedInstitutionResponses);
+        return infoWrapper;
     }
 
     @Override
@@ -89,6 +123,29 @@ public class UserServiceImpl implements UserService {
         log.debug("getUserOnboardedProductDetails result = {}", result);
         log.trace("getUserOnboardedProductDetails end");
         return result;
+    }
+
+    private List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId){
+        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId);
+        List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
+
+        institutions.stream().forEach(institution -> {
+            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
+            onboardedInstitutionResponse.stream()
+                    .filter(onboardedInstitution -> onboardedInstitution.getId().equals(institution.getInstitutionId()))
+                    .map(onboardedInstitution -> {
+                        onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
+                                .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
+                                        product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
+                                .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
+                        onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
+                        return  onboardedInstitution;
+                    })
+                    .collect(Collectors.toList());
+            onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse);
+        });
+
+        return onboardedInstitutionsInfo;
     }
 
 }
