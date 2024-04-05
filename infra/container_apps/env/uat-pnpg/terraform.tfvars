@@ -65,7 +65,7 @@ app_settings = [
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://uat01.pnpg.internal.uat.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-u-pnpg-product-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -74,6 +74,10 @@ app_settings = [
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
     value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-u-pnpg-user-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   }
 ]
 

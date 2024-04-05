@@ -28,4 +28,4 @@ configEnvSpecific:
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
   MS_ONBOARDING_URL: "https://selc-d-pnpg-onboarding-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
-  SELFCARE_USER_URL: "https://selc-d-pnpg-user-ms-ca.livelydesert-633675bb.westeurope.azurecontainerapps.io"
+  SELFCARE_USER_URL: "https://selc-d-pnpg-user-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
