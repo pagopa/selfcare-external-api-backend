@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.connector.rest;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -11,6 +12,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
@@ -23,11 +27,14 @@ import it.pagopa.selfcare.external_api.model.product.ProductInfo;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 
 import javax.validation.ValidationException;
@@ -70,6 +77,9 @@ class PartyConnectorImplTest {
 
     @Mock
     private MsCoreRestClient msCoreRestClient;
+
+    @Mock
+    private UserApiRestClient userApiRestClientMock;
 
     @Captor
     ArgumentCaptor<OnboardingImportInstitutionRequest> onboardingImportRequestCaptor;
@@ -209,6 +219,20 @@ class PartyConnectorImplTest {
     }
 
     @Test
+    void getInstitutionUserProductsV2_nullInstitutionId() {
+        //given
+        final String institutionId = null;
+        final String userId = "userId";
+        //when
+        Executable executable = () -> partyConnector.getInstitutionUserProductsV2(institutionId, userId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
+        verifyNoInteractions(partyProcessRestClientMock);
+        verifyNoInteractions(partyManagementRestClientMock);
+    }
+
+    @Test
     void getInstitutionUserProducts_nullUserId() {
         //given
         String institutionId = "institutionId";
@@ -220,6 +244,20 @@ class PartyConnectorImplTest {
         assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
         verifyNoInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
+    }
+
+    @Test
+    void getInstitutionUserProductsV2_nullUserId() {
+        //given
+        final String institutionId = "institutionId";
+        final String userId = null;
+        //when
+        Executable executable = () -> partyConnector.getInstitutionUserProductsV2(institutionId, userId);
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
+        verifyNoInteractions(partyProcessRestClientMock);
+        verifyNoInteractions(partyManagementRestClientMock);
     }
 
     @Test
@@ -241,6 +279,27 @@ class PartyConnectorImplTest {
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
+    }
+
+    @Test
+    void getInstitutionUserProductsV2_nullResponse() {
+        //given
+        final String institutionId = "institutionId";
+        final String userId = "userId";
+        //when
+        List<String> products = partyConnector.getInstitutionUserProductsV2(institutionId, userId);
+        //then
+        assertNotNull(products);
+        assertTrue(products.isEmpty());
+        verify(userApiRestClientMock, times(1))
+                ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
+                        eq(userId),
+                        isNull(),
+                        isNull(),
+                        isNull(),
+                        isNull(),
+                        eq(List.of(ACTIVE.name())));
+        verifyNoMoreInteractions(userApiRestClientMock);
     }
 
     @Test
@@ -270,6 +329,32 @@ class PartyConnectorImplTest {
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
         verifyNoInteractions(msCoreRestClient);
+    }
+
+    @Test
+    void getInstitutionUserProductsV2() throws IOException {
+        //given
+        final String institutionId = "institutionId";
+        final String userId = "userId";
+
+        File stubs = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/user_institutions_to_product.json");
+        List<UserDataResponse> response = mapper.readValue(stubs, new TypeReference<List<UserDataResponse>>(){});
+        when(userApiRestClientMock._usersUserIdInstitutionInstitutionIdGet(any(), any(), any(), any(), any(), any(), anyList()))
+                .thenReturn(ResponseEntity.of(Optional.of(response)));
+        //when
+        List<String> products = partyConnector.getInstitutionUserProductsV2(institutionId, userId);
+        //then
+        assertNotNull(products);
+        assertEquals(1, products.size());
+        verify(userApiRestClientMock, times(1))
+                ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
+                        eq(userId),
+                        isNull(),
+                        isNull(),
+                        isNull(),
+                        isNull(),
+                        eq(List.of(ACTIVE.name())));
+        verifyNoMoreInteractions(userApiRestClientMock);
     }
 
 

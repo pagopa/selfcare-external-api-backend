@@ -10,13 +10,25 @@ tags = {
 }
 
 container_app = {
-  min_replicas = 1
+  min_replicas = 0
   max_replicas = 1
-  scale_rules  = []
+  scale_rules = [
+    {
+      custom = {
+        metadata = {
+          "desiredReplicas" = "1"
+          "start"           = "0 8 * * MON-FRI"
+          "end"             = "0 19 * * MON-FRI"
+          "timezone"        = "Europe/Rome"
+        }
+        type = "cron"
+      }
+      name = "cron-scale-rule"
+    }
+  ]
   cpu          = 0.5
   memory       = "1Gi"
 }
-
 
 app_settings = [
   
@@ -50,23 +62,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-d-pnpg-onboarding-ms-ca.whiteglacier-211c4885.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-onboarding-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.whiteglacier-211c4885.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-d-pnpg-party-reg-proxy-ca.whiteglacier-211c4885.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-party-reg-proxy-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.whiteglacier-211c4885.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://dev01.pnpg.internal.dev.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-d-pnpg-product-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -74,7 +86,11 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.whiteglacier-211c4885.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-d-pnpg-user-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   }
 ]
 

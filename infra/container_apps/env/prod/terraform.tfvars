@@ -62,23 +62,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-p-onboarding-ms-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-onboarding-ms-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-p-party-reg-proxy-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-party-reg-proxy-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc.internal.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-p-product-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -86,13 +86,21 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-p-ms-core-ca.bluedune-cc0f8752.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "STORAGE_CONTAINER"
+    value = "selc-p-contracts-blob"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-p-user-ms-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
   }
 ]
 
 secrets_names = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"           = "appinsights-connection-string"
-    "BLOB_STORAGE_CONN_STRING"                        = "web-storage-connection-string"
+    "BLOB_STORAGE_CONN_STRING"                        = "blob-storage-contract-connection-string"
     "USERVICE_USER_REGISTRY_API_KEY"                  = "user-registry-api-key"
     "JWT_TOKEN_PUBLIC_KEY"                            = "jwt-public-key"
 }

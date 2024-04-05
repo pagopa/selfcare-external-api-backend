@@ -49,23 +49,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-u-onboarding-ms-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-onboarding-ms-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-u-ms-core-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-ms-core-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-u-party-reg-proxy-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-party-reg-proxy-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-u-ms-core-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-ms-core-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc.internal.uat.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-u-product-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -73,13 +73,21 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-u-ms-core-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-ms-core-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "STORAGE_CONTAINER"
+    value = "selc-u-contracts-blob"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-u-user-ms-ca.agreeablesky-f71e6306.westeurope.azurecontainerapps.io"
   }
 ]
 
 secrets_names = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"           = "appinsights-connection-string"
-    "BLOB_STORAGE_CONN_STRING"                        = "web-storage-connection-string"
+    "BLOB_STORAGE_CONN_STRING"                        = "blob-storage-contract-connection-string"
     "USERVICE_USER_REGISTRY_API_KEY"                  = "user-registry-api-key"
     "JWT_TOKEN_PUBLIC_KEY"                            = "jwt-public-key"
 }

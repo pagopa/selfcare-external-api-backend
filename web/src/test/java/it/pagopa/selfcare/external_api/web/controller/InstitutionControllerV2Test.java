@@ -1,12 +1,15 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
+import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -18,17 +21,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Collections;
+import java.util.List;
+
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {InstitutionV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration(classes = {InstitutionV2Controller.class, WebTestConfig.class, InstitutionResourceMapperImpl.class})
 public class InstitutionControllerV2Test {
-
 
     private static final String BASE_URL = "/v2/institutions";
 
@@ -47,9 +55,9 @@ public class InstitutionControllerV2Test {
     @Autowired
     protected MockMvc mvc;
 
-
     @MockBean
     private ContractService contractService;
+
     @Test
     void getContract() throws Exception{
         //given
@@ -70,6 +78,39 @@ public class InstitutionControllerV2Test {
         //then
         verify(contractService, times(1)).getContractV2(institutionId, productId);
         verifyNoMoreInteractions(contractService);
+    }
 
+    /**
+     * Method under test: {@link InstitutionV2Controller#getInstitutionUserProducts(String)}
+     */
+    @Test
+    void getInstitutionUserProducts() throws Exception {
+        //given
+        final String institutionId = "institutionId";
+        Product product = mockInstance(new Product());
+        when(institutionServiceMock.getInstitutionUserProductsV2(anyString()))
+                .thenReturn(Collections.singletonList(product));
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/" + institutionId + "/products")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+        List<ProductResource> response = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(product.getId(), response.get(0).getId());
+        assertEquals(product.getTitle(), response.get(0).getTitle());
+        assertEquals(product.getDescription(), response.get(0).getDescription());
+        assertEquals(product.getUrlBO(), response.get(0).getUrlBO());
+        assertEquals(product.getUrlPublic(), response.get(0).getUrlPublic());
+        verify(institutionServiceMock, times(1))
+                .getInstitutionUserProductsV2(institutionId);
+        verifyNoMoreInteractions(institutionServiceMock);
     }
 }
