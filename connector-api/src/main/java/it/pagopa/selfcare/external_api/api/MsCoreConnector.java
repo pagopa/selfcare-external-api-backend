@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.api;
 
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.token.Token;
@@ -18,5 +19,6 @@ public interface MsCoreConnector {
     OnboardingInfoResponse getInstitutionProductsInfo(String userId, List<RelationshipState> userStatuses);
     InstitutionOnboarding getInstitutionOnboardings(String institutionId, String productId);
     List<UserProducts> getOnboarderUsers(List<TokenUser> users);
+    List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId);
 
 }

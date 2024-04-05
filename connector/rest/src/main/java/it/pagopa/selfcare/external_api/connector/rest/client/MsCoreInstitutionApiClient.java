@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import it.pagopa.selfcare.core.generated.openapi.v1.api.InstitutionApi;
-import it.pagopa.selfcare.core.generated.openapi.v1.api.OnboardingApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

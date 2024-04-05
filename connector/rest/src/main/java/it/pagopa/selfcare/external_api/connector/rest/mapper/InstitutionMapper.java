@@ -1,14 +1,23 @@
 package it.pagopa.selfcare.external_api.connector.rest.mapper;
 
+import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
 import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
 import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface InstitutionMapper {
@@ -38,4 +47,24 @@ public interface InstitutionMapper {
 
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
+    @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "convertInstitutionType")
+    OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
+
+    @Mapping(target = "id", source = "productId")
+    @Mapping(target = "status", expression = "java(onboardedProductResponse.getStatus().name())")
+    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "toOffsetDateTime")
+    ProductInfo toProductInfo(OnboardedProductResponse onboardedProductResponse);
+
+    @Named("convertInstitutionType")
+    static InstitutionType convertInstitutionType(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse.InstitutionTypeEnum institutionTypeEnum) {
+        String institutionType = institutionTypeEnum.name();
+        return InstitutionType.valueOf(institutionType);
+    }
+
+    @Named("toOffsetDateTime")
+    default OffsetDateTime map(LocalDateTime localDateTime) {
+        return Optional.ofNullable(localDateTime)
+                .map(time -> time.atZone(ZoneId.systemDefault()).toOffsetDateTime())
+                .orElse(null);
+    }
 }
