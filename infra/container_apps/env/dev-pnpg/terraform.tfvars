@@ -87,6 +87,10 @@ app_settings = [
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
     value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-d-pnpg-user-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
   }
 ]
 
