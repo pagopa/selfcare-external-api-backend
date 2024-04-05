@@ -20,8 +20,11 @@ import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -42,6 +45,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     private final MsCoreInstitutionApiClient institutionApiClient;
     private final InstitutionMapper institutionMapper;
     private final MsCoreRestClient msCoreRestClient;
+    private final UserApiRestClient userApiRestClient;
 
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
@@ -324,5 +328,23 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("getInstitutionByGeoTaxonomy result = {}", institutions);
         log.trace("getInstitutionByGeoTaxonomy end");
         return institutions;
+    }
+
+    @Override
+    public List<String> getInstitutionUserProductsV2(String institutionId, String userId) {
+        log.trace("getInstitutionUserProducts start");
+        Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
+        Assert.hasText(userId, USER_ID_IS_REQUIRED);
+        Set<String> products = new HashSet<>();
+        ResponseEntity<List<UserDataResponse>> response = userApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
+        if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().get(0))) {
+            //There is only a document for the couple institutionId/userId
+            products = response.getBody().get(0).getProducts().stream()
+                    .map(OnboardedProductResponse::getProductId)
+                    .collect(Collectors.toSet());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts start");
+        return products.stream().toList();
     }
 }

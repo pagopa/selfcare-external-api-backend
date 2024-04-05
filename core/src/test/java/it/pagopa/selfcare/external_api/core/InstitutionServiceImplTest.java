@@ -281,7 +281,7 @@ class InstitutionServiceImplTest {
         product4.setId("id4");
         final List<String> productIds = List.of("prod-io", "prod-interop");
         final List<Product> products = List.of(product1, product2, product3, product4);
-        when(partyConnectorMock.getInstitutionUserProductsV2(any(), any()))
+        when(msCoreConnectorMock.getInstitutionUserProductsV2(any(), any()))
                 .thenReturn(productIds);
         when(productsConnectorMock.getProducts())
                 .thenReturn(products);
@@ -289,11 +289,11 @@ class InstitutionServiceImplTest {
         List<Product> result = institutionService.getInstitutionUserProductsV2(institutionId);
         //then
         assertEquals(2, result.size());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionUserProductsV2(institutionId, userId);
         verify(productsConnectorMock, times(1))
                 .getProducts();
-        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
 

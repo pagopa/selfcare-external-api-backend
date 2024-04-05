@@ -97,7 +97,7 @@ class InstitutionServiceImpl implements InstitutionService {
         SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
         List<Product> products = productsConnector.getProducts();
         if (!products.isEmpty()) {
-            List<String> productIds = partyConnector.getInstitutionUserProductsV2(institutionId, user.getId());
+            List<String> productIds = msCoreConnector.getInstitutionUserProductsV2(institutionId, user.getId());
             products = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
                     .collect(Collectors.toList());

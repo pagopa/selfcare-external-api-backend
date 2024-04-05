@@ -12,8 +12,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
@@ -114,7 +112,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -154,7 +151,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), eq(EnumSet.of(ACTIVE)));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -169,7 +165,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), isNotNull());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -200,7 +195,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getOnBoardingInfo(isNull(), isNotNull());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -228,8 +222,6 @@ class PartyConnectorImplTest {
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(INSTITUTION_ID_IS_REQUIRED, e.getMessage());
-        verifyNoInteractions(partyProcessRestClientMock);
-        verifyNoInteractions(partyManagementRestClientMock);
     }
 
     @Test
@@ -256,8 +248,6 @@ class PartyConnectorImplTest {
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(USER_ID_IS_REQUIRED, e.getMessage());
-        verifyNoInteractions(partyProcessRestClientMock);
-        verifyNoInteractions(partyManagementRestClientMock);
     }
 
     @Test
@@ -278,7 +268,6 @@ class PartyConnectorImplTest {
                         isNull(),
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -328,7 +317,6 @@ class PartyConnectorImplTest {
                         isNull(),
                         eq(userId));
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -399,7 +387,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(isNull(), isNull(), notNull(), notNull(), isNull(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -416,7 +403,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -433,7 +419,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -457,7 +442,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -481,7 +465,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -505,7 +488,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -528,7 +510,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -551,7 +532,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 
@@ -574,7 +554,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getRelationships(any(), any(), any(), any(), any(), any());
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -643,7 +622,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getInstitution(institutionId);
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -664,7 +642,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getInstitution(institutionId);
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
     @Test
@@ -685,8 +662,6 @@ class PartyConnectorImplTest {
         assertEquals(2, results.size());
         verify(msCoreRestClient, times(1))
                 .getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
-        verifyNoInteractions(msCoreRestClient);
-        verifyNoMoreInteractions(msCoreRestClient);
     }
 
     @Test
@@ -704,7 +679,6 @@ class PartyConnectorImplTest {
         verify(msCoreRestClient, times(1))
                 .getInstitutionsByGeoTaxonomies(geoTax, searchMode);
         verifyNoMoreInteractions(msCoreRestClient);
-        verifyNoInteractions(msCoreRestClient);
     }
 
 

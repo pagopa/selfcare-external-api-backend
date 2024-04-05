@@ -35,4 +35,6 @@ public interface MsCoreConnector {
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
 
     Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode);
+
+    List<String> getInstitutionUserProductsV2(String institutionId, String id);
 }
