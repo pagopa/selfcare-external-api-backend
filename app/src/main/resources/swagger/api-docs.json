@@ -1160,7 +1160,7 @@
       "post" : {
         "tags" : [ "external-v2", "support", "users" ],
         "summary" : "getUserInfo",
-        "description" : "Service to retrieve user info including institutions and products linked to him",
+        "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "getUserInfoUsingPOST_1",
         "requestBody" : {
           "content" : {

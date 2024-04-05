@@ -35,7 +35,7 @@ public class UserV2Controller {
     @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}")
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
                                         @RequestBody @Valid SearchUserDto searchUserDto) {
         log.trace("getUserInfo start");
