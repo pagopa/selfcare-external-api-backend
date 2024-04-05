@@ -6,15 +6,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
 
 public interface OnboardingService {
 
-    void oldContractOnboarding(OnboardingImportData onboardingData);
-
     void oldContractOnboardingV2(OnboardingData onboardingData);
-
-    void autoApprovalOnboarding(OnboardingData onboardingData);
-
-    void autoApprovalOnboardingFromPda(PdaOnboardingData onboardingData, String injestionInstitutionType);
-
-    void autoApprovalOnboardingProduct(OnboardingData onboardingData);
 
     void autoApprovalOnboardingProductV2(OnboardingData onboardingData);
 }

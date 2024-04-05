@@ -30,17 +30,6 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ResourceResponse getContract(String institutionId, String productId) {
-        log.trace("getContract start");
-        log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
-        Token token = msCoreConnector.getToken(institutionId, productId);
-        ResourceResponse file = fileStorageConnector.getFile(token.getContractSigned());
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "getContract result = {}", file);
-        log.trace("getContract end");
-        return file;
-    }
-
-    @Override
     public ResourceResponse getContractV2(String institutionId, String productId) {
         log.trace("getContract start");
         log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
