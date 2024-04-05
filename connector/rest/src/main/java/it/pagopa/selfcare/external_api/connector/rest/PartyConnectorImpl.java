@@ -4,6 +4,7 @@ import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyManagementRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.PartyProcessRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionUpdate;
@@ -17,6 +18,8 @@ import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,7 @@ public class PartyConnectorImpl implements PartyConnector {
     protected static final String REQUIRED_INSTITUTION_TAX_CODE_MESSAGE = "An Institution tax code is required";
     private final PartyProcessRestClient partyProcessRestClient;
     private final PartyManagementRestClient partyManagementRestClient;
+    private final UserApiRestClient userApiRestClient;
     private final InstitutionMapper institutionMapper;
 
     private static final BinaryOperator<InstitutionInfo> MERGE_FUNCTION =
@@ -148,16 +152,17 @@ public class PartyConnectorImpl implements PartyConnector {
         return partyProduct;
     };
 
-
     @Autowired
     public PartyConnectorImpl(PartyProcessRestClient partyProcessRestClient,
                               PartyManagementRestClient partyManagementRestClient,
-                              InstitutionMapper institutionMapper) {
+                              InstitutionMapper institutionMapper,
+                              UserApiRestClient userApiRestClient) {
         this.partyProcessRestClient = partyProcessRestClient;
         this.partyManagementRestClient = partyManagementRestClient;
         this.institutionMapper = institutionMapper;
-
+        this.userApiRestClient = userApiRestClient;
     }
+
 
     @Override
     public Collection<InstitutionInfo> getOnBoardedInstitutions(String productId) {
@@ -201,6 +206,23 @@ public class PartyConnectorImpl implements PartyConnector {
         return products;
     }
 
+    @Override
+    public List<String> getInstitutionUserProductsV2(String institutionId, String userId) {
+        log.trace("getInstitutionUserProducts start");
+        Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
+        Assert.hasText(userId, USER_ID_IS_REQUIRED);
+        Set<String> products = new HashSet<>();
+        ResponseEntity<List<UserDataResponse>> response = userApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
+        if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().get(0))) {
+            //There is only a document for the couple institutionId/userId
+            products = response.getBody().get(0).getProducts().stream()
+                    .map(OnboardedProductResponse::getProductId)
+                    .collect(Collectors.toSet());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts start");
+        return products.stream().toList();
+    }
 
     private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo, String productId) {
         log.trace("parseOnBoardingInfo start");

@@ -30,7 +30,6 @@ container_app = {
   memory = "2.5Gi"
 }
 
-
 app_settings = [
   
   {
@@ -63,23 +62,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-p-pnpg-onboarding-ms-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-pnpg-onboarding-ms-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-p-pnpg-ms-core-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-pnpg-ms-core-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-p-pnpg-party-reg-proxy-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-pnpg-party-reg-proxy-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-p-pnpg-ms-core-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-pnpg-ms-core-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://prod01.pnpg.internal.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-p-pnpg-product-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -87,7 +86,11 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-p-pnpg-ms-core-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-pnpg-ms-core-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-p-pnpg-user-ms-ca.redbeach-5da5166f.westeurope.azurecontainerapps.io"
   }
 ]
 

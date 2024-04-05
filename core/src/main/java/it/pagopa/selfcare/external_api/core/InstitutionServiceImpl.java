@@ -98,6 +98,26 @@ class InstitutionServiceImpl implements InstitutionService {
         return products;
     }
 
+    @Override
+    public List<Product> getInstitutionUserProductsV2(String institutionId) {
+        log.trace("getInstitutionUserProducts start");
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Assert.state(authentication != null, "Authentication is required");
+        Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
+        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+        List<Product> products = productsConnector.getProducts();
+        if (!products.isEmpty()) {
+            List<String> productIds = partyConnector.getInstitutionUserProductsV2(institutionId, user.getId());
+            products = products.stream()
+                    .filter(product -> productIds.contains(product.getId()))
+                    .collect(Collectors.toList());
+        }
+        log.debug("getInstitutionUserProducts result = {}", products);
+        log.trace("getInstitutionUserProducts end");
+        return products;
+    }
+
 
     @Override
     public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
@@ -151,7 +171,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
         log.debug("addInstitution request = {}", request);
-        String institutionInternalId = null;
+        String institutionInternalId;
         try {
             institutionInternalId = partyConnector.getInstitutionByExternalId(request.getExternalId()).getId();
         } catch (ResourceNotFoundException e) {

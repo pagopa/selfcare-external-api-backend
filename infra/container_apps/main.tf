@@ -8,7 +8,7 @@ provider "azurerm" {
   features {}
 }
 
-module "container_app_dashboard_backend" {
+module "container_app_ext_api_backend" {
   source = "github.com/pagopa/selfcare-commons//infra/terraform-modules/container_app_microservice?ref=main"
 
   is_pnpg = var.is_pnpg

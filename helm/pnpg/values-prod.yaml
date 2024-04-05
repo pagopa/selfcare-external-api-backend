@@ -28,3 +28,4 @@ configEnvSpecific:
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "INFO"
   MS_ONBOARDING_URL: "https://selc-p-pnpg-onboarding-ms-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"
+  SELFCARE_USER_URL: "https://selc-p-pnpg-user-ms-ca.salmonpond-60269923.westeurope.azurecontainerapps.io"

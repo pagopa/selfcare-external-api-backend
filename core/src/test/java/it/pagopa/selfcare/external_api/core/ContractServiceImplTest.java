@@ -37,25 +37,6 @@ class ContractServiceImplTest {
 
 
     @Test
-    void getContract(){
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        Token token = mockInstance(new Token());
-        ResourceResponse response = mockInstance(new ResourceResponse());
-        when(msCoreConnectorMock.getToken(any(), any())).thenReturn(token);
-        when(storageConnectorMock.getFile(any())).thenReturn(response);
-        //when
-        ResourceResponse result = contractService.getContract(institutionId, productId);
-        //then
-        assertEquals(response, result);
-        verify(msCoreConnectorMock, times(1)).getToken(institutionId, productId);
-        verify(storageConnectorMock, times(1)).getFile(token.getContractSigned());
-        verifyNoMoreInteractions(msCoreConnectorMock, storageConnectorMock);
-    }
-
-
-    @Test
     void getContractV2(){
         //given
         final String institutionId = "institutionId";

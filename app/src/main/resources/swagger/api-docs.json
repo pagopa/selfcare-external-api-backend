@@ -202,90 +202,6 @@
         } ]
       }
     },
-    "/v1/institutions/{institutionId}/contract" : {
-      "get" : {
-        "tags" : [ "external-v2", "institutions", "support" ],
-        "summary" : "getContract",
-        "description" : "Service to retrieve a contract given institutionId and productId",
-        "operationId" : "getContractUsingGET",
-        "parameters" : [ {
-          "name" : "institutionId",
-          "in" : "path",
-          "description" : "Institution's unique internal Id",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "productId",
-          "in" : "query",
-          "description" : "Product's unique identifier",
-          "required" : true,
-          "style" : "form",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/octet-stream" : {
-                "schema" : {
-                  "type" : "string",
-                  "format" : "byte"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Not Found",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
     "/v1/institutions/{institutionId}/geographicTaxonomy" : {
       "get" : {
         "tags" : [ "external-v2", "institutions" ],
@@ -555,7 +471,7 @@
         "tags" : [ "external-v2", "institutions", "support" ],
         "summary" : "getContract",
         "description" : "Service to retrieve a contract given institutionId and productId",
-        "operationId" : "getContractUsingGET_1",
+        "operationId" : "getContractUsingGET",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -633,100 +549,35 @@
         } ]
       }
     },
-    "/v1/onboarding" : {
-      "post" : {
-        "tags" : [ "onboarding" ],
-        "summary" : "onboarding",
-        "description" : "The service allows the onboarding of Users to a subunit of an Institution",
-        "operationId" : "onboardingUsingPOST",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/OnboardingProductDto"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Created"
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
-    "/v1/onboarding/pda/{injectionInstitutionType}" : {
-      "post" : {
-        "tags" : [ "onboarding" ],
-        "summary" : "autoApprovalOnboardingFromPda",
-        "description" : "The service allows the onboarding of EC and PT institutions with auto approval",
-        "operationId" : "autoApprovalOnboardingFromPdaUsingPOST",
+    "/v2/institutions/{institutionId}/products" : {
+      "get" : {
+        "tags" : [ "external-v2", "institutions" ],
+        "summary" : "getInstitutionUserProducts",
+        "description" : "Service to retrieve all active products for given institution and logged user",
+        "operationId" : "getInstitutionUserProductsUsingGET_1",
         "parameters" : [ {
-          "name" : "injectionInstitutionType",
+          "name" : "institutionId",
           "in" : "path",
-          "description" : "The field specified institution type for injestion EC, PT",
+          "description" : "Institution's unique internal Id",
           "required" : true,
           "style" : "simple",
           "schema" : {
             "type" : "string"
           }
         } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/PdaOnboardingDto"
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProductResource"
+                  }
+                }
               }
             }
-          }
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Created"
           },
           "400" : {
             "description" : "Bad Request",
@@ -748,83 +599,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
-    "/v1/onboarding/{externalInstitutionId}" : {
-      "post" : {
-        "tags" : [ "onboarding" ],
-        "summary" : "oldContractOnboarding",
-        "description" : "The service allows the import of old institutions' contracts",
-        "operationId" : "oldContractOnboardingUsingPOST",
-        "parameters" : [ {
-          "name" : "externalInstitutionId",
-          "in" : "path",
-          "description" : "Institution's unique external identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/OnboardingImportDto"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Created"
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "409" : {
-            "description" : "Conflict",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -844,102 +620,6 @@
             }
           }
         },
-        "deprecated" : true,
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
-    "/v1/onboarding/{externalInstitutionId}/products/{productId}" : {
-      "post" : {
-        "tags" : [ "onboarding" ],
-        "summary" : "autoApprovalOnboarding",
-        "description" : "The service allows the onboarding of EC and PT institutions with auto approval",
-        "operationId" : "autoApprovalOnboardingUsingPOST",
-        "parameters" : [ {
-          "name" : "externalInstitutionId",
-          "in" : "path",
-          "description" : "Institution's unique external identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "productId",
-          "in" : "path",
-          "description" : "Product's unique identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/OnboardingDto"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Created"
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "409" : {
-            "description" : "Conflict",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -950,7 +630,7 @@
         "tags" : [ "onboarding" ],
         "summary" : "onboarding",
         "description" : "The service allows the onboarding of Users to a subunit of an Institution",
-        "operationId" : "onboardingUsingPOST_1",
+        "operationId" : "onboardingUsingPOST",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1015,7 +695,7 @@
         "tags" : [ "onboarding" ],
         "summary" : "oldContractOnboarding",
         "description" : "The service allows the import of old institutions' contracts",
-        "operationId" : "oldContractOnboardingUsingPOST_1",
+        "operationId" : "oldContractOnboardingUsingPOST",
         "parameters" : [ {
           "name" : "externalInstitutionId",
           "in" : "path",
@@ -1475,6 +1155,68 @@
           "bearerAuth" : [ "global" ]
         } ]
       }
+    },
+    "/v2/users" : {
+      "post" : {
+        "tags" : [ "external-v2", "support", "users" ],
+        "summary" : "getUserInfo",
+        "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
+        "operationId" : "getUserInfoUsingPOST_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SearchUserDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfoResource"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
     }
   },
   "components" : {
@@ -1511,7 +1253,7 @@
       },
       "BillingDataDto" : {
         "title" : "BillingDataDto",
-        "required" : [ "businessName", "digitalAddress", "recipientCode", "registeredOffice", "taxCode", "vatNumber", "zipCode" ],
+        "required" : [ "businessName", "digitalAddress", "recipientCode", "registeredOffice", "zipCode" ],
         "type" : "object",
         "properties" : {
           "businessName" : {
@@ -1670,21 +1412,6 @@
       },
       "GeographicTaxonomyDto" : {
         "title" : "GeographicTaxonomyDto",
-        "required" : [ "code", "desc" ],
-        "type" : "object",
-        "properties" : {
-          "code" : {
-            "type" : "string",
-            "description" : "Institution's geographic taxonomy ISTAT code"
-          },
-          "desc" : {
-            "type" : "string",
-            "description" : "Institution's geographic taxonomy extended name"
-          }
-        }
-      },
-      "GeographicTaxonomyDto0" : {
-        "title" : "GeographicTaxonomyDto0",
         "required" : [ "code", "desc" ],
         "type" : "object",
         "properties" : {
@@ -1865,7 +1592,7 @@
       },
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "id", "origin", "originId", "taxCode" ],
+        "required" : [ "id", "origin", "originId" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -2144,56 +1871,6 @@
           }
         }
       },
-      "OnboardingDto" : {
-        "title" : "OnboardingDto",
-        "required" : [ "billingData", "geographicTaxonomies", "institutionType", "users" ],
-        "type" : "object",
-        "properties" : {
-          "assistanceContacts" : {
-            "description" : "Institution's assistance contacts",
-            "$ref" : "#/components/schemas/AssistanceContactsDto"
-          },
-          "billingData" : {
-            "description" : "Institution's billing information",
-            "$ref" : "#/components/schemas/BillingDataDto"
-          },
-          "companyInformations" : {
-            "description" : "GPS, SCP, PT optional data",
-            "$ref" : "#/components/schemas/CompanyInformationsDto"
-          },
-          "geographicTaxonomies" : {
-            "type" : "array",
-            "description" : "Institution's geographic taxonomy",
-            "items" : {
-              "$ref" : "#/components/schemas/GeographicTaxonomyDto"
-            }
-          },
-          "institutionType" : {
-            "type" : "string",
-            "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
-          },
-          "origin" : {
-            "type" : "string",
-            "description" : "Institution data origin"
-          },
-          "pricingPlan" : {
-            "type" : "string",
-            "description" : "Product's pricing plan"
-          },
-          "pspData" : {
-            "description" : "Payment Service Provider (PSP) specific data",
-            "$ref" : "#/components/schemas/PspDataDto"
-          },
-          "users" : {
-            "type" : "array",
-            "description" : "List of onboarding users",
-            "items" : {
-              "$ref" : "#/components/schemas/UserDto"
-            }
-          }
-        }
-      },
       "OnboardingImportDto" : {
         "title" : "OnboardingImportDto",
         "required" : [ "importContract", "users" ],
@@ -2214,7 +1891,7 @@
       },
       "OnboardingProductDto" : {
         "title" : "OnboardingProductDto",
-        "required" : [ "billingData", "geographicTaxonomies", "institutionType", "productId", "taxCode", "users" ],
+        "required" : [ "geographicTaxonomies", "institutionType", "productId", "users" ],
         "type" : "object",
         "properties" : {
           "assistanceContacts" : {
@@ -2300,40 +1977,6 @@
           },
           "vatNumberGroup" : {
             "type" : "boolean"
-          }
-        }
-      },
-      "PdaOnboardingDto" : {
-        "title" : "PdaOnboardingDto",
-        "required" : [ "businessName", "productId", "recipientCode", "taxCode", "users", "vatNumber" ],
-        "type" : "object",
-        "properties" : {
-          "businessName" : {
-            "type" : "string",
-            "description" : "Institution's legal name"
-          },
-          "productId" : {
-            "type" : "string",
-            "description" : "Product's unique identifier"
-          },
-          "recipientCode" : {
-            "type" : "string",
-            "description" : "Billing recipient code, not required only for institutionType SA"
-          },
-          "taxCode" : {
-            "type" : "string",
-            "description" : "Institution's taxCode"
-          },
-          "users" : {
-            "type" : "array",
-            "description" : "List of onboarding users",
-            "items" : {
-              "$ref" : "#/components/schemas/UserDto"
-            }
-          },
-          "vatNumber" : {
-            "type" : "string",
-            "description" : "Institution's VAT number"
           }
         }
       },

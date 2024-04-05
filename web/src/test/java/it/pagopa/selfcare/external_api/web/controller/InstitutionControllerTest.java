@@ -300,28 +300,5 @@ class InstitutionControllerTest {
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
-    @Test
-    void getContract() throws Exception{
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        ResourceResponse response = mockInstance(new ResourceResponse());
-        byte[] mockData = "mock".getBytes();
-        response.setData(mockData);
-        when(contractService.getContract(any(), any())).thenReturn(response);
-        //when
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
-                        .param("productId", productId)
-                        .accept(MediaType.APPLICATION_OCTET_STREAM))
-                .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
-                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", response.getFileName())))
-                .andExpect(content().bytes(response.getData()));
-        //then
-        verify(contractService, times(1)).getContract(institutionId, productId);
-        verifyNoMoreInteractions(contractService);
-
-    }
-
 
 }

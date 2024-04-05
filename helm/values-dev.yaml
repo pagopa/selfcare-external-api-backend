@@ -38,4 +38,5 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
-  MS_ONBOARDING_URL: "https://selc-d-onboarding-ms-ca.gentleflower-c63e62fe.westeurope.azurecontainerapps.io"
+  MS_ONBOARDING_URL: "https://selc-d-onboarding-ms-ca.livelydesert-633675bb.westeurope.azurecontainerapps.io"
+  SELFCARE_USER_URL: "https://selc-d-user-ms-ca.livelydesert-633675bb.westeurope.azurecontainerapps.io"

@@ -28,4 +28,5 @@ configEnvSpecific:
   JAVA_TOOL_OPTIONS: "-javaagent:/applicationinsights-agent.jar"
   APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
   EXTERNAL_API_LOG_LEVEL: "DEBUG"
-  MS_ONBOARDING_URL: "https://selc-u-pnpg-onboarding-ms-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+  MS_ONBOARDING_URL: "https://selc-u-pnpg-onboarding-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+  SELFCARE_USER_URL: "https://selc-u-pnpg-user-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"

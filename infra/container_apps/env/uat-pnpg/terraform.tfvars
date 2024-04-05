@@ -17,7 +17,6 @@ container_app = {
   memory       = "1Gi"
 }
 
-
 app_settings = [
   
   {
@@ -50,23 +49,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-u-pnpg-onboarding-ms-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-onboarding-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-u-pnpg-party-reg-proxy-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-party-reg-proxy-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://uat01.pnpg.internal.uat.selfcare.pagopa.it/ms-product/v1"
+    value = "https://selc-u-pnpg-product-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -74,7 +73,11 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.redground-be752d1f.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+  },
+  {
+    name  = "SELFCARE_USER_URL"
+    value = "https://selc-u-pnpg-user-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
   }
 ]
 

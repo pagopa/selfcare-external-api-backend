@@ -5,11 +5,12 @@ import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UserService {
 
     UserInfoWrapper getUserInfo(String fiscalCode, List<RelationshipState> userStatuses);
+
+    UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses);
 
     UserDetailsWrapper getUserOnboardedProductDetails(String userId, String institutionId, String productId);
 
