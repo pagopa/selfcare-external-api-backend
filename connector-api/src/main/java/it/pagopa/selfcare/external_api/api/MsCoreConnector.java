@@ -32,7 +32,7 @@ public interface MsCoreConnector {
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
 
     Institution getInstitutionByExternalId(String externalInstitutionId);
-    List<UserProducts> getOnboarderUsers(List<TokenUser> users);
+
     List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
