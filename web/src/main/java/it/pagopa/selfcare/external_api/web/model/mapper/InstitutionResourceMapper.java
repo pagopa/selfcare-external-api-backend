@@ -4,11 +4,16 @@ import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface InstitutionResourceMapper {
@@ -27,14 +32,19 @@ public interface InstitutionResourceMapper {
 
     @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
     @Mapping(target = "pspData", source = "paymentServiceProvider", qualifiedByName = "toPspDataResource")
-    @Mapping(target = "companyInformations.rea", source = "rea")
-    @Mapping(target = "companyInformations.shareCapital", source = "shareCapital")
-    @Mapping(target = "companyInformations.businessRegisterPlace", source = "businessRegisterPlace")
-    @Mapping(target = "assistanceContacts.supportPhone", source = "supportPhone")
-    @Mapping(target = "assistanceContacts.supportEmail", source = "supportEmail")
+    @Mapping(target = "companyInformations", source = "businessData", qualifiedByName = "toCompanyInformationResource")
+    @Mapping(target = "assistanceContacts", source = "supportContact", qualifiedByName = "toAssistanceContactsResource")
     @Mapping(target = "dpoData", source = "dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
     @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
+    @Mapping(target = "userProductRoles", source = "productInfo", qualifiedByName = "toUserProductRoles")
     InstitutionResource toResource(OnboardedInstitutionInfo model);
+
+    @Named("toUserProductRoles")
+    static Collection<String> toUserProductRoles(ProductInfo productInfo) {
+        Set<String> productRole = new HashSet<>();
+        productRole.add(productInfo.getRole());
+        return productRole;
+    }
 
     @Mapping(target = "geographicTaxonomies", source = "model.geographicTaxonomies", qualifiedByName = "toGeographicTaxonomyResource")
     InstitutionDetailResource toResource(Institution model);

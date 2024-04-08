@@ -128,16 +128,22 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
     @Override
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
-        ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
-        if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+        try {
+            ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+            if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+                return Collections.emptyList();
+            } else {
+                return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+                    ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+                    onboardedInstitutionInfo.setProductInfo(productInfo);
+                    onboardedInstitutionInfo.setState(productInfo.getStatus());
+                    return onboardedInstitutionInfo;
+                }).toList();
+            }
+        } catch (Exception e) {
+            log.error("Impossible to retrieve institution with ID: {}", institutionId, e);
             return Collections.emptyList();
         }
-        return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-            OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
-            ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-            onboardedInstitutionInfo.setProductInfo(productInfo);
-            onboardedInstitutionInfo.setState(productInfo.getStatus());
-            return onboardedInstitutionInfo;
-        }).toList();
     }
 }
