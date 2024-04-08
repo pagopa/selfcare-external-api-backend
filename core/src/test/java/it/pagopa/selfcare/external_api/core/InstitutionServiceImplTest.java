@@ -4,7 +4,6 @@ import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
-import it.pagopa.selfcare.external_api.api.PartyConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.core.config.CoreTestConfig;
@@ -55,9 +54,6 @@ class InstitutionServiceImplTest {
     private InstitutionServiceImpl institutionService;
 
     @MockBean
-    private PartyConnector partyConnectorMock;
-
-    @MockBean
     private ProductsConnector productsConnectorMock;
 
     @MockBean
@@ -77,7 +73,7 @@ class InstitutionServiceImplTest {
         //given
         String productId = "productIds";
         InstitutionInfo expectedInstitutionInfo = new InstitutionInfo();
-        when(partyConnectorMock.getOnBoardedInstitutions(anyString()))
+        when(msCoreConnectorMock.getOnBoardedInstitutions(anyString()))
                 .thenReturn(List.of(expectedInstitutionInfo));
         // when
         Collection<InstitutionInfo> institutions = institutionService.getInstitutions(productId);
@@ -85,9 +81,9 @@ class InstitutionServiceImplTest {
         assertNotNull(institutions);
         assertEquals(1, institutions.size());
         assertSame(expectedInstitutionInfo, institutions.iterator().next());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getOnBoardedInstitutions(productId);
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -98,9 +94,9 @@ class InstitutionServiceImplTest {
         // then
         assertNotNull(institutions);
         assertTrue(institutions.isEmpty());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getOnBoardedInstitutions(isNull());
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -112,7 +108,7 @@ class InstitutionServiceImplTest {
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class, executable);
         assertEquals("Authentication is required", e.getMessage());
-        verifyNoInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
     @Test
@@ -125,7 +121,7 @@ class InstitutionServiceImplTest {
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class, executable);
         assertEquals("Not SelfCareUser principal", e.getMessage());
-        verifyNoInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
     @Test
@@ -137,7 +133,7 @@ class InstitutionServiceImplTest {
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
-        verifyNoInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
     @Test
@@ -159,8 +155,8 @@ class InstitutionServiceImplTest {
         assertTrue(result.isEmpty());
         verify(productsConnectorMock, times(1))
                 .getProducts();
-        verifyNoMoreInteractions(partyConnectorMock);
-        verifyNoInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
+        verifyNoInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -204,7 +200,7 @@ class InstitutionServiceImplTest {
         product4.setId("id4");
         final List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
         final List<Product> products = List.of(product1, product2, product3, product4);
-        when(partyConnectorMock.getInstitutionUserProducts(any(), any()))
+        when(msCoreConnectorMock.getInstitutionUserProducts(any(), any()))
                 .thenReturn(partyProducts);
         when(productsConnectorMock.getProducts())
                 .thenReturn(products);
@@ -212,11 +208,11 @@ class InstitutionServiceImplTest {
         List<Product> result = institutionService.getInstitutionUserProducts(institutionId);
         //then
         assertEquals(2, result.size());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionUserProducts(institutionId, userId);
         verify(productsConnectorMock, times(1))
                 .getProducts();
-        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, productsConnectorMock);
     }
     
     @Test
@@ -249,7 +245,7 @@ class InstitutionServiceImplTest {
         product4.setId("id4");
         final List<PartyProduct> partyProducts = List.of(partyProduct1, partyProduct2, partyProduct3);
         final List<Product> products = List.of(product1, product2, product3, product4);
-        when(partyConnectorMock.getInstitutionUserProducts(any(), any()))
+        when(msCoreConnectorMock.getInstitutionUserProducts(any(), any()))
                 .thenReturn(partyProducts);
         when(productsConnectorMock.getProducts())
                 .thenReturn(products);
@@ -257,11 +253,11 @@ class InstitutionServiceImplTest {
         List<Product> result = institutionService.getInstitutionUserProducts(institutionId);
         //then
         assertEquals(2, result.size());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionUserProducts(institutionId, userId);
         verify(productsConnectorMock, times(1))
                 .getProducts();
-        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
     @Test
@@ -285,7 +281,7 @@ class InstitutionServiceImplTest {
         product4.setId("id4");
         final List<String> productIds = List.of("prod-io", "prod-interop");
         final List<Product> products = List.of(product1, product2, product3, product4);
-        when(partyConnectorMock.getInstitutionUserProductsV2(any(), any()))
+        when(msCoreConnectorMock.getInstitutionUserProductsV2(any(), any()))
                 .thenReturn(productIds);
         when(productsConnectorMock.getProducts())
                 .thenReturn(products);
@@ -293,11 +289,11 @@ class InstitutionServiceImplTest {
         List<Product> result = institutionService.getInstitutionUserProductsV2(institutionId);
         //then
         assertEquals(2, result.size());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionUserProductsV2(institutionId, userId);
         verify(productsConnectorMock, times(1))
                 .getProducts();
-        verifyNoMoreInteractions(partyConnectorMock, productsConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
 
@@ -315,7 +311,7 @@ class InstitutionServiceImplTest {
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
-        verifyNoInteractions(productsConnectorMock, partyConnectorMock);
+        verifyNoInteractions(productsConnectorMock, msCoreConnectorMock);
     }
 
 
@@ -331,7 +327,7 @@ class InstitutionServiceImplTest {
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals("A Product id is required", e.getMessage());
-        verifyNoInteractions(productsConnectorMock, partyConnectorMock);
+        verifyNoInteractions(productsConnectorMock, msCoreConnectorMock);
     }
 
 
@@ -351,7 +347,7 @@ class InstitutionServiceImplTest {
         Map<String, WorkContact> workContact = new HashMap<>();
         workContact.put(institutionId, contact);
         user.setWorkContacts(workContact);
-        when(partyConnectorMock.getUsers(any()))
+        when(msCoreConnectorMock.getUsers(any()))
                 .thenReturn(Collections.singletonList(userInfo));
         when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
                 .thenReturn(user);
@@ -364,7 +360,7 @@ class InstitutionServiceImplTest {
             TestUtils.checkNotNullFields(userInfo1.getUser());
         });
         ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getUsers(filterCaptor.capture());
         UserInfo.UserInfoFilter capturedFilter = filterCaptor.getValue();
         assertEquals(usrIdParam, capturedFilter.getRole());
@@ -381,7 +377,7 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.familyName));
         assertTrue(capturedFields.contains(User.Fields.workContacts));
         assertFalse(capturedFields.contains(User.Fields.fiscalCode));
-        verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }
 
@@ -402,7 +398,7 @@ class InstitutionServiceImplTest {
         Map<String, WorkContact> workContact = new HashMap<>();
         workContact.put(institutionId, contact);
         user.setWorkContacts(workContact);
-        when(partyConnectorMock.getUsers(any()))
+        when(msCoreConnectorMock.getUsers(any()))
                 .thenReturn(Collections.singletonList(userInfo));
         when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
                 .thenReturn(user);
@@ -415,7 +411,7 @@ class InstitutionServiceImplTest {
             TestUtils.checkNotNullFields(userInfo1.getUser());
         });
         ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getUsers(filterCaptor.capture());
         UserInfo.UserInfoFilter capturedFilter = filterCaptor.getValue();
         assertEquals(usrIdParam, capturedFilter.getRole());
@@ -432,7 +428,7 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.familyName));
         assertTrue(capturedFields.contains(User.Fields.workContacts));
         assertFalse(capturedFields.contains(User.Fields.fiscalCode));
-        verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }
 
@@ -453,7 +449,7 @@ class InstitutionServiceImplTest {
         Map<String, WorkContact> workContact = new HashMap<>();
         workContact.put(institutionId, contact);
         user.setWorkContacts(workContact);
-        when(partyConnectorMock.getUsers(any()))
+        when(msCoreConnectorMock.getUsers(any()))
                 .thenReturn(Collections.singletonList(userInfo));
         when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
                 .thenReturn(user);
@@ -466,7 +462,7 @@ class InstitutionServiceImplTest {
             TestUtils.checkNotNullFields(userInfo1.getUser());
         });
         ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getUsers(filterCaptor.capture());
         UserInfo.UserInfoFilter capturedFilter = filterCaptor.getValue();
         assertEquals(usrIdParam, capturedFilter.getRole());
@@ -483,7 +479,7 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.familyName));
         assertTrue(capturedFields.contains(User.Fields.workContacts));
         assertTrue(capturedFields.contains(User.Fields.fiscalCode));
-        verifyNoMoreInteractions(partyConnectorMock, userRegistryConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }
 
@@ -493,7 +489,7 @@ class InstitutionServiceImplTest {
         final String institutionId = "institutionId";
         final Institution institutionMock = mockInstance(new Institution());
         institutionMock.setGeographicTaxonomies(List.of(mockInstance(new GeographicTaxonomy())));
-        when(partyConnectorMock.getGeographicTaxonomyList(anyString()))
+        when(msCoreConnectorMock.getGeographicTaxonomyList(anyString()))
                 .thenReturn(institutionMock.getGeographicTaxonomies());
         // when
         List<GeographicTaxonomy> result = institutionService.getGeographicTaxonomyList(institutionId);
@@ -501,9 +497,9 @@ class InstitutionServiceImplTest {
         assertNotNull(result);
         assertEquals(institutionMock.getGeographicTaxonomies().get(0).getCode(), result.get(0).getCode());
         assertEquals(institutionMock.getGeographicTaxonomies().get(0).getDesc(), result.get(0).getDesc());
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getGeographicTaxonomyList(institutionId);
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -515,7 +511,7 @@ class InstitutionServiceImplTest {
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
-        verifyNoInteractions(partyConnectorMock);
+        verifyNoInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -523,7 +519,7 @@ class InstitutionServiceImplTest {
         //given
         final Set<String> geoTaxIds = Set.of("geoTax1", "geoTax2");
         final SearchMode searchMode = SearchMode.any;
-        when(partyConnectorMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
+        when(msCoreConnectorMock.getInstitutionsByGeoTaxonomies(anyString(), any()))
                 .thenReturn(List.of(mockInstance(new Institution())));
         //when
         Collection<Institution> results = institutionService.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
@@ -532,11 +528,11 @@ class InstitutionServiceImplTest {
         assertFalse(results.isEmpty());
         assertEquals(1, results.size());
         ArgumentCaptor<String> geoTaxIdCaptor = ArgumentCaptor.forClass(String.class);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionsByGeoTaxonomies(geoTaxIdCaptor.capture(), eq(searchMode));
         assertEquals(String.join(",", geoTaxIds), geoTaxIdCaptor.getValue());
         verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock);
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -549,22 +545,22 @@ class InstitutionServiceImplTest {
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("GeoTaxonomy ids are required in order to retrieve the institutions", e.getMessage());
-        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, partyConnectorMock);
+        verifyNoInteractions(userRegistryConnectorMock, productsConnectorMock, msCoreConnectorMock);
     }
     @Test
     void addInstitution_exists() {
         //given
         CreatePnPgInstitution createPnPgInstitution = mockInstance(new CreatePnPgInstitution());
         Institution institution = mockInstance(new Institution());
-        when(partyConnectorMock.getInstitutionByExternalId(anyString()))
+        when(msCoreConnectorMock.getInstitutionByExternalId(anyString()))
                 .thenReturn(institution);
         //when
         String internalInstitutionId = institutionService.addInstitution(createPnPgInstitution);
         //then
         assertEquals(institution.getId(), internalInstitutionId);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionByExternalId(createPnPgInstitution.getExternalId());
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 
     @Test
@@ -573,7 +569,7 @@ class InstitutionServiceImplTest {
         final CreatePnPgInstitution createPnPgInstitution = mockInstance(new CreatePnPgInstitution());
         final String institutionId = "institutionId";
         doThrow(ResourceNotFoundException.class).
-                when(partyConnectorMock)
+                when(msCoreConnectorMock)
                 .getInstitutionByExternalId(anyString());
         when(msCoreConnectorMock.createPnPgInstitution(any()))
                 .thenReturn(institutionId);
@@ -581,10 +577,10 @@ class InstitutionServiceImplTest {
         String internalInstitutionId = institutionService.addInstitution(createPnPgInstitution);
         //then
         assertEquals(institutionId, internalInstitutionId);
-        verify(partyConnectorMock, times(1))
+        verify(msCoreConnectorMock, times(1))
                 .getInstitutionByExternalId(createPnPgInstitution.getExternalId());
         verify(msCoreConnectorMock, times(1))
                 .createPnPgInstitution(createPnPgInstitution);
-        verifyNoMoreInteractions(partyConnectorMock);
+        verifyNoMoreInteractions(msCoreConnectorMock);
     }
 }
