@@ -17,6 +17,7 @@ import org.mapstruct.Named;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring")
@@ -57,8 +58,11 @@ public interface InstitutionMapper {
 
     @Named("convertInstitutionType")
     static InstitutionType convertInstitutionType(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse.InstitutionTypeEnum institutionTypeEnum) {
-        String institutionType = institutionTypeEnum.name();
-        return InstitutionType.valueOf(institutionType);
+        if(Objects.nonNull(institutionTypeEnum)) {
+            String institutionType = institutionTypeEnum.name();
+            return InstitutionType.valueOf(institutionType);
+        }
+        return null;
     }
 
     @Named("toOffsetDateTime")
