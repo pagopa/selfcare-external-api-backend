@@ -177,18 +177,6 @@ public class PartyConnectorImpl implements PartyConnector {
     }
 
     @Override
-    public List<InstitutionInfo> getOnBoardedInstitutionsV2(String productId) {
-        log.trace("getOnBoardedInstitutions start");
-        log.debug("getOnboardedInstitutions productId = {}", productId);
-        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
-        OnBoardingInfo onBoardingInfo = partyProcessRestClient.getOnBoardingInfo(null, EnumSet.of(ACTIVE));
-        Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo, productId);
-        log.debug("getOnBoardedInstitutions result = {}", result);
-        log.trace("getOnBoardedInstitutions end");
-        return List.of();
-    }
-
-    @Override
     public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}, userId = {}", institutionId, userId);

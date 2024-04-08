@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.*;
@@ -23,6 +24,17 @@ public interface InstitutionResourceMapper {
     @Mapping(target = "county", source = "institutionLocation.county")
     @Mapping(target = "country", source = "institutionLocation.country")
     InstitutionResource toResource(InstitutionInfo model);
+
+    @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
+    @Mapping(target = "pspData", source = "paymentServiceProvider", qualifiedByName = "toPspDataResource")
+    @Mapping(target = "companyInformations.rea", source = "rea")
+    @Mapping(target = "companyInformations.shareCapital", source = "shareCapital")
+    @Mapping(target = "companyInformations.businessRegisterPlace", source = "businessRegisterPlace")
+    @Mapping(target = "assistanceContacts.supportPhone", source = "supportPhone")
+    @Mapping(target = "assistanceContacts.supportEmail", source = "supportEmail")
+    @Mapping(target = "dpoData", source = "dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
+    @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
+    InstitutionResource toResource(OnboardedInstitutionInfo model);
 
     @Mapping(target = "geographicTaxonomies", source = "model.geographicTaxonomies", qualifiedByName = "toGeographicTaxonomyResource")
     InstitutionDetailResource toResource(Institution model);

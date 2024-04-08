@@ -5,17 +5,20 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
-import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
-import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
+import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,18 +35,17 @@ public class InstitutionV2Controller {
 
     private final ContractService contractService;
     private final InstitutionService institutionService;
+    private final UserService userService;
     private final InstitutionResourceMapper institutionResourceMapper;
-    private final InstitutionService institutionService;
 
     public InstitutionV2Controller(ContractService contractService,
-                                   InstitutionService institutionService) {
-    public InstitutionV2Controller(ContractService contractService,
                                    InstitutionService institutionService,
+                                   UserService userService,
                                    InstitutionResourceMapper institutionResourceMapper) {
         this.contractService = contractService;
         this.institutionService = institutionService;
-        this.institutionService = institutionService;
         this.institutionResourceMapper = institutionResourceMapper;
+        this.userService = userService;
     }
 
     @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
@@ -51,10 +53,12 @@ public class InstitutionV2Controller {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
     public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
-                                                     @RequestParam(value = "productId") String productId) {
+                                                     @RequestParam(value = "productId") String productId,
+                                                     Authentication authentication) {
         log.trace("getInstitutions start");
         log.debug("getInstitutions productId = {}", productId);
-        List<InstitutionResource> institutionResources = institutionService.getInstitutionsV2(productId)
+        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+        List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
                 .stream()
                 .map(institutionResourceMapper::toResource)
                 .collect(Collectors.toList());

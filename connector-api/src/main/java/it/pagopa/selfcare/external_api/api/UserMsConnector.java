@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserMsConnector {
 
-     List<UserInstitution> getUsersInstitutions(String userId);
+     List<UserInstitution> getUsersInstitutions(String userId, List<String> product);
 
      User searchUserByExternalId(String fiscalCode);
 

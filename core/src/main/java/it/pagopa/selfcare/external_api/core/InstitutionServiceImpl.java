@@ -67,16 +67,6 @@ class InstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
-    public List<InstitutionInfo> getInstitutionsV2(String productId) {
-        log.trace("getInstitutions start");
-        log.debug("getInstitutions productId = {}", productId);
-        List<InstitutionInfo> result = partyConnector.getOnBoardedInstitutionsV2(productId);
-        log.debug("getInstitutions result = {}", result);
-        log.trace("getInstitutions end");
-        return result;
-    }
-
-    @Override
     public List<Product> getInstitutionUserProducts(String institutionId) {
         log.trace("getInstitutionUserProducts start");
         log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
