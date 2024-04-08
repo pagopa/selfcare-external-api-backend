@@ -217,7 +217,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public Collection<InstitutionInfo> getOnBoardedInstitutions(String productId) {
         log.trace("getOnBoardedInstitutions start");
-        log.debug("getOnboardedInstitutions productId = {}", productId);
         Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
         OnBoardingInfo onBoardingInfo = msCoreRestClient.getOnBoardingInfo(null, EnumSet.of(ACTIVE));
         Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo, productId);
@@ -229,7 +228,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
         log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}, userId = {}", institutionId, userId);
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         List<PartyProduct> products = Collections.emptyList();
@@ -301,7 +299,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public Institution getInstitutionByExternalId(String externalInstitutionId) {
         log.trace("getInstitution start");
-        log.debug("getInstitution externalInstitutionId = {}", externalInstitutionId);
         Assert.hasText(externalInstitutionId, REQUIRED_INSTITUTION_ID_MESSAGE);
         Institution result = msCoreRestClient.getInstitutionByExternalId(externalInstitutionId);
         log.debug("getInstitution result = {}", result);
@@ -312,7 +309,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId) {
         log.trace("getGeographicTaxonomyList start");
-        log.debug("getGeographicTaxonomyList institutionId = {}", institutionId);
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Institution institution = msCoreRestClient.getInstitution(institutionId);
         List<GeographicTaxonomy> result;
@@ -329,7 +325,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode) {
         log.trace("getInstitutionByGeoTaxonomy start");
-        log.debug("getInstitutionByGeoTaxonomy geoTaxIds = {}, searchMode = {}", geoTaxIds, searchMode);
         Collection<Institution> institutions = msCoreRestClient.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode).getItems();
         if (institutions == null) {
             throw new ResourceNotFoundException(String.format("No institutions where found for given taxIds = %s", geoTaxIds));
