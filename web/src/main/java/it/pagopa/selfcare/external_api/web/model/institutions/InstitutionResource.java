@@ -41,8 +41,7 @@ public class InstitutionResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.zipCode}")
     private String zipCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}", required = true)
-    @NotBlank
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}")
     private String taxCode;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}", required = true)

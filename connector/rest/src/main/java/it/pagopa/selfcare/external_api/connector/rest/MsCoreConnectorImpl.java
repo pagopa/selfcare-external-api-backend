@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.*;
@@ -14,6 +15,10 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPg
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
@@ -25,6 +30,8 @@ import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -32,6 +39,9 @@ import javax.validation.ValidationException;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
@@ -346,5 +356,20 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("getInstitutionUserProducts result = {}", products);
         log.trace("getInstitutionUserProducts start");
         return products.stream().toList();
+    }
+
+    @Override
+    public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
+        ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+        if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+            return Collections.emptyList();
+        }
+        return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+            OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+            ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+            onboardedInstitutionInfo.setProductInfo(productInfo);
+            onboardedInstitutionInfo.setState(productInfo.getStatus());
+            return onboardedInstitutionInfo;
+        }).toList();
     }
 }

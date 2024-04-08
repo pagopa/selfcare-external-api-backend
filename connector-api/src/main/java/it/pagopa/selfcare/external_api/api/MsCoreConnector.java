@@ -5,6 +5,7 @@ import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
@@ -31,6 +32,8 @@ public interface MsCoreConnector {
     Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter);
 
     Institution getInstitutionByExternalId(String externalInstitutionId);
+    List<UserProducts> getOnboarderUsers(List<TokenUser> users);
+    List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId);
 
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
 
