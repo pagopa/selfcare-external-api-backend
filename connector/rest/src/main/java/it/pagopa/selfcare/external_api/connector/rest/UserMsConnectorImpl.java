@@ -29,7 +29,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     @Override
     public List<UserInstitution> getUsersInstitutions(String userId, List<String> products) {
         return Objects.requireNonNull(userControllerApi._usersGet(
-                null, null, null, products.isEmpty() ? null : products,
+                null, null, null, Objects.isNull(products) ? null : products,
                 null, null, null, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
     }
