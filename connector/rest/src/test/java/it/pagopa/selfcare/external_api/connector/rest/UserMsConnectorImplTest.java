@@ -43,6 +43,18 @@ public class UserMsConnectorImplTest {
     }
 
     @Test
+    void getUsersInstitutionsWithProducts() {
+        final String userId = "userId";
+        final String productId = "prod-1";
+        when(userControllerApi._usersGet(null, null, null, List.of(productId), null, null, null, userId))
+                .thenReturn(ResponseEntity.of(Optional.of(List.of(new UserInstitutionResponse()))));
+        userMsConnector.getUsersInstitutions(userId, List.of(productId));
+        verify(userControllerApi, times(1))
+                ._usersGet(null, null, null, List.of(productId), null, null, null, userId);
+        verifyNoMoreInteractions(userControllerApi);
+    }
+
+    @Test
     void searchUserByExternalId() {
         final String fiscalCode = "fiscalCode";
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);

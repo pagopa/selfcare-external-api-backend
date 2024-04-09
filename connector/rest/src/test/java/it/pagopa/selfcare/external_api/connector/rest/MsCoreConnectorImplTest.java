@@ -161,6 +161,11 @@ class MsCoreConnectorImplTest {
         InstitutionResponse institutionResponse = new InstitutionResponse();
         OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
         onboardedProductResponse.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        BillingResponse billing = new BillingResponse();
+        billing.setVatNumber("vatNumber");
+        billing.setRecipientCode("recipientCode");
+        billing.setPublicServices(true);
+        onboardedProductResponse.setBilling(billing);
         institutionResponse.setOnboarding(List.of(onboardedProductResponse));
         institutionResponse.setInstitutionType(InstitutionResponse.InstitutionTypeEnum.PA);
         final String userId = "userId";
