@@ -20,6 +20,7 @@ module "container_app_ext_api_backend" {
   image_tag          = var.image_tag
   app_settings       = var.app_settings
   secrets_names      = var.secrets_names
+  workload_profile_name   = var.workload_profile_name
 
   tags = var.tags
 }
