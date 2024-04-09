@@ -134,7 +134,8 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
                 return Collections.emptyList();
             } else {
                 return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+                    InstitutionResponse institutionResponse = responseEntity.getBody();
+                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(institutionResponse);
                     ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
                     onboardedInstitutionInfo.setProductInfo(productInfo);
                     onboardedInstitutionInfo.setState(productInfo.getStatus());

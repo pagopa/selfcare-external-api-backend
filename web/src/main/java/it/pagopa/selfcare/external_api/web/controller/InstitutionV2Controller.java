@@ -21,9 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
@@ -61,7 +65,8 @@ public class InstitutionV2Controller {
         List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
                 .stream()
                 .map(institutionResourceMapper::toResource)
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(toCollection(() -> new TreeSet<>(comparing(InstitutionResource::getId))),
+                        ArrayList::new));
         log.debug("getInstitutions result = {}", institutionResources);
         log.trace("getInstitutions end");
         return institutionResources;

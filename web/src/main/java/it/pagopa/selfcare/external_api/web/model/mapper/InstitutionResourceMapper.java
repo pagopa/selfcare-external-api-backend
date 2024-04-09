@@ -32,8 +32,11 @@ public interface InstitutionResourceMapper {
 
     @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
     @Mapping(target = "pspData", source = "paymentServiceProvider", qualifiedByName = "toPspDataResource")
-    @Mapping(target = "companyInformations", source = "businessData", qualifiedByName = "toCompanyInformationResource")
-    @Mapping(target = "assistanceContacts", source = "supportContact", qualifiedByName = "toAssistanceContactsResource")
+    @Mapping(target = "companyInformations.rea", source = "rea")
+    @Mapping(target = "companyInformations.shareCapital", source = "shareCapital")
+    @Mapping(target = "companyInformations.businessRegisterPlace", source = "businessRegisterPlace")
+    @Mapping(target = "assistanceContacts.supportPhone", source = "supportPhone")
+    @Mapping(target = "assistanceContacts.supportEmail", source = "supportEmail")
     @Mapping(target = "dpoData", source = "dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
     @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
     @Mapping(target = "userProductRoles", source = "productInfo", qualifiedByName = "toUserProductRoles")

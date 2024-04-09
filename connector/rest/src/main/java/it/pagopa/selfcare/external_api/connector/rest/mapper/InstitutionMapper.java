@@ -1,10 +1,14 @@
 package it.pagopa.selfcare.external_api.connector.rest.mapper;
 
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
-import it.pagopa.selfcare.external_api.model.institutions.*;
+import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
+import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
@@ -15,6 +19,7 @@ import org.mapstruct.Named;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,7 +32,6 @@ public interface InstitutionMapper {
 
     @Named("toCompanyInformationsEntity")
     static CompanyInformations toCompanyInformationsEntity(InstitutionResponse dto) {
-
         CompanyInformations companyInformations = new CompanyInformations();
         companyInformations.setRea(dto.getRea());
         companyInformations.setShareCapital(dto.getShareCapital());
@@ -37,7 +41,6 @@ public interface InstitutionMapper {
 
     @Named("toAssistanceContacts")
     static AssistanceContacts toAssistanceContacts(InstitutionResponse dto) {
-
         AssistanceContacts assistanceContacts = new AssistanceContacts();
         assistanceContacts.setSupportEmail(dto.getSupportEmail());
         assistanceContacts.setSupportPhone(dto.getSupportPhone());
@@ -47,8 +50,7 @@ public interface InstitutionMapper {
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
     @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "convertInstitutionType")
-    @Mapping(target = "businessData", source = ".", qualifiedByName = "toBusinessData")
-    @Mapping(target = "supportContact", source = ".", qualifiedByName = "toSupportContact")
+    @Mapping(target = "billing", source = "onboarding", qualifiedByName = "setBillingData")
     OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
 
     @Mapping(target = "id", source = "productId")
@@ -56,21 +58,17 @@ public interface InstitutionMapper {
     @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "toOffsetDateTime")
     ProductInfo toProductInfo(OnboardedProductResponse onboardedProductResponse);
 
-    @Named("toBusinessData")
-    static BusinessData toBusinessData(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse) {
-        BusinessData businessData = new BusinessData();
-        businessData.setRea(institutionResponse.getRea());
-        businessData.setBusinessRegisterPlace(institutionResponse.getBusinessRegisterPlace());
-        businessData.setShareCapital(institutionResponse.getShareCapital());
-        return businessData;
-    }
-
-    @Named("toSupportContact")
-    static SupportContact toSupportContact(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse) {
-        SupportContact supportContact = new SupportContact();
-        supportContact.setSupportEmail(institutionResponse.getSupportEmail());
-        supportContact.setSupportPhone(institutionResponse.getSupportPhone());
-        return supportContact;
+    @Named("setBillingData")
+    static Billing setBillingData(List<OnboardedProductResponse> onboardings) {
+        if(Objects.nonNull(onboardings) && !onboardings.isEmpty()) {
+            Billing billing = new Billing();
+            BillingResponse billingResponse = onboardings.get(0).getBilling();
+            billing.setRecipientCode(billingResponse.getRecipientCode());
+            billing.setVatNumber(billingResponse.getVatNumber());
+            billing.setPublicServices(billingResponse.getPublicServices());
+            return billing;
+        }
+        return null;
     }
 
     @Named("convertInstitutionType")

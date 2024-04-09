@@ -34,8 +34,11 @@ public class OnboardedInstitutionInfo {
     private String country;
     private String county;
     private PaymentServiceProvider paymentServiceProvider;
+    private String supportEmail;
+    private String supportPhone;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
     private DataProtectionOfficer dataProtectionOfficer;
     private RootParent rootParent;
-    private SupportContact supportContact;
-    private BusinessData businessData;
 }
