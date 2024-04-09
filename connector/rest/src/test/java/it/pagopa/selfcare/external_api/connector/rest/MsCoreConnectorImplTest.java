@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -156,7 +155,7 @@ class MsCoreConnectorImplTest {
     }
 
     @Test
-    void getInstitutionDetails(){
+    void getInstitutionDetails() {
         //given
         InstitutionResponse institutionResponse = new InstitutionResponse();
         OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
@@ -178,6 +177,35 @@ class MsCoreConnectorImplTest {
         //then
         assertNotNull(result);
         verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET("id");
+        verifyNoMoreInteractions(institutionApiClient);
+    }
+
+    @Test
+    void getInstitutionDetailsEmptyResponse() {
+        //given
+        final String userId = "userId";
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(anyString()))
+                .thenReturn(ResponseEntity.of(Optional.of(new InstitutionResponse())));
+        //when
+        TokenUser tokenUser = new TokenUser();
+        tokenUser.setUserId(userId);
+        List<OnboardedInstitutionInfo> result = msCoreConnector.getInstitutionDetails("id");
+        //then
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET("id");
+        verifyNoMoreInteractions(institutionApiClient);
+    }
+
+    @Test
+    void getInstitutionDetailsWithError() {
+        //given
+        final String institutionId = "id";
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(any())).thenThrow(RuntimeException.class);
+        List<OnboardedInstitutionInfo> result = msCoreConnector.getInstitutionDetails(institutionId);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
         verifyNoMoreInteractions(institutionApiClient);
     }
 }
