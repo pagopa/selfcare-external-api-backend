@@ -60,7 +60,6 @@ public class InstitutionV2Controller {
                                                      @RequestParam(value = "productId") String productId,
                                                      Authentication authentication) {
         log.trace("getInstitutions start");
-        log.debug("getInstitutions productId = {}", productId);
         SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
         List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
                 .stream()
