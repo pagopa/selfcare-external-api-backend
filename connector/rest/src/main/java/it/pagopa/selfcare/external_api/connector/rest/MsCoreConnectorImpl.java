@@ -354,16 +354,15 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
             ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
             if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
                 return Collections.emptyList();
-            } else {
-                return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-                    InstitutionResponse institutionResponse = responseEntity.getBody();
-                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(institutionResponse);
-                    it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-                    onboardedInstitutionInfo.setProductInfo(productInfo);
-                    onboardedInstitutionInfo.setState(productInfo.getStatus());
-                    return onboardedInstitutionInfo;
-                }).toList();
             }
+            return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+                InstitutionResponse institutionResponse = responseEntity.getBody();
+                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(institutionResponse);
+                it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+                onboardedInstitutionInfo.setProductInfo(productInfo);
+                onboardedInstitutionInfo.setState(productInfo.getStatus());
+                return onboardedInstitutionInfo;
+            }).toList();
         } catch (Exception e) {
             log.error("Impossible to retrieve institution with ID: {}", institutionId, e);
             return Collections.emptyList();
