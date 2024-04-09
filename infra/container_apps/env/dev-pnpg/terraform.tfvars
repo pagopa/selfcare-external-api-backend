@@ -62,23 +62,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-d-pnpg-onboarding-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-onboarding-ms-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-d-pnpg-party-reg-proxy-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-party-reg-proxy-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc-d-pnpg-product-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-product-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -86,11 +86,11 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-d-pnpg-ms-core-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-ms-core-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   },
   {
     name  = "SELFCARE_USER_URL"
-    value = "https://selc-d-pnpg-user-ms-ca.yellowdesert-85d3792d.westeurope.azurecontainerapps.io"
+    value = "https://selc-d-pnpg-user-ms-ca.victoriousfield-e39534b8.westeurope.azurecontainerapps.io"
   }
 ]
 
