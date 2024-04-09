@@ -25,12 +25,12 @@ container_app = {
       name = "cron-scale-rule"
     }
   ]
-  cpu          = 0.5
-  memory       = "1Gi"
+  cpu    = 0.5
+  memory = "1Gi"
 }
 
 app_settings = [
-  
+
   {
     name  = "APPLICATIONINSIGHTS_ROLE_NAME"
     value = "external-api"
@@ -98,8 +98,8 @@ app_settings = [
 ]
 
 secrets_names = {
-    "APPLICATIONINSIGHTS_CONNECTION_STRING"           = "appinsights-connection-string"
-    "BLOB_STORAGE_CONN_STRING"                        = "blob-storage-contract-connection-string"
-    "USERVICE_USER_REGISTRY_API_KEY"                  = "user-registry-api-key"
-    "JWT_TOKEN_PUBLIC_KEY"                            = "jwt-public-key"
+  "APPLICATIONINSIGHTS_CONNECTION_STRING" = "appinsights-connection-string"
+  "BLOB_STORAGE_CONN_STRING"              = "blob-storage-contract-connection-string"
+  "USERVICE_USER_REGISTRY_API_KEY"        = "user-registry-api-key"
+  "JWT_TOKEN_PUBLIC_KEY"                  = "jwt-public-key"
 }
