@@ -62,23 +62,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-p-onboarding-ms-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-onboarding-ms-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-p-party-reg-proxy-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-party-reg-proxy-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc-p-product-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-product-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -86,7 +86,7 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-p-ms-core-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-ms-core-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   },
   {
     name  = "STORAGE_CONTAINER"
@@ -94,7 +94,7 @@ app_settings = [
   },
   {
     name  = "SELFCARE_USER_URL"
-    value = "https://selc-p-user-ms-ca.salmonstone-7f910b8f.westeurope.azurecontainerapps.io"
+    value = "https://selc-p-user-ms-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
   }
 ]
 
