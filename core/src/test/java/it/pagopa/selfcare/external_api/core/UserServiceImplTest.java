@@ -20,9 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
@@ -191,6 +193,78 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getUserOnbaordedProductDetailsV2(){
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final String productId = "prod-io";
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId(institutionId);
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId(productId);
+        onboardedProductResponse.setStatus("ACTIVE");
+        onboardedProductResponse.setRole("MANAGER");
+        onboardedProductResponse.setProductRole("admin");
+        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+
+        //when
+        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        //then
+        checkNotNullFields(userDetailsWrapper);
+        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+    }
+
+    @Test
+    void getUserOnbaordedProductDetailsV2_noMatchProduct(){
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final String productId = "prod-io";
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId(institutionId);
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId("prod");
+        onboardedProductResponse.setStatus("ACTIVE");
+        onboardedProductResponse.setRole("MANAGER");
+        onboardedProductResponse.setProductRole("admin");
+        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+
+        //when
+        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        //then
+        assertNull(userDetailsWrapper.getProductDetails());
+        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+    }
+
+    @Test
+    void getUserOnbaordedProductDetailsV2_noMatchInstitution(){
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final String productId = "prod-io";
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId("institution");
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId("prod");
+        onboardedProductResponse.setStatus("ACTIVE");
+        onboardedProductResponse.setRole("MANAGER");
+        onboardedProductResponse.setProductRole("admin");
+        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+
+        //when
+        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        //then
+        assertNull(userDetailsWrapper.getProductDetails());
+        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+    }
+
+    @Test
     void getUserInfoV2() {
         //given
         UserInstitution userInstitution = new UserInstitution();
@@ -209,7 +283,7 @@ class UserServiceImplTest {
         // when
         when(userMsConnector.searchUserByExternalId(anyString()))
                 .thenReturn(dummyUser);
-        when(userMsConnector.getUsersInstitutions(anyString(), null, null, null, null, null, null, null)).thenReturn(List.of(userInstitution));
+        when(userMsConnector.getUsersInstitutions(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
         when(msCoreConnector.getInstitutionDetails(anyString())).thenReturn(List.of(onboardedInstitutionInfo));
 
         UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
