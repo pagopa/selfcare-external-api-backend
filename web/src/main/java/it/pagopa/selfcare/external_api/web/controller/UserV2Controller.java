@@ -58,7 +58,6 @@ public class UserV2Controller {
                                                   @RequestParam("institutionId")
                                                   String institutionId) {
         log.trace("getUserProductInfo start");
-        log.debug("getUserProductInfo userId = {}, productId = {}, institutionId = {}", userId, productId, institutionId);
         UserDetailsResource userDetailsResource = userInfoResourceMapper.toResource(userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId));
         log.debug("getUserProductInfo result = {}", userDetailsResource);
         log.trace("getUserProductInfo end");
