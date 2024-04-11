@@ -209,7 +209,7 @@ class UserServiceImplTest {
         // when
         when(userMsConnector.searchUserByExternalId(anyString()))
                 .thenReturn(dummyUser);
-        when(userMsConnector.getUsersInstitutions(anyString())).thenReturn(List.of(userInstitution));
+        when(userMsConnector.getUsersInstitutions(anyString(), null, null, null, null, null, null, null)).thenReturn(List.of(userInstitution));
         when(msCoreConnector.getInstitutionDetails(anyString())).thenReturn(List.of(onboardedInstitutionInfo));
 
         UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));

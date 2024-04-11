@@ -14,4 +14,6 @@ public interface UserService {
 
     UserDetailsWrapper getUserOnboardedProductDetails(String userId, String institutionId, String productId);
 
+    UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId);
+
 }
