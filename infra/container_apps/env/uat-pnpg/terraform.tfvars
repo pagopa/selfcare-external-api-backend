@@ -1,7 +1,7 @@
-is_pnpg   = true
-env_short = "u"
-cae_name  = "cae"
-workload_profile_name = "Consumption"
+is_pnpg          = true
+env_short        = "u"
+suffix_increment = "-001"
+cae_name         = "cae-001"
 
 tags = {
   CreatedBy   = "Terraform"
@@ -51,23 +51,23 @@ app_settings = [
   },
   {
     name  = "MS_ONBOARDING_URL"
-    value = "https://selc-u-pnpg-onboarding-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-onboarding-ms-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_CORE_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
-    value = "https://selc-u-pnpg-party-reg-proxy-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-party-reg-proxy-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "MS_PRODUCT_URL"
-    value = "https://selc-u-pnpg-product-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-product-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -75,11 +75,11 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "https://selc-u-pnpg-ms-core-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-ms-core-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   },
   {
     name  = "SELFCARE_USER_URL"
-    value = "https://selc-u-pnpg-user-ms-ca.calmforest-ffe47bf1.westeurope.azurecontainerapps.io"
+    value = "https://selc-u-pnpg-user-ms-ca.orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
   }
 ]
 
