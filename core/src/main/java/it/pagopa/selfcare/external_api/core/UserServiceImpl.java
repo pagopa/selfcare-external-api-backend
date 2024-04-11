@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -165,19 +164,17 @@ public class UserServiceImpl implements UserService {
         List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, null, null, null);
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
-        institutions.stream().forEach(institution -> {
+        institutions.forEach(institution -> {
             List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
             onboardedInstitutionResponse.stream()
                     .filter(onboardedInstitution -> onboardedInstitution.getId().equals(institution.getInstitutionId()))
-                    .map(onboardedInstitution -> {
+                    .peek(onboardedInstitution -> {
                         onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
                                         product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
                                 .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
                         onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
-                        return  onboardedInstitution;
-                    })
-                    .collect(Collectors.toList());
+                    });
             onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse);
         });
 
