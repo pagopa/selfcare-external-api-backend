@@ -231,7 +231,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         if (response != null) {
             products = response.stream()
                     .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         log.debug("getInstitutionUserProducts result = {}", products);
         log.trace("getInstitutionUserProducts start");

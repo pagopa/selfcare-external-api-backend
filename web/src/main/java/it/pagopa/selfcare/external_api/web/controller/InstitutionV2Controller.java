@@ -101,7 +101,7 @@ public class InstitutionV2Controller {
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId)
                 .stream()
                 .map(ProductsMapper::toResource)
-                .collect(Collectors.toList());
+                .toList();
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
         return productResources;

@@ -65,6 +65,12 @@ public class InstitutionControllerV2Test {
     @Autowired
     protected MockMvc mvc;
 
+    @MockBean
+    private ContractService contractService;
+
+    /**
+     * Method under test: {@link InstitutionV2Controller#getInstitutions(String, Authentication)}
+     */
     @Test
     void getInstitutions() throws Exception {
         //given
@@ -108,11 +114,11 @@ public class InstitutionControllerV2Test {
         verifyNoMoreInteractions(institutionServiceMock);
     }
 
-    @MockBean
-    private ContractService contractService;
-
+    /**
+     * Method under test: {@link InstitutionV2Controller#getContract(String, String)}
+     */
     @Test
-    void getContract() throws Exception{
+    void getContract() throws Exception {
         //given
         String institutionId = "institutionId";
         String productId = "productId";

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -141,8 +140,7 @@ public class UserServiceImpl implements UserService {
                                 .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
                         onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
                         return  onboardedInstitution;
-                    })
-                    .collect(Collectors.toList());
+                    });
             onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse);
         });
 
