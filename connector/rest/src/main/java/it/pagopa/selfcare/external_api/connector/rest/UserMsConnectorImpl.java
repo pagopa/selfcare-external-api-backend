@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
                 partyRoles.add(role);
             });
         } else {
-            return null;
+            return Collections.emptyList();
         }
         return partyRoles;
     }

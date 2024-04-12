@@ -36,7 +36,7 @@ public class UserV2Controller {
     @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}", nickname = "V2getUserInfoUsingGET")
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
                                         @RequestBody @Valid SearchUserDto searchUserDto) {
         log.trace("getUserInfo start");
@@ -49,7 +49,7 @@ public class UserV2Controller {
 
     @GetMapping(value = "/{id}/onboarded-product")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserProductInfo}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserProductInfo}", nickname = "V2getUserProductInfoUsingGET")
     public UserDetailsResource getUserProductInfo(@ApiParam("${swagger.external_api.user.model.id}")
                                                   @PathVariable("id") String userId,
                                                   @ApiParam("${swagger.external-api.product.model.id}")

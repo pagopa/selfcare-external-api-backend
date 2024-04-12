@@ -1161,7 +1161,7 @@
         "tags" : [ "external-v2", "support", "users" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
-        "operationId" : "getUserInfoUsingPOST_1",
+        "operationId" : "V2getUserInfoUsingGET",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1223,7 +1223,7 @@
         "tags" : [ "users" ],
         "summary" : "getUserProductInfo",
         "description" : "Service to retrieve user's onboarded product info",
-        "operationId" : "getUserProductInfoUsingGET_1",
+        "operationId" : "V2getUserProductInfoUsingGET",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",

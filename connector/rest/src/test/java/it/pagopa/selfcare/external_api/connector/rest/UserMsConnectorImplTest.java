@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +46,7 @@ class UserMsConnectorImplTest {
 
         userMsConnector.getUsersInstitutions(null, null, null, null, null, null, null, null);
 
-        verify(userApiRestClient, times(1))._usersGet(null, null, null, null, null, null, null, null);
+        verify(userApiRestClient, times(1))._usersGet(null, null, null, null, Collections.emptyList(), null, null, null);
     }
 
 }
