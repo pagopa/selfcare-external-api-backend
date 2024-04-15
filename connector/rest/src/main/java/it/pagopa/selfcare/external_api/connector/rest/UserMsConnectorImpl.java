@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 
 @Slf4j
+@Component
 public class UserMsConnectorImpl implements UserMsConnector {
 
     private final MsUserApiRestClient msUserApiRestClient;

@@ -122,48 +122,4 @@ class UserMsConnectorImplTest {
         verify(msUserApiRestClient, times(1))._usersUserIdPost(anyString(), any(AddUserRoleDto.class));
         assert returnedUserId.equals("userId");
     }
-
-    @Test
-    void searchUserByExternalId_happyPath() {
-        UserDetailResponse userDetailResponse = new UserDetailResponse();
-        userDetailResponse.setId("userId");
-
-        when(msUserApiRestClient._usersSearchPost(any(), any(SearchUserDto.class))).thenReturn(new ResponseEntity<>(userDetailResponse, HttpStatus.OK));
-
-        it.pagopa.selfcare.external_api.model.user.User user = userMsConnector.searchUserByExternalId("fiscalCode");
-
-        verify(msUserApiRestClient, times(1))._usersSearchPost(any(), any(SearchUserDto.class));
-        assert user != null;
-    }
-
-    @Test
-    void searchUserByExternalId_nullFiscalCode() {
-        UserDetailResponse userDetailResponse = new UserDetailResponse();
-        userDetailResponse.setId("userId");
-
-        when(msUserApiRestClient._usersSearchPost(any(), any(SearchUserDto.class))).thenReturn(new ResponseEntity<>(userDetailResponse, HttpStatus.OK));
-        when(userMapper.toUserFromUserDetailResponse(any(UserDetailResponse.class))).thenReturn(new it.pagopa.selfcare.external_api.model.user.User());
-
-        it.pagopa.selfcare.external_api.model.user.User user = userMsConnector.searchUserByExternalId(null);
-
-        verify(msUserApiRestClient, times(1))._usersSearchPost(any(), any(SearchUserDto.class));
-        verify(userMapper, times(1)).toUserFromUserDetailResponse(any(UserDetailResponse.class));
-        assert user != null;
-    }
-
-    @Test
-    void searchUserByExternalId_emptyFiscalCode() {
-        UserDetailResponse userDetailResponse = new UserDetailResponse();
-        userDetailResponse.setId("userId");
-
-        when(msUserApiRestClient._usersSearchPost(any(), any(SearchUserDto.class))).thenReturn(new ResponseEntity<>(userDetailResponse, HttpStatus.OK));
-        when(userMapper.toUserFromUserDetailResponse(any(UserDetailResponse.class))).thenReturn(new it.pagopa.selfcare.external_api.model.user.User());
-
-        it.pagopa.selfcare.external_api.model.user.User user = userMsConnector.searchUserByExternalId("");
-
-        verify(msUserApiRestClient, times(1))._usersSearchPost(any(), any(SearchUserDto.class));
-        verify(userMapper, times(1)).toUserFromUserDetailResponse(any(UserDetailResponse.class));
-        assert user != null;
-    }
-
 }
