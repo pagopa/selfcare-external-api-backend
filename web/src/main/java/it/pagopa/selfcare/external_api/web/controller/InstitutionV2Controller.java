@@ -5,20 +5,29 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
@@ -28,14 +37,38 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 @Api(tags = "institutions")
 public class InstitutionV2Controller {
 
-
     private final ContractService contractService;
     private final InstitutionService institutionService;
+    private final UserService userService;
+    private final InstitutionResourceMapper institutionResourceMapper;
 
     public InstitutionV2Controller(ContractService contractService,
-                                   InstitutionService institutionService) {
+                                   InstitutionService institutionService,
+                                   UserService userService,
+                                   InstitutionResourceMapper institutionResourceMapper) {
         this.contractService = contractService;
         this.institutionService = institutionService;
+        this.institutionResourceMapper = institutionResourceMapper;
+        this.userService = userService;
+    }
+
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @GetMapping(value = "")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
+    public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
+                                                     @RequestParam(value = "productId") String productId,
+                                                     Authentication authentication) {
+        log.trace("getInstitutions start");
+        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+        List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
+                .stream()
+                .map(institutionResourceMapper::toResource)
+                .collect(Collectors.collectingAndThen(toCollection(() -> new TreeSet<>(comparing(InstitutionResource::getId))),
+                        ArrayList::new));
+        log.debug("getInstitutions result = {}", institutionResources);
+        log.trace("getInstitutions end");
+        return institutionResources;
     }
 
     @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
@@ -68,7 +101,7 @@ public class InstitutionV2Controller {
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId)
                 .stream()
                 .map(ProductsMapper::toResource)
-                .collect(Collectors.toList());
+                .toList();
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
         return productResources;

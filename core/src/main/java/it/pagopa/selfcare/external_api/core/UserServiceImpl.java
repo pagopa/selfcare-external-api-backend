@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
         log.trace("geUserInfo start");
         final User user = userMsConnector.searchUserByExternalId(fiscalCode);
-        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId());
+        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId(), null);
         List<String> userStatusesString = userStatuses == null ? Collections.emptyList()
                 : userStatuses.stream().map(RelationshipState::toString).toList();
 
@@ -160,8 +160,9 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    private List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId){
-        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, null, null, null);
+    @Override
+    public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
+        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null);
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
         institutions.forEach(institution -> {

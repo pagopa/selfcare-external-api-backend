@@ -19,12 +19,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserMsConnectorImplTest {
+
     @InjectMocks
     private UserMsConnectorImpl userMsConnector;
 
