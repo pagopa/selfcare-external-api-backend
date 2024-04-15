@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest.mapper;
 
 
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
@@ -112,4 +113,9 @@ public interface OnboardingMapper {
 
     @Mapping(target = "institutionUpdate", source = "institution")
     OnboardingData toOnboardingData(OnboardingGet onboardingGet);
+
+    @Mapping(target = "createdAt", expression = "java(institutionResponse.getCreatedAt() != null ? institutionResponse.getCreatedAt().atOffset(java.time.ZoneOffset.UTC) : null)")
+    @Mapping(target = "updatedAt", expression = "java(institutionResponse.getUpdatedAt() != null ? institutionResponse.getCreatedAt().atOffset(java.time.ZoneOffset.UTC) : null)")
+    @Mapping(target = "onboarding", ignore = true)
+    Institution toInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
 }

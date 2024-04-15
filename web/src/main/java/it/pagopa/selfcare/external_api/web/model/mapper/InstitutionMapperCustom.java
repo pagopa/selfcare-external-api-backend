@@ -1,0 +1,82 @@
+package it.pagopa.selfcare.external_api.web.model.mapper;
+
+import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
+import it.pagopa.selfcare.external_api.model.institutions.Onboarding;
+import it.pagopa.selfcare.external_api.model.institutions.PaAttributes;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.external_api.web.model.institutions.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@NoArgsConstructor(access = AccessLevel.NONE)
+public class InstitutionMapperCustom {
+
+    public static InstitutionUpdateResponse toInstitutionUpdateResponse(it.pagopa.selfcare.external_api.model.institutions.Institution institution) {
+        InstitutionUpdateResponse institutionUpdate = new InstitutionUpdateResponse();
+        institutionUpdate.setAddress(institution.getAddress());
+        institutionUpdate.setInstitutionType(institution.getInstitutionType());
+        institutionUpdate.setDescription(institution.getDescription());
+        institutionUpdate.setDigitalAddress(institution.getDigitalAddress());
+        institutionUpdate.setTaxCode(institution.getTaxCode());
+        institutionUpdate.setZipCode(institution.getZipCode());
+        institutionUpdate.setPaymentServiceProvider(toPaymentServiceProviderResponse(institution.getPaymentServiceProvider()));
+        institutionUpdate.setDataProtectionOfficer(toDataProtectionOfficerResponse(institution.getDataProtectionOfficer()));
+        if (institution.getGeographicTaxonomies() != null) {
+            var geoCodes = institution.getGeographicTaxonomies().stream()
+                    .map(GeographicTaxonomy::getCode)
+                    .collect(Collectors.toList());
+            institutionUpdate.setGeographicTaxonomies(geoCodes);
+        }
+        institutionUpdate.setRea(institution.getRea());
+        institutionUpdate.setShareCapital(institution.getShareCapital());
+        institutionUpdate.setBusinessRegisterPlace(institution.getBusinessRegisterPlace());
+        institutionUpdate.setSupportEmail(institution.getSupportEmail());
+        institutionUpdate.setSupportPhone(institution.getSupportPhone());
+        institutionUpdate.setImported(institution.isImported());
+
+        return institutionUpdate;
+    }
+
+    public static BillingResponse toBillingResponse(Onboarding onboarding, it.pagopa.selfcare.external_api.model.institutions.Institution institution) {
+        BillingResponse billingResponse = new BillingResponse();
+        if (onboarding.getBilling() != null) {
+            billingResponse.setVatNumber(onboarding.getBilling().getVatNumber());
+            billingResponse.setRecipientCode(onboarding.getBilling().getRecipientCode());
+            billingResponse.setPublicServices(onboarding.getBilling().getPublicServices());
+        } else if (institution.getBilling() != null) {
+            billingResponse.setVatNumber(institution.getBilling().getVatNumber());
+            billingResponse.setRecipientCode(institution.getBilling().getRecipientCode());
+            billingResponse.setPublicServices(institution.getBilling().getPublicServices());
+        }
+        return billingResponse;
+    }
+
+    public static DataProtectionOfficerResponse toDataProtectionOfficerResponse(DataProtectionOfficer dataProtectionOfficer) {
+        DataProtectionOfficerResponse response = null;
+        if (dataProtectionOfficer != null) {
+            response = new DataProtectionOfficerResponse();
+            response.setPec(dataProtectionOfficer.getPec());
+            response.setEmail(dataProtectionOfficer.getEmail());
+            response.setAddress(dataProtectionOfficer.getAddress());
+        }
+        return response;
+    }
+
+    public static PaymentServiceProviderResponse toPaymentServiceProviderResponse(PaymentServiceProvider paymentServiceProvider) {
+        PaymentServiceProviderResponse response = null;
+        if (paymentServiceProvider != null) {
+            response = new PaymentServiceProviderResponse();
+            response.setAbiCode(paymentServiceProvider.getAbiCode());
+            response.setLegalRegisterName(paymentServiceProvider.getLegalRegisterName());
+            response.setBusinessRegisterNumber(paymentServiceProvider.getBusinessRegisterNumber());
+            response.setVatNumberGroup(paymentServiceProvider.getVatNumberGroup());
+            response.setLegalRegisterNumber(paymentServiceProvider.getLegalRegisterNumber());
+        }
+        return response;
+    }
+
+}

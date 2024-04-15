@@ -690,6 +690,112 @@
         } ]
       }
     },
+    "/v2/onboarding/users" : {
+      "post" : {
+        "tags" : [ "Onboarding", "support" ],
+        "summary" : "Api to persist users to product",
+        "description" : "Api to persist users to product",
+        "operationId" : "onboardingInstitutionUsersUsingPOST",
+        "parameters" : [ {
+          "name" : "authenticated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "authorities[0].authority",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "credentials",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "object"
+          }
+        }, {
+          "name" : "details",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "object"
+          }
+        }, {
+          "name" : "principal",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "object"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingInstitutionUsersRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RelationshipResult"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
     "/v2/onboarding/{externalInstitutionId}" : {
       "post" : {
         "tags" : [ "onboarding" ],
@@ -1382,6 +1488,21 @@
           }
         }
       },
+      "BillingResponse" : {
+        "title" : "BillingResponse",
+        "type" : "object",
+        "properties" : {
+          "publicServices" : {
+            "type" : "boolean"
+          },
+          "recipientCode" : {
+            "type" : "string"
+          },
+          "vatNumber" : {
+            "type" : "string"
+          }
+        }
+      },
       "CompanyInformationsDto" : {
         "title" : "CompanyInformationsDto",
         "type" : "object",
@@ -1435,6 +1556,21 @@
       },
       "DataProtectionOfficer" : {
         "title" : "DataProtectionOfficer",
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "pec" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DataProtectionOfficerResponse" : {
+        "title" : "DataProtectionOfficerResponse",
         "type" : "object",
         "properties" : {
           "address" : {
@@ -1853,6 +1989,61 @@
           }
         }
       },
+      "InstitutionUpdateResponse" : {
+        "title" : "InstitutionUpdateResponse",
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "type" : "string"
+          },
+          "businessRegisterPlace" : {
+            "type" : "string"
+          },
+          "dataProtectionOfficer" : {
+            "$ref" : "#/components/schemas/DataProtectionOfficerResponse"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "digitalAddress" : {
+            "type" : "string"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "imported" : {
+            "type" : "boolean"
+          },
+          "institutionType" : {
+            "type" : "string",
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+          },
+          "paymentServiceProvider" : {
+            "$ref" : "#/components/schemas/PaymentServiceProviderResponse"
+          },
+          "rea" : {
+            "type" : "string"
+          },
+          "shareCapital" : {
+            "type" : "string"
+          },
+          "supportEmail" : {
+            "type" : "string"
+          },
+          "supportPhone" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          }
+        }
+      },
       "InvalidParam" : {
         "title" : "InvalidParam",
         "required" : [ "name", "reason" ],
@@ -1980,6 +2171,30 @@
           }
         }
       },
+      "OnboardingInstitutionUsersRequest" : {
+        "title" : "OnboardingInstitutionUsersRequest",
+        "type" : "object",
+        "properties" : {
+          "institutionSubunitCode" : {
+            "type" : "string"
+          },
+          "institutionTaxCode" : {
+            "type" : "string"
+          },
+          "productId" : {
+            "type" : "string"
+          },
+          "sendCreateUserNotificationEmail" : {
+            "type" : "boolean"
+          },
+          "users" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Person"
+            }
+          }
+        }
+      },
       "OnboardingProductDto" : {
         "title" : "OnboardingProductDto",
         "required" : [ "geographicTaxonomies", "institutionType", "productId", "users" ],
@@ -2068,6 +2283,62 @@
           },
           "vatNumberGroup" : {
             "type" : "boolean"
+          }
+        }
+      },
+      "PaymentServiceProviderResponse" : {
+        "title" : "PaymentServiceProviderResponse",
+        "type" : "object",
+        "properties" : {
+          "abiCode" : {
+            "type" : "string"
+          },
+          "businessRegisterNumber" : {
+            "type" : "string"
+          },
+          "legalRegisterName" : {
+            "type" : "string"
+          },
+          "legalRegisterNumber" : {
+            "type" : "string"
+          },
+          "vatNumberGroup" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "Person" : {
+        "title" : "Person",
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "env" : {
+            "type" : "string",
+            "enum" : [ "COLL", "DEV", "PROD", "ROOT" ]
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "productRole" : {
+            "type" : "string"
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+          },
+          "roleLabel" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
           }
         }
       },
@@ -2307,6 +2578,52 @@
             "type" : "boolean",
             "description" : "PSP's Vat Number group",
             "example" : false
+          }
+        }
+      },
+      "RelationshipResult" : {
+        "title" : "RelationshipResult",
+        "type" : "object",
+        "properties" : {
+          "billing" : {
+            "$ref" : "#/components/schemas/BillingResponse"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "from" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "institutionUpdate" : {
+            "$ref" : "#/components/schemas/InstitutionUpdateResponse"
+          },
+          "pricingPlan" : {
+            "type" : "string"
+          },
+          "product" : {
+            "$ref" : "#/components/schemas/ProductInfo"
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+          },
+          "state" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "DELETED", "PENDING", "REJECTED", "SUSPENDED", "TOBEVALIDATED" ]
+          },
+          "to" : {
+            "type" : "string"
+          },
+          "tokenId" : {
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
           }
         }
       },
