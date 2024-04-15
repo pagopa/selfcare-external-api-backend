@@ -1,38 +1,42 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserResourceMapper;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
-import it.pagopa.selfcare.user.generated.openapi.v1.api.UserControllerApi;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto;
+import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+
 @Slf4j
+@Component
 public class UserMsConnectorImpl implements UserMsConnector {
 
-    private final UserControllerApi userControllerApi;
+    private final MsUserApiRestClient msUserApiRestClient;
+    private final UserResourceMapper userResourceMapper;
 
     private final UserMapper userMapper;
 
-    public UserMsConnectorImpl(UserControllerApi userControllerApi,
-                               UserMapper userMapper) {
-        this.userControllerApi = userControllerApi;
+    public UserMsConnectorImpl(MsUserApiRestClient msUserApiRestClient, UserResourceMapper userResourceMapper,  UserMapper userMapper) {
+        this.msUserApiRestClient = msUserApiRestClient;
+        this.userResourceMapper = userResourceMapper;
         this.userMapper = userMapper;
     }
 
     @Override
-    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states) {
+    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<it.pagopa.selfcare.commons.base.security.PartyRole> roles, List<String> states) {
 
-        return Objects.requireNonNull(userControllerApi._usersGet(
+        return Objects.requireNonNull(msUserApiRestClient._usersGet(
                         institutionId, page, productRoles, products, toDtoPartyRole(roles)
                         , size, states, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
@@ -41,10 +45,10 @@ public class UserMsConnectorImpl implements UserMsConnector {
     @Override
     public User searchUserByExternalId(String fiscalCode) {
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);
-        return userMapper.toUserFromUserDetailResponse(userControllerApi._usersSearchPost(null, searchUserDto).getBody());
+        return userMapper.toUserFromUserDetailResponse(msUserApiRestClient._usersSearchPost(null, searchUserDto).getBody());
     }
 
-    private List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> toDtoPartyRole(List<PartyRole> roles) {
+    private List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> toDtoPartyRole(List<it.pagopa.selfcare.commons.base.security.PartyRole> roles) {
         List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> partyRoles = new ArrayList<>();
         if (roles != null) {
             roles.forEach(partyRole -> {
@@ -55,5 +59,48 @@ public class UserMsConnectorImpl implements UserMsConnector {
             return Collections.emptyList();
         }
         return partyRoles;
+    }
+
+    @Override
+    public String createUser(Institution institution, String productId, String role, List<String> productRoles, UserToOnboard user, boolean sendMail) {
+
+        Product1 product = Product1.builder()
+                .productId(productId)
+                .role(PartyRole.valueOf(role))
+                .productRoles(productRoles)
+                .build();
+
+        CreateUserDto createUserDto = CreateUserDto.builder()
+                .institutionId(institution.getId())
+                .user(userResourceMapper.toUser(user))
+                .product(product)
+                .hasToSendEmail(sendMail)
+                .institutionDescription(institution.getDescription())
+                .institutionRootName(institution.getParentDescription())
+                .build();
+
+        String userId = msUserApiRestClient._usersPost(createUserDto).getBody();
+        log.info("User created with id: {}", userId);
+        return userId;
+    }
+
+    @Override
+    public String addUserRole(String userId, Institution institution, String productId, String role, List<String> productRoles) {
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product = it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
+                .productId(productId)
+                .role(PartyRole.valueOf(role))
+                .productRoles(productRoles)
+                .build();
+
+        AddUserRoleDto addUserRoleDto = AddUserRoleDto.builder()
+                .product(product)
+                .institutionId(institution.getId())
+                .institutionDescription(institution.getDescription())
+                .institutionRootName(institution.getParentDescription())
+                .build();
+
+        msUserApiRestClient._usersUserIdPost(userId, addUserRoleDto);
+
+        return userId;
     }
 }

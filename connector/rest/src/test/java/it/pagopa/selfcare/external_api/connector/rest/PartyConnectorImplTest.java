@@ -12,7 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
@@ -26,7 +26,6 @@ import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -77,7 +76,7 @@ class PartyConnectorImplTest {
     private MsCoreRestClient msCoreRestClient;
 
     @Mock
-    private UserApiRestClient userApiRestClientMock;
+    private MsUserApiRestClient msUserApiRestClientMock;
 
     @Captor
     ArgumentCaptor<OnboardingImportInstitutionRequest> onboardingImportRequestCaptor;
@@ -280,7 +279,7 @@ class PartyConnectorImplTest {
         //then
         assertNotNull(products);
         assertTrue(products.isEmpty());
-        verify(userApiRestClientMock, times(1))
+        verify(msUserApiRestClientMock, times(1))
                 ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
                         eq(userId),
                         isNull(),
@@ -288,7 +287,7 @@ class PartyConnectorImplTest {
                         isNull(),
                         isNull(),
                         eq(List.of(ACTIVE.name())));
-        verifyNoMoreInteractions(userApiRestClientMock);
+        verifyNoMoreInteractions(msUserApiRestClientMock);
     }
 
     @Test
@@ -327,14 +326,14 @@ class PartyConnectorImplTest {
 
         File stubs = ResourceUtils.getFile("classpath:stubs/PartyConnectorImplTest/user_institutions_to_product.json");
         List<UserDataResponse> response = mapper.readValue(stubs, new TypeReference<List<UserDataResponse>>(){});
-        when(userApiRestClientMock._usersUserIdInstitutionInstitutionIdGet(any(), any(), any(), any(), any(), any(), anyList()))
+        when(msUserApiRestClientMock._usersUserIdInstitutionInstitutionIdGet(any(), any(), any(), any(), any(), any(), anyList()))
                 .thenReturn(ResponseEntity.of(Optional.of(response)));
         //when
         List<String> products = partyConnector.getInstitutionUserProductsV2(institutionId, userId);
         //then
         assertNotNull(products);
         assertEquals(1, products.size());
-        verify(userApiRestClientMock, times(1))
+        verify(msUserApiRestClientMock, times(1))
                 ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
                         eq(userId),
                         isNull(),
@@ -342,7 +341,7 @@ class PartyConnectorImplTest {
                         isNull(),
                         isNull(),
                         eq(List.of(ACTIVE.name())));
-        verifyNoMoreInteractions(userApiRestClientMock);
+        verifyNoMoreInteractions(msUserApiRestClientMock);
     }
 
 

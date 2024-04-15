@@ -7,20 +7,30 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
+import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.RelationshipMapper;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingInstitutionUsersRequest;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
+import it.pagopa.selfcare.external_api.web.model.user.RelationshipResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
@@ -90,6 +100,26 @@ public class OnboardingV2Controller {
         }
         onboardingService.oldContractOnboardingV2(OnboardingMapper.toOnboardingData(externalInstitutionId, request));
         log.trace("oldContractonboarding end");
+    }
+
+    /**
+     * The function persist user on registry if not exists and add relation with institution-product
+     *
+     * @param request OnboardingInstitutionUsersRequest
+     * @return no content
+     * * Code: 204, Message: successful operation
+     * * Code: 404, Message: Not found, DataType: Problem
+     * * Code: 400, Message: Invalid request, DataType: Problem
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @Tags({@Tag(name = "support"), @Tag(name = "Onboarding")})
+    @ApiOperation(value = "${swagger.mscore.onboarding.users}", notes = "${swagger.mscore.onboarding.users}")
+    @PostMapping(value = "/users")
+    public ResponseEntity<List<RelationshipResult>> onboardingInstitutionUsers(@RequestBody @Valid OnboardingInstitutionUsersRequest request,
+                                                                               Authentication authentication) {
+        SelfCareUser selfCareUser = (SelfCareUser) authentication.getPrincipal();
+        List<RelationshipInfo> response = onboardingService.onboardingUsers(onboardingResourceMapper.toOnboardingUsersRequest(request), selfCareUser.getUserName(), selfCareUser.getSurname());
+        return ResponseEntity.ok().body(RelationshipMapper.toRelationshipResultList(response));
     }
 
 }

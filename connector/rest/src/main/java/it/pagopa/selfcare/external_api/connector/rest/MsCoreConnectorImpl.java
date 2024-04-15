@@ -7,7 +7,7 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
@@ -50,7 +50,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     private final MsCoreInstitutionApiClient institutionApiClient;
     private final InstitutionMapper institutionMapper;
     private final MsCoreRestClient msCoreRestClient;
-    private final UserApiRestClient userApiRestClient;
+    private final MsUserApiRestClient msUserApiRestClient;
 
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
@@ -143,7 +143,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
         InstitutionLocation institutionLocation = new InstitutionLocation();
-        if(onboardingData.getInstitutionLocation() != null) {
+        if (onboardingData.getInstitutionLocation() != null) {
             institutionLocation.setCity(onboardingData.getInstitutionLocation().getCity());
             institutionLocation.setCountry(onboardingData.getInstitutionLocation().getCountry());
             institutionLocation.setCounty(onboardingData.getInstitutionLocation().getCounty());
@@ -336,7 +336,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         Set<String> products = new HashSet<>();
-        ResponseEntity<List<UserDataResponse>> response = userApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
+        ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
         if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().get(0))) {
             //There is only a document for the couple institutionId/userId
             products = response.getBody().get(0).getProducts().stream()
@@ -350,22 +350,16 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
     @Override
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
-        try {
-            ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
-            if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
-                return Collections.emptyList();
-            }
+        ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+        if (responseEntity != null && responseEntity.getBody() != null && responseEntity.getBody().getOnboarding() != null) {
             return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-                InstitutionResponse institutionResponse = responseEntity.getBody();
-                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(institutionResponse);
+                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
                 it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
                 onboardedInstitutionInfo.setProductInfo(productInfo);
                 onboardedInstitutionInfo.setState(productInfo.getStatus());
                 return onboardedInstitutionInfo;
             }).toList();
-        } catch (Exception e) {
-            log.error("Impossible to retrieve institution with ID: {}", institutionId, e);
-            return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
 }

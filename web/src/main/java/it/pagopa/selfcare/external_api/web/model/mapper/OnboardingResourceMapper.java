@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.onboarding.PdaOnboardingData;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingInstitutionUsersRequest;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.PdaOnboardingDto;
 import org.mapstruct.Mapper;
@@ -32,4 +34,5 @@ public interface OnboardingResourceMapper {
     PdaOnboardingData toEntity(PdaOnboardingDto dto);
 
 
+    OnboardingUsersRequest toOnboardingUsersRequest(OnboardingInstitutionUsersRequest request);
 }

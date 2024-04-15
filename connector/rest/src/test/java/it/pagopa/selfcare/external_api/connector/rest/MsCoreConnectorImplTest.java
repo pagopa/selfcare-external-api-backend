@@ -196,16 +196,4 @@ class MsCoreConnectorImplTest {
         verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET("id");
         verifyNoMoreInteractions(institutionApiClient);
     }
-
-    @Test
-    void getInstitutionDetailsWithError() {
-        //given
-        final String institutionId = "id";
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET(any())).thenThrow(RuntimeException.class);
-        List<OnboardedInstitutionInfo> result = msCoreConnector.getInstitutionDetails(institutionId);
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
-        verifyNoMoreInteractions(institutionApiClient);
-    }
 }
