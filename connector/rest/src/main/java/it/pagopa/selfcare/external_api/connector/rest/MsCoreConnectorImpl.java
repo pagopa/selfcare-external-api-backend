@@ -356,7 +356,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
         ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
         if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody())
-                || !Objects.isNull(responseEntity.getBody()) && Objects.isNull(responseEntity.getBody().getOnboarding())) {
+                || (!Objects.isNull(responseEntity.getBody()) && Objects.isNull(responseEntity.getBody().getOnboarding()))) {
             return Collections.emptyList();
         }
         return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
