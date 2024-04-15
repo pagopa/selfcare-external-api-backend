@@ -143,7 +143,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         institutionInfo.setSubunitType(onboardingData.getSubunitType());
         institutionInfo.setAooParentCode(onboardingData.getAooParentCode());
         InstitutionLocation institutionLocation = new InstitutionLocation();
-        if(onboardingData.getInstitutionLocation() != null) {
+        if (onboardingData.getInstitutionLocation() != null) {
             institutionLocation.setCity(onboardingData.getInstitutionLocation().getCity());
             institutionLocation.setCountry(onboardingData.getInstitutionLocation().getCountry());
             institutionLocation.setCounty(onboardingData.getInstitutionLocation().getCounty());
@@ -351,16 +351,15 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
         ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
-        if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody())
-                || (!Objects.isNull(responseEntity.getBody()) && Objects.isNull(responseEntity.getBody().getOnboarding()))) {
-            return Collections.emptyList();
+        if (responseEntity != null && responseEntity.getBody() != null && responseEntity.getBody().getOnboarding() != null) {
+            return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+                it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+                onboardedInstitutionInfo.setProductInfo(productInfo);
+                onboardedInstitutionInfo.setState(productInfo.getStatus());
+                return onboardedInstitutionInfo;
+            }).toList();
         }
-        return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-            OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
-            it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-            onboardedInstitutionInfo.setProductInfo(productInfo);
-            onboardedInstitutionInfo.setState(productInfo.getStatus());
-            return onboardedInstitutionInfo;
-        }).toList();
+        return Collections.emptyList();
     }
 }
