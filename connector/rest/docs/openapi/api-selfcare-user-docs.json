@@ -4,6 +4,13 @@
     "title" : "user-ms API",
     "version" : "1.0.0"
   },
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Auto generated value"
+  }, {
+    "url" : "http://0.0.0.0:8080",
+    "description" : "Auto generated value"
+  } ],
   "paths" : {
     "/authorize/{institutionId}" : {
       "get" : {
@@ -760,7 +767,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/MutableUserFieldsDto"
+                "$ref" : "#/components/schemas/UpdateUserRequest"
               }
             }
           }
@@ -1022,28 +1029,12 @@
           },
           "institutionRootName" : {
             "type" : "string"
-          }
-        }
-      },
-      "CertifiableFieldResourceOfLocalDate" : {
-        "type" : "object",
-        "properties" : {
-          "certification" : {
-            "$ref" : "#/components/schemas/CertificationEnum1"
           },
-          "value" : {
-            "$ref" : "#/components/schemas/LocalDate"
-          }
-        }
-      },
-      "CertifiableFieldResourceOfstring" : {
-        "type" : "object",
-        "properties" : {
-          "certification" : {
-            "$ref" : "#/components/schemas/CertificationEnum"
-          },
-          "value" : {
+          "userMailUuid" : {
             "type" : "string"
+          },
+          "hasToSendEmail" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1059,10 +1050,6 @@
         }
       },
       "CertificationEnum" : {
-        "enum" : [ "NONE", "SPID" ],
-        "type" : "string"
-      },
-      "CertificationEnum1" : {
         "enum" : [ "NONE", "SPID" ],
         "type" : "string"
       },
@@ -1085,6 +1072,9 @@
           },
           "institutionRootName" : {
             "type" : "string"
+          },
+          "hasToSendEmail" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1092,38 +1082,10 @@
         "enum" : [ "ROOT", "DEV", "COLL", "PROD" ],
         "type" : "string"
       },
-      "LocalDate" : {
-        "format" : "date",
-        "type" : "string",
-        "example" : "2022-03-10"
-      },
       "LocalDateTime" : {
         "format" : "date-time",
         "type" : "string",
         "example" : "2022-03-10T12:15:50"
-      },
-      "MutableUserFieldsDto" : {
-        "type" : "object",
-        "properties" : {
-          "birthDate" : {
-            "$ref" : "#/components/schemas/CertifiableFieldResourceOfLocalDate"
-          },
-          "email" : {
-            "$ref" : "#/components/schemas/CertifiableFieldResourceOfstring"
-          },
-          "familyName" : {
-            "$ref" : "#/components/schemas/CertifiableFieldResourceOfstring"
-          },
-          "name" : {
-            "$ref" : "#/components/schemas/CertifiableFieldResourceOfstring"
-          },
-          "workContacts" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/WorkContactResource"
-            }
-          }
-        }
       },
       "OnboardedProductResponse" : {
         "type" : "object",
@@ -1180,8 +1142,11 @@
           "tokenId" : {
             "type" : "string"
           },
-          "productRole" : {
-            "type" : "string"
+          "productRoles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -1199,8 +1164,11 @@
           "tokenId" : {
             "type" : "string"
           },
-          "productRole" : {
-            "type" : "string"
+          "productRoles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -1217,22 +1185,34 @@
           }
         }
       },
+      "UpdateUserRequest" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "familyName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        }
+      },
       "User" : {
-        "required" : [ "familyName", "fiscalCode", "name", "institutionEmail" ],
+        "required" : [ "fiscalCode", "institutionEmail" ],
         "type" : "object",
         "properties" : {
           "birthDate" : {
             "type" : "string"
           },
           "familyName" : {
-            "minLength" : 1,
-            "type" : "string"
-          },
-          "fiscalCode" : {
-            "minLength" : 1,
             "type" : "string"
           },
           "name" : {
+            "type" : "string"
+          },
+          "fiscalCode" : {
             "minLength" : 1,
             "type" : "string"
           },
@@ -1436,9 +1416,11 @@
             "type" : "string"
           },
           "name" : {
+            "pattern" : "\\S",
             "type" : "string"
           },
           "surname" : {
+            "pattern" : "\\S",
             "type" : "string"
           },
           "email" : {
@@ -1486,14 +1468,6 @@
             "items" : {
               "$ref" : "#/components/schemas/UserNotificationResponse"
             }
-          }
-        }
-      },
-      "WorkContactResource" : {
-        "type" : "object",
-        "properties" : {
-          "email" : {
-            "$ref" : "#/components/schemas/CertifiableFieldResourceOfstring"
           }
         }
       },

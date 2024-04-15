@@ -12,5 +12,4 @@ public interface OnboardingMsConnector {
     void onboarding(OnboardingData onboardingData);
     void onboardingImportPA(OnboardingData onboardingData);
     List<TokenOnboardedUsers> getOnboardings(String productId, int page, int size);
-
 }
