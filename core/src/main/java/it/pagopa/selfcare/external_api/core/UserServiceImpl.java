@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.core;
 
+import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
@@ -125,21 +127,54 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId) {
+        List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, institutionId, null, null, null, List.of(productId), null, null);
+        UserDetailsWrapper result;
+        Optional<UserInstitution> userInstitutionResponse = usersInstitutions.stream()
+                .filter(userInstitution -> institutionId.equals(userInstitution.getInstitutionId()))
+                .findFirst();
+        List<OnboardedProductResponse> onboardedProductResponses = new ArrayList<>();
+        ProductDetails productDetails = null;
+        List<String> roles = new ArrayList<>();
+        userInstitutionResponse.ifPresent(userInstitution -> {
+            List<OnboardedProductResponse> onboardedProducts = userInstitution.getProducts().stream().filter(onboardedProductResponse -> productId.equals(onboardedProductResponse.getProductId()))
+                    .filter(onboardedProductResponse -> RelationshipState.ACTIVE.name().equals(onboardedProductResponse.getStatus()))
+                    .toList();
+            onboardedProductResponses.addAll(onboardedProducts);
+        });
+        if (!onboardedProductResponses.isEmpty()) {
+            onboardedProductResponses.forEach(onboardedProductResponse -> {
+                roles.add(onboardedProductResponse.getProductRole());
+            });
+            productDetails = new ProductDetails();
+            productDetails.setRole(PartyRole.valueOf(onboardedProductResponses.get(0).getRole()));
+            productDetails.setProductId(productId);
+            productDetails.setRoles(roles);
+            productDetails.setCreatedAt(onboardedProductResponses.get(0).getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime());
+        }
+        result = UserDetailsWrapper.builder()
+                .userId(userId)
+                .productDetails(productDetails)
+                .institutionId(institutionId)
+                .build();
+        return result;
+    }
+
+    @Override
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
         List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, Objects.isNull(productId) ? null : List.of(productId));
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
-        institutions.stream().forEach(institution -> {
+        institutions.forEach(institution -> {
             List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
             onboardedInstitutionResponse.stream()
                     .filter(onboardedInstitution -> onboardedInstitution.getId().equals(institution.getInstitutionId()))
-                    .map(onboardedInstitution -> {
+                    .peek(onboardedInstitution -> {
                         onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
                                         product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
                                 .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
                         onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
-                        return  onboardedInstitution;
                     });
             onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse);
         });
