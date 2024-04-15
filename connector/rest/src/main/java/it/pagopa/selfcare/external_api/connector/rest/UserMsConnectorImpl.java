@@ -62,7 +62,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     }
 
     @Override
-    public String createUser(Institution institution, String productId, String role, List<String> productRoles, UserToOnboard user) {
+    public String createUser(Institution institution, String productId, String role, List<String> productRoles, UserToOnboard user, boolean sendMail) {
 
         Product1 product = Product1.builder()
                 .productId(productId)
@@ -74,6 +74,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
                 .institutionId(institution.getId())
                 .user(userResourceMapper.toUser(user))
                 .product(product)
+                .hasToSendEmail(sendMail)
                 .institutionDescription(institution.getDescription())
                 .institutionRootName(institution.getParentDescription())
                 .build();

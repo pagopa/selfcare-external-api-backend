@@ -65,11 +65,11 @@ public class OnboardingMsConnectorImpl implements OnboardingMsConnector {
     @Override
     public List<Institution> getInstitutionsByTaxCodeAndSubunitCode(String institutionTaxCode, String institutionSubunitCode) {
         return Objects.requireNonNull(institutionApiClient._getInstitutionsUsingGET(institutionTaxCode, institutionSubunitCode, null, null)
-                        .getBody()
+                        .getBody())
                         .getInstitutions()
                         .stream()
                         .map(onboardingMapper::toInstitution)
-                .toList());
+                .toList();
     }
 
 }

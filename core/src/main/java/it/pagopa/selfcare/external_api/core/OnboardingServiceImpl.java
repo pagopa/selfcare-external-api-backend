@@ -94,7 +94,7 @@ class OnboardingServiceImpl implements OnboardingService {
             Map<PartyRole, List<UserToOnboard>> listOfRole = users.stream().collect(Collectors.groupingBy(UserToOnboard::getRole));
             listOfRole.forEach((role, usersByRole) -> {
                 List<String> productRoles = users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
-                String userId = userMsConnector.createUser(institution, productId, role.name(), productRoles, usersByRole.get(0));
+                String userId = userMsConnector.createUser(institution, productId, role.name(), productRoles, usersByRole.get(0), true);
                 result.addAll(buildRelationShipInfo(userId, institution, productId, usersByRole));
             });
         });

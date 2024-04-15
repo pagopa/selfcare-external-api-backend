@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserMsConnector {
 
-    String createUser(Institution institution, String productId, String role, List<String> productRoles, UserToOnboard user);
+    String createUser(Institution institution, String productId, String role, List<String> productRoles, UserToOnboard user, boolean sendMail);
 
     String addUserRole(String userId, Institution institution, String productId, String role, List<String> productRoles);
 
