@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
-        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, Objects.isNull(productId) ? null : List.of(productId));
+        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null);
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
         institutions.forEach(institution -> {
