@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapperImpl;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
@@ -26,7 +26,7 @@ class UserMsConnectorImplTest {
     private UserMsConnectorImpl userMsConnector;
 
     @Mock
-    private UserApiRestClient userApiRestClient;
+    private MsUserApiRestClient msUserApiRestClient;
 
     @Spy
     UserMapper mapper = new UserMapperImpl();
@@ -34,19 +34,19 @@ class UserMsConnectorImplTest {
     @Test
     void getUserInstitutions(){
         final List<PartyRole> commonsPartyRoles = List.of(PartyRole.OPERATOR);
-        when(userApiRestClient._usersGet(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(new ResponseEntity<>(List.of(new UserInstitutionResponse()), HttpStatus.OK));
+        when(msUserApiRestClient._usersGet(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(new ResponseEntity<>(List.of(new UserInstitutionResponse()), HttpStatus.OK));
         userMsConnector.getUsersInstitutions(null, null, null, null, null, null, commonsPartyRoles, null);
 
-        verify(userApiRestClient, times(1))._usersGet(null, null, null, null, List.of(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.OPERATOR), null, null, null);
+        verify(msUserApiRestClient, times(1))._usersGet(null, null, null, null, List.of(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.OPERATOR), null, null, null);
     }
 
     @Test
     void getUserInstitutions_nullRoles(){
-        when(userApiRestClient._usersGet(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(new ResponseEntity<>(List.of(new UserInstitutionResponse()), HttpStatus.OK));
+        when(msUserApiRestClient._usersGet(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(new ResponseEntity<>(List.of(new UserInstitutionResponse()), HttpStatus.OK));
 
         userMsConnector.getUsersInstitutions(null, null, null, null, null, null, null, null);
 
-        verify(userApiRestClient, times(1))._usersGet(null, null, null, null, Collections.emptyList(), null, null, null);
+        verify(msUserApiRestClient, times(1))._usersGet(null, null, null, null, Collections.emptyList(), null, null, null);
     }
 
 }

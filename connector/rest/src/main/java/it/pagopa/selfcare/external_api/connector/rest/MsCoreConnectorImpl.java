@@ -7,7 +7,7 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.client.UserApiRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
@@ -54,7 +54,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     private final MsCoreInstitutionApiClient institutionApiClient;
     private final InstitutionMapper institutionMapper;
     private final MsCoreRestClient msCoreRestClient;
-    private final UserApiRestClient userApiRestClient;
+    private final MsUserApiRestClient msUserApiRestClient;
 
     protected static final String PRODUCT_ID_IS_REQUIRED = "A productId is required";
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
@@ -340,7 +340,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         Set<String> products = new HashSet<>();
-        ResponseEntity<List<UserDataResponse>> response = userApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
+        ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
         if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().get(0))) {
             //There is only a document for the couple institutionId/userId
             products = response.getBody().get(0).getProducts().stream()
