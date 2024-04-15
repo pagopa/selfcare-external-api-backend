@@ -7,15 +7,11 @@ import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
-import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
-import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingInstitutionUsersRequest;
 import it.pagopa.selfcare.external_api.web.model.user.Person;
-import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -28,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.hamcrest.Matchers.emptyString;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {OnboardingV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {OnboardingV2Controller.class, WebTestConfig.class})
+@ContextConfiguration(classes = {OnboardingV2Controller.class, WebTestConfig.class, OnboardingResourceMapperImpl.class})
 public class OnboardingV2ControllerTest {
 
     private static final String BASE_URL = "/v2/onboarding";
@@ -90,8 +85,11 @@ public class OnboardingV2ControllerTest {
         request.setProductId("productCode");
         request.setUsers(List.of(new Person()));
 
-
-        when(onboardingServiceMock.onboardingUsers(any(OnboardingUsersRequest.class), anyString(), anyString())).thenReturn(List.of(new RelationshipInfo()));
+        Institution institution = new Institution();
+        institution.setId("institutionId");
+        RelationshipInfo relationshipInfo = new RelationshipInfo();
+        relationshipInfo.setInstitution(institution);
+        when(onboardingServiceMock.onboardingUsers(any(OnboardingUsersRequest.class), anyString(), anyString())).thenReturn(List.of(relationshipInfo));
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(selfCareUser);
