@@ -3,12 +3,14 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.external_api.model.institutions.BusinessData;
+import it.pagopa.selfcare.external_api.model.institutions.RootParent;
+import it.pagopa.selfcare.external_api.model.institutions.SupportContact;
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnboardedInstitutionInfo {
-
     private String id;
     private String externalId;
     private String originId;
@@ -28,5 +30,15 @@ public class OnboardedInstitutionInfo {
     private String subunitType;
     private String aooParentCode;
     private String userMailUuid;
-
+    private String city;
+    private String country;
+    private String county;
+    private PaymentServiceProvider paymentServiceProvider;
+    private String supportEmail;
+    private String supportPhone;
+    private String rea;
+    private String shareCapital;
+    private String businessRegisterPlace;
+    private DataProtectionOfficer dataProtectionOfficer;
+    private RootParent rootParent;
 }

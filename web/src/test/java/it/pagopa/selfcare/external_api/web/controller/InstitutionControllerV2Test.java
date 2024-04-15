@@ -2,11 +2,15 @@ package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
+import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
+import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
@@ -19,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
+import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -52,14 +59,66 @@ public class InstitutionControllerV2Test {
     @MockBean
     private InstitutionService institutionServiceMock;
 
+    @MockBean
+    private UserService userServiceMock;
+
     @Autowired
     protected MockMvc mvc;
 
     @MockBean
     private ContractService contractService;
 
+    /**
+     * Method under test: {@link InstitutionV2Controller#getInstitutions(String, Authentication)}
+     */
     @Test
-    void getContract() throws Exception{
+    void getInstitutions() throws Exception {
+        //given
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+        final String productId = "productId";
+        OnboardedInstitutionInfo institutionInfo = mockInstance(new OnboardedInstitutionInfo(), "setId");
+        institutionInfo.setId(randomUUID().toString());
+        institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
+        institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
+        institutionInfo.setSupportEmail("spportEmail@example.com");
+        when(userServiceMock.getOnboardedInstitutionsDetails(anyString(), anyString()))
+                .thenReturn(Collections.singletonList(institutionInfo));
+        //when
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "")
+                        .param("productId", productId)
+                        .principal(authentication)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+        List<InstitutionResource> response = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                });
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(institutionInfo.getId(), response.get(0).getId().toString());
+        assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
+        assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
+        assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
+        reflectionEqualsByName(institutionInfo.getSupportEmail(), response.get(0).getAssistanceContacts().getSupportEmail());
+        reflectionEqualsByName(institutionInfo.getRea(), response.get(0).getCompanyInformations().getRea());
+        reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
+        reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
+        verify(userServiceMock, times(1))
+                .getOnboardedInstitutionsDetails(selfCareUser.getId(), productId);
+        verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    /**
+     * Method under test: {@link InstitutionV2Controller#getContract(String, String)}
+     */
+    @Test
+    void getContract() throws Exception {
         //given
         String institutionId = "institutionId";
         String productId = "productId";

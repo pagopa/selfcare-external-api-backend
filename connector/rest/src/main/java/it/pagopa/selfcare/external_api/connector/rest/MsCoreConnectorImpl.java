@@ -16,19 +16,15 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInsti
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionLocation;
-import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.relationship.Relationships;
+import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
-import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import lombok.RequiredArgsConstructor;
@@ -235,7 +231,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         if (response != null) {
             products = response.stream()
                     .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         log.debug("getInstitutionUserProducts result = {}", products);
         log.trace("getInstitutionUserProducts start");
@@ -354,16 +350,22 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
     @Override
     public List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
-        ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
-        if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+        try {
+            ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+            if (Objects.isNull(responseEntity) || Objects.isNull(responseEntity.getBody()) || Objects.isNull(responseEntity.getBody().getOnboarding())) {
+                return Collections.emptyList();
+            }
+            return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
+                InstitutionResponse institutionResponse = responseEntity.getBody();
+                OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(institutionResponse);
+                it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
+                onboardedInstitutionInfo.setProductInfo(productInfo);
+                onboardedInstitutionInfo.setState(productInfo.getStatus());
+                return onboardedInstitutionInfo;
+            }).toList();
+        } catch (Exception e) {
+            log.error("Impossible to retrieve institution with ID: {}", institutionId, e);
             return Collections.emptyList();
         }
-        return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-            OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
-            it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
-            onboardedInstitutionInfo.setProductInfo(productInfo);
-            onboardedInstitutionInfo.setState(productInfo.getStatus());
-            return onboardedInstitutionInfo;
-        }).toList();
     }
 }
