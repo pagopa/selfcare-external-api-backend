@@ -36,13 +36,11 @@ class InstitutionServiceImpl implements InstitutionService {
 
     private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
     private static final EnumSet<User.Fields> USER_FIELD_LIST_FISCAL_CODE = EnumSet.of(name, familyName, workContacts, fiscalCode);
-
     static final String REQUIRED_INSTITUTION_MESSAGE = "An Institution id is required";
     private final ProductsConnector productsConnector;
-
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
-
+    private final static String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
     private final Set<String> serviceType;
 
     @Autowired
@@ -67,8 +65,7 @@ class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public List<Product> getInstitutionUserProducts(String institutionId) {
-        log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " start");
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.state(authentication != null, "Authentication is required");
@@ -82,14 +79,14 @@ class InstitutionServiceImpl implements InstitutionService {
                     .filter(product -> institutionUserProducts.containsKey(product.getId()))
                     .collect(Collectors.toList());
         }
-        log.debug("getInstitutionUserProducts result = {}", products);
-        log.trace("getInstitutionUserProducts end");
+        log.debug(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
         return products;
     }
 
     @Override
     public List<Product> getInstitutionUserProductsV2(String institutionId) {
-        log.trace("getInstitutionUserProducts start");
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " start");
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Assert.state(authentication != null, "Authentication is required");
@@ -102,8 +99,8 @@ class InstitutionServiceImpl implements InstitutionService {
                     .filter(product -> productIds.contains(product.getId()))
                     .collect(Collectors.toList());
         }
-        log.debug("getInstitutionUserProducts result = {}", products);
-        log.trace("getInstitutionUserProducts end");
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
         return products;
     }
 
