@@ -1685,21 +1685,6 @@
           }
         }
       },
-      "DataProtectionOfficerResponse" : {
-        "title" : "DataProtectionOfficerResponse",
-        "type" : "object",
-        "properties" : {
-          "address" : {
-            "type" : "string"
-          },
-          "email" : {
-            "type" : "string"
-          },
-          "pec" : {
-            "type" : "string"
-          }
-        }
-      },
       "DpoDataDto" : {
         "title" : "DpoDataDto",
         "required" : [ "address", "email", "pec" ],
@@ -2116,7 +2101,7 @@
             "type" : "string"
           },
           "dataProtectionOfficer" : {
-            "$ref" : "#/components/schemas/DataProtectionOfficerResponse"
+            "$ref" : "#/components/schemas/DpoDataResource"
           },
           "description" : {
             "type" : "string"
@@ -2138,7 +2123,7 @@
             "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "paymentServiceProvider" : {
-            "$ref" : "#/components/schemas/PaymentServiceProviderResponse"
+            "$ref" : "#/components/schemas/PspDataResource"
           },
           "rea" : {
             "type" : "string"
@@ -2383,27 +2368,6 @@
       },
       "PaymentServiceProvider" : {
         "title" : "PaymentServiceProvider",
-        "type" : "object",
-        "properties" : {
-          "abiCode" : {
-            "type" : "string"
-          },
-          "businessRegisterNumber" : {
-            "type" : "string"
-          },
-          "legalRegisterName" : {
-            "type" : "string"
-          },
-          "legalRegisterNumber" : {
-            "type" : "string"
-          },
-          "vatNumberGroup" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "PaymentServiceProviderResponse" : {
-        "title" : "PaymentServiceProviderResponse",
         "type" : "object",
         "properties" : {
           "abiCode" : {
