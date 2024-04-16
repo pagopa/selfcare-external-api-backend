@@ -1,8 +1,8 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
-import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyDto;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
+import it.pagopa.selfcare.external_api.web.model.onboarding.GeographicTaxonomyDto;
 
 public class GeographicTaxonomyMapper {
 

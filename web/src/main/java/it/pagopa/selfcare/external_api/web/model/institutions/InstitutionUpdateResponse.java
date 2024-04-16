@@ -15,8 +15,8 @@ public class InstitutionUpdateResponse {
     private String address;
     private String taxCode;
     private String zipCode;
-    private PaymentServiceProviderResponse paymentServiceProvider;
-    private DataProtectionOfficerResponse dataProtectionOfficer;
+    private PspDataResource paymentServiceProvider;
+    private DpoDataResource dataProtectionOfficer;
     private String businessRegisterPlace;
     private List<String> geographicTaxonomies;
     private boolean imported;

@@ -55,10 +55,10 @@ public class InstitutionMapperCustom {
         return billingResponse;
     }
 
-    public static DataProtectionOfficerResponse toDataProtectionOfficerResponse(DataProtectionOfficer dataProtectionOfficer) {
-        DataProtectionOfficerResponse response = null;
+    public static DpoDataResource toDataProtectionOfficerResponse(DataProtectionOfficer dataProtectionOfficer) {
+        DpoDataResource response = null;
         if (dataProtectionOfficer != null) {
-            response = new DataProtectionOfficerResponse();
+            response = new DpoDataResource();
             response.setPec(dataProtectionOfficer.getPec());
             response.setEmail(dataProtectionOfficer.getEmail());
             response.setAddress(dataProtectionOfficer.getAddress());
@@ -66,10 +66,10 @@ public class InstitutionMapperCustom {
         return response;
     }
 
-    public static PaymentServiceProviderResponse toPaymentServiceProviderResponse(PaymentServiceProvider paymentServiceProvider) {
-        PaymentServiceProviderResponse response = null;
+    public static PspDataResource toPaymentServiceProviderResponse(PaymentServiceProvider paymentServiceProvider) {
+        PspDataResource response = null;
         if (paymentServiceProvider != null) {
-            response = new PaymentServiceProviderResponse();
+            response = new PspDataResource();
             response.setAbiCode(paymentServiceProvider.getAbiCode());
             response.setLegalRegisterName(paymentServiceProvider.getLegalRegisterName());
             response.setBusinessRegisterNumber(paymentServiceProvider.getBusinessRegisterNumber());
