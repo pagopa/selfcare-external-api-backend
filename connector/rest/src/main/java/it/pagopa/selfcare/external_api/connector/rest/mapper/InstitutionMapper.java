@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest.mapper;
 
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionRequest;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
@@ -12,6 +13,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -29,6 +31,9 @@ public interface InstitutionMapper {
     @Mapping(target = "companyInformations", source = ".", qualifiedByName = "toCompanyInformationsEntity")
     @Mapping(target = "assistanceContacts", source = ".", qualifiedByName = "toAssistanceContacts")
     Institution toEntity(InstitutionResponse dto);
+
+    @Mapping(target = "taxCode", source = "externalId")
+    InstitutionRequest toInstitutionRequest(CreatePnPgInstitution createPnPgInstitution);
 
     @Named("toCompanyInformationsEntity")
     static CompanyInformations toCompanyInformationsEntity(InstitutionResponse dto) {

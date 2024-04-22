@@ -62,19 +62,23 @@ class MsCoreConnectorImplTest {
     void createPnPgInstitution() {
         //given
         CreatePnPgInstitution request = mockInstance(new CreatePnPgInstitution());
-        InstitutionPnPgResponse response = mockInstance(new InstitutionPnPgResponse());
-        when(msCoreRestClient.createPnPgInstitution(any()))
+        ResponseEntity<InstitutionResponse> response = mock(ResponseEntity.class);
+        InstitutionResponse institutionResponse = mockInstance(new InstitutionResponse());
+        when(response.getBody()).thenReturn(institutionResponse);
+
+        when(institutionApiClient._createInstitutionFromInfocamereUsingPOST(any()))
                 .thenReturn(response);
         //when
         String institutionPnPgResponse = msCoreConnector.createPnPgInstitution(request);
         //then
-        ArgumentCaptor<CreatePnPgInstitutionRequest> requestCaptor = ArgumentCaptor.forClass(CreatePnPgInstitutionRequest.class);
-        verify(msCoreRestClient, times(1))
-                .createPnPgInstitution(requestCaptor.capture());
+        ArgumentCaptor<InstitutionRequest> requestCaptor = ArgumentCaptor.forClass(InstitutionRequest.class);
+        verify(institutionApiClient, times(1))
+                ._createInstitutionFromInfocamereUsingPOST(requestCaptor.capture());
         verifyNoMoreInteractions(msCoreRestClient);
-        CreatePnPgInstitutionRequest capturedRequest = requestCaptor.getValue();
-        assertEquals(request.getExternalId(), capturedRequest.getTaxId());
+        InstitutionRequest capturedRequest = requestCaptor.getValue();
+        assertEquals(request.getExternalId(), capturedRequest.getExternalId());
         assertEquals(request.getDescription(), capturedRequest.getDescription());
+        assertEquals(institutionResponse.getId(), institutionPnPgResponse);
 
     }
 

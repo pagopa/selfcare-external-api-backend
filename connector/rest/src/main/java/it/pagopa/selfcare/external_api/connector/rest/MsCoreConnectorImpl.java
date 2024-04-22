@@ -2,6 +2,7 @@ package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionRequest;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
@@ -165,11 +166,12 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     public String createPnPgInstitution(CreatePnPgInstitution request) {
         log.trace("createPnPgInstitution start");
         log.debug(LogUtils.CONFIDENTIAL_MARKER, "createPnPgInstitution request = {}", request);
-        CreatePnPgInstitutionRequest institutionRequest = new CreatePnPgInstitutionRequest(request);
-        InstitutionPnPgResponse pnPgInstitution = restClient.createPnPgInstitution(institutionRequest);
-        log.debug("createPnPgInstitution result = {}", pnPgInstitution.getId());
+        InstitutionRequest institutionRequest = institutionMapper.toInstitutionRequest(request);
+        InstitutionResponse response = Optional.ofNullable(institutionApiClient._createInstitutionFromInfocamereUsingPOST(institutionRequest).getBody())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Institution with %s taxCode not found!", request.getExternalId())));
+        log.debug("createPnPgInstitution result = {}", response.getId());
         log.trace("createPnPgInstitution end");
-        return pnPgInstitution.getId();
+        return response.getId();
     }
 
     @Override
