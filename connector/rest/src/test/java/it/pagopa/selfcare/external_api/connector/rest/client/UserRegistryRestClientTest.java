@@ -7,6 +7,7 @@ import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.UserRegistryRestClientTestConfig;
 import it.pagopa.selfcare.external_api.connector.rest.model.user_registry.EmbeddedExternalId;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.user.MutableUserFieldsDto;
 import it.pagopa.selfcare.external_api.model.user.SaveUserDto;
 import it.pagopa.selfcare.external_api.model.user.User;
@@ -71,8 +72,8 @@ class UserRegistryRestClientTest extends BaseFeignRestClientTest {
         //when
         final Executable executable = () -> restClient.getUserByInternalId(userId, fieldList);
         //then
-        final FeignException.NotFound e = assertThrows(FeignException.NotFound.class, executable);
-        assertTrue(e.getMessage().contains("Request was not matched"));
+        final ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
+        assertTrue(e.getMessage().contains("Not Found"));
     }
 
     @Test
@@ -83,8 +84,8 @@ class UserRegistryRestClientTest extends BaseFeignRestClientTest {
         //when
         final Executable executable = () -> restClient.getUserByInternalId(userId, fieldList);
         //then
-        final FeignException.NotFound e = assertThrows(FeignException.NotFound.class, executable);
-        assertTrue(e.getMessage().contains("Request was not matched"));
+        final ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
+        assertTrue(e.getMessage().contains("Not Found"));
     }
 
     @Test
