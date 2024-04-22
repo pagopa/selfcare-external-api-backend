@@ -1,14 +1,22 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
+import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingTokenControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingDefaultRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingImportRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPaRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPspRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -37,6 +46,9 @@ public class OnboardingMsConnectorImplTest {
 
     @Mock
     private MsOnboardingControllerApi onboardingControllerApi;
+
+    @Mock
+    private MsCoreInstitutionApiClient institutionApiClient;
 
     @Spy
     private TokenMapper tokenMapper = new TokenMapperImpl();
@@ -153,5 +165,50 @@ public class OnboardingMsConnectorImplTest {
         OnboardingImportRequest actual = onboardingRequestCaptor.getValue();
         assertEquals(actual.getInstitution().getTaxCode(), institutionUpdate.getTaxCode());
         verifyNoMoreInteractions(onboardingControllerApi);
+    }
+
+    @Test
+    void getInstitutionsByTaxCodeAndSubunitCode_happyPath() {
+        InstitutionsResponse institutionResponse = new InstitutionsResponse();
+        institutionResponse.setInstitutions(List.of(new InstitutionResponse()));
+
+        when(institutionApiClient._getInstitutionsUsingGET(anyString(), anyString(), any(), any())).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
+        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+
+        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode("taxCode", "subunitCode");
+
+        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(anyString(), anyString(), any(), any());
+        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
+        assert institutions.size() == 1;
+    }
+
+    @Test
+    void getInstitutionsByTaxCodeAndSubunitCode_nullTaxCode() {
+        InstitutionsResponse institutionResponse = new InstitutionsResponse();
+        institutionResponse.setInstitutions(List.of(new it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse()));
+
+        when(institutionApiClient._getInstitutionsUsingGET(null, "subunitCode", null, null)).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
+        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+
+        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode(null, "subunitCode");
+
+        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(null, "subunitCode", null, null);
+        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
+        assert institutions.size() == 1;
+    }
+
+    @Test
+    void getInstitutionsByTaxCodeAndSubunitCode_nullSubunitCode() {
+        InstitutionsResponse institutionResponse = new InstitutionsResponse();
+        institutionResponse.setInstitutions(List.of(new InstitutionResponse()));
+
+        when(institutionApiClient._getInstitutionsUsingGET("taxCode", null, null, null)).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
+        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+
+        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode("taxCode", null);
+
+        verify(institutionApiClient, times(1))._getInstitutionsUsingGET("taxCode", null, null, null);
+        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
+        assert institutions.size() == 1;
     }
 }

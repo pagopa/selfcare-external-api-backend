@@ -4,7 +4,6 @@ import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportData;
-import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.*;
 import it.pagopa.selfcare.external_api.web.model.user.UserDto;
 import org.junit.jupiter.api.Test;

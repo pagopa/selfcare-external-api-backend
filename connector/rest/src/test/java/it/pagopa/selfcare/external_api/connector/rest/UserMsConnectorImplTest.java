@@ -73,7 +73,7 @@ class UserMsConnectorImplTest {
         when(userResourceMapper.toUser(any(UserToOnboard.class))).thenReturn(new User());
         when(msUserApiRestClient._usersPost(any(CreateUserDto.class))).thenReturn(new ResponseEntity<>("userId", HttpStatus.OK));
 
-        String userId = userMsConnector.createUser(institution, "productId", "MANAGER", List.of("productRole"), userToOnboard);
+        String userId = userMsConnector.createUser(institution, "productId", "MANAGER", List.of("productRole"), userToOnboard, false);
 
         verify(msUserApiRestClient, times(1))._usersPost(any(CreateUserDto.class));
         verify(userResourceMapper, times(1)).toUser(any(UserToOnboard.class));
@@ -89,7 +89,7 @@ class UserMsConnectorImplTest {
 
         when(msUserApiRestClient._usersPost(any(CreateUserDto.class))).thenReturn(new ResponseEntity<>("userId", HttpStatus.OK));
 
-        String userId = userMsConnector.createUser(institution, "productId", "MANAGER", List.of("productRole"), null);
+        String userId = userMsConnector.createUser(institution, "productId", "MANAGER", List.of("productRole"), null, false);
 
         verify(msUserApiRestClient, times(1))._usersPost(any(CreateUserDto.class));
         assert userId.equals("userId");
