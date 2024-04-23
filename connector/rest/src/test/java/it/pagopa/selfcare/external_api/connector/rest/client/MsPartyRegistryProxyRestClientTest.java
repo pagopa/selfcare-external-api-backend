@@ -5,6 +5,7 @@ import feign.FeignException;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.MsPartyRegistryProxyRestClientTestConfig;
+import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
@@ -73,6 +74,6 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
                 // when
                 Executable executable = () -> restClient.findInstitution(institutionExternalId, null, null);
                 //then
-                assertThrows(FeignException.NotFound.class, executable);
+                assertThrows(ResourceNotFoundException.class, executable);
         }
 }
