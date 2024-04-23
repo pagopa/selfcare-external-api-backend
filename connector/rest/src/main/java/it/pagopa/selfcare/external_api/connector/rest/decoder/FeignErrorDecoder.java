@@ -11,7 +11,7 @@ public class FeignErrorDecoder extends ErrorDecoder.Default {
     @Override
     public Exception decode(String methodKey, Response response) {
         if (response.status() == 404) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException(response.reason());
         } else if (response.status() == 400 && response.request().httpMethod().equals(Request.HttpMethod.HEAD)) {
             throw new InstitutionDoesNotExistException();
         } else {
