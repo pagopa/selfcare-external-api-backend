@@ -1566,7 +1566,7 @@
       },
       "BillingDataDto" : {
         "title" : "BillingDataDto",
-        "required" : [ "businessName", "digitalAddress", "recipientCode", "registeredOffice", "zipCode" ],
+        "required" : [ "businessName", "digitalAddress", "registeredOffice" ],
         "type" : "object",
         "properties" : {
           "businessName" : {
