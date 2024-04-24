@@ -6,6 +6,7 @@ import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.core.strategy.OnboardingValidationStrategy;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.User;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
@@ -130,13 +131,17 @@ class OnboardingServiceImplTest {
         request.setInstitutionTaxCode("taxCode");
         request.setInstitutionSubunitCode("subunitCode");
         request.setUsers(List.of(userToOnboard, userToOnboard2, userToOnboard3));
+        request.setProductId("productId");
 
         Institution institution = new Institution();
         institution.setId("institutionId");
+        Onboarding onboarding = new Onboarding();
+        onboarding.setProductId("productId");
+        institution.setOnboarding(List.of(onboarding));
 
         when(onboardingMsConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(), anyString())).thenReturn(List.of(institution));
-        when(userMsConnector.addUserRole("id", institution, null, "MANAGER", List.of("admin"))).thenReturn("userId");
-        when(userMsConnector.createUser(institution, null,"MANAGER", List.of("admin","operator"), userToOnboard2, true)).thenReturn("userId");
+        when(userMsConnector.addUserRole("id", institution, "productId", "MANAGER", List.of("admin"))).thenReturn("userId");
+        when(userMsConnector.createUser(institution, "productId","MANAGER", List.of("admin","operator"), userToOnboard2, true)).thenReturn("userId");
 
         List<RelationshipInfo> result = onboardingServiceImpl.onboardingUsers(request, "userName", "surname");
 
@@ -162,9 +167,13 @@ class OnboardingServiceImplTest {
         request.setInstitutionTaxCode("taxCode");
         request.setInstitutionSubunitCode("subunitCode");
         request.setUsers(new ArrayList<>());
+        request.setProductId("productId");
 
         Institution institution = new Institution();
         institution.setId("institutionId");
+        Onboarding onboarding = new Onboarding();
+        onboarding.setProductId("productId");
+        institution.setOnboarding(List.of(onboarding));
 
         when(onboardingMsConnectorMock.getInstitutionsByTaxCodeAndSubunitCode(anyString(), anyString())).thenReturn(List.of(institution));
 
