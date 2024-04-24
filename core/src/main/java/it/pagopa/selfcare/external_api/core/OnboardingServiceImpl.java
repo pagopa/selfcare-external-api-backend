@@ -14,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
@@ -53,6 +54,11 @@ class OnboardingServiceImpl implements OnboardingService {
         Institution institution = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode(request.getInstitutionTaxCode(), request.getInstitutionSubunitCode()).stream()
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Institution not found for given value"));
+
+        if(CollectionUtils.isEmpty(institution.getOnboarding()) ||
+                institution.getOnboarding().stream().noneMatch(onboarding -> onboarding.getProductId().equals(request.getProductId()))){
+            throw new ResourceNotFoundException("Product not found for given institution");
+        }
 
         Map<String, List<UserToOnboard>> usersWithId = new HashMap<>();
         Map<String, List<UserToOnboard>> usersWithoutId = new HashMap<>();
