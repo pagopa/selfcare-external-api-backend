@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
+import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.core.config.CoreTestConfig;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -15,9 +16,7 @@ import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInfo;
-import it.pagopa.selfcare.external_api.model.user.WorkContact;
+import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +60,9 @@ class InstitutionServiceImplTest {
 
     @MockBean
     private MsCoreConnector msCoreConnectorMock;
+
+    @MockBean
+    private UserMsConnector userMsConnector;
 
     @BeforeEach
     void beforeEach() {
@@ -296,9 +298,6 @@ class InstitutionServiceImplTest {
         verifyNoMoreInteractions(msCoreConnectorMock, productsConnectorMock);
     }
 
-
-
-
     @Test
     void getInstitutionProductUsers_nullInstitutionId() {
         // given
@@ -316,6 +315,20 @@ class InstitutionServiceImplTest {
 
 
     @Test
+    void getInstitutionProductUsersV2_nullInstitutionId() {
+        // given
+        final String institutionId = null;
+        final String productId = "productId";
+        final String userId = null;
+        final Optional<Set<String>> productRole = Optional.empty();
+        // when
+        Executable executable = () -> institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, null);
+        // then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        Assertions.assertEquals(REQUIRED_INSTITUTION_MESSAGE, e.getMessage());
+        verifyNoInteractions(productsConnectorMock, msCoreConnectorMock);
+    }
+    @Test
     void getInstitutionProductUsers_nullProductId() {
         // given
         final String institutionId = "institutionId";
@@ -324,6 +337,20 @@ class InstitutionServiceImplTest {
         final Optional<Set<String>> productRole = Optional.empty();
         // when
         Executable executable = () -> institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRole, null);
+        // then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
+        Assertions.assertEquals("A Product id is required", e.getMessage());
+        verifyNoInteractions(productsConnectorMock, msCoreConnectorMock);
+    }
+    @Test
+    void getInstitutionProductUsersV2_nullProductId() {
+        // given
+        final String institutionId = "institutionId";
+        final String productId = null;
+        final String userId = "userId";
+        final Optional<Set<String>> productRole = Optional.empty();
+        // when
+        Executable executable = () -> institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, null);
         // then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals("A Product id is required", e.getMessage());
@@ -378,6 +405,61 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.workContacts));
         assertFalse(capturedFields.contains(User.Fields.fiscalCode));
         verifyNoMoreInteractions(msCoreConnectorMock, userRegistryConnectorMock);
+        verifyNoInteractions(productsConnectorMock);
+    }
+
+
+
+
+    @Test
+    void getInstitutionProductUsersV2() {
+        // given
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+
+        final Optional<Set<String>> productRole = Optional.empty();
+
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId(productId);
+        onboardedProductResponse.setStatus(ACTIVE.name());
+        onboardedProductResponse.setRole(PartyRole.DELEGATE.name());
+        onboardedProductResponse.setProductRole(PartyRole.DELEGATE.getSelfCareAuthority().name());
+
+        final UserInstitution userInstitution = mockInstance(new UserInstitution());
+        final String userId = UUID.randomUUID().toString();
+        userInstitution.setInstitutionId(institutionId);
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+        final User user = mockInstance(new User());
+        user.setId(userId);
+        WorkContact contact = mockInstance(new WorkContact());
+        Map<String, WorkContact> workContact = new HashMap<>();
+        workContact.put(institutionId, contact);
+        user.setWorkContacts(workContact);
+        when(userMsConnector.getUsersInstitutions(userId, institutionId, null, null, null, null, null, null))
+                .thenReturn(Collections.singletonList(userInstitution));
+        when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
+                .thenReturn(user);
+        // when
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, null);
+        // then
+        Assertions.assertNotNull(userInfos);
+        userInfos.forEach(userInfo1 -> {
+            TestUtils.checkNotNullFields(userInfo1, "products");
+            TestUtils.checkNotNullFields(userInfo1.getUser());
+        });
+
+        verify(userMsConnector, times(1))
+                .getUsersInstitutions(userId, institutionId, null, null, null, null, null, null);
+
+        ArgumentCaptor<EnumSet<User.Fields>> filedsCaptor = ArgumentCaptor.forClass(EnumSet.class);
+        verify(userRegistryConnectorMock, times(1))
+                .getUserByInternalId(eq(userId), filedsCaptor.capture());
+        EnumSet<User.Fields> capturedFields = filedsCaptor.getValue();
+        assertTrue(capturedFields.contains(User.Fields.name));
+        assertTrue(capturedFields.contains(User.Fields.familyName));
+        assertTrue(capturedFields.contains(User.Fields.workContacts));
+        assertFalse(capturedFields.contains(User.Fields.fiscalCode));
+        verifyNoMoreInteractions(userMsConnector, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }
 
