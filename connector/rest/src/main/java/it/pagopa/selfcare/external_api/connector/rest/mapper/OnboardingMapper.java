@@ -50,6 +50,7 @@ public interface OnboardingMapper {
                 .map(InstitutionPaSubunitType::valueOf)
                 .orElse(null));
         institution.setOrigin(Optional.ofNullable(onboardingData.getOrigin()).map(Origin::fromValue).orElse(null));
+        institution.setOriginId(onboardingData.getOriginId());
         if(Objects.nonNull(onboardingData.getLocation())) {
             institution.setCity(onboardingData.getLocation().getCity());
             institution.setCountry(onboardingData.getLocation().getCountry());
@@ -85,6 +86,7 @@ public interface OnboardingMapper {
                 .orElse(null));
 
         institutionPsp.setOrigin(Optional.ofNullable(onboardingData.getOrigin()).map(Origin::fromValue).orElse(null));
+        institutionPsp.setOriginId(onboardingData.getOriginId());
         if(Objects.nonNull(onboardingData.getLocation())) {
             institutionPsp.setCity(onboardingData.getLocation().getCity());
             institutionPsp.setCountry(onboardingData.getLocation().getCountry());
