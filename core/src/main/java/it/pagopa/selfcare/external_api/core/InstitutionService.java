@@ -23,6 +23,8 @@ public interface InstitutionService {
 
     Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid);
 
+    Collection<UserInfo> getInstitutionProductUsersV2(String institutionId, String productId, String userId, Optional<Set<String>> productRoles, String xSelfCareUid);
+
     List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId);
 
     Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode);
