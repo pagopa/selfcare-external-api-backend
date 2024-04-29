@@ -1,9 +1,12 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
+import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.security.SelfCareAuthority;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
+import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
@@ -13,9 +16,7 @@ import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.user.RelationshipState;
-import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,16 +41,18 @@ class InstitutionServiceImpl implements InstitutionService {
     private final ProductsConnector productsConnector;
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
+    private final UserMsConnector userMsConnector;
     private final static String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
     private final Set<String> serviceType;
 
     @Autowired
     InstitutionServiceImpl(ProductsConnector productsConnector,
                            MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector,
-                           @Value("${external_api.allowed-service-types}")String[] serviceType) {
+                           UserMsConnector userMsConnector, @Value("${external_api.allowed-service-types}")String[] serviceType) {
         this.productsConnector = productsConnector;
         this.msCoreConnector = msCoreConnector;
         this.userRegistryConnector = userRegistryConnector;
+        this.userMsConnector = userMsConnector;
         this.serviceType = Set.of(serviceType);
     }
 
@@ -128,6 +131,69 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", result);
         log.trace("getInstitutionProductUsers end");
         return result;
+    }
+
+
+    @Override
+    public Collection<UserInfo> getInstitutionProductUsersV2(String institutionId, String productId, String userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
+        log.trace("getInstitutionProductUsersV2 start");
+        log.debug("getInstitutionProductUsersV2 institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
+        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
+        Assert.hasText(userId, "User is required");
+        Assert.hasText(productId, "A Product id is required");
+
+        List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, institutionId, null, null, null, null, null, null);
+        if(Objects.isNull(usersInstitutions) || usersInstitutions.isEmpty()) return List.of();
+
+        Collection<UserInfo> userInfos = usersInstitutions.stream()
+                .peek(userInstitution -> userInstitution.setProducts(userInstitution.getProducts().stream()
+                        .filter(item -> Objects.isNull(productId) || productId.equals(item.getProductId()))
+                        .filter(item -> productRoles.isEmpty() || productRoles.get().stream().anyMatch(role -> role.equals(item.getProductRole())))
+                        .filter(item -> RelationshipState.ACTIVE.name().equals(item.getStatus()))
+                        .toList()))
+                .flatMap(userInstitution -> userInstitution.getProducts().stream()
+                        .map(onboardedProduct -> toUserInfos(userId, userInstitution, onboardedProduct)))
+                .toList();
+
+        if(xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
+            userInfos.forEach(userInfo ->
+                    userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST_FISCAL_CODE)));
+        } else {
+            userInfos.forEach(userInfo ->
+                    userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST)));
+        }
+        log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", userInfos);
+        log.trace("getInstitutionProductUsers end");
+        return userInfos;
+    }
+
+    private UserInfo toUserInfos(String userId, UserInstitution userInstitution, OnboardedProductResponse onboardedProduct) {
+        SelfCareAuthority selfCareAuthority = Arrays.stream(PartyRole.values())
+                    .filter(partyRole -> partyRole.name().equals(onboardedProduct.getRole()))
+                    .findAny()
+                    .map(PartyRole::getSelfCareAuthority)
+                    .orElseThrow(() -> new RuntimeException(String.format("Role for user %s and institution %s not found!", userId, userInstitution.getInstitutionId())));
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userId);
+        userInfo.setStatus(onboardedProduct.getStatus());
+        userInfo.setRole(selfCareAuthority);
+        userInfo.setPartyRole(PartyRole.valueOf(onboardedProduct.getRole()));
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setId(onboardedProduct.getProductId());
+        RoleInfo roleInfo = new RoleInfo();
+        roleInfo.setRelationshipId(userId);
+        roleInfo.setSelcRole(selfCareAuthority);
+        roleInfo.setRole(onboardedProduct.getProductRole());
+        roleInfo.setStatus(onboardedProduct.getStatus());
+        ArrayList<RoleInfo> roleInfos = new ArrayList<>();
+        roleInfos.add(roleInfo);
+        productInfo.setRoleInfos(roleInfos);
+        Map<String, ProductInfo> products = new HashMap<>();
+        products.put(productInfo.getId(), productInfo);
+        userInfo.setProducts(products);
+        userInfo.setInstitutionId(userInstitution.getInstitutionId());
+        return userInfo;
     }
 
     @Override
