@@ -10,10 +10,13 @@ import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
+import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,9 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -105,5 +106,32 @@ public class InstitutionV2Controller {
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
         return productResources;
+    }
+
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @GetMapping(value = "/{institutionId}/products/{productId}/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
+    public List<UserResource> getInstitutionProductsUsers(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                          @PathVariable("institutionId") String institutionId,
+                                                          @ApiParam("${swagger.external_api.products.model.id}")
+                                                          @PathVariable("productId")
+                                                          String productId,
+                                                          @ApiParam("${swagger.external_api.user.model.id}")
+                                                          @RequestParam(value = "userId", required = false)
+                                                          Optional<String> userId,
+                                                          @ApiParam("${swagger.external_api.model.productRoles}")
+                                                          @RequestParam(value = "productRoles", required = false)
+                                                          Optional<Set<String>> productRoles,
+                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
+        log.trace("getInstitutionProductUsers start");
+        log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
+        List<UserResource> result = userInfos.stream()
+                .map(model -> UserMapper.toUserResource(model, productId))
+                .collect(Collectors.toList());
+        log.debug("getInstitutionProductUsers result = {}", result);
+        log.trace("getInstitutionProductUsers end");
+        return result;
     }
 }
