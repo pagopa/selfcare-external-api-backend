@@ -33,6 +33,9 @@ public class OnboardingProductDto {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}")
     private String origin;
 
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.originId}")
+    private String ivassCode;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.pricingPlan}")
     private String pricingPlan;
 
