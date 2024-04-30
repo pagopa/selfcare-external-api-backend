@@ -16,6 +16,7 @@ import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
+import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -137,7 +139,6 @@ class InstitutionServiceImpl implements InstitutionService {
     @Override
     public Collection<UserInfo> getInstitutionProductUsersV2(String institutionId, String productId, String userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
-        Assert.hasText(userId, "User is required");
         Assert.hasText(productId, "A Product id is required");
 
         List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, institutionId, null, null, null, null, null, null);
@@ -150,8 +151,11 @@ class InstitutionServiceImpl implements InstitutionService {
                         .filter(item -> RelationshipState.ACTIVE.name().equals(item.getStatus()))
                         .toList()))
                 .flatMap(userInstitution -> userInstitution.getProducts().stream()
-                        .map(onboardedProduct -> toUserInfos(userId, userInstitution, onboardedProduct)))
-                .toList();
+                        .map(onboardedProduct -> toUserInfos(userInstitution, onboardedProduct)))
+                .collect(Collectors.toMap(UserInfo::getId,
+                        Function.identity(),
+                        USER_INFO_MERGE_FUNCTION))
+                .values();
 
         if(xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
             userInfos.forEach(userInfo ->
@@ -165,22 +169,22 @@ class InstitutionServiceImpl implements InstitutionService {
         return userInfos;
     }
 
-    private UserInfo toUserInfos(String userId, UserInstitution userInstitution, OnboardedProductResponse onboardedProduct) {
+    private UserInfo toUserInfos(UserInstitution userInstitution, OnboardedProductResponse onboardedProduct) {
         SelfCareAuthority selfCareAuthority = Arrays.stream(PartyRole.values())
                     .filter(partyRole -> partyRole.name().equals(onboardedProduct.getRole()))
                     .findAny()
                     .map(PartyRole::getSelfCareAuthority)
-                    .orElseThrow(() -> new RuntimeException(String.format("Role for user %s and institution %s not found!", userId, userInstitution.getInstitutionId())));
+                    .orElseThrow(() -> new RuntimeException(String.format("Role for user %s and institution %s not found!", userInstitution.getUserId(), userInstitution.getInstitutionId())));
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
+        userInfo.setId(userInstitution.getUserId());
         userInfo.setStatus(onboardedProduct.getStatus());
         userInfo.setRole(selfCareAuthority);
         userInfo.setPartyRole(PartyRole.valueOf(onboardedProduct.getRole()));
         ProductInfo productInfo = new ProductInfo();
         productInfo.setId(onboardedProduct.getProductId());
         RoleInfo roleInfo = new RoleInfo();
-        roleInfo.setRelationshipId(userId);
+        roleInfo.setRelationshipId(userInstitution.getUserId());
         roleInfo.setSelcRole(selfCareAuthority);
         roleInfo.setRole(onboardedProduct.getProductRole());
         roleInfo.setStatus(onboardedProduct.getStatus());
@@ -193,6 +197,27 @@ class InstitutionServiceImpl implements InstitutionService {
         userInfo.setInstitutionId(userInstitution.getInstitutionId());
         return userInfo;
     }
+
+    private static final BinaryOperator<UserInfo> USER_INFO_MERGE_FUNCTION = (userInfo1, userInfo2) -> {
+        String id = userInfo2.getProducts().keySet().toArray()[0].toString();
+
+        if (userInfo1.getProducts().containsKey(id)) {
+            userInfo1.getProducts().get(id).getRoleInfos().addAll(userInfo2.getProducts().get(id).getRoleInfos());
+        } else {
+            userInfo1.getProducts().put(id, userInfo2.getProducts().get(id));
+        }
+        if (userInfo1.getStatus().equals(userInfo2.getStatus())) {
+            if (userInfo1.getRole().compareTo(userInfo2.getRole()) > 0) {
+                userInfo1.setRole(userInfo2.getRole());
+            }
+        } else {
+            if ("ACTIVE".equals(userInfo2.getStatus())) {
+                userInfo1.setRole(userInfo2.getRole());
+                userInfo1.setStatus(userInfo2.getStatus());
+            }
+        }
+        return userInfo1;
+    };
 
     @Override
     public List<GeographicTaxonomy> getGeographicTaxonomyList(String institutionId) {

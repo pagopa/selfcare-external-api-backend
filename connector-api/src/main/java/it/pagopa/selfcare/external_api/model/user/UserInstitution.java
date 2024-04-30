@@ -9,6 +9,7 @@ import java.util.List;
 public class UserInstitution {
     private String institutionId;
 
+    private String userId;
     private String userMailUuid;
 
     @Valid
