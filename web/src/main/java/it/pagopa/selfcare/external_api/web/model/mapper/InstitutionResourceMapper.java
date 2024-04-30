@@ -37,6 +37,7 @@ public interface InstitutionResourceMapper {
     @Mapping(target = "companyInformations.businessRegisterPlace", source = "businessRegisterPlace")
     @Mapping(target = "assistanceContacts.supportPhone", source = "supportPhone")
     @Mapping(target = "assistanceContacts.supportEmail", source = "supportEmail")
+    @Mapping(target = "status", source = "state")
     @Mapping(target = "dpoData", source = "dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
     @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
     @Mapping(target = "userProductRoles", source = "productInfo", qualifiedByName = "toUserProductRoles")
