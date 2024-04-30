@@ -428,6 +428,7 @@ class InstitutionServiceImplTest {
         final UserInstitution userInstitution = mockInstance(new UserInstitution());
         final String userId = UUID.randomUUID().toString();
         userInstitution.setInstitutionId(institutionId);
+        userInstitution.setUserId(userId);
         userInstitution.setProducts(List.of(onboardedProductResponse));
         final User user = mockInstance(new User());
         user.setId(userId);
@@ -511,6 +512,63 @@ class InstitutionServiceImplTest {
         assertTrue(capturedFields.contains(User.Fields.workContacts));
         assertFalse(capturedFields.contains(User.Fields.fiscalCode));
         verifyNoMoreInteractions(msCoreConnectorMock, userRegistryConnectorMock);
+        verifyNoInteractions(productsConnectorMock);
+    }
+
+
+
+    @Test
+    void getInstitutionProductUsers_userIdFilterIsNull(){
+        // given
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+        final String xSelfCareUid = "unregistered-interceptor";
+        final Optional<Set<String>> productRole = Optional.empty();
+
+        final String userId = UUID.randomUUID().toString();
+        final User user = mockInstance(new User());
+        user.setId(userId);
+        WorkContact contact = mockInstance(new WorkContact());
+        Map<String, WorkContact> workContact = new HashMap<>();
+        workContact.put(institutionId, contact);
+
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId(productId);
+        onboardedProductResponse.setStatus(ACTIVE.name());
+        onboardedProductResponse.setRole(PartyRole.DELEGATE.name());
+        onboardedProductResponse.setProductRole(PartyRole.DELEGATE.getSelfCareAuthority().name());
+
+        final UserInstitution userInstitution = mockInstance(new UserInstitution());
+        userInstitution.setInstitutionId(institutionId);
+        userInstitution.setUserId(userId);
+        userInstitution.setProducts(List.of(onboardedProductResponse));
+
+        user.setWorkContacts(workContact);
+        when(userMsConnector.getUsersInstitutions(null, institutionId, null, null, null, null, null, null))
+                .thenReturn(Collections.singletonList(userInstitution));
+        when(userRegistryConnectorMock.getUserByInternalId(anyString(), any()))
+                .thenReturn(user);
+        // when
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, null, productRole, xSelfCareUid);
+        // then
+        Assertions.assertNotNull(userInfos);
+        userInfos.forEach(userInfo1 -> {
+            TestUtils.checkNotNullFields(userInfo1, "products");
+            TestUtils.checkNotNullFields(userInfo1.getUser());
+        });
+        ArgumentCaptor<UserInfo.UserInfoFilter> filterCaptor = ArgumentCaptor.forClass(UserInfo.UserInfoFilter.class);
+        verify(userMsConnector, times(1))
+                .getUsersInstitutions(null, institutionId, null, null, null, null, null, null);
+
+        ArgumentCaptor<EnumSet<User.Fields>> filedsCaptor = ArgumentCaptor.forClass(EnumSet.class);
+        verify(userRegistryConnectorMock, times(1))
+                .getUserByInternalId(eq(userId), filedsCaptor.capture());
+        EnumSet<User.Fields> capturedFields = filedsCaptor.getValue();
+        assertTrue(capturedFields.contains(User.Fields.name));
+        assertTrue(capturedFields.contains(User.Fields.familyName));
+        assertTrue(capturedFields.contains(User.Fields.workContacts));
+        assertFalse(capturedFields.contains(User.Fields.fiscalCode));
+        verifyNoMoreInteractions(userMsConnector, userRegistryConnectorMock);
         verifyNoInteractions(productsConnectorMock);
     }
 
