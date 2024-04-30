@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
+import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
@@ -65,6 +66,7 @@ public class InstitutionV2Controller {
         List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
                 .stream()
                 .map(institutionResourceMapper::toResource)
+                .filter(item -> RelationshipState.ACTIVE.name().equals(item.getStatus()))
                 .collect(Collectors.collectingAndThen(toCollection(() -> new TreeSet<>(comparing(InstitutionResource::getId))),
                         ArrayList::new));
         log.debug("getInstitutions result = {}", institutionResources);
