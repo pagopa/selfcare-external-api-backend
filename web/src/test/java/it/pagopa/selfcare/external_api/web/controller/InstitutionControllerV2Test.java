@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
+import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
@@ -86,11 +87,15 @@ public class InstitutionControllerV2Test {
         institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
         institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
         institutionInfo.setSupportEmail("spportEmail@example.com");
+        institutionInfo.setState(RelationshipState.ACTIVE.name());
+
+        OnboardedInstitutionInfo institutionInfoWithoutState = mockInstance(new OnboardedInstitutionInfo(), "setId");
+
         when(userServiceMock.getOnboardedInstitutionsDetails(anyString(), anyString()))
-                .thenReturn(Collections.singletonList(institutionInfo));
+                .thenReturn(List.of(institutionInfo, institutionInfoWithoutState));
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get(BASE_URL + "")
+                        .get(BASE_URL)
                         .param("productId", productId)
                         .principal(authentication)
                         .contentType(APPLICATION_JSON_VALUE)
