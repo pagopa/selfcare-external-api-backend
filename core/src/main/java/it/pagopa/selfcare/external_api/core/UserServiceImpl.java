@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -186,4 +185,36 @@ public class UserServiceImpl implements UserService {
         return onboardedInstitutionsInfo;
     }
 
+    @Override
+    public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetailsActive(String userId, String productId) {
+        List<UserInstitution> institutionsWithProductActive = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null)
+                .stream()
+                .filter(item -> Objects.nonNull(item.getProducts()))
+                .filter(item -> item.getProducts().stream()
+                        .filter(product -> Objects.nonNull(product.getProductId()))
+                        .anyMatch(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus())))
+                .toList();
+
+        List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
+
+        institutionsWithProductActive
+                .forEach(institution -> {
+                    List<OnboardedInstitutionInfo> institutionOnboardings = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
+                    onboardedInstitutionsInfo.addAll(institutionOnboardings.stream()
+                            .filter(onboardedInstitution -> RelationshipState.ACTIVE.name().equals(onboardedInstitution.getState()))
+                            .filter(onboardedInstitutionInfo -> institution.getProducts().stream()
+                                    .anyMatch(product -> product.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
+                            )
+                            .peek(onboardedInstitution -> {
+                                onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
+                                        .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
+                                                product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
+                                        .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
+                                onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
+                            })
+                    .toList());
+        });
+
+        return onboardedInstitutionsInfo;
+    }
 }

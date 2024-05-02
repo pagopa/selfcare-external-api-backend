@@ -91,7 +91,7 @@ public class InstitutionControllerV2Test {
 
         OnboardedInstitutionInfo institutionInfoWithoutState = mockInstance(new OnboardedInstitutionInfo(), "setId");
 
-        when(userServiceMock.getOnboardedInstitutionsDetails(anyString(), anyString()))
+        when(userServiceMock.getOnboardedInstitutionsDetailsActive(anyString(), anyString()))
                 .thenReturn(List.of(institutionInfo, institutionInfoWithoutState));
         //when
         MvcResult result = mvc.perform(MockMvcRequestBuilders
@@ -118,7 +118,7 @@ public class InstitutionControllerV2Test {
         reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
         reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
         verify(userServiceMock, times(1))
-                .getOnboardedInstitutionsDetails(selfCareUser.getId(), productId);
+                .getOnboardedInstitutionsDetailsActive(selfCareUser.getId(), productId);
         verifyNoMoreInteractions(institutionServiceMock);
     }
 

@@ -63,7 +63,7 @@ public class InstitutionV2Controller {
                                                      Authentication authentication) {
         log.trace("getInstitutions start");
         SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
-        List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetails(user.getId(), productId)
+        List<InstitutionResource> institutionResources = userService.getOnboardedInstitutionsDetailsActive(user.getId(), productId)
                 .stream()
                 .map(institutionResourceMapper::toResource)
                 .filter(item -> RelationshipState.ACTIVE.name().equals(item.getStatus()))
