@@ -294,4 +294,59 @@ class UserServiceImplTest {
         assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
         assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
     }
+
+
+
+    @Test
+    void getOnboardedInstitutionsDetailsActive(){
+        //given
+        final String institutionId = "institutionId";
+        final String userId = UUID.randomUUID().toString();
+        final String productId = "prod-io";
+        final String productIdDeleted = "prod-deleted";
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId(institutionId);
+
+        //Add onboardedProduct Active
+        OnboardedProductResponse onboardedProductActive = new OnboardedProductResponse();
+        onboardedProductActive.setProductId(productId);
+        onboardedProductActive.setStatus(RelationshipState.ACTIVE.name());
+        onboardedProductActive.setRole(PartyRole.MANAGER.name());
+        onboardedProductActive.setProductRole("admin");
+        onboardedProductActive.setCreatedAt(LocalDateTime.now());
+
+        //Add onboardedProduct Deleted
+        OnboardedProductResponse onboardedProductDeleted = new OnboardedProductResponse();
+        onboardedProductDeleted.setProductId(productIdDeleted);
+        onboardedProductDeleted.setStatus(RelationshipState.DELETED.name());
+
+        userInstitution.setProducts(List.of(onboardedProductActive, onboardedProductDeleted));
+
+        //Add to institution both product in state ACTIVE
+        OnboardedInstitutionInfo onboardedInstitutionActive = new OnboardedInstitutionInfo();
+        onboardedInstitutionActive.setState(RelationshipState.ACTIVE.name());
+
+        ProductInfo productInfoActive = new ProductInfo();
+        productInfoActive.setId(productId);
+        productInfoActive.setStatus(RelationshipState.ACTIVE.name());
+        onboardedInstitutionActive.setProductInfo(productInfoActive);
+        OnboardedInstitutionInfo onboardedInstitutionDeleted = new OnboardedInstitutionInfo();
+
+        ProductInfo productInfoDeleted = new ProductInfo();
+        productInfoDeleted.setId(productIdDeleted);
+        productInfoDeleted.setStatus(RelationshipState.ACTIVE.name());
+        onboardedInstitutionDeleted.setProductInfo(productInfoDeleted);
+
+        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+        when(msCoreConnector.getInstitutionDetails(institutionId)).thenReturn(List.of(onboardedInstitutionActive, onboardedInstitutionDeleted));
+
+        //when
+        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
+        //then expect only association ACTIVE
+        assertNotNull(onboardedInstitutionInfos);
+        assertFalse(onboardedInstitutionInfos.isEmpty());
+        assertEquals(1, onboardedInstitutionInfos.size());
+        verify(userMsConnector, times(1))
+                .getUsersInstitutions(eq(userId), isNull(), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+    }
 }
