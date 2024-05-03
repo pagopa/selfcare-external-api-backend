@@ -282,7 +282,7 @@ class PartyConnectorImplTest {
         verify(msUserApiRestClientMock, times(1))
                 ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
                         eq(userId),
-                        isNull(),
+                        eq(userId),
                         isNull(),
                         isNull(),
                         isNull(),
@@ -336,7 +336,7 @@ class PartyConnectorImplTest {
         verify(msUserApiRestClientMock, times(1))
                 ._usersUserIdInstitutionInstitutionIdGet(eq(institutionId),
                         eq(userId),
-                        isNull(),
+                        eq(userId),
                         isNull(),
                         isNull(),
                         isNull(),

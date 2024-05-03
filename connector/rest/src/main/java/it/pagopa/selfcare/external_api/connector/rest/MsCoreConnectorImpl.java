@@ -336,8 +336,8 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
         Assert.hasText(userId, USER_ID_IS_REQUIRED);
         Set<String> products = new HashSet<>();
-        ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, null, null, null, null, List.of(ACTIVE.name()));
-        if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().get(0))) {
+        ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
+        if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && !response.getBody().isEmpty()) {
             //There is only a document for the couple institutionId/userId
             products = response.getBody().get(0).getProducts().stream()
                     .map(OnboardedProductResponse::getProductId)
