@@ -193,6 +193,9 @@ public class UserServiceImpl implements UserService {
                 .filter(item -> item.getProducts().stream()
                         .filter(product -> Objects.nonNull(product.getProductId()))
                         .anyMatch(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus())))
+                .peek(item -> item.setProducts(item.getProducts().stream()
+                                .filter(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus()))
+                                .toList()))
                 .toList();
 
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
