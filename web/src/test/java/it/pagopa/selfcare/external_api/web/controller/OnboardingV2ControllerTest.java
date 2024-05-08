@@ -1,108 +1,310 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
-import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
-import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
-import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingInstitutionUsersRequest;
-import it.pagopa.selfcare.external_api.web.model.user.Person;
+import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(value = {OnboardingV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {OnboardingV2Controller.class, WebTestConfig.class, OnboardingResourceMapperImpl.class})
-public class OnboardingV2ControllerTest {
+@ExtendWith(MockitoExtension.class)
+class OnboardingV2ControllerTest {
 
     private static final String BASE_URL = "/v2/onboarding";
 
     @Autowired
-    protected MockMvc mvc;
+    protected OnboardingV2Controller onboardingV2Controller;
 
-    @MockBean
+    @Mock
     private OnboardingService onboardingServiceMock;
 
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void setUp() {
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(onboardingV2Controller)
+                .build();
+    }
+
+
     @Test
-    void onboardingTest(@Value("classpath:stubs/onboardingSubunitDto.json") Resource onboardingDto) throws Exception {
-        // when
-        mvc.perform(MockMvcRequestBuilders
+    void onboardingOk() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        String request = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL)
-                        .content(onboardingDto.getInputStream().readAllBytes())
+                        .content(request)
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(emptyString()));
-        // then
-        verify(onboardingServiceMock, times(1))
-                .autoApprovalOnboardingProductV2(any(OnboardingData.class));
-        verifyNoMoreInteractions(onboardingServiceMock);
+                .andReturn();
     }
 
     @Test
-    void oldContractOnboarding(@Value("classpath:stubs/onboardingImportDto.json") Resource onboardingImportDto) throws Exception {
-        // given
+    void onboardingWithoutUser() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        byte[] onboardingDtoFile = Files.readAllBytes(outputResource.getFile().toPath());
+        OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
+        });
+
+        onboardingDto.setUsers(null);
+
+        String expectedResource = StringUtils.deleteWhitespace(new String(onboardingDtoFile));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(expectedResource)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+
+    @Test
+    void onboardingWithoutBilling() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        byte[] onboardingDtoFile = Files.readAllBytes(outputResource.getFile().toPath());
+        OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
+        });
+
+        onboardingDto.setBillingData(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(onboardingDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void onboardingWithoutInstitutionType() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        byte[] onboardingDtoFile = Files.readAllBytes(outputResource.getFile().toPath());
+        OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
+        });
+
+        onboardingDto.setInstitutionType(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(onboardingDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void onboardingWithoutProductId() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        byte[] onboardingDtoFile = Files.readAllBytes(outputResource.getFile().toPath());
+        OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
+        });
+
+        onboardingDto.setProductId(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(onboardingDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+
+    @Test
+    void onboardingWithoutGeographicTaxonomy() throws Exception {
+
+        ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
+        byte[] onboardingDtoFile = Files.readAllBytes(outputResource.getFile().toPath());
+        OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
+        });
+
+        onboardingDto.setGeographicTaxonomies(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(onboardingDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void oldContractOnboarding() throws Exception {
+
         String institutionId = "institutionId";
-        // when
-        mvc.perform(MockMvcRequestBuilders
+
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
+        OnboardingImportDto onboardingImportDto = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {
+        });
+
+        mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/{institutionId}", institutionId)
-                        .content(onboardingImportDto.getInputStream().readAllBytes())
+                        .content(objectMapper.writeValueAsString(onboardingImportDto))
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(emptyString()));
-        // then
-        verify(onboardingServiceMock, times(1))
-                .oldContractOnboardingV2(any(OnboardingData.class));
-        verifyNoMoreInteractions(onboardingServiceMock);
+                .andExpect(content().string(emptyString()))
+                .andReturn();
+    }
+
+
+    @Test
+    void oldContractOnboardingWithInvalidOnboardingDate() throws Exception {
+
+        String institutionId = "institutionId";
+
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
+        OnboardingImportDto onboardingImportDto = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
+        onboardingImportDto.getImportContract().setOnboardingDate(OffsetDateTime.now().plusDays(2));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/{institutionId}", institutionId)
+                        .content(objectMapper.writeValueAsString(onboardingImportDto))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
     }
 
     @Test
     void onboardingInstitutionUsers() throws Exception {
-        OnboardingInstitutionUsersRequest request = new OnboardingInstitutionUsersRequest();
-        request.setInstitutionTaxCode("taxCode");
-        request.setProductId("productCode");
-        request.setUsers(List.of(new Person()));
 
-        Institution institution = new Institution();
-        institution.setId("institutionId");
-        RelationshipInfo relationshipInfo = new RelationshipInfo();
-        relationshipInfo.setInstitution(institution);
-        when(onboardingServiceMock.onboardingUsers(any(OnboardingUsersRequest.class), anyString(), anyString())).thenReturn(List.of(relationshipInfo));
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/OnboardingInstitutionUserRequest.json"));
+        OnboardingInstitutionUsersRequest onboardingInstitutionUsersRequest = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {
+        });
+
+        ClassPathResource relationshipInfosFile = new ClassPathResource("expectations/RelationshipInfo.json");
+        List<RelationshipInfo> relationshipInfos = objectMapper.readValue(Files.readAllBytes(relationshipInfosFile.getFile().toPath()), new TypeReference<>(){});
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/RelationshipResult.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        when(onboardingServiceMock.onboardingUsers(any(OnboardingUsersRequest.class), anyString(), anyString())).thenReturn(relationshipInfos);
+
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(selfCareUser);
 
-        mvc.perform(MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/users")
                         .principal(authentication)
-                        .content(new ObjectMapper().writeValueAsString(request))
+                        .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(status().isOk());
 
         verify(onboardingServiceMock, times(1)).onboardingUsers(any(OnboardingUsersRequest.class), anyString(), anyString());
         verifyNoMoreInteractions(onboardingServiceMock);
     }
+
+
+    @Test
+    void onboardingInstitutionUsersWithoutUserToOnboard() throws Exception {
+
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/OnboardingInstitutionUserRequest.json"));
+        OnboardingInstitutionUsersRequest onboardingInstitutionUsersRequest = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {
+        });
+        onboardingInstitutionUsersRequest.setUsers(null);
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/users")
+                        .principal(authentication)
+                        .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void onboardingInstitutionUsersWithoutInstitutionTaxCode() throws Exception {
+
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/OnboardingInstitutionUserRequest.json"));
+        OnboardingInstitutionUsersRequest onboardingInstitutionUsersRequest = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {
+        });
+        onboardingInstitutionUsersRequest.setInstitutionTaxCode(null);
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/users")
+                        .principal(authentication)
+                        .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    void onboardingInstitutionUsersWithoutProductId() throws Exception {
+
+        byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/OnboardingInstitutionUserRequest.json"));
+        OnboardingInstitutionUsersRequest onboardingInstitutionUsersRequest = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {
+        });
+        onboardingInstitutionUsersRequest.setProductId(null);
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(BASE_URL + "/users")
+                        .principal(authentication)
+                        .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
 }

@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
-import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
@@ -22,9 +20,7 @@ import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -34,7 +30,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -44,15 +39,12 @@ public class InstitutionController {
 
     private final InstitutionService institutionService;
 
-    private final ContractService contractService;
-
     private final InstitutionResourceMapper institutionResourceMapper;
 
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService, ContractService contractService, InstitutionResourceMapper institutionResourceMapper) {
+    public InstitutionController(InstitutionService institutionService, InstitutionResourceMapper institutionResourceMapper) {
         this.institutionService = institutionService;
-        this.contractService = contractService;
         this.institutionResourceMapper = institutionResourceMapper;
     }
 

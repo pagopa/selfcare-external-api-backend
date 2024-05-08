@@ -9,211 +9,273 @@ import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.user.ProductInfo;
-import it.pagopa.selfcare.external_api.model.user.RelationshipState;
-import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
-import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
-import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
-import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
-import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
-import it.pagopa.selfcare.external_api.web.model.user.UserResource;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.*;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static it.pagopa.selfcare.commons.utils.TestUtils.reflectionEqualsByName;
-import static java.util.Collections.singletonList;
-import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(value = {InstitutionV2Controller.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {InstitutionV2Controller.class, WebTestConfig.class, InstitutionResourceMapperImpl.class})
+@ExtendWith(MockitoExtension.class)
 public class InstitutionControllerV2Test {
 
     private static final String BASE_URL = "/v2/institutions";
 
     @InjectMocks
-    private InstitutionV2Controller institutionController;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private InstitutionV2Controller institutionV2Controller;
+    @Mock
+    private InstitutionService institutionService;
 
-    @Spy
-    private InstitutionResourceMapper institutionResourceMapper = new InstitutionResourceMapperImpl();
+    @Mock
+    private UserService userService;
 
-    @MockBean
-    private InstitutionService institutionServiceMock;
-
-    @MockBean
-    private UserService userServiceMock;
-
-    @Autowired
-    protected MockMvc mvc;
-
-    @MockBean
+    @Mock
     private ContractService contractService;
 
-    /**
-     * Method under test: {@link InstitutionV2Controller#getInstitutions(String, Authentication)}
-     */
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void setUp() {
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(institutionV2Controller)
+                .build();
+    }
+
     @Test
-    void getInstitutions() throws Exception {
-        //given
+    public void getInstitutionsWith2Elements() throws Exception {
+
+        ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
+        byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
+        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
+        onboardedInstitutionInfos.forEach(onboardedInstitutionInfo -> onboardedInstitutionInfo.setState("ACTIVE"));
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
+
         when(authentication.getPrincipal()).thenReturn(selfCareUser);
         final String productId = "productId";
-        OnboardedInstitutionInfo institutionInfo = mockInstance(new OnboardedInstitutionInfo(), "setId");
-        institutionInfo.setId(randomUUID().toString());
-        institutionInfo.getDataProtectionOfficer().setEmail("dpoEmail@example.com");
-        institutionInfo.getDataProtectionOfficer().setPec("dpoPec@example.com");
-        institutionInfo.setSupportEmail("spportEmail@example.com");
-        institutionInfo.setState(RelationshipState.ACTIVE.name());
 
-        OnboardedInstitutionInfo institutionInfoWithoutState = mockInstance(new OnboardedInstitutionInfo(), "setId");
-
-        when(userServiceMock.getOnboardedInstitutionsDetailsActive(anyString(), anyString()))
-                .thenReturn(List.of(institutionInfo, institutionInfoWithoutState));
+        when(userService.getOnboardedInstitutionsDetailsActive(anyString(), anyString()))
+                .thenReturn(onboardedInstitutionInfos);
         //when
-        MvcResult result = mvc.perform(MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                         .get(BASE_URL)
                         .param("productId", productId)
                         .principal(authentication)
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(status().isOk())
                 .andReturn();
         //then
-        List<InstitutionResource> response = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<>() {
-                });
-        assertNotNull(response);
-        assertEquals(1, response.size());
-        assertEquals(institutionInfo.getId(), response.get(0).getId().toString());
-        assertEquals(institutionInfo.getExternalId(), response.get(0).getExternalId());
-        assertEquals(institutionInfo.getDescription(), response.get(0).getDescription());
-        assertEquals(institutionInfo.getBilling().getRecipientCode(), response.get(0).getRecipientCode());
-        reflectionEqualsByName(institutionInfo.getSupportEmail(), response.get(0).getAssistanceContacts().getSupportEmail());
-        reflectionEqualsByName(institutionInfo.getRea(), response.get(0).getCompanyInformations().getRea());
-        reflectionEqualsByName(institutionInfo.getPaymentServiceProvider(), response.get(0).getPspData());
-        reflectionEqualsByName(institutionInfo.getDataProtectionOfficer(), response.get(0).getDpoData());
-        verify(userServiceMock, times(1))
+
+        verify(userService, times(1))
                 .getOnboardedInstitutionsDetailsActive(selfCareUser.getId(), productId);
-        verifyNoMoreInteractions(institutionServiceMock);
+        verifyNoMoreInteractions(institutionService);
     }
 
-    /**
-     * Method under test: {@link InstitutionV2Controller#getContract(String, String)}
-     */
     @Test
-    void getContract() throws Exception {
-        //given
+    public void getInstitutionsWith1Elements() throws Exception {
+
+        ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
+        byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
+        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+        final String productId = "productId";
+
+        when(userService.getOnboardedInstitutionsDetailsActive(anyString(), anyString()))
+                .thenReturn(onboardedInstitutionInfos);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL)
+                        .param("productId", productId)
+                        .principal(authentication)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+
+        verify(userService, times(1))
+                .getOnboardedInstitutionsDetailsActive(selfCareUser.getId(), productId);
+        verifyNoMoreInteractions(institutionService);
+    }
+
+    @Test
+    public void getInstitutionsWithoutElement() throws Exception {
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+        final String productId = "productId";
+
+        when(userService.getOnboardedInstitutionsDetailsActive(anyString(), anyString()))
+                .thenReturn(Collections.emptyList());
+        //when
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL)
+                        .param("productId", productId)
+                        .principal(authentication)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(status().isOk())
+                .andReturn();
+        //then
+
+        verify(userService, times(1))
+                .getOnboardedInstitutionsDetailsActive(selfCareUser.getId(), productId);
+        verifyNoMoreInteractions(institutionService);
+    }
+
+    @Test
+    public void getInstitutionsWithoutProductId() throws Exception {
+
+        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getPrincipal()).thenReturn(selfCareUser);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL)
+                        .principal(authentication)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void getContractOk() throws Exception {
+
         String institutionId = "institutionId";
         String productId = "productId";
-        ResourceResponse response = mockInstance(new ResourceResponse());
-        byte[] mockData = "mock".getBytes();
-        response.setData(mockData);
-        when(contractService.getContractV2(institutionId, productId)).thenReturn(response);
-        //when
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
-                        .param("productId", productId)
-                        .accept(MediaType.APPLICATION_OCTET_STREAM))
+
+        ResourceResponse resourceResponse = new ResourceResponse();
+        resourceResponse.setData("data".getBytes());
+        resourceResponse.setFileName("fileName");
+        resourceResponse.setMimetype("mimetype");
+        when(contractService.getContractV2(institutionId, productId)).thenReturn(resourceResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
+                .param("productId", productId).accept(MediaType.APPLICATION_OCTET_STREAM))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
-                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", response.getFileName())))
-                .andExpect(content().bytes(response.getData()));
-        //then
-        verify(contractService, times(1)).getContractV2(institutionId, productId);
-        verifyNoMoreInteractions(contractService);
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", resourceResponse.getFileName())))
+                .andExpect(content().bytes(resourceResponse.getData()));
     }
 
-    /**
-     * Method under test: {@link InstitutionV2Controller#getInstitutionUserProducts(String)}
-     */
     @Test
-    void getInstitutionUserProducts() throws Exception {
-        //given
-        final String institutionId = "institutionId";
-        Product product = mockInstance(new Product());
-        when(institutionServiceMock.getInstitutionUserProductsV2(anyString()))
-                .thenReturn(Collections.singletonList(product));
-        //when
-        MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get(BASE_URL + "/" + institutionId + "/products")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andReturn();
-        //then
-        List<ProductResource> response = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<>() {
-                });
-        assertNotNull(response);
-        assertEquals(1, response.size());
-        assertEquals(product.getId(), response.get(0).getId());
-        assertEquals(product.getTitle(), response.get(0).getTitle());
-        assertEquals(product.getDescription(), response.get(0).getDescription());
-        assertEquals(product.getUrlBO(), response.get(0).getUrlBO());
-        assertEquals(product.getUrlPublic(), response.get(0).getUrlPublic());
-        verify(institutionServiceMock, times(1))
-                .getInstitutionUserProductsV2(institutionId);
-        verifyNoMoreInteractions(institutionServiceMock);
-    }
+    void getContractOkWithoutProductId() throws Exception {
 
-
-    @Test
-    void getInstitutionProductUsers_notEmpty() throws Exception {
-        // given
         String institutionId = "institutionId";
-        String productId = "productId";
-        String userId = "userId";
-        String role = "admin";
-        final ProductInfo productInfo = mockInstance(new ProductInfo(), "setRoleInfos");
-        productInfo.setRoleInfos(List.of(mockInstance(new RoleInfo())));
-        final UserInfo userInfoModel = mockInstance(new UserInfo(), "setId", "setProducts");
-        userInfoModel.setId(randomUUID().toString());
-        userInfoModel.setProducts(Map.of(productId, productInfo));
-        when(institutionServiceMock.getInstitutionProductUsersV2(any(), any(), any(), any(), any()))
-                .thenReturn(singletonList(userInfoModel));
-        // when
-        MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get(BASE_URL + "/{institutionId}/products/{productId}/users", institutionId, productId)
-                        .queryParam("userId", userId)
-                        .queryParam("productRoles", role)
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
+                .accept(MediaType.APPLICATION_OCTET_STREAM))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getInstitutionUserProductsWith2Elements() throws Exception {
+        ClassPathResource inputResource = new ClassPathResource("expectations/Product.json");
+        byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
+        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/ProductResource.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        when(institutionService.getInstitutionUserProductsV2(anyString())).thenReturn(products);
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/products", "testInstitutionId")
+                .contentType(APPLICATION_JSON_VALUE).accept(APPLICATION_JSON_VALUE))
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
+
+    @Test
+    public void getInstitutionUserProductsWithEmptyList() throws Exception {
+
+        when(institutionService.getInstitutionUserProductsV2("testInstitutionId")).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/products", "testInstitutionId")
+                .contentType(APPLICATION_JSON_VALUE).accept(APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
+
+    @Test
+    public void getInstitutionProductsUsersWith2ReturnedElements() throws Exception {
+
+        ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
+        byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
+        UserInfo userInfo = objectMapper.readValue(userInfoStream, UserInfo.class);
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        when(institutionService.getInstitutionProductUsers(any(), any(), any(), any(), any())).thenReturn(Collections.singletonList(userInfo));
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
                 .andReturn();
-        // then
-        List<UserResource> products = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<>() {
-                });
-        assertNotNull(products);
-        assertFalse(products.isEmpty());
-        verify(institutionServiceMock, times(1))
-                .getInstitutionProductUsersV2(institutionId, productId, userId, Optional.of(Set.of(role)), null);
-        verifyNoMoreInteractions(institutionServiceMock);
+    }
+
+    @Test
+    public void getInstitutionProductsUsersWithEmptyList() throws Exception {
+
+        when(institutionService.getInstitutionProductUsers("testInstitutionId", "testProductId", java.util.Optional.empty(), java.util.Optional.empty(), null)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
     }
 }

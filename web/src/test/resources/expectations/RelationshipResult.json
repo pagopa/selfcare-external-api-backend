@@ -1,0 +1,146 @@
+[
+  {
+    "id": "123456789",
+    "to": "123e4567-e89b-12d3-a456-426614174000",
+    "from": "id1",
+    "role":"RoleXYZ",
+    "tokenId": "Token123",
+    "product": {
+      "id": "ABC123",
+      "createdAt": "2024-05-08T10:00:00+01:00",
+      "role": "RoleXYZ"
+    },
+    "state": "ACTIVE",
+    "pricingPlan": "pricingPlan",
+    "institutionUpdate": {
+      "institutionType": "PA",
+      "description": "description",
+      "digitalAddress": "digitalAddress",
+      "address": "address",
+      "taxCode": "taxCode",
+      "zipCode": "zipCode",
+      "paymentServiceProvider": {
+        "abiCode": "abiCode",
+        "businessRegisterNumber": "businessRegisterNumber",
+        "legalRegisterName": "legalRegisterName",
+        "legalRegisterNumber": "legalRegisterNumber",
+        "vatNumberGroup": true
+      },
+      "dataProtectionOfficer": {
+        "address": "address",
+        "email": "email",
+        "pec": "pec"
+      },
+      "businessRegisterPlace": "businessRegisterPlace",
+      "geographicTaxonomies": ["code"],
+      "imported": true,
+      "rea": "rea",
+      "shareCapital": "shareCapital",
+      "supportEmail": "supportEmail",
+      "supportPhone": "supportPhone"
+    },
+    "billing":{
+      "vatNumber": "vatNumber",
+      "recipientCode": "recipientCode",
+      "publicServices": true
+    },
+    "createdAt": "2023-01-01T00:00:00+01:00",
+    "updatedAt": "2023-01-01T00:00:00+01:00"
+  },
+  {
+    "id": "123456710",
+    "to": "123e4567-e89b-12d3-a456-426614174000",
+    "from": "id2",
+    "role":"RoleXYZ",
+    "tokenId": "Token123",
+    "product": {
+      "id": "ABC123",
+      "createdAt": "2024-05-08T10:00:00+01:00",
+      "role": "RoleXYZ"
+    },
+    "state": "ACTIVE",
+    "pricingPlan": "pricingPlan",
+    "institutionUpdate": {
+      "institutionType": "PA",
+      "description": "description",
+      "digitalAddress": "digitalAddress",
+      "address": "address",
+      "taxCode": "taxCode",
+      "zipCode": "zipCode",
+      "paymentServiceProvider": {
+        "abiCode": "abiCode",
+        "businessRegisterNumber": "businessRegisterNumber",
+        "legalRegisterName": "legalRegisterName",
+        "legalRegisterNumber": "legalRegisterNumber",
+        "vatNumberGroup": true
+      },
+      "dataProtectionOfficer": {
+        "address": "address",
+        "email": "email",
+        "pec": "pec"
+      },
+      "businessRegisterPlace": "businessRegisterPlace",
+      "geographicTaxonomies": ["code"],
+      "imported": true,
+      "rea": "rea",
+      "shareCapital": "shareCapital",
+      "supportEmail": "supportEmail",
+      "supportPhone": "supportPhone"
+    },
+    "billing":{
+      "vatNumber": "vatNumber",
+      "recipientCode": "recipientCode",
+      "publicServices": true
+    },
+    "createdAt": "2023-01-01T00:00:00+01:00",
+    "updatedAt": "2023-01-01T00:00:00+01:00"
+  },
+  {
+    "id": "123456712",
+    "to": "123e4567-e89b-12d3-a456-426614174000",
+    "from": "id3",
+    "role":"RoleXYZ",
+    "tokenId": "Token123",
+    "product": {
+      "id": "ABC123",
+      "createdAt": "2024-05-08T10:00:00+01:00",
+      "role": "RoleXYZ"
+    },
+    "state": "ACTIVE",
+    "pricingPlan": "pricingPlan",
+    "institutionUpdate": {
+      "institutionType": "PA",
+      "description": "description",
+      "digitalAddress": "digitalAddress",
+      "address": "address",
+      "taxCode": "taxCode",
+      "zipCode": "zipCode",
+      "paymentServiceProvider": {
+        "abiCode": "abiCode",
+        "businessRegisterNumber": "businessRegisterNumber",
+        "legalRegisterName": "legalRegisterName",
+        "legalRegisterNumber": "legalRegisterNumber",
+        "vatNumberGroup": true
+      },
+      "dataProtectionOfficer": {
+        "address": "address",
+        "email": "email",
+        "pec": "pec"
+      },
+      "businessRegisterPlace": "businessRegisterPlace",
+      "geographicTaxonomies": ["code"],
+      "imported": true,
+      "rea": "rea",
+      "shareCapital": "shareCapital",
+      "supportEmail": "supportEmail",
+      "supportPhone": "supportPhone"
+    },
+    "billing":{
+      "vatNumber": "vatNumber",
+      "recipientCode": "recipientCode",
+      "publicServices": true
+    },
+    "createdAt": "2023-01-01T00:00:00+01:00",
+    "updatedAt": "2023-01-01T00:00:00+01:00"
+  }
+]
