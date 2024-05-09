@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
 
@@ -78,10 +80,11 @@ public class UserServiceImpl implements UserService {
 
         List<OnboardedInstitutionResponse> onboardedInstitutionResponses =
                 onboardedInstitutions.stream()
-                        .filter(institution -> userStatusesString.isEmpty() || userStatusesString.contains(institution.getState()))
+                        .filter(institution -> userStatusesString.isEmpty() ||
+                                (Objects.nonNull(institution.getProductInfo()) && userStatusesString.contains(institution.getProductInfo().getStatus())))
                         .map(onboardedInstitution -> {
                             OnboardedInstitutionResponse response = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
-                            if(user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null){
+                            if(Objects.nonNull(onboardedInstitution.getUserMailUuid()) && user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null){
                                 response.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
                             }
                             return response;
@@ -162,22 +165,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
-        List<UserInstitution> institutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null);
+        List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null);
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
-        institutions.forEach(institution -> {
-            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
+        usersInstitutions.forEach(userInstitution -> {
+            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId());
+
             onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse.stream()
-                    .filter(onboardedInstitution -> onboardedInstitution.getId().equals(institution.getInstitutionId()))
-                    .filter(onboardedInstitutionInfo -> institution.getProducts().stream()
+                    //Verify if userInstitution has any match with current product
+                    .filter(onboardedInstitutionInfo -> userInstitution.getProducts().stream()
                             .anyMatch(onboardedProductResponse -> onboardedProductResponse.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
                     )
                     .peek(onboardedInstitution -> {
-                        onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
+                        //In case it has, Retrieve min role valid for associations with product-id
+                        Optional<RelationshipState> optCurrentState = userInstitution.getProducts().stream()
+                                .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()))
+                                        .map(product -> RelationshipState.valueOf(product.getStatus()))
+                                        .min(RelationshipState::compareTo);
+
+                        //Set role and status for min association with product
+                        Optional<OnboardedProductResponse> optOnboardedProduct = optCurrentState.map(currentstate -> userInstitution.getProducts().stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
-                                        product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
-                                .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
-                        onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
+                                                product.getStatus().equals(currentstate.name())))
+                                .orElse(Stream.of())
+                                .findFirst();
+                        optOnboardedProduct.ifPresent(item -> {
+                            onboardedInstitution.getProductInfo().setRole(item.getRole());
+                            onboardedInstitution.getProductInfo().setStatus(item.getStatus());
+                            //onboardedInstitution.getProductInfo().setCreatedAt(item.getCreatedAt().atOffset(ZoneOffset.of(String.valueOf(ZoneOffset.systemDefault()))));
+                        });
+                        onboardedInstitution.setUserMailUuid(userInstitution.getUserMailUuid());
                     })
                     .toList());
         });
