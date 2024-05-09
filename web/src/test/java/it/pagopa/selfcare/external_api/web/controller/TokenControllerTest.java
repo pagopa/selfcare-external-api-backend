@@ -1,21 +1,20 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.TokenService;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapperImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.file.Files;
 import java.util.Collections;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class TokenControllerTest {
+class TokenControllerTest extends BaseControllerTest {
 
     private static final String BASE_URL = "/v1/tokens";
 
@@ -35,14 +34,12 @@ class TokenControllerTest {
     @Mock
     private TokenService tokenService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    @Spy
+    private TokenResourceMapperImpl tokenResourceMapperImpl;
 
     @BeforeEach
-    public void setUp() {
-        objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(tokenController)
-                .build();
+    void setUp(){
+        super.setUp(tokenController);
     }
 
     @Test

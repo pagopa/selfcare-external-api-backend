@@ -6,22 +6,25 @@ import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
+import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapperImpl;
+import it.pagopa.selfcare.external_api.web.model.onboarding.BillingDataDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingInstitutionUsersRequest;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardingProductDto;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.validation.ValidationException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
@@ -36,24 +39,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class OnboardingV2ControllerTest {
+class OnboardingV2ControllerTest extends BaseControllerTest{
 
     private static final String BASE_URL = "/v2/onboarding";
 
-    @Autowired
+    @InjectMocks
     protected OnboardingV2Controller onboardingV2Controller;
 
     @Mock
     private OnboardingService onboardingServiceMock;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    @Spy
+    private OnboardingResourceMapperImpl onboardingResourceMapperImpl;
 
     @BeforeEach
-    public void setUp() {
-        objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(onboardingV2Controller)
-                .build();
+    void setUp(){
+        super.setUp(onboardingV2Controller);
     }
 
 
@@ -82,11 +83,9 @@ class OnboardingV2ControllerTest {
 
         onboardingDto.setUsers(null);
 
-        String expectedResource = StringUtils.deleteWhitespace(new String(onboardingDtoFile));
-
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL)
-                        .content(expectedResource)
+                        .content(objectMapper.writeValueAsString(onboardingDto))
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
@@ -102,7 +101,7 @@ class OnboardingV2ControllerTest {
         OnboardingProductDto onboardingDto = objectMapper.readValue(onboardingDtoFile, new TypeReference<>() {
         });
 
-        onboardingDto.setBillingData(null);
+        onboardingDto.setBillingData(new BillingDataDto());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL)
@@ -194,19 +193,16 @@ class OnboardingV2ControllerTest {
     @Test
     void oldContractOnboardingWithInvalidOnboardingDate() throws Exception {
 
-        String institutionId = "institutionId";
+        String externalInstitutionId = "externalInstitutionId";
 
         byte[] onboardingImportDtoFile = Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
         OnboardingImportDto onboardingImportDto = objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
         onboardingImportDto.getImportContract().setOnboardingDate(OffsetDateTime.now().plusDays(2));
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post(BASE_URL + "/{institutionId}", institutionId)
-                        .content(objectMapper.writeValueAsString(onboardingImportDto))
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        Assertions.assertThrows(ValidationException.class,
+                () -> onboardingV2Controller.oldContractOnboarding(externalInstitutionId, onboardingImportDto),
+                "Invalid onboarding date: the onboarding date must be prior to the current date.");
+
     }
 
     @Test
@@ -251,9 +247,7 @@ class OnboardingV2ControllerTest {
         });
         onboardingInstitutionUsersRequest.setUsers(null);
 
-        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(selfCareUser);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/users")
@@ -272,9 +266,7 @@ class OnboardingV2ControllerTest {
         });
         onboardingInstitutionUsersRequest.setInstitutionTaxCode(null);
 
-        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(selfCareUser);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/users")
@@ -294,9 +286,7 @@ class OnboardingV2ControllerTest {
         });
         onboardingInstitutionUsersRequest.setProductId(null);
 
-        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(selfCareUser);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_URL + "/users")

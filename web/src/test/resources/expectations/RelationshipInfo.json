@@ -7,10 +7,7 @@
       "status": "ACTIVE",
       "contract": "Contract123",
       "productRole": "RoleXYZ",
-      "role": {
-        "partyId": "party123",
-        "roleName": "Customer"
-      },
+      "role": "MANAGER",
       "tokenId": "Token123",
       "env": "ROOT",
       "createdAt": "2024-05-08T10:00:00+01:00",
@@ -40,7 +37,7 @@
         {
           "productId": "ABC123",
           "tokenId": "tokenId",
-          "relationshipState": "ACTIVE",
+          "status": "ACTIVE",
           "contract": "contract",
           "pricingPlan": "pricingPlan",
           "billing": {
@@ -114,10 +111,7 @@
       "status": "ACTIVE",
       "contract": "Contract123",
       "productRole": "RoleXYZ",
-      "role": {
-        "partyId": "party123",
-        "roleName": "Customer"
-      },
+      "role": "DELEGATE",
       "tokenId": "Token123",
       "env": "ROOT",
       "createdAt": "2024-05-08T10:00:00+01:00",
@@ -147,7 +141,7 @@
         {
           "productId": "ABC123",
           "tokenId": "tokenId",
-          "relationshipState": "ACTIVE",
+          "status": "ACTIVE",
           "contract": "contract",
           "pricingPlan": "pricingPlan",
           "billing": {
@@ -221,10 +215,7 @@
       "status": "ACTIVE",
       "contract": "Contract123",
       "productRole": "RoleXYZ",
-      "role": {
-        "partyId": "party123",
-        "roleName": "Customer"
-      },
+      "role": "DELEGATE",
       "tokenId": "Token123",
       "env": "ROOT",
       "createdAt": "2024-05-08T10:00:00+01:00",
@@ -254,7 +245,7 @@
         {
           "productId": "ABC123",
           "tokenId": "tokenId",
-          "relationshipState": "ACTIVE",
+          "status": "ACTIVE",
           "contract": "contract",
           "pricingPlan": "pricingPlan",
           "billing": {

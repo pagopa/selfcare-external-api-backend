@@ -1,17 +1,14 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.web.model.pnpg.CreatePnPgInstitutionDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.UUID;
 
@@ -23,8 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class PnPgControllerTest {
-    @Autowired
+class PnPgControllerTest extends BaseControllerTest {
+    @InjectMocks
     protected PnPgController pnPgController;
 
     @Mock
@@ -32,14 +29,9 @@ class PnPgControllerTest {
 
     private final static String BASE_URL = "/v1/pn-pg";
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
-
     @BeforeEach
     public void setUp() {
-        objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(pnPgController)
-                .build();
+        super.setUp(pnPgController);
     }
 
     @Test

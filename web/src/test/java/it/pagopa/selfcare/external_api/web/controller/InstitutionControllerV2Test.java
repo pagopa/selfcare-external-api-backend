@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
@@ -10,18 +9,19 @@ import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InstitutionControllerV2Test {
+public class InstitutionControllerV2Test extends BaseControllerTest{
 
     private static final String BASE_URL = "/v2/institutions";
 
@@ -52,14 +52,12 @@ public class InstitutionControllerV2Test {
     @Mock
     private ContractService contractService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+    @Spy
+    private InstitutionResourceMapperImpl institutionResourceMapperImpl;
 
     @BeforeEach
-    public void setUp() {
-        objectMapper = new ObjectMapper();
-        mockMvc = MockMvcBuilders.standaloneSetup(institutionV2Controller)
-                .build();
+    void setUp(){
+        super.setUp(institutionV2Controller);
     }
 
     @Test
@@ -70,7 +68,7 @@ public class InstitutionControllerV2Test {
         List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
         onboardedInstitutionInfos.forEach(onboardedInstitutionInfo -> onboardedInstitutionInfo.setState("ACTIVE"));
 
-        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2.json");
+        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2_2elements.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
@@ -106,7 +104,7 @@ public class InstitutionControllerV2Test {
         byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
         List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
 
-        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2.json");
+        ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2_1element.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
@@ -166,10 +164,7 @@ public class InstitutionControllerV2Test {
     @Test
     public void getInstitutionsWithoutProductId() throws Exception {
 
-        SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
-
-        when(authentication.getPrincipal()).thenReturn(selfCareUser);
         //when
         mockMvc.perform(MockMvcRequestBuilders
                         .get(BASE_URL)
@@ -192,7 +187,8 @@ public class InstitutionControllerV2Test {
         resourceResponse.setMimetype("mimetype");
         when(contractService.getContractV2(institutionId, productId)).thenReturn(resourceResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
+        MockMvcBuilders.standaloneSetup(institutionV2Controller)
+                .build().perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
                 .param("productId", productId).accept(MediaType.APPLICATION_OCTET_STREAM))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
@@ -216,7 +212,7 @@ public class InstitutionControllerV2Test {
         byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
         List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
 
-        ClassPathResource outputResource = new ClassPathResource("expectations/ProductResource.json");
+        ClassPathResource outputResource = new ClassPathResource("expectations/ProductResources.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
         when(institutionService.getInstitutionUserProductsV2(anyString())).thenReturn(products);
@@ -248,12 +244,12 @@ public class InstitutionControllerV2Test {
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
         byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
-        UserInfo userInfo = objectMapper.readValue(userInfoStream, UserInfo.class);
+        List<UserInfo> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
 
         ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
-        when(institutionService.getInstitutionProductUsers(any(), any(), any(), any(), any())).thenReturn(Collections.singletonList(userInfo));
+        when(institutionService.getInstitutionProductUsersV2(any(), any(), any(), any(), any())).thenReturn(userInfo);
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
                         .contentType(APPLICATION_JSON_VALUE)
@@ -268,7 +264,8 @@ public class InstitutionControllerV2Test {
     @Test
     public void getInstitutionProductsUsersWithEmptyList() throws Exception {
 
-        when(institutionService.getInstitutionProductUsers("testInstitutionId", "testProductId", java.util.Optional.empty(), java.util.Optional.empty(), null)).thenReturn(Collections.emptyList());
+        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
+                .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
                         .contentType(APPLICATION_JSON_VALUE)

@@ -1,8 +1,6 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -19,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.file.Files;
 import java.util.Collections;
@@ -36,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InstitutionControllerTest {
+public class InstitutionControllerTest extends BaseControllerTest{
 
     @InjectMocks
     private InstitutionController institutionController;
@@ -47,17 +43,11 @@ public class InstitutionControllerTest {
     @Mock
     private InstitutionService institutionService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
-
     @BeforeEach
-    public void setUp() {
-        objectMapper = new ObjectMapper();
-        //objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
-        mockMvc = MockMvcBuilders.standaloneSetup(institutionController)
-                .build();
+    void setUp(){
+        super.setUp(institutionController);
     }
+
 
     @Test
     public void getInstitutionsWithOneReturnedElement() throws Exception {
@@ -115,8 +105,8 @@ public class InstitutionControllerTest {
         List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {
         });
 
-        ClassPathResource outputResource = new ClassPathResource("expectations/ProductResource.json");
-        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+        ClassPathResource outputResource = new ClassPathResource("expectations/ProductResources.json");
+       String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
         when(institutionService.getInstitutionUserProducts(anyString())).thenReturn(products);
 
