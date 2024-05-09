@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.ProductId;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
@@ -10,6 +11,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResp
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
+import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,14 +19,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
@@ -45,11 +45,12 @@ class UserServiceImplTest {
     @Mock
     private UserMsConnector userMsConnector;
 
-    @Mock
-    private OnboardingInstitutionMapper onboardingInstitutionMapper;
 
     @Mock
     private MsCoreConnector msCoreConnector;
+
+    @Spy
+    OnboardingInstitutionMapper onboardingInstitutionMapper = new OnboardingInstitutionMapperImpl();
 
     private static final String fiscalCode = "MNCCSD01R13A757G";
 
@@ -264,27 +265,80 @@ class UserServiceImplTest {
         verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
     }
 
+
+
     @Test
-    void getUserInfoV2() {
+    void getUserInfoV2_shouldBeDeleted() {
         //given
         UserInstitution userInstitution = new UserInstitution();
         userInstitution.setInstitutionId("id");
-        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
-        onboardedProductResponse.setProductId("prod-io");
-        onboardedProductResponse.setStatus("ACTIVE");
-        userInstitution.setProducts(List.of(onboardedProductResponse));
+        userInstitution.setProducts(dummyOnboardedProductResponses());
+
         OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
         onboardedInstitutionInfo.setId("id");
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setId("prod-io");
+        productInfo.setId(ProductId.PROD_IO.name());
+        productInfo.setStatus(RelationshipState.ACTIVE.name());
         onboardedInstitutionInfo.setProductInfo(productInfo);
+        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
         OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
         onboardedInstitutionResponse.setId("id");
         // when
         when(userMsConnector.searchUserByExternalId(anyString()))
                 .thenReturn(dummyUser);
         when(userMsConnector.getUsersInstitutions(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
-        when(msCoreConnector.getInstitutionDetails(anyString())).thenReturn(List.of(onboardedInstitutionInfo));
+        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
+
+        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, null);
+        // then
+        assertNotNull(userWrapper);
+        assertNotNull(userWrapper.getUser());
+        assertNotNull(userWrapper.getOnboardedInstitutions());
+        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
+        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
+        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getState());
+        assertEquals(RelationshipState.DELETED.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getStatus());
+    }
+
+
+
+    private List<OnboardedProductResponse> dummyOnboardedProductResponses() {
+        OnboardedProductResponse onboardedProductActive = new OnboardedProductResponse();
+        onboardedProductActive.setProductId(ProductId.PROD_PAGOPA.name());
+        onboardedProductActive.setStatus(RelationshipState.ACTIVE.name());
+        OnboardedProductResponse onboardedProductPagopaDeleted = new OnboardedProductResponse();
+        onboardedProductPagopaDeleted.setProductId(ProductId.PROD_PAGOPA.name());
+        onboardedProductPagopaDeleted.setStatus(RelationshipState.DELETED.name());
+        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
+        onboardedProductResponse.setProductId(ProductId.PROD_IO.name());
+        onboardedProductResponse.setStatus(RelationshipState.DELETED.name());
+        OnboardedProductResponse onboardedProductPending = new OnboardedProductResponse();
+        onboardedProductPending.setProductId(ProductId.PROD_IO.name());
+        onboardedProductPending.setStatus(RelationshipState.PENDING.name());
+        return List.of(onboardedProductResponse, onboardedProductPending, onboardedProductActive, onboardedProductPagopaDeleted);
+    }
+
+    @Test
+    void getUserInfoV2_shouldBeEmptyWhenFilterState() {
+        //given
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId("id");
+        userInstitution.setProducts(dummyOnboardedProductResponses());
+
+        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
+        onboardedInstitutionInfo.setId("id");
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setId(ProductId.PROD_IO.name());
+        productInfo.setStatus(RelationshipState.ACTIVE.name());
+        onboardedInstitutionInfo.setProductInfo(productInfo);
+        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
+        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
+        onboardedInstitutionResponse.setId("id");
+        // when
+        when(userMsConnector.searchUserByExternalId(anyString()))
+                .thenReturn(dummyUser);
+        when(userMsConnector.getUsersInstitutions(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
+        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
 
         UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
         // then
@@ -293,6 +347,39 @@ class UserServiceImplTest {
         assertNotNull(userWrapper.getOnboardedInstitutions());
         assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
         assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
+        assertTrue(userWrapper.getOnboardedInstitutions().isEmpty());
+    }
+
+    @Test
+    void getUserInfoV2() {
+        //given
+        UserInstitution userInstitution = new UserInstitution();
+        userInstitution.setInstitutionId("id");
+        userInstitution.setProducts(dummyOnboardedProductResponses());
+        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
+        onboardedInstitutionInfo.setId("id");
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setId(ProductId.PROD_PAGOPA.name());
+        productInfo.setStatus(RelationshipState.ACTIVE.name());
+        onboardedInstitutionInfo.setProductInfo(productInfo);
+        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
+        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
+        onboardedInstitutionResponse.setId("id");
+        // when
+        when(userMsConnector.searchUserByExternalId(fiscalCode))
+                .thenReturn(dummyUser);
+        when(userMsConnector.getUsersInstitutions(eq(dummyUser.getId()), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
+        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
+
+        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
+        // then
+        assertNotNull(userWrapper);
+        assertNotNull(userWrapper.getUser());
+        assertNotNull(userWrapper.getOnboardedInstitutions());
+        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
+        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
+        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getState());
+        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getStatus());
     }
 
 
