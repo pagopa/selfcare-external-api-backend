@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 public class ProductInfo {
     private String id;
     private String role;
+    private String productRole;
     private OffsetDateTime createdAt;
     private String status;
 }
