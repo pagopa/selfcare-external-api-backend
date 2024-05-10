@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
                             onboardedInstitution.getProductInfo().setProductRole(item.getProductRole());
                             onboardedInstitution.getProductInfo().setStatus(item.getStatus());
                             onboardedInstitution.getProductInfo().setCreatedAt(Optional.ofNullable(item.getCreatedAt())
-                                    .map(date -> date.atOffset(ZoneOffset.of(String.valueOf(ZoneOffset.systemDefault()))))
+                                    .map(date -> date.atZone(ZoneOffset.systemDefault()).toOffsetDateTime())
                                     .orElse(null));
                         });
                         onboardedInstitution.setUserMailUuid(userInstitution.getUserMailUuid());
