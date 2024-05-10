@@ -53,6 +53,7 @@ class UserServiceImplTest {
     OnboardingInstitutionMapper onboardingInstitutionMapper = new OnboardingInstitutionMapperImpl();
 
     private static final String fiscalCode = "MNCCSD01R13A757G";
+    private static final String productRoleExample = "product-role";
 
     @BeforeEach
     void beforeEach() {
@@ -306,15 +307,20 @@ class UserServiceImplTest {
         OnboardedProductResponse onboardedProductActive = new OnboardedProductResponse();
         onboardedProductActive.setProductId(ProductId.PROD_PAGOPA.name());
         onboardedProductActive.setStatus(RelationshipState.ACTIVE.name());
+        onboardedProductActive.setProductRole(productRoleExample);
+        onboardedProductActive.setRole(PartyRole.MANAGER.name());
         OnboardedProductResponse onboardedProductPagopaDeleted = new OnboardedProductResponse();
         onboardedProductPagopaDeleted.setProductId(ProductId.PROD_PAGOPA.name());
         onboardedProductPagopaDeleted.setStatus(RelationshipState.DELETED.name());
+        onboardedProductPagopaDeleted.setProductRole(productRoleExample);
         OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
         onboardedProductResponse.setProductId(ProductId.PROD_IO.name());
         onboardedProductResponse.setStatus(RelationshipState.DELETED.name());
+        onboardedProductResponse.setProductRole(productRoleExample);
         OnboardedProductResponse onboardedProductPending = new OnboardedProductResponse();
         onboardedProductPending.setProductId(ProductId.PROD_IO.name());
         onboardedProductPending.setStatus(RelationshipState.PENDING.name());
+        onboardedProductPending.setProductRole(productRoleExample);
         return List.of(onboardedProductResponse, onboardedProductPending, onboardedProductActive, onboardedProductPagopaDeleted);
     }
 
@@ -380,6 +386,8 @@ class UserServiceImplTest {
         assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
         assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getState());
         assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getStatus());
+        assertEquals(productRoleExample,  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getProductRole());
+        assertEquals(PartyRole.MANAGER.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getRole());
     }
 
 
