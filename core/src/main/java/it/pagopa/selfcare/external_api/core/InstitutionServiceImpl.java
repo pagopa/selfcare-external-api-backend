@@ -11,12 +11,9 @@ import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
-import it.pagopa.selfcare.external_api.model.institutions.InstitutionInfo;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
-import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +41,7 @@ class InstitutionServiceImpl implements InstitutionService {
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
     private final UserMsConnector userMsConnector;
-    private final static String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
+    private static final String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
     private final Set<String> serviceType;
 
     @Autowired
@@ -58,36 +55,6 @@ class InstitutionServiceImpl implements InstitutionService {
         this.serviceType = Set.of(serviceType);
     }
 
-    @Override
-    public Collection<InstitutionInfo> getInstitutions(String productId) {
-        log.trace("getInstitutions start");
-        log.debug("getInstitutions productId = {}", productId);
-        Collection<InstitutionInfo> result = msCoreConnector.getOnBoardedInstitutions(productId);
-        log.debug("getInstitutions result = {}", result);
-        log.trace("getInstitutions end");
-        return result;
-    }
-
-    @Override
-    public List<Product> getInstitutionUserProducts(String institutionId) {
-        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " start");
-        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Assert.state(authentication != null, "Authentication is required");
-        Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
-        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
-        List<Product> products = productsConnector.getProducts();
-        if (!products.isEmpty()) {
-            Map<String, PartyProduct> institutionUserProducts = msCoreConnector.getInstitutionUserProducts(institutionId, user.getId()).stream()
-                    .collect(Collectors.toMap(PartyProduct::getId, Function.identity(), (partyProduct, partyProduct2) -> partyProduct));
-            products = products.stream()
-                    .filter(product -> institutionUserProducts.containsKey(product.getId()))
-                    .collect(Collectors.toList());
-        }
-        log.debug(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
-        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
-        return products;
-    }
 
     @Override
     public List<Product> getInstitutionUserProductsV2(String institutionId) {
@@ -102,37 +69,11 @@ class InstitutionServiceImpl implements InstitutionService {
             List<String> productIds = msCoreConnector.getInstitutionUserProductsV2(institutionId, user.getId());
             products = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
         return products;
-    }
-
-
-    @Override
-    public Collection<UserInfo> getInstitutionProductUsers(String institutionId, String productId, Optional<String> userId, Optional<Set<String>> productRoles, String xSelfCareUid) {
-        log.trace("getInstitutionProductUsers start");
-        log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
-        Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
-        Assert.hasText(productId, "A Product id is required");
-        UserInfo.UserInfoFilter userInfoFilter = new UserInfo.UserInfoFilter();
-        userInfoFilter.setInstitutionId(Optional.of(institutionId));
-        userInfoFilter.setProductId(Optional.of(productId));
-        userInfoFilter.setUserId(userId);
-        userInfoFilter.setProductRoles(productRoles);
-        userInfoFilter.setAllowedState(Optional.of(EnumSet.of(RelationshipState.ACTIVE)));
-        Collection<UserInfo> result = msCoreConnector.getUsers(userInfoFilter);
-        if (xSelfCareUid != null && serviceType.contains(xSelfCareUid)) {
-            result.forEach(userInfo ->
-                    userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST_FISCAL_CODE)));
-        } else {
-            result.forEach(userInfo ->
-                    userInfo.setUser(userRegistryConnector.getUserByInternalId(userInfo.getId(), USER_FIELD_LIST)));
-        }
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", result);
-        log.trace("getInstitutionProductUsers end");
-        return result;
     }
 
 

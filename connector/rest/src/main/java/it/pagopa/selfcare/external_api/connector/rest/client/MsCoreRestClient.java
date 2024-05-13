@@ -1,7 +1,8 @@
 package it.pagopa.selfcare.external_api.connector.rest.client;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.*;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.InstitutionResponse;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
+import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
@@ -9,7 +10,6 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPg
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
-import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
@@ -45,15 +44,6 @@ public interface MsCoreRestClient {
     OnBoardingInfo getOnBoardingInfo(@RequestParam(value = "institutionExternalId", required = false) String institutionExternalId,
                                      @RequestParam(value = "states", required = false) EnumSet<RelationshipState> states);
 
-    @GetMapping(value = "${rest-client.ms-core.getUserInstitutionRelationships.path}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @CollectionFormat(feign.CollectionFormat.CSV)
-    RelationshipsResponse getUserInstitutionRelationships(@PathVariable("id") String institutionId,
-                                                          @RequestParam(value = "roles", required = false) EnumSet<PartyRole> roles,
-                                                          @RequestParam(value = "states", required = false) EnumSet<RelationshipState> states,
-                                                          @RequestParam(value = "products", required = false) Set<String> productIds,
-                                                          @RequestParam(value = "productRoles", required = false) Set<String> productRoles,
-                                                          @RequestParam(value = "personId", required = false) String personId);
 
     @RequestMapping(method = HEAD, value = "${rest-client.ms-core.verifyOnboardingByExternalId.path}")
     @ResponseBody
@@ -89,15 +79,6 @@ public interface MsCoreRestClient {
     @ResponseBody
     InstitutionResponse createInstitutionFromIVASS(@RequestBody InstitutionSeed institutionSeed);
 
-    @GetMapping(value = "${rest-client.ms-core.getRelationships.path}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @CollectionFormat(feign.CollectionFormat.CSV)
-    Relationships getRelationships(@RequestParam(value = "from", required = false) String from,
-                                   @RequestParam(value = "to", required = false) String to,
-                                   @RequestParam(value = "roles", required = false) EnumSet<PartyRole> roles,
-                                   @RequestParam(value = "states", required = false) EnumSet<RelationshipState> states,
-                                   @RequestParam(value = "products", required = false) Set<String> productIds,
-                                   @RequestParam(value = "productRoles", required = false) Set<String> productRoles);
 
     @GetMapping(value = "${rest-client.ms-core.findByGeoTaxonomies.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
