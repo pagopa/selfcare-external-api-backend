@@ -8,7 +8,6 @@ import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionAp
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
@@ -210,23 +209,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
 
 
-    private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo, String productId) {
-        log.trace("parseOnBoardingInfo start");
-        log.debug("parseOnBoardingInfo onBoardingInfo = {}", onBoardingInfo);
-        Collection<InstitutionInfo> institutions = Collections.emptyList();
-        if (onBoardingInfo != null && onBoardingInfo.getInstitutions() != null) {
-            institutions = onBoardingInfo.getInstitutions().stream()
-                    .filter(onboardingResponseData -> onboardingResponseData.getProductInfo().getId().equals(productId))
-                    .map(ONBOARDING_DATA_TO_INSTITUTION_INFO_FUNCTION)
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toMap(InstitutionInfo::getId, Function.identity(), MERGE_FUNCTION),
-                            Map::values
-                    ));
-        }
-        log.debug("parseOnBoardingInfo result = {}", institutions);
-        log.trace("parseOnBoardingInfo end");
-        return institutions;
-    }
 
 
 

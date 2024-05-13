@@ -47,7 +47,7 @@ public class InstitutionControllerTest extends BaseControllerTest{
 
 
     @Test
-    public void getInstitutionGeographicTaxonomiesWith2Elements() throws Exception {
+    void getInstitutionGeographicTaxonomiesWith2Elements() throws Exception {
 
         GeographicTaxonomy geographicTaxonomy = new GeographicTaxonomy();
         geographicTaxonomy.setCode("testCode1");
@@ -69,7 +69,7 @@ public class InstitutionControllerTest extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionGeographicTaxonomiesWithEmptyList() throws Exception {
+    void getInstitutionGeographicTaxonomiesWithEmptyList() throws Exception {
 
         when(institutionService.getGeographicTaxonomyList(anyString())).thenReturn(Collections.emptyList());
 
@@ -83,7 +83,7 @@ public class InstitutionControllerTest extends BaseControllerTest{
 
 
     @Test
-    public void getInstitutionsByGeoTaxonomiesWith2ReturnedElements() throws Exception {
+    void getInstitutionsByGeoTaxonomiesWith2ReturnedElements() throws Exception {
 
         ClassPathResource productResponse = new ClassPathResource("expectations/Institution.json");
         byte[] institutionStream = Files.readAllBytes(productResponse.getFile().toPath());
@@ -108,7 +108,7 @@ public class InstitutionControllerTest extends BaseControllerTest{
 
 
     @Test
-    public void getInstitutionsByGeoTaxonomiesWithEmptyList() throws Exception {
+    void getInstitutionsByGeoTaxonomiesWithEmptyList() throws Exception {
 
         when(institutionService.getInstitutionsByGeoTaxonomies(Set.of("testGeoTaxonomies"), null))
                 .thenReturn(Collections.emptyList());
@@ -125,7 +125,7 @@ public class InstitutionControllerTest extends BaseControllerTest{
 
 
     @Test
-    public void getInstitutionsByGeoTaxonomiesWithoutGeoTaxonomyParam() throws Exception {
+    void getInstitutionsByGeoTaxonomiesWithoutGeoTaxonomyParam() throws Exception {
 
         mockMvc.perform(get("/v1/institutions/byGeoTaxonomies")
                         .contentType(APPLICATION_JSON_VALUE)

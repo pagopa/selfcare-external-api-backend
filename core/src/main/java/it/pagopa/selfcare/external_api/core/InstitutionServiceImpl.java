@@ -41,7 +41,7 @@ class InstitutionServiceImpl implements InstitutionService {
     private final MsCoreConnector msCoreConnector;
     private final UserRegistryConnector userRegistryConnector;
     private final UserMsConnector userMsConnector;
-    private final static String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
+    private static final String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
     private final Set<String> serviceType;
 
     @Autowired
