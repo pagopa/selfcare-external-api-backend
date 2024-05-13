@@ -1,74 +1,87 @@
 package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.core.TokenService;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
-import it.pagopa.selfcare.external_api.model.token.TokenUser;
-import it.pagopa.selfcare.external_api.web.config.WebTestConfig;
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapperImpl;
-import it.pagopa.selfcare.external_api.web.model.tokens.TokensResource;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(value = {TokenController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {TokenController.class, WebTestConfig.class, TokenResourceMapperImpl.class})
-class TokenControllerTest {
+@ExtendWith(MockitoExtension.class)
+class TokenControllerTest extends BaseControllerTest {
 
     private static final String BASE_URL = "/v1/tokens";
 
-    @Autowired
-    protected MockMvc mvc;
-    @Autowired
-    protected ObjectMapper objectMapper;
-    @MockBean
+    @InjectMocks
+    protected TokenController tokenController;
+    @Mock
     private TokenService tokenService;
 
+    @Spy
+    private TokenResourceMapperImpl tokenResourceMapperImpl;
+
+    @BeforeEach
+    void setUp(){
+        super.setUp(tokenController);
+    }
+
     @Test
-    void getTokensByProduct() throws Exception {
-        //given
-        final String productId = "productId";
-        TokenOnboardedUsers token = new TokenOnboardedUsers();
-        token.setId("id");
-        token.setProductId(productId);
-        token.setInstitutionId("institutionId");
+    void getTokensByProductFound() throws Exception {
+        String productId = "productId";
 
-        TokenUser userProduct = new TokenUser();
-        token.setUsers(List.of(userProduct));
+        ClassPathResource inputResource = new ClassPathResource("expectations/TokenOnboardedUsers.json");
+        List<TokenOnboardedUsers> tokens = objectMapper.readValue(Files.readAllBytes(inputResource.getFile().toPath()), new TypeReference<>() {});
 
-        when(tokenService.findByProductId("productId", 1, 10))
-                .thenReturn(List.of(token));
-        //when
-        MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get(BASE_URL + "/products/{productId}", productId )
+        ClassPathResource outputResource = new ClassPathResource("expectations/TokensResource.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        when(tokenService.findByProductId(productId, 1, 10))
+                .thenReturn(tokens);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/products/{productId}", productId)
                         .queryParam("page", "1")
                         .queryParam("size", "10")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$.items", hasSize(2)))
                 .andReturn();
-        //then
-        TokensResource response = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<>() {
-                });
-        assertNotNull(response);
-        assertNotNull(response.getItems());
-        assertEquals(1, response.getItems().size());
+    }
+
+    @Test
+    void getTokensByProductNotFound() throws Exception {
+        String productId = "productId";
+
+        when(tokenService.findByProductId(productId, 1, 10))
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL + "/products/{productId}", productId)
+                        .queryParam("page", "1")
+                        .queryParam("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(0)))
+                .andReturn();
     }
 }
