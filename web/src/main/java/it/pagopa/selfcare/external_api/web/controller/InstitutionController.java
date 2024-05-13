@@ -5,26 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
-import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
-import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.institutions.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionDetailResource;
-import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.mapper.GeographicTaxonomyMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapper;
-import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
-import it.pagopa.selfcare.external_api.web.model.mapper.UserMapper;
-import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
-import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -34,7 +24,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -44,78 +33,17 @@ public class InstitutionController {
 
     private final InstitutionService institutionService;
 
-    private final ContractService contractService;
 
     private final InstitutionResourceMapper institutionResourceMapper;
 
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService, ContractService contractService, InstitutionResourceMapper institutionResourceMapper) {
+    public InstitutionController(InstitutionService institutionService, InstitutionResourceMapper institutionResourceMapper) {
         this.institutionService = institutionService;
-        this.contractService = contractService;
         this.institutionResourceMapper = institutionResourceMapper;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
-    @GetMapping(value = "")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
-    public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
-                                                     @RequestParam(value = "productId") String productId) {
-        log.trace("getInstitutions start");
-        log.debug("getInstitutions productId = {}", productId);
-        List<InstitutionResource> institutionResources = institutionService.getInstitutions(productId)
-                .stream()
-                .map(institutionResourceMapper::toResource)
-                .collect(Collectors.toList());
-        log.debug("getInstitutions result = {}", institutionResources);
-        log.trace("getInstitutions end");
-        return institutionResources;
-    }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
-    @GetMapping(value = "/{institutionId}/products")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
-    public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                            @PathVariable("institutionId") String institutionId) {
-        log.trace("getInstitutionUserProducts start");
-        log.debug("getInstitutionUserProducts institutionId = {}", institutionId);
-        List<ProductResource> productResources = institutionService.getInstitutionUserProducts(institutionId)
-                .stream()
-                .map(ProductsMapper::toResource)
-                .collect(Collectors.toList());
-        log.debug("getInstitutionUserProducts result = {}", productResources);
-        log.trace("getInstitutionUserProducts end");
-        return productResources;
-    }
-
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
-    @GetMapping(value = "/{institutionId}/products/{productId}/users")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
-    public List<UserResource> getInstitutionProductsUsers(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                          @PathVariable("institutionId") String institutionId,
-                                                          @ApiParam("${swagger.external_api.products.model.id}")
-                                                          @PathVariable("productId")
-                                                          String productId,
-                                                          @ApiParam("${swagger.external_api.user.model.id}")
-                                                          @RequestParam(value = "userId", required = false)
-                                                          Optional<String> userId,
-                                                          @ApiParam("${swagger.external_api.model.productRoles}")
-                                                          @RequestParam(value = "productRoles", required = false)
-                                                          Optional<Set<String>> productRoles,
-                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
-        log.trace("getInstitutionProductUsers start");
-        log.debug("getInstitutionProductUsers institutionId = {}, productId = {}, productRoles = {}, xSelfCareUid = {}", institutionId, productId, productRoles, xSelfCareUid);
-        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsers(institutionId, productId, userId, productRoles, xSelfCareUid.orElse(null));
-        List<UserResource> result = userInfos.stream()
-                .map(model -> UserMapper.toUserResource(model, productId))
-                .collect(Collectors.toList());
-        log.debug("getInstitutionProductUsers result = {}", result);
-        log.trace("getInstitutionProductUsers end");
-        return result;
-    }
 
     @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/geographicTaxonomy")

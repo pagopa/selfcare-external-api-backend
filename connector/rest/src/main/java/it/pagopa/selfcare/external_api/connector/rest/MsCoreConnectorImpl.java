@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
-import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
@@ -11,7 +10,6 @@ import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.OnBoardingInfo;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipInfo;
-import it.pagopa.selfcare.external_api.connector.rest.model.institution.RelationshipsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
@@ -20,7 +18,6 @@ import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
-import it.pagopa.selfcare.external_api.model.relationship.Relationships;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
@@ -210,33 +207,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
                 .orElseThrow(ResourceNotFoundException::new);
     }
 
-    @Override
-    public Collection<InstitutionInfo> getOnBoardedInstitutions(String productId) {
-        log.trace("getOnBoardedInstitutions start");
-        Assert.hasText(productId, PRODUCT_ID_IS_REQUIRED);
-        OnBoardingInfo onBoardingInfo = msCoreRestClient.getOnBoardingInfo(null, EnumSet.of(ACTIVE));
-        Collection<InstitutionInfo> result = parseOnBoardingInfo(onBoardingInfo, productId);
-        log.debug("getOnBoardedInstitutions result = {}", result);
-        log.trace("getOnBoardedInstitutions end");
-        return result;
-    }
 
-    @Override
-    public List<PartyProduct> getInstitutionUserProducts(String institutionId, String userId) {
-        log.trace("getInstitutionUserProducts start");
-        Assert.hasText(institutionId, INSTITUTION_ID_IS_REQUIRED);
-        Assert.hasText(userId, USER_ID_IS_REQUIRED);
-        List<PartyProduct> products = Collections.emptyList();
-        RelationshipsResponse response = msCoreRestClient.getUserInstitutionRelationships(institutionId, EnumSet.allOf(PartyRole.class), EnumSet.of(ACTIVE), null, null, userId);
-        if (response != null) {
-            products = response.stream()
-                    .map(RELATIONSHIP_INFO_TO_PARTY_PRODUCT_FUNCTION)
-                    .toList();
-        }
-        log.debug("getInstitutionUserProducts result = {}", products);
-        log.trace("getInstitutionUserProducts start");
-        return products;
-    }
 
 
     private Collection<InstitutionInfo> parseOnBoardingInfo(OnBoardingInfo onBoardingInfo, String productId) {
@@ -258,39 +229,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     }
 
 
-    @Override
-    public Collection<UserInfo> getUsers(UserInfo.UserInfoFilter userInfoFilter) {
-        log.trace("getUsers start");
-        log.debug("getUsers userInfoFilter = {}", userInfoFilter);
-
-        Collection<UserInfo> userInfos = Collections.emptyList();
-
-        EnumSet<PartyRole> roles = null;
-        if (userInfoFilter.getRole().isPresent()) {
-            roles = Arrays.stream(PartyRole.values())
-                    .filter(partyRole -> partyRole.getSelfCareAuthority().name().equals(userInfoFilter.getRole().get()))
-                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(PartyRole.class)));
-        }
-
-        Relationships relationships = msCoreRestClient.getRelationships(
-                userInfoFilter.getUserId().orElse(null),
-                userInfoFilter.getInstitutionId().orElse(null),
-                roles,
-                userInfoFilter.getAllowedStates().orElse(null),
-                userInfoFilter.getProductId().map(Set::of).orElse(null),
-                userInfoFilter.getProductRoles().orElse(null)
-        );
-
-        if (relationships != null && relationships.getItems() != null) {
-            userInfos = relationships.getItems().stream()
-                    .collect(Collectors.toMap(Relationship::getFrom,
-                            RELATIONSHIP_INFO_TO_USER_INFO_FUNCTION,
-                            USER_INFO_MERGE_FUNCTION)).values();
-        }
-        log.debug("getUsers result = {}", userInfos);
-        log.trace("getUsers end");
-        return userInfos;
-    }
 
     @Override
     public Institution getInstitutionByExternalId(String externalInstitutionId) {
