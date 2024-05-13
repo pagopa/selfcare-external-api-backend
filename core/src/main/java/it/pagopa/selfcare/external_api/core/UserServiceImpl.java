@@ -3,7 +3,6 @@ package it.pagopa.selfcare.external_api.core;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
@@ -17,23 +16,16 @@ import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static it.pagopa.selfcare.external_api.model.user.User.Fields.*;
-
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final EnumSet<User.Fields> USER_FIELD_LIST = EnumSet.of(name, familyName, workContacts);
-    private static final List<RelationshipState> DEFAULT_USER_STATUSES =  new ArrayList<>(Arrays.asList(RelationshipState.values()));
-    private final UserRegistryConnector userRegistryConnector;
     private final MsCoreConnector msCoreConnector;
     private final UserMsConnector userMsConnector;
     private final OnboardingInstitutionMapper onboardingInstitutionMapper;
 
     @Autowired
-    public UserServiceImpl(UserRegistryConnector userRegistryConnector,
-                           MsCoreConnector msCoreConnector, UserMsConnector userMsConnector, OnboardingInstitutionMapper onboardingInstitutionMapper) {
-        this.userRegistryConnector = userRegistryConnector;
+    public UserServiceImpl(MsCoreConnector msCoreConnector, UserMsConnector userMsConnector, OnboardingInstitutionMapper onboardingInstitutionMapper) {
         this.msCoreConnector = msCoreConnector;
         this.userMsConnector = userMsConnector;
         this.onboardingInstitutionMapper = onboardingInstitutionMapper;
@@ -53,7 +45,7 @@ public class UserServiceImpl implements UserService {
                                 (Objects.nonNull(institution.getProductInfo()) && userStatusesString.contains(institution.getProductInfo().getStatus())))
                         .map(onboardedInstitution -> {
                             OnboardedInstitutionResponse response = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
-                            if(Objects.nonNull(onboardedInstitution.getUserMailUuid()) && user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null){
+                            if (Objects.nonNull(onboardedInstitution.getUserMailUuid()) && user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null) {
                                 response.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
                             }
                             return response;
@@ -118,12 +110,12 @@ public class UserServiceImpl implements UserService {
                         //In case it has, Retrieve min role valid for associations with product-id
                         Optional<RelationshipState> optCurrentState = userInstitution.getProducts().stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()))
-                                        .map(product -> RelationshipState.valueOf(product.getStatus()))
-                                        .min(RelationshipState::compareTo);
+                                .map(product -> RelationshipState.valueOf(product.getStatus()))
+                                .min(RelationshipState::compareTo);
 
                         //Set role and status for min association with product
                         Optional<OnboardedProductResponse> optOnboardedProduct = optCurrentState.map(currentstate -> userInstitution.getProducts().stream()
-                                .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
+                                        .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
                                                 product.getStatus().equals(currentstate.name())))
                                 .orElse(Stream.of())
                                 .findFirst();
@@ -152,8 +144,8 @@ public class UserServiceImpl implements UserService {
                         .filter(product -> Objects.nonNull(product.getProductId()))
                         .anyMatch(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus())))
                 .peek(item -> item.setProducts(item.getProducts().stream()
-                                .filter(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus()))
-                                .toList()))
+                        .filter(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus()))
+                        .toList()))
                 .toList();
 
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
@@ -173,8 +165,8 @@ public class UserServiceImpl implements UserService {
                                         .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
                                 onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
                             })
-                    .toList());
-        });
+                            .toList());
+                });
 
         return onboardedInstitutionsInfo;
     }
