@@ -12,13 +12,8 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInsti
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
-import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenUser;
-import it.pagopa.selfcare.external_api.model.user.RelationshipState;
-import it.pagopa.selfcare.external_api.model.user.UserProducts;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -78,63 +73,6 @@ class MsCoreConnectorImplTest {
 
     }
 
-
-    @Test
-    void getOnboardingInfo() {
-        //given
-        OnboardingInfoResponse response = new OnboardingInfoResponse();
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        institutionResponse.setId("id");
-        institutionResponse.setAddress("address");
-        response.setInstitutions(List.of(institutionResponse));
-        when(msCoreRestClient.getInstitutionProductsInfo(anyString())).thenReturn(response);
-        //when
-        OnboardingInfoResponse result = msCoreConnector.getInstitutionProductsInfo("userId");
-        //then
-        assertEquals(response, result);
-        assertNotNull(result.getInstitutions());
-        assertEquals(1, result.getInstitutions().size());
-        assertEquals("address", result.getInstitutions().get(0).getAddress());
-        verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId");
-        verifyNoMoreInteractions(msCoreRestClient);
-    }
-
-    @Test
-    void getOnboardingInfoWithStatus() {
-        //given
-        OnboardingInfoResponse response = new OnboardingInfoResponse();
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        institutionResponse.setId("id");
-        institutionResponse.setAddress("address");
-        response.setInstitutions(List.of(institutionResponse));
-        when(msCoreRestClient.getInstitutionProductsInfo(anyString(), any())).thenReturn(response);
-        //when
-        OnboardingInfoResponse result = msCoreConnector.getInstitutionProductsInfo("userId", List.of(RelationshipState.PENDING));
-        //then
-        assertEquals(response, result);
-        assertNotNull(result.getInstitutions());
-        assertEquals(1, result.getInstitutions().size());
-        assertEquals("address", result.getInstitutions().get(0).getAddress());
-        verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , new String[]{"PENDING"});
-        verifyNoMoreInteractions(msCoreRestClient);
-    }
-
-    @Test
-    void getOnboardingInfoWithNullStatus() {
-        //given
-        OnboardingInfoResponse response = new OnboardingInfoResponse();
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        response.setInstitutions(List.of(institutionResponse));
-        when(msCoreRestClient.getInstitutionProductsInfo(anyString(), any())).thenReturn(response);
-        //when
-        OnboardingInfoResponse result = msCoreConnector.getInstitutionProductsInfo("userId", null);
-        //then
-        assertEquals(response, result);
-        assertNotNull(result.getInstitutions());
-        assertEquals(1, result.getInstitutions().size());
-        verify(msCoreRestClient, times(1)).getInstitutionProductsInfo("userId" , null);
-        verifyNoMoreInteractions(msCoreRestClient);
-    }
 
     @Test
     void getInstitutionOnboardings(){

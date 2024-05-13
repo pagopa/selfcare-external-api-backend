@@ -13,12 +13,14 @@ import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInsti
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionLocation;
+import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingResponseData;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.relationship.Relationship;
 import it.pagopa.selfcare.external_api.model.user.ProductInfo;
-import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.RoleInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse;
@@ -166,27 +168,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         log.debug("createPnPgInstitution result = {}", pnPgInstitution.getId());
         log.trace("createPnPgInstitution end");
         return pnPgInstitution.getId();
-    }
-
-    @Override
-    public OnboardingInfoResponse getInstitutionProductsInfo(String userId) {
-        log.trace("getInstitutionProductsInfo start");
-        log.debug("getInstitutionProductsInfo userId = {}", userId);
-        OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId);
-        log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
-        log.trace("getInstitutionProductsInfo end");
-        return onboardingInfo;
-    }
-
-    @Override
-    public OnboardingInfoResponse getInstitutionProductsInfo(String userId, List<RelationshipState> userStatuses) {
-        log.trace("getInstitutionProductsInfo start");
-        log.debug("getInstitutionProductsInfo userId = {}", userId);
-        OnboardingInfoResponse onboardingInfo = restClient.getInstitutionProductsInfo(userId, Objects.nonNull(userStatuses)
-                ? userStatuses.stream().map(RelationshipState::name).toArray(String[]::new) : null);
-        log.debug("getInstitutionProductsInfo result = {}", onboardingInfo);
-        log.trace("getInstitutionProductsInfo end");
-        return onboardingInfo;
     }
 
     @Override

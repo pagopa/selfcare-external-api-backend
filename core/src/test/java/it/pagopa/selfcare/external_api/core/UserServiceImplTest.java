@@ -5,7 +5,6 @@ import it.pagopa.selfcare.commons.base.utils.ProductId;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
-import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
@@ -16,7 +15,6 @@ import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -24,10 +22,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -76,68 +74,6 @@ class UserServiceImplTest {
         dummyUser.setName(fieldName);
     }
 
-    @Test
-    void getUserInfo() {
-        //given
-        Optional<User> optUser = Optional.of(dummyUser);
-        // when
-        when(userRegistryConnector.search(anyString(), any()))
-                .thenReturn(optUser);
-        OnboardingInfoResponse onboardingInfoResponse = buildOnboardingInfoResponse();
-        when(msCoreConnector.getInstitutionProductsInfo("id", List.of(RelationshipState.ACTIVE))).thenReturn(onboardingInfoResponse);
-        UserInfoWrapper userWrapper = userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
-        // then
-        assertNotNull(userWrapper);
-        assertNotNull(userWrapper.getUser());
-        assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals(1, userWrapper.getOnboardedInstitutions().size());
-        assertEquals(optUser.get().getName().getValue(),  userWrapper.getUser().getName().getValue());
-        assertEquals(optUser.get().getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
-        assertEquals(onboardingInfoResponse.getInstitutions().get(0).getAddress(), userWrapper.getOnboardedInstitutions().get(0).getAddress());
-    }
-
-    @Test
-    void getUserInfoWithWorkContacts() {
-        //given
-        WorkContact workContact = new WorkContact();
-        CertifiedField<String> email = new CertifiedField<>();
-        email.setValue("test@test.it");
-        workContact.setEmail(email);
-        dummyUser.setWorkContacts(Map.of("id", workContact));
-        Optional<User> optUser = Optional.of(dummyUser);
-
-        // when
-        when(userRegistryConnector.search(anyString(), any()))
-                .thenReturn(optUser);
-        OnboardingInfoResponse onboardingInfoResponse = buildOnboardingInfoResponse();
-        when(msCoreConnector.getInstitutionProductsInfo("id", List.of(RelationshipState.ACTIVE))).thenReturn(onboardingInfoResponse);
-        UserInfoWrapper userWrapper = userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
-        // then
-        assertNotNull(userWrapper);
-        assertNotNull(userWrapper.getUser());
-        assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals(1, userWrapper.getOnboardedInstitutions().size());
-        assertEquals(optUser.get().getName().getValue(),  userWrapper.getUser().getName().getValue());
-        assertEquals(optUser.get().getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
-        assertEquals(onboardingInfoResponse.getInstitutions().get(0).getAddress(), userWrapper.getOnboardedInstitutions().get(0).getAddress());
-        assertEquals("test@test.it", userWrapper.getOnboardedInstitutions().get(0).getUserEmail());
-    }
-
-    @Test
-    void getEmptyUser() {
-        //given
-        Optional<User> optUser = Optional.empty();
-        // when
-        when(userRegistryConnector.search(anyString(), any()))
-                .thenReturn(optUser);
-
-        Executable executable = () -> userService.getUserInfo(fiscalCode, List.of(RelationshipState.ACTIVE));
-        // then
-        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, executable);
-        assertEquals("User with fiscal code " + fiscalCode + " not found", e.getMessage());
-
-    }
-
     private OnboardingInfoResponse buildOnboardingInfoResponse() {
         OnboardingInfoResponse response = new OnboardingInfoResponse();
         OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
@@ -147,52 +83,6 @@ class UserServiceImplTest {
         return response;
     }
 
-    @Test
-    void getUserOnboardedProductDetails(){
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        String userId = "userId";
-        OnboardingInfoResponse onboardingInfoResponse = new OnboardingInfoResponse();
-        onboardingInfoResponse.setUserId(userId);
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        institutionResponse.setId(institutionId);
-        ProductInfo productInfo = mockInstance(new ProductInfo());
-        productInfo.setId(productId);
-        institutionResponse.setProductInfo(productInfo);
-        institutionResponse.setRole(PartyRole.MANAGER);
-        onboardingInfoResponse.setInstitutions(List.of(institutionResponse));
-        when(msCoreConnector.getInstitutionProductsInfo(anyString())).thenReturn(onboardingInfoResponse);
-        //when
-        UserDetailsWrapper result = userService.getUserOnboardedProductDetails(userId, institutionId, productId);
-        //then
-        checkNotNullFields(result);
-        verify(msCoreConnector, times(1)).getInstitutionProductsInfo(userId);
-    }
-
-    @Test
-    void getUserOnboardedProduct_noMatch(){
-        //given
-        String institutionId = "institutionId";
-        String productId = "productId";
-        String userId = "userId";
-        OnboardingInfoResponse onboardingInfoResponse = new OnboardingInfoResponse();
-        onboardingInfoResponse.setUserId(userId);
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        institutionResponse.setId("id");
-        ProductInfo productInfo = mockInstance(new ProductInfo());
-        productInfo.setId(productId);
-        institutionResponse.setProductInfo(productInfo);
-        institutionResponse.setRole(PartyRole.MANAGER);
-        onboardingInfoResponse.setInstitutions(List.of(institutionResponse));
-        when(msCoreConnector.getInstitutionProductsInfo(anyString())).thenReturn(onboardingInfoResponse);
-        //when
-        UserDetailsWrapper result = userService.getUserOnboardedProductDetails(userId, institutionId, productId);
-        //then
-        assertNull(result.getProductDetails());
-        verify(msCoreConnector, times(1)).getInstitutionProductsInfo(userId);
-
-    }
 
     @Test
     void getUserOnbaordedProductDetailsV2(){
