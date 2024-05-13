@@ -57,7 +57,7 @@ public class InstitutionController {
         List<GeographicTaxonomyResource> geographicTaxonomies = institutionService.getGeographicTaxonomyList(institutionId)
                 .stream()
                 .map(GeographicTaxonomyMapper::toResource)
-                .collect(Collectors.toList());
+                .toList();
         log.debug("getInstitutionGeographicTaxonomy result = {}", geographicTaxonomies);
         log.trace("getInstitutionGeographicTaxonomy end");
         return geographicTaxonomies;

@@ -69,7 +69,7 @@ class InstitutionServiceImpl implements InstitutionService {
             List<String> productIds = msCoreConnector.getInstitutionUserProductsV2(institutionId, user.getId());
             products = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
