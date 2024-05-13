@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -124,7 +123,7 @@ public class UserServiceImpl implements UserService {
                             onboardedInstitution.getProductInfo().setProductRole(item.getProductRole());
                             onboardedInstitution.getProductInfo().setStatus(item.getStatus());
                             onboardedInstitution.getProductInfo().setCreatedAt(Optional.ofNullable(item.getCreatedAt())
-                                    .map(date -> date.atZone(ZoneOffset.systemDefault()).toOffsetDateTime())
+                                    .map(date -> date.atZone(java.time.ZoneId.systemDefault()).toOffsetDateTime())
                                     .orElse(null));
                         });
                         onboardedInstitution.setUserMailUuid(userInstitution.getUserMailUuid());
