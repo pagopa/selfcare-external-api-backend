@@ -1860,6 +1860,10 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
+          "taxCodeSfe" : {
+            "type" : "string",
+            "description" : "Institution's taxCodeSfe"
+          },
           "userProductRoles" : {
             "type" : "array",
             "description" : "Logged user's roles on product",
@@ -2207,6 +2211,10 @@
           "taxCode" : {
             "type" : "string",
             "description" : "Institution's taxCode"
+          },
+          "taxCodeSfe" : {
+            "type" : "string",
+            "description" : "Institution's taxCodeSfe"
           },
           "users" : {
             "type" : "array",

@@ -63,6 +63,9 @@ public class OnboardingProductDto {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}")
     private String taxCode;
 
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCodeSfe}")
+    private String taxCodeSfe;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitCode}")
     private String subunitCode;
 

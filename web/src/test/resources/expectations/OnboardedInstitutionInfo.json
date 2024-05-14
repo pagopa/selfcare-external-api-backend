@@ -10,6 +10,7 @@
     "address": "example_address",
     "zipCode": "example_zip_code",
     "taxCode": "example_tax_code",
+    "taxCodeSfe":"example_tax_code_sfe",
     "pricingPlan": "piano_tariffario",
     "billing": {
       "vatNumber": "numero_iva",
@@ -64,6 +65,7 @@
     "address": "example_address",
     "zipCode": "example_zip_code",
     "taxCode": "example_tax_code",
+    "taxCodeSfe":"example_tax_code_sfe",
     "pricingPlan": "piano_tariffario",
     "billing": {
       "vatNumber": "numero_iva",

@@ -21,6 +21,7 @@ public class OnboardedInstitutionInfo {
     private String address;
     private String zipCode;
     private String taxCode;
+    private String taxCodeSfe;
     private String pricingPlan;
     private Billing billing;
     private String state;
