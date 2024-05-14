@@ -9,6 +9,7 @@
     "address": "address",
     "zipCode": "zipCode",
     "taxCode": "taxCode",
+    "taxCodeSfe": "taxCode_sfe",
     "origin": "origin",
     "geographicTaxonomies": [
       {
@@ -40,6 +41,7 @@
     "address": "address",
     "zipCode": "zipCode",
     "taxCode": "taxCode",
+    "taxCodeSfe": "taxCode_sfe",
     "origin": "origin",
     "geographicTaxonomies": [
       {

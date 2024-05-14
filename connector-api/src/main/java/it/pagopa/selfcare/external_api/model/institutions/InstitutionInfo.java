@@ -21,6 +21,7 @@ public class InstitutionInfo {
     private String description;
     private String status;
     private String taxCode;
+    private String taxCodeSfe;
     private String address;
     private String digitalAddress;
     private String pricingPlan;

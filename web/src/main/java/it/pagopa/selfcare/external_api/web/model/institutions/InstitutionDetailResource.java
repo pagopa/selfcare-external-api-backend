@@ -37,6 +37,9 @@ public class InstitutionDetailResource {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}")
     private String taxCode;
 
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCodeSfe}")
+    private String taxCodeSfe;
+
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.origin}")
     private String origin;
 

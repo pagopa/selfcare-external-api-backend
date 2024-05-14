@@ -11,6 +11,7 @@ public class InstitutionResource {
     private String ou;
     private String aoo;
     private String taxCode;
+    private String taxCodeSfe;
     private String category;
     private String description;
     private String digitalAddress;

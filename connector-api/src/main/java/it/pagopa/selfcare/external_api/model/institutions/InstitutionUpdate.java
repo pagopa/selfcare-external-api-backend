@@ -13,5 +13,6 @@ public class InstitutionUpdate {
     private String digitalAddress;
     private String address;
     private String taxCode;
+    private String taxCodeSfe;
 
 }
