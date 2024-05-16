@@ -20,7 +20,7 @@
       "county": "county",
       "country": "country",
       "taxCode": "taxCode",
-      "taxCodeSfe": "taxCode_sfe",
+      "taxCodeInvoicing": "taxCodeInvoicing",
       "zipCode": "zipCode",
       "paymentServiceProvider": {
         "abiCode": "abiCode",
@@ -72,7 +72,7 @@
       "county": "county",
       "country": "country",
       "taxCode": "taxCode",
-      "taxCodeSfe": "taxCode_sfe",
+      "taxCodeInvoicing": "taxCodeInvoicing",
       "zipCode": "zipCode",
       "paymentServiceProvider": {
         "abiCode": "abiCode",

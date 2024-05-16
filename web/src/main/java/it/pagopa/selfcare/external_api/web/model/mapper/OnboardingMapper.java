@@ -108,7 +108,7 @@ public class OnboardingMapper {
             resource.setZipCode(dto.getBillingData().getZipCode());
             resource.setDescription(dto.getBillingData().getBusinessName());
             resource.setTaxCode(dto.getBillingData().getTaxCode());
-            resource.setTaxCodeSfe(dto.getBillingData().getTaxCodeSfe());
+            resource.setTaxCodeInvoicing(dto.getBillingData().getTaxCodeInvoicing());
             resource.setPaymentServiceProvider(mapPaymentServiceProvider(dto.getPspData()));
             resource.setDataProtectionOfficer(mapDataProtectionOfficer(dto.getPspData()));
             resource.setGeographicTaxonomies(dto.getGeographicTaxonomies().stream()

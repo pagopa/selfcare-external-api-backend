@@ -17,7 +17,7 @@ public class InstitutionUpdate {
     private String county;
     private String country;
     private String taxCode;
-    private String taxCodeSfe;
+    private String taxCodeInvoicing;
     private String zipCode;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;

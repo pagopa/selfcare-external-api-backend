@@ -19,7 +19,7 @@ public class OnboardedInstitutionResponse {
     private String address;
     private String zipCode;
     private String taxCode;
-    private String taxCodeSfe;
+    private String taxCodeInvoicing;
     private String pricingPlan;
     private Billing billing;
     private String state;

@@ -3,9 +3,7 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
-import it.pagopa.selfcare.external_api.model.institutions.BusinessData;
 import it.pagopa.selfcare.external_api.model.institutions.RootParent;
-import it.pagopa.selfcare.external_api.model.institutions.SupportContact;
 import lombok.Data;
 
 @Data
@@ -21,7 +19,7 @@ public class OnboardedInstitutionInfo {
     private String address;
     private String zipCode;
     private String taxCode;
-    private String taxCodeSfe;
+    private String taxCodeInvoicing;
     private String pricingPlan;
     private Billing billing;
     private String state;

@@ -1442,9 +1442,9 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "taxCodeSfe" : {
+          "taxCodeInvoicing" : {
             "type" : "string",
-            "description" : "Institution's taxCodeSfe"
+            "description" : "Institution's taxCodeInvoicing"
           },
           "vatNumber" : {
             "type" : "string",
@@ -1745,9 +1745,9 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "taxCodeSfe" : {
+          "taxCodeInvoicing" : {
             "type" : "string",
-            "description" : "Institution's taxCodeSfe"
+            "description" : "Institution's taxCodeInvoicing"
           },
           "zipCode" : {
             "type" : "string",
@@ -1868,9 +1868,9 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "taxCodeSfe" : {
+          "taxCodeInvoicing" : {
             "type" : "string",
-            "description" : "Institution's taxCodeSfe"
+            "description" : "Institution's taxCodeInvoicing"
           },
           "userProductRoles" : {
             "type" : "array",
@@ -1944,7 +1944,7 @@
           "taxCode" : {
             "type" : "string"
           },
-          "taxCodeSfe" : {
+          "taxCodeInvoicing" : {
             "type" : "string"
           },
           "zipCode" : {
@@ -2223,9 +2223,9 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
-          "taxCodeSfe" : {
+          "taxCodeInvoicing" : {
             "type" : "string",
-            "description" : "Institution's taxCodeSfe"
+            "description" : "Institution's taxCodeInvoicing"
           },
           "users" : {
             "type" : "array",
