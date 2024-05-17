@@ -136,6 +136,7 @@ class InstitutionServiceImpl implements InstitutionService {
         products.put(productInfo.getId(), productInfo);
         userInfo.setProducts(products);
         userInfo.setInstitutionId(userInstitution.getInstitutionId());
+        userInfo.setUserUuidMail(userInstitution.getUserMailUuid());
         return userInfo;
     }
 

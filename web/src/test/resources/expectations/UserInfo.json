@@ -49,7 +49,8 @@
       }
     },
     "status": "ACTIVE",
-    "institutionId": "institution1"
+    "institutionId": "institution1",
+    "userUuidMail": "institution1"
   },
   {
     "id": "123e4567-e89b-12d3-a456-426614174555",
@@ -101,6 +102,7 @@
       }
     },
     "status": "ACTIVE",
-    "institutionId": "institution1"
+    "institutionId": "institution1",
+    "userUuidMail": "institution1"
   }
 ]
