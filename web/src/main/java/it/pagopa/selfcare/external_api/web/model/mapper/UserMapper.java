@@ -33,7 +33,8 @@ public class UserMapper {
                         .map(RoleInfo::getRole)
                         .collect(Collectors.toList()));
                 Optional.ofNullable(model.getUser().getWorkContacts())
-                        .map(map -> map.get(model.getInstitutionId()))
+                        .filter(map -> map.containsKey(model.getUserUuidMail()))
+                        .map(map -> map.get(model.getUserUuidMail()))
                         .map(WorkContact::getEmail)
                         .map(CertifiedFieldMapper::toValue)
                         .ifPresent(resource::setEmail);
