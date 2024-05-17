@@ -43,7 +43,7 @@ class UserMapperTest {
         Map<String, ProductInfo> product = new HashMap<>();
         product.put(productMock.getId(), productMock);
         model.setProducts(product);
-        model.getUser().setWorkContacts(Map.of(model.getInstitutionId(), mockInstance(new WorkContact())));
+        model.getUser().setWorkContacts(Map.of(model.getUserUuidMail(), mockInstance(new WorkContact())));
         String id = model.getProducts().keySet().toArray()[0].toString();
         ProductInfo productInfo = model.getProducts().get(id);
         // when
@@ -52,7 +52,7 @@ class UserMapperTest {
         assertEquals(model.getId(), resource.getId().toString());
         assertEquals(model.getUser().getName().getValue(), resource.getName());
         assertEquals(model.getUser().getFamilyName().getValue(), resource.getSurname());
-        assertEquals(model.getUser().getWorkContacts().get(model.getInstitutionId()).getEmail().getValue(), resource.getEmail());
+        assertEquals(model.getUser().getWorkContacts().get(model.getUserUuidMail()).getEmail().getValue(), resource.getEmail());
         assertEquals(model.getPartyRole(), resource.getRole());
         assertIterableEquals(productInfo.getRoleInfos().stream().map(RoleInfo::getRole).collect(Collectors.toList()), resource.getRoles());
     }

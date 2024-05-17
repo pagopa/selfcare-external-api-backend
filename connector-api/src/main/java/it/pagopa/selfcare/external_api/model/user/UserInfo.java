@@ -33,6 +33,7 @@ public class UserInfo {
     private Map<String, ProductInfo> products;
     private String status;
     private String institutionId;
+    private String userUuidMail;
 
 
     @Data
