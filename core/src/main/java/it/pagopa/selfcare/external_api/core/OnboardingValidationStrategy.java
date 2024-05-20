@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.core.strategy;
+package it.pagopa.selfcare.external_api.core;
 
 public interface OnboardingValidationStrategy {
 

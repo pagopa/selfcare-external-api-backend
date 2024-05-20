@@ -1,0 +1,90 @@
+{
+  "institutionExternalId": "institutionExternalId",
+  "taxCode": "taxCode",
+  "subunitCode": "subunitCode",
+  "subunitType": "subunitType",
+  "productId": "productId",
+  "productName": "productName",
+  "users": [
+    {
+      "id": "id",
+      "name": "name",
+      "surname": "surname",
+      "taxCode": "taxCode",
+      "role": "DELEGATE",
+      "email": "email",
+      "productRole": "productRole"
+    },
+    {
+      "id": "id",
+      "name": "name",
+      "surname": "surname",
+      "taxCode": "taxCode",
+      "role": "MANAGER",
+      "email": "email",
+      "productRole": "productRole"
+    }
+  ],
+  "contractPath": "contractPath",
+  "contractVersion": "contractVersion",
+  "billing": {
+    "vatNumber": "vatNumber",
+    "recipientCode": "recipientCode",
+    "publicServices": true
+  },
+  "institutionUpdate": {
+    "institutionType": "PA",
+    "description": "description",
+    "digitalAddress": "digitalAddress",
+    "address": "address",
+    "city": "city",
+    "county": "county",
+    "country": "country",
+    "taxCode": "taxCode",
+    "zipCode": "zipCode",
+    "paymentServiceProvider": {
+      "abiCode": "abiCode",
+      "businessRegisterNumber": "businessRegisterNumber",
+      "legalRegisterName": "legalRegisterName",
+      "legalRegisterNumber": "legalRegisterNumber",
+      "vatNumberGroup": true
+    },
+    "dataProtectionOfficer": {
+      "address": "address",
+      "email": "email",
+      "pec": "pec"
+    },
+    "geographicTaxonomies": [
+      {
+        "code": "code",
+        "desc": "desc"
+      }
+    ],
+    "rea": "rea",
+    "shareCapital": "shareCapital",
+    "businessRegisterPlace": "businessRegisterPlace",
+    "supportEmail": "supportEmail",
+    "supportPhone": "supportPhone",
+    "imported": true
+  },
+  "institutionType": "PA",
+  "origin": "origin",
+  "originId": "originId",
+  "pricingPlan": "pricingPlan",
+  "rootParent": {
+    "id": "id",
+    "description": "description"
+  },
+  "sendCompleteOnboardingEmail": true,
+  "location": {
+    "city": "city",
+    "county": "county",
+    "country": "country"
+  },
+  "contractImported": {
+    "fileName": "fileName",
+    "filePath": "filePath",
+    "createdAt": "2021-01-01T00:00:00Z",
+    "activatedAt": "2021-01-01T00:00:00Z"
+  }
+}

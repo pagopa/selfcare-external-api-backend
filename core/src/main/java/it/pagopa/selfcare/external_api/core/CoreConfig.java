@@ -1,4 +1,4 @@
-package it.pagopa.selfcare.external_api.core.config;
+package it.pagopa.selfcare.external_api.core;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
