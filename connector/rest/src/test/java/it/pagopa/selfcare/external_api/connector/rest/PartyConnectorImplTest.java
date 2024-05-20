@@ -11,20 +11,22 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
-import it.pagopa.selfcare.external_api.connector.rest.model.onboarding.OnboardingImportInstitutionRequest;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.Attribute;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
@@ -47,9 +49,22 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PartyConnectorImplTest {
 
-    private final ObjectMapper mapper;
+    private ObjectMapper mapper;
 
-    public PartyConnectorImplTest() {
+    @InjectMocks
+    private MsCoreConnectorImpl partyConnector;
+
+    @Mock
+    private MsCoreRestClient msCoreRestClient;
+
+    @Mock
+    private MsUserApiRestClient msUserApiRestClientMock;
+
+    @Spy
+    private InstitutionMapperImpl institutionMapper;
+
+    @BeforeEach
+    void setUp(){
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new Jdk8Module());
@@ -61,25 +76,6 @@ class PartyConnectorImplTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setTimeZone(TimeZone.getDefault());
     }
-
-    @InjectMocks
-    private MsCoreConnectorImpl partyConnector;
-
-    @Mock
-    private MsCoreRestClient msCoreRestClient;
-
-    @Mock
-    private MsUserApiRestClient msUserApiRestClientMock;
-
-    @Captor
-    ArgumentCaptor<OnboardingImportInstitutionRequest> onboardingImportRequestCaptor;
-
-    @Spy
-    private InstitutionMapper institutionMapper = new InstitutionMapperImpl();
-
-
-
-
 
     @Test
     void getInstitutionUserProductsV2_nullInstitutionId() {

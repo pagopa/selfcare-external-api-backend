@@ -6,17 +6,11 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingTokenControllerApi;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingDefaultRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingImportRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPaRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPspRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -51,10 +45,10 @@ public class OnboardingMsConnectorImplTest {
     private MsCoreInstitutionApiClient institutionApiClient;
 
     @Spy
-    private TokenMapper tokenMapper = new TokenMapperImpl();
+    private TokenMapperImpl tokenMapper;
 
     @Spy
-    private OnboardingMapper onboardingMapper = new OnboardingMapperImpl();
+    private OnboardingMapperImpl onboardingMapper;
 
     @Test
     void getToken(){

@@ -2,12 +2,14 @@ package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.UserResourceMapper;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserResourceMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.*;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.CreateUserDto;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.User;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -33,14 +34,11 @@ class UserMsConnectorImplTest {
     @Mock
     private MsUserApiRestClient msUserApiRestClient;
 
-    @Mock
-    private UserResourceMapper userResourceMapper;
-
-    @Mock
-    private UserMapper userMapper;
+    @Spy
+    private UserResourceMapperImpl userResourceMapper;
 
     @Spy
-    UserMapper mapper = new UserMapperImpl();
+    private UserMapperImpl userMapper;
 
     @Test
     void getUserInstitutions(){

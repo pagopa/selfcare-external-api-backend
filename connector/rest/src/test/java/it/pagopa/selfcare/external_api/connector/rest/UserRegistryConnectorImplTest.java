@@ -6,12 +6,13 @@ import it.pagopa.selfcare.external_api.connector.rest.client.UserRegistryRestCli
 import it.pagopa.selfcare.external_api.connector.rest.model.user_registry.EmbeddedExternalId;
 import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
@@ -22,17 +23,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        classes = {
-                UserRegistryConnectorImpl.class
-        }
-)
+@ExtendWith(MockitoExtension.class)
 class UserRegistryConnectorImplTest {
 
-    @Autowired
+    @InjectMocks
     private UserRegistryConnectorImpl userConnector;
 
-    @MockBean
+    @Mock
     private UserRegistryRestClient restClientMock;
 
 

@@ -4,9 +4,7 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.*;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreUserApiClient;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.UserProductMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserProductMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
@@ -47,10 +45,10 @@ class MsCoreConnectorImplTest {
     private MsCoreUserApiClient userApiClient;
 
     @Spy
-    InstitutionMapper institutionMapper = new InstitutionMapperImpl();
+    InstitutionMapperImpl institutionMapper;
 
     @Spy
-    UserProductMapper userProductMapper = new UserProductMapperImpl();
+    UserProductMapperImpl userProductMapper;
 
 
     @Test
