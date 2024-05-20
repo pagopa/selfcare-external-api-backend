@@ -7,4 +7,5 @@ public class Billing {
     private String vatNumber;
     private String recipientCode;
     private Boolean publicServices;
+    private String taxCodeInvoicing;
 }

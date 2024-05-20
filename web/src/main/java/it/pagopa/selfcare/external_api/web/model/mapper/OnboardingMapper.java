@@ -40,6 +40,10 @@ public class OnboardingMapper {
             if (model.getPublicServices() != null) {
                 resource.setPublicServices(model.getPublicServices());
             }
+            if (model.getTaxCodeInvoicing() != null) {
+                resource.setTaxCodeInvoicing(model.getTaxCodeInvoicing());
+            }
+
         }
         return resource;
     }
