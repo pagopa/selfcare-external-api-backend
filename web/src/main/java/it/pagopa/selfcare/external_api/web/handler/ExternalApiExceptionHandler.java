@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.web.model.mapper.ProblemMapper;
 import it.pagopa.selfcare.external_api.core.exception.OnboardingNotAllowedException;
 import it.pagopa.selfcare.external_api.core.exception.UpdateNotAllowedException;
 import it.pagopa.selfcare.external_api.exceptions.InstitutionAlreadyOnboardedException;
+import it.pagopa.selfcare.external_api.exceptions.InvalidRequestException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,11 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @RestControllerAdvice
 public class ExternalApiExceptionHandler {
+    @ExceptionHandler({InvalidRequestException.class})
+    ResponseEntity<Problem> handleInvalidRequestException(InvalidRequestException e) {
+        log.warn(e.toString());
+        return ProblemMapper.toResponseEntity(new Problem(BAD_REQUEST, e.getMessage()));
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     ResponseEntity<Problem> handleNotFoundException(Exception e) {
