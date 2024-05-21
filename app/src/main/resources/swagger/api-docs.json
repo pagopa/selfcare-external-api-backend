@@ -1289,6 +1289,10 @@
             "type" : "string",
             "description" : "Institution's taxCode"
           },
+          "taxCodeInvoicing" : {
+            "type" : "string",
+            "description" : "Institution's taxCodeInvoicing"
+          },
           "vatNumber" : {
             "type" : "string",
             "description" : "Institution's VAT number"
@@ -1706,6 +1710,10 @@
           "taxCode" : {
             "type" : "string",
             "description" : "Institution's taxCode"
+          },
+          "taxCodeInvoicing" : {
+            "type" : "string",
+            "description" : "Institution's taxCodeInvoicing"
           },
           "userProductRoles" : {
             "type" : "array",

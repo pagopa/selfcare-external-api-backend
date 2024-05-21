@@ -1,0 +1,13 @@
+{
+  "id": "onboardingId",
+  "type": "INSTITUTION",
+  "productId": "productId",
+  "checksum": "checksum",
+  "contractVersion": "contractVersion",
+  "contractTemplate": "contractTemplate",
+  "contractSigned": "contractSigned",
+  "createdAt": "2022-12-31T23:59:59.999Z",
+  "updatedAt": "2022-12-31T23:59:59.999Z",
+  "closedAt": "2022-12-31T23:59:59.999Z",
+  "deletedAt": "2022-12-31T23:59:59.999Z"
+}

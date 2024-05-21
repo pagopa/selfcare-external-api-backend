@@ -3,8 +3,10 @@ package it.pagopa.selfcare.external_api.connector.rest;
 import feign.FeignException;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.client.UserRegistryRestClient;
+import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.connector.rest.model.user_registry.EmbeddedExternalId;
 import it.pagopa.selfcare.external_api.model.user.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -24,14 +26,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserRegistryConnectorImplTest {
+class UserRegistryConnectorImplTest extends BaseConnectorTest {
 
     @InjectMocks
-    private UserRegistryConnectorImpl userConnector;
+    private UserRegistryConnectorImpl userRegistryConnector;
 
     @Mock
     private UserRegistryRestClient restClientMock;
-
 
     @Test
     void getUserByInternalId_nullInfo() {
@@ -42,7 +43,7 @@ class UserRegistryConnectorImplTest {
         when(restClientMock.getUserByInternalId(any(), any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.getUserByInternalId(userId.toString(), fieldList);
+        User user = userRegistryConnector.getUserByInternalId(userId.toString(), fieldList);
         ///then
         assertNull(user.getName());
         assertNull(user.getFamilyName());
@@ -64,7 +65,7 @@ class UserRegistryConnectorImplTest {
         when(restClientMock.getUserByInternalId(any(), any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.getUserByInternalId(userId.toString(), fieldList);
+        User user = userRegistryConnector.getUserByInternalId(userId.toString(), fieldList);
         ///then
         assertNull(user);
 
@@ -88,7 +89,7 @@ class UserRegistryConnectorImplTest {
         when(restClientMock.getUserByInternalId(any(), any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.getUserByInternalId(userId.toString(), fieldList);
+        User user = userRegistryConnector.getUserByInternalId(userId.toString(), fieldList);
         ///then
         assertEquals(userId.toString(), user.getId());
         assertEquals(NONE, user.getName().getCertification());
@@ -109,7 +110,7 @@ class UserRegistryConnectorImplTest {
         String userId = null;
         final EnumSet<User.Fields> fieldList = EnumSet.allOf(User.Fields.class);
         //when
-        Executable executable = () -> userConnector.getUserByInternalId(userId, fieldList);
+        Executable executable = () -> userRegistryConnector.getUserByInternalId(userId, fieldList);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("A userId is required", e.getMessage());
@@ -134,7 +135,7 @@ class UserRegistryConnectorImplTest {
         when(restClientMock.getUserByInternalId(any(), any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.getUserByInternalId(userId.toString(), fieldList);
+        User user = userRegistryConnector.getUserByInternalId(userId.toString(), fieldList);
         ///then
         assertEquals(userId.toString(), user.getId());
         assertEquals(SPID, user.getName().getCertification());
@@ -157,7 +158,7 @@ class UserRegistryConnectorImplTest {
         Mockito.when(restClientMock.search(Mockito.any(), Mockito.any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.search(externalId, fieldList).get();
+        User user = userRegistryConnector.search(externalId, fieldList).get();
         ///then
         assertNull(user.getName());
         assertNull(user.getFamilyName());
@@ -182,7 +183,7 @@ class UserRegistryConnectorImplTest {
                 .when(restClientMock)
                 .search(Mockito.any(), Mockito.any());
         //when
-        Optional<User> user = userConnector.search(externalId, fieldList);
+        Optional<User> user = userRegistryConnector.search(externalId, fieldList);
         ///then
         assertNotNull(user);
         assertTrue(user.isEmpty());
@@ -208,7 +209,7 @@ class UserRegistryConnectorImplTest {
         Mockito.when(restClientMock.search(Mockito.any(), Mockito.any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.search(externalId, fieldList).get();
+        User user = userRegistryConnector.search(externalId, fieldList).get();
         ///then
         assertEquals(NONE, user.getName().getCertification());
         assertEquals(NONE, user.getEmail().getCertification());
@@ -231,7 +232,7 @@ class UserRegistryConnectorImplTest {
         String externalId = null;
         final EnumSet<User.Fields> fieldList = EnumSet.allOf(User.Fields.class);
         //when
-        Executable executable = () -> userConnector.search(externalId, fieldList);
+        Executable executable = () -> userRegistryConnector.search(externalId, fieldList);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("A TaxCode is required", e.getMessage());
@@ -255,7 +256,7 @@ class UserRegistryConnectorImplTest {
         Mockito.when(restClientMock.search(Mockito.any(), Mockito.any()))
                 .thenReturn(userMock);
         //when
-        User user = userConnector.search(externalId, fieldList).get();
+        User user = userRegistryConnector.search(externalId, fieldList).get();
         //then
         assertEquals(SPID, user.getName().getCertification());
         assertEquals(SPID, user.getEmail().getCertification());
@@ -278,7 +279,7 @@ class UserRegistryConnectorImplTest {
         UUID id = UUID.randomUUID();
         MutableUserFieldsDto userDto = TestUtils.mockInstance(new MutableUserFieldsDto(), "setWorkContacts");
         //when
-        Executable executable = () -> userConnector.updateUser(id, userDto);
+        Executable executable = () -> userRegistryConnector.updateUser(id, userDto);
         //then
         assertDoesNotThrow(executable);
         ArgumentCaptor<MutableUserFieldsDto> userDtoCaptor = ArgumentCaptor.forClass(MutableUserFieldsDto.class);
@@ -296,7 +297,7 @@ class UserRegistryConnectorImplTest {
         MutableUserFieldsDto userDto = TestUtils.mockInstance(new MutableUserFieldsDto(), "setWorkContacts");
 
         //when
-        Executable executable = () -> userConnector.updateUser(id, userDto);
+        Executable executable = () -> userRegistryConnector.updateUser(id, userDto);
         //then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
         assertEquals("A UUID is required", e.getMessage());
@@ -311,7 +312,7 @@ class UserRegistryConnectorImplTest {
         Mockito.when(restClientMock.saveUser(Mockito.any()))
                 .thenReturn(id);
         //when
-        UserId userId = userConnector.saveUser(saveUserDto);
+        UserId userId = userRegistryConnector.saveUser(saveUserDto);
         //then
         assertEquals(id.getId(), userId.getId());
         ArgumentCaptor<SaveUserDto> savedDto = ArgumentCaptor.forClass(SaveUserDto.class);
@@ -327,7 +328,7 @@ class UserRegistryConnectorImplTest {
         //given
         SaveUserDto saveUserDto = TestUtils.mockInstance(new SaveUserDto(), "setWorkContacts");
         //when
-        UserId id = userConnector.saveUser(saveUserDto);
+        UserId id = userRegistryConnector.saveUser(saveUserDto);
         //then
         assertNull(id);
         ArgumentCaptor<SaveUserDto> savedDto = ArgumentCaptor.forClass(SaveUserDto.class);

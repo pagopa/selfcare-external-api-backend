@@ -31,6 +31,7 @@ public interface InstitutionResourceMapper {
     InstitutionResource toResource(InstitutionInfo model);
 
     @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
+    @Mapping(target = "taxCodeInvoicing", source = "model.billing.taxCodeInvoicing")
     @Mapping(target = "pspData", source = "paymentServiceProvider", qualifiedByName = "toPspDataResource")
     @Mapping(target = "companyInformations.rea", source = "rea")
     @Mapping(target = "companyInformations.shareCapital", source = "shareCapital")

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,8 +39,8 @@ class ContractServiceImplTest extends BaseServiceTest {
 
 
     @BeforeEach
-    void setUp() {
-        super.setUp(contractService);
+    public void setUp() {
+        super.setUp();
     }
 
     @Test

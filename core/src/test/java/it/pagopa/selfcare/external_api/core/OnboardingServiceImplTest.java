@@ -37,8 +37,8 @@ class OnboardingServiceImplTest extends BaseServiceTest {
     private UserMsConnector userMsConnectorMock;
 
     @BeforeEach
-    void beforeEach() {
-        super.setUp(onboardingService);
+    public void setUp() {
+        super.setUp();
     }
 
     @Test

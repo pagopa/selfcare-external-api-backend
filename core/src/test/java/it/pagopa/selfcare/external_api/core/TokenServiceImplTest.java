@@ -27,8 +27,8 @@ public class TokenServiceImplTest extends BaseServiceTest {
     private OnboardingMsConnector onboardingMsConnector;
 
     @BeforeEach
-    void beforeEach() {
-        super.setUp(this.tokenService);
+    public void setUp() {
+        super.setUp();
     }
 
     @Test

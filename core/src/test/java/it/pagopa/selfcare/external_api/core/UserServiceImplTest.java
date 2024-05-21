@@ -3,7 +3,6 @@ package it.pagopa.selfcare.external_api.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
@@ -39,7 +38,7 @@ public class UserServiceImplTest extends BaseServiceTest {
 
     @BeforeEach
     public void setUp() {
-        super.setUp(userService);
+        super.setUp();
     }
 
 
