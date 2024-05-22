@@ -1,22 +1,22 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsOnboardingTokenControllerApi;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapper;
+import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingDefaultRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingImportRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPaRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingPspRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse;
+import it.pagopa.selfcare.external_api.model.token.Token;
+import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,11 +24,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class OnboardingMsConnectorImplTest {
+public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
 
     @InjectMocks
     private OnboardingMsConnectorImpl onboardingMsConnector;
@@ -51,20 +55,49 @@ public class OnboardingMsConnectorImplTest {
     private MsCoreInstitutionApiClient institutionApiClient;
 
     @Spy
-    private TokenMapper tokenMapper = new TokenMapperImpl();
+    private TokenMapperImpl tokenMapper;
 
     @Spy
-    private OnboardingMapper onboardingMapper = new OnboardingMapperImpl();
+    private OnboardingMapperImpl onboardingMapper;
 
     @Test
-    void getToken(){
-        //given
+    void getToken() throws IOException {
+        final String onboardingId = "onboardingId";
+
+        ClassPathResource resource = new ClassPathResource("stubs/TokenResponse.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        TokenResponse tokenResponse = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+
+        ClassPathResource expectationResource = new ClassPathResource("stubs/Token.json");
+        byte[] expectationResourceStream = Files.readAllBytes(expectationResource.getFile().toPath());
+        List<Token> expectation = objectMapper.readValue(expectationResourceStream, new TypeReference<>() {
+        });
+
+        when(tokenControllerApi._v1TokensGet(onboardingId))
+                .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+
+        List<Token> response = onboardingMsConnector.getToken(onboardingId);
+
+
+        Assertions.assertEquals(1, response.size());
+        Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(response));
+
+        verify(tokenControllerApi, times(1))
+                ._v1TokensGet(onboardingId);
+        verifyNoMoreInteractions(tokenControllerApi);
+    }
+
+    @Test
+    void getTokenEmptyList(){
+
         final String onboardingId = "onboardingId";
         when(tokenControllerApi._v1TokensGet(onboardingId))
-                .thenReturn(ResponseEntity.of(Optional.of(List.of(new TokenResponse()))));
-        //when
-        onboardingMsConnector.getToken(onboardingId);
-        //then
+                .thenReturn(ResponseEntity.ok(Collections.emptyList()));
+
+        List<Token> response = onboardingMsConnector.getToken(onboardingId);
+
+        Assertions.assertEquals(0, response.size());
         verify(tokenControllerApi, times(1))
                 ._v1TokensGet(onboardingId);
         verifyNoMoreInteractions(tokenControllerApi);
@@ -84,9 +117,8 @@ public class OnboardingMsConnectorImplTest {
         onboardingData.setBilling(billing);
         onboardingData.setUsers(List.of(mockInstance(new User())));
         onboardingData.setInstitutionUpdate(institutionUpdate);
-        // when
+
         onboardingMsConnector.onboarding(onboardingData);
-        // then
 
         ArgumentCaptor<OnboardingDefaultRequest> onboardingRequestCaptor = ArgumentCaptor.forClass(OnboardingDefaultRequest.class);
         verify(onboardingControllerApi, times(1))
@@ -99,7 +131,7 @@ public class OnboardingMsConnectorImplTest {
 
     @Test
     void onboarding_institutionPa() {
-        // given
+
         OnboardingData onboardingData = new OnboardingData();
         onboardingData.setTaxCode("taxCode");
         onboardingData.setInstitutionType(InstitutionType.PA);
@@ -109,9 +141,8 @@ public class OnboardingMsConnectorImplTest {
         onboardingData.setBilling(billing);
         onboardingData.setUsers(List.of(mockInstance(new User())));
         onboardingData.setInstitutionUpdate(institutionUpdate);
-        // when
+
         onboardingMsConnector.onboarding(onboardingData);
-        // then
 
         ArgumentCaptor<OnboardingPaRequest> onboardingRequestCaptor = ArgumentCaptor.forClass(OnboardingPaRequest.class);
         verify(onboardingControllerApi, times(1))
@@ -122,7 +153,7 @@ public class OnboardingMsConnectorImplTest {
     }
     @Test
     void onboarding_institutionPsp() {
-        // given
+
         OnboardingData onboardingData = new OnboardingData();
         onboardingData.setTaxCode("taxCode");
         onboardingData.setInstitutionType(InstitutionType.PSP);
@@ -134,9 +165,9 @@ public class OnboardingMsConnectorImplTest {
         onboardingData.setBilling(billing);
         onboardingData.setUsers(List.of(mockInstance(new User())));
         onboardingData.setInstitutionUpdate(institutionUpdate);
-        // when
+
         onboardingMsConnector.onboarding(onboardingData);
-        // then
+
         ArgumentCaptor<OnboardingPspRequest> onboardingRequestCaptor = ArgumentCaptor.forClass(OnboardingPspRequest.class);
         verify(onboardingControllerApi, times(1))
                 ._v1OnboardingPspCompletionPost(onboardingRequestCaptor.capture());
@@ -149,16 +180,16 @@ public class OnboardingMsConnectorImplTest {
 
     @Test
     void onboarding_importPa() {
-        // given
+
         OnboardingData onboardingData = new OnboardingData();
         onboardingData.setTaxCode("taxCode");
         InstitutionUpdate institutionUpdate = new InstitutionUpdate();
         institutionUpdate.setTaxCode("taxCode");
         onboardingData.setUsers(List.of(mockInstance(new User())));
         onboardingData.setInstitutionUpdate(institutionUpdate);
-        // when
+
         onboardingMsConnector.onboardingImportPA(onboardingData);
-        // then
+
         ArgumentCaptor<OnboardingImportRequest> onboardingRequestCaptor = ArgumentCaptor.forClass(OnboardingImportRequest.class);
         verify(onboardingControllerApi, times(1))
                 ._v1OnboardingPaImportPost(onboardingRequestCaptor.capture());
@@ -168,47 +199,77 @@ public class OnboardingMsConnectorImplTest {
     }
 
     @Test
-    void getInstitutionsByTaxCodeAndSubunitCode_happyPath() {
-        InstitutionsResponse institutionResponse = new InstitutionsResponse();
-        institutionResponse.setInstitutions(List.of(new InstitutionResponse()));
+    void getInstitutionsByTaxCodeAndSubunitCode_happyPath() throws Exception {
+        String taxCode = "taxCode";
+        String subunitCode = "subunitCode";
 
-        when(institutionApiClient._getInstitutionsUsingGET(anyString(), anyString(), any(), any())).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
-        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+        ClassPathResource institutionsResponseResource = new ClassPathResource("stubs/institutionsResponse.json");
+        byte[] institutionsResponseStream = Files.readAllBytes(institutionsResponseResource.getFile().toPath());
+        InstitutionsResponse institutionsResponse = objectMapper.readValue(institutionsResponseStream, new TypeReference<>() {
+        });
 
-        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode("taxCode", "subunitCode");
+        ClassPathResource institutionResource = new ClassPathResource("stubs/Institution2.json");
+        byte[] institutionStream = Files.readAllBytes(institutionResource.getFile().toPath());
+        List<Institution> expected = objectMapper.readValue(institutionStream, new TypeReference<>() {
+        });
 
-        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(anyString(), anyString(), any(), any());
-        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
+        when(institutionApiClient._getInstitutionsUsingGET(taxCode, subunitCode, null, null)).thenReturn(new ResponseEntity<>(institutionsResponse, HttpStatus.OK));
+
+        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode(taxCode, subunitCode);
+
+        assertEquals(expected, institutions);
         assert institutions.size() == 1;
+
+        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(taxCode, subunitCode, null, null);
+        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
+    }
+
+
+    @Test
+    void getInstitutionsByTaxCodeAndSubunitCode_emptyList() {
+        String taxCode = "taxCode";
+        String subunitCode = "subunitCode";
+
+        InstitutionsResponse institutionResponse = new InstitutionsResponse();
+        institutionResponse.setInstitutions(Collections.emptyList());
+
+        when(institutionApiClient._getInstitutionsUsingGET(taxCode, subunitCode, null, null)).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
+
+        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode(taxCode, subunitCode);
+
+        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(taxCode, subunitCode, null, null);
+        assert institutions.isEmpty();
+    }
+
+
+    @Test
+    void getOnboardingsEmptyList() {
+        String productId = "prod-io";
+
+        OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
+        onboardingGetResponse.setItems(Collections.emptyList());
+        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
+
+        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1);
+
+        Assertions.assertEquals(0, response.size());
     }
 
     @Test
-    void getInstitutionsByTaxCodeAndSubunitCode_nullTaxCode() {
-        InstitutionsResponse institutionResponse = new InstitutionsResponse();
-        institutionResponse.setInstitutions(List.of(new it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse()));
+    void getOnboardings() {
+        String productId = "prod-io";
 
-        when(institutionApiClient._getInstitutionsUsingGET(null, "subunitCode", null, null)).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
-        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+        //JSON
+        OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
+        onboardingGetResponse.setItems(new ArrayList<>());
+        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
 
-        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode(null, "subunitCode");
+        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1);
 
-        verify(institutionApiClient, times(1))._getInstitutionsUsingGET(null, "subunitCode", null, null);
-        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
-        assert institutions.size() == 1;
-    }
+        //JSON
+        List<TokenOnboardedUsers> expectation = new ArrayList<>();
 
-    @Test
-    void getInstitutionsByTaxCodeAndSubunitCode_nullSubunitCode() {
-        InstitutionsResponse institutionResponse = new InstitutionsResponse();
-        institutionResponse.setInstitutions(List.of(new InstitutionResponse()));
-
-        when(institutionApiClient._getInstitutionsUsingGET("taxCode", null, null, null)).thenReturn(new ResponseEntity<>(institutionResponse, HttpStatus.OK));
-        when(onboardingMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
-
-        List<Institution> institutions = onboardingMsConnector.getInstitutionsByTaxCodeAndSubunitCode("taxCode", null);
-
-        verify(institutionApiClient, times(1))._getInstitutionsUsingGET("taxCode", null, null, null);
-        verify(onboardingMapper, times(1)).toInstitution(any(InstitutionResponse.class));
-        assert institutions.size() == 1;
+        Assertions.assertEquals(expectation, response);
+        Assertions.assertEquals(0, response.size());
     }
 }
