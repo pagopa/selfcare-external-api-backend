@@ -1,14 +1,16 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.product.entity.Product;
 import it.pagopa.selfcare.product.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductConnectorImpl implements ProductsConnector {
 
     private final ProductService productService;
@@ -30,9 +32,13 @@ public class ProductConnectorImpl implements ProductsConnector {
     @Override
     public Product getProduct(String id, InstitutionType institutionType) {
         Product product = productService.getProduct(id);
-        product.setContractTemplatePath(product.getInstitutionContractMappings().get(institutionType).getContractTemplatePath());
-        product.setContractTemplateVersion(product.getInstitutionContractMappings().get(institutionType).getContractTemplateVersion());
-        product.setContractTemplateUpdatedAt(product.getInstitutionContractMappings().get(institutionType).getContractTemplateUpdatedAt());
+        if (product.getInstitutionContractMappings().containsKey(institutionType)) {
+            product.setContractTemplatePath(product.getInstitutionContractMappings().get(institutionType).getContractTemplatePath());
+            product.setContractTemplateVersion(product.getInstitutionContractMappings().get(institutionType).getContractTemplateVersion());
+            product.setContractTemplateUpdatedAt(product.getInstitutionContractMappings().get(institutionType).getContractTemplateUpdatedAt());
+        }
         return product;
     }
+
+
 }
