@@ -2,19 +2,16 @@ package it.pagopa.selfcare.external_api.connector.rest.config;
 
 import it.pagopa.selfcare.azurestorage.AzureBlobClient;
 import it.pagopa.selfcare.azurestorage.AzureBlobClientDefault;
-import it.pagopa.selfcare.commons.connector.rest.config.RestClientBaseConfig;
 import it.pagopa.selfcare.product.service.ProductService;
 import it.pagopa.selfcare.product.service.ProductServiceCacheable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@Import(RestClientBaseConfig.class)
 @PropertySource("classpath:config/products-sdk.properties")
-public class ProductsRestClientConfig {
+public class ProductServiceConfig {
     @Value("${external-api.blob-storage.container-product}")
     private String containerProduct;
     @Value("${external-api.blob-storage.filepath-product}")
