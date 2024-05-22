@@ -1,33 +1,24 @@
 package it.pagopa.selfcare.external_api.core;
 
-import it.pagopa.selfcare.external_api.api.MsCoreConnector;
+import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.api.OnboardingMsConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.model.product.Product;
-import it.pagopa.selfcare.external_api.model.token.ProductToken;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
-import it.pagopa.selfcare.external_api.model.user.InstitutionProducts;
-import it.pagopa.selfcare.external_api.model.user.UserProducts;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.core.io.ClassPathResource;
 
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-public class TokenServiceImplTest {
+@ExtendWith({MockitoExtension.class})
+class TokenServiceImplTest extends BaseServiceTestUtils {
 
     @InjectMocks
     private TokenServiceImpl tokenService;
@@ -35,36 +26,25 @@ public class TokenServiceImplTest {
     @Mock
     private OnboardingMsConnector onboardingMsConnector;
 
-    @Mock
-    private MsCoreConnector msCoreConnector;
-
     @BeforeEach
-    void beforeEach() {
-        TestSecurityContextHolder.clearContext();
+    public void setUp() {
+        super.setUp();
     }
 
+    @Test
+    void findByProductId() throws Exception {
+        ClassPathResource inputResource = new ClassPathResource("expectations/TokenOnboardedUsers.json");
+        byte[] tokenOnboardedUsersStream = Files.readAllBytes(inputResource.getFile().toPath());
+        List<TokenOnboardedUsers> tokenOnboardedUsers = objectMapper.readValue(tokenOnboardedUsersStream, new TypeReference<>() {});
+        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10)).thenReturn(tokenOnboardedUsers);
+        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10);
+        Assertions.assertEquals(tokenOnboardedUsers, tokens);
+    }
 
     @Test
-    void findByProductId() {
-        //given
-        String productId = "productId";
-        TokenOnboardedUsers tokenOnboardedUsers = new TokenOnboardedUsers();
-        tokenOnboardedUsers.setProductId(productId);
-        when(onboardingMsConnector.getOnboardings(productId, 1, 10))
-                .thenReturn(List.of(tokenOnboardedUsers));
-        UserProducts userProducts = new UserProducts();
-        userProducts.setId("userId");
-        InstitutionProducts bindings = new InstitutionProducts();
-        bindings.setInstitutionId("institutionId");
-        ProductToken productToken = new ProductToken();
-        productToken.setProductId(productId);
-        bindings.setProducts(List.of(productToken));
-        userProducts.setBindings(List.of(bindings));
-
-        // when
-        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(productId, 1, 10);
-        // then
-        assertNotNull(tokens);
-
+    void findByProductIdEmptyList(){
+        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10)).thenReturn(Collections.emptyList());
+        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10);
+        Assertions.assertEquals(0, tokens.size());
     }
 }
