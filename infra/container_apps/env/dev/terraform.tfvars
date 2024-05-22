@@ -11,7 +11,7 @@ tags = {
 container_app = {
   min_replicas = 0
   max_replicas = 1
-  scale_rules = [
+  scale_rules  = [
     {
       custom = {
         metadata = {
@@ -76,10 +76,6 @@ app_settings = [
     value = "http://selc-d-ms-core-ca"
   },
   {
-    name  = "MS_PRODUCT_URL"
-    value = "http://selc-d-product-ca"
-  },
-  {
     name  = "USERVICE_USER_REGISTRY_URL"
     value = "https://api.uat.pdv.pagopa.it/user-registry/v1"
   },
@@ -98,8 +94,10 @@ app_settings = [
 ]
 
 secrets_names = {
-  "APPLICATIONINSIGHTS_CONNECTION_STRING" = "appinsights-connection-string"
-  "BLOB_STORAGE_CONN_STRING"              = "blob-storage-contract-connection-string"
-  "USERVICE_USER_REGISTRY_API_KEY"        = "user-registry-api-key"
-  "JWT_TOKEN_PUBLIC_KEY"                  = "jwt-public-key"
+  "APPLICATIONINSIGHTS_CONNECTION_STRING"  = "appinsights-connection-string"
+  "BLOB_STORAGE_CONN_STRING"               = "blob-storage-contract-connection-string"
+  "USERVICE_USER_REGISTRY_API_KEY"         = "user-registry-api-key"
+  "JWT_TOKEN_PUBLIC_KEY"                   = "jwt-public-key"
+  "BLOB_STORAGE_PRODUCT_CONNECTION_STRING" = "blob-storage-product-connection-string"
+
 }

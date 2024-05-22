@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -21,10 +20,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductsMapper productsMapper;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductsMapper productsMapper) {
         this.productService = productService;
+        this.productsMapper = productsMapper;
     }
 
     // Currently not used from APIM
@@ -34,7 +35,7 @@ public class ProductController {
     public ProductResource getProduct(@ApiParam("${swagger.external_api.products.model.id}") @PathVariable(value = "productId") String productId) {
         log.trace("getProduct start");
         log.debug("getProduct productId = {}", productId);
-        ProductResource productResources = ProductsMapper.toResource(productService.getProduct(productId));
+        ProductResource productResources = productsMapper.toResource(productService.getProduct(productId));
         log.debug("getProduct result = {}", productResources);
         log.trace("getProduct end");
         return productResources;

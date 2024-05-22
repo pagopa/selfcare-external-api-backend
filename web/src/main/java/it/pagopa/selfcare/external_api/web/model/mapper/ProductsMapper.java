@@ -1,46 +1,34 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.web.model.products.ProductResource;
-import it.pagopa.selfcare.external_api.web.model.products.ProductRoleInfo;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import it.pagopa.selfcare.onboarding.common.PartyRole;
+import it.pagopa.selfcare.product.entity.Product;
+import it.pagopa.selfcare.product.entity.ProductRoleInfo;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.EnumMap;
+import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProductsMapper {
+@Mapper(componentModel = "spring")
+public interface ProductsMapper {
 
-    public static ProductResource toResource(Product model){
-        ProductResource resource = null;
-        if(model != null){
-            resource = new ProductResource();
-            resource.setId(model.getId());
-            resource.setDescription(model.getDescription());
-            resource.setTitle(model.getTitle());
-            resource.setUrlPublic(model.getUrlPublic());
-            resource.setUrlBO(model.getUrlBO());
-            resource.setContractTemplateVersion(model.getContractTemplateVersion());
-            resource.setContractTemplatePath(model.getContractTemplatePath());
-            resource.setContractTemplateUpdatedAt(model.getContractTemplateUpdatedAt());
-            resource.setCreatedAt(model.getCreatedAt());
-            resource.setDepictImageUrl(model.getDepictImageUrl());
-            resource.setIdentityTokenAudience(model.getIdentityTokenAudience());
-            resource.setLogo(model.getLogo());
-            resource.setLogoBgColor(model.getLogoBgColor());
-            resource.setParentId(model.getParentId());
-            resource.setRoleManagementURL(model.getRoleManagementURL());
-            resource.setRoleMappings(toRoleMappings(model.getRoleMappings()));
-        }
-        return resource;
-    }
+    @Mapping(target = "roleMappings", qualifiedByName = "toRoleMappings")
+    ProductResource toResource(Product model);
 
-    public static EnumMap<PartyRole, ProductRoleInfo> toRoleMappings(EnumMap<PartyRole, it.pagopa.selfcare.external_api.model.product.ProductRoleInfo> roleMappings){
+    @Named("toRoleMappings")
+    default EnumMap<PartyRole, ProductRoleInfo> toRoleMappings(Map<PartyRole, ProductRoleInfo> roleMappings){
         EnumMap<PartyRole, ProductRoleInfo> result;
         if(roleMappings != null){
             result = new EnumMap<>(PartyRole.class);
-            roleMappings.forEach((key, value) -> result.put(key, new ProductRoleInfo(value)));
+
+            roleMappings.forEach((key, value) -> {
+                ProductRoleInfo productRoleInfo = new ProductRoleInfo();
+                productRoleInfo.setRoles(roleMappings.get(key).getRoles());
+                productRoleInfo.setMultiroleAllowed(roleMappings.get(key).isMultiroleAllowed());
+                result.put(key, productRoleInfo);
+            });
         }
         else{
             result = null;

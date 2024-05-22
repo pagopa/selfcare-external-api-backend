@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.model.product.Product;
+import it.pagopa.selfcare.product.entity.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

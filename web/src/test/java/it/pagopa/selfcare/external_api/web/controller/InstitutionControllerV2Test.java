@@ -7,9 +7,11 @@ import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapperImpl;
+import it.pagopa.selfcare.product.entity.Product;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,8 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
 
     @Mock
     private ContractService contractService;
-
+    @Spy
+    private ProductsMapper productsMapper = new ProductsMapperImpl();
     @Spy
     private InstitutionResourceMapperImpl institutionResourceMapperImpl;
 

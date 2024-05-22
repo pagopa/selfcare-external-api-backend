@@ -4,8 +4,8 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
-import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.product.entity.Product;
 
 import java.util.Collection;
 import java.util.List;

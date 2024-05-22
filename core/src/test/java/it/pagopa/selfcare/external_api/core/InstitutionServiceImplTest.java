@@ -13,8 +13,8 @@ import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
-import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.product.entity.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,10 +79,10 @@ class InstitutionServiceImplTest {
                 .surname("surname")
                 .build();
         TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
-        final Product product1 = mockInstance(new Product(), 1);
-        final Product product2 = mockInstance(new Product(), 2);
-        final Product product3 = mockInstance(new Product(), 3);
-        final Product product4 = mockInstance(new Product(), 4);
+        final Product product1 = createDummyProduct(1);
+        final Product product2 = createDummyProduct(2);
+        final Product product3 = createDummyProduct(3);
+        final Product product4 = createDummyProduct(4);
         product1.setId("prod-io");
         product2.setId("prod-interop");
         product3.setId("id3");
@@ -350,5 +350,12 @@ class InstitutionServiceImplTest {
         verify(msCoreConnectorMock, times(1))
                 .createPnPgInstitution(createPnPgInstitution);
         verifyNoMoreInteractions(msCoreConnectorMock);
+    }
+
+    private Product createDummyProduct(int bias){
+        Product product = new Product();
+        product.setId("id"+bias);
+        product.setTitle("title"+bias);
+        return product;
     }
 }

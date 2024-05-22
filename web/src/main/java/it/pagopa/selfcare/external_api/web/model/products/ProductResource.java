@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.products;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -61,7 +61,7 @@ public class ProductResource {
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.roleMappings}", required = true)
     @NotEmpty
-    private EnumMap<PartyRole, ProductRoleInfo> roleMappings;
+    private EnumMap<PartyRole, it.pagopa.selfcare.product.entity.ProductRoleInfo> roleMappings;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.roleManagementURL}")
     private String roleManagementURL;

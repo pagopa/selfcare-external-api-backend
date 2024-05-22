@@ -42,14 +42,16 @@ public class InstitutionV2Controller {
     private final ContractService contractService;
     private final InstitutionService institutionService;
     private final UserService userService;
+    private final ProductsMapper productsMapper;
     private final InstitutionResourceMapper institutionResourceMapper;
 
     public InstitutionV2Controller(ContractService contractService,
                                    InstitutionService institutionService,
                                    UserService userService,
-                                   InstitutionResourceMapper institutionResourceMapper) {
+                                   ProductsMapper productsMapper, InstitutionResourceMapper institutionResourceMapper) {
         this.contractService = contractService;
         this.institutionService = institutionService;
+        this.productsMapper = productsMapper;
         this.institutionResourceMapper = institutionResourceMapper;
         this.userService = userService;
     }
@@ -103,7 +105,7 @@ public class InstitutionV2Controller {
         log.trace("getInstitutionUserProducts start");
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId)
                 .stream()
-                .map(ProductsMapper::toResource)
+                .map(productsMapper::toResource)
                 .toList();
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");

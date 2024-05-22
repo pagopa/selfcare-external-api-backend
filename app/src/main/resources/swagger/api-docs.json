@@ -2267,36 +2267,28 @@
       },
       "ProductRole" : {
         "title" : "ProductRole",
-        "required" : [ "code", "description", "label" ],
         "type" : "object",
         "properties" : {
           "code" : {
-            "type" : "string",
-            "description" : "Product role internal code"
+            "type" : "string"
           },
           "description" : {
-            "type" : "string",
-            "description" : "Product role description"
+            "type" : "string"
           },
           "label" : {
-            "type" : "string",
-            "description" : "Product role label"
+            "type" : "string"
           }
         }
       },
       "ProductRoleInfo" : {
         "title" : "ProductRoleInfo",
-        "required" : [ "multiroleAllowed", "roles" ],
         "type" : "object",
         "properties" : {
           "multiroleAllowed" : {
-            "type" : "boolean",
-            "description" : "Flag indicating if a User can have more than one product role",
-            "example" : false
+            "type" : "boolean"
           },
           "roles" : {
             "type" : "array",
-            "description" : "Available product roles",
             "items" : {
               "$ref" : "#/components/schemas/ProductRole"
             }
