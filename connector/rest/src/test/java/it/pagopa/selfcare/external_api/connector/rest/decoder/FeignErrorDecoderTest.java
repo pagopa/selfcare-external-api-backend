@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.connector.rest.decoder;
 import feign.Request;
 import feign.Response;
 import it.pagopa.selfcare.external_api.exceptions.InstitutionDoesNotExistException;
+import it.pagopa.selfcare.external_api.exceptions.InvalidRequestException;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -22,6 +23,22 @@ class FeignErrorDecoderTest {
     FeignErrorDecoder feignDecoder = new FeignErrorDecoder();
 
     private Map<String, Collection<String>> headers = new LinkedHashMap<>();
+
+    @Test
+    void testDecodeToInvalidRequest() throws Throwable {
+        //given
+        Response response = Response.builder()
+                .status(400)
+                .reason("Invalid Request")
+                .request(Request.create(Request.HttpMethod.GET, "/api", Collections.emptyMap(), null, UTF_8))
+                .headers(headers)
+                .body("hello world", UTF_8)
+                .build();
+        //when
+        Executable executable = () -> feignDecoder.decode("", response);
+        //then
+        assertThrows(InvalidRequestException.class, executable);
+    }
 
     @Test
     void testDecodeToResourceNotFound() throws Throwable {
@@ -57,7 +74,6 @@ class FeignErrorDecoderTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "BadRequest,400",
             "Unauthorized,401",
             "OK,200"
     })
