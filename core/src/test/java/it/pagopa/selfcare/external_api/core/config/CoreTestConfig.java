@@ -4,6 +4,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 
 @TestConfiguration
-@Import(CoreConfig.class)
+@Import({CoreConfig.class})
 public class CoreTestConfig {
+    public CoreTestConfig() {
+    }
 }
