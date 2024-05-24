@@ -75,14 +75,14 @@ public class UserServiceImpl implements UserService {
             onboardedProductResponses.addAll(onboardedProducts);
         });
         if (!onboardedProductResponses.isEmpty()) {
-            onboardedProductResponses.forEach(onboardedProductResponse -> {
-                roles.add(onboardedProductResponse.getProductRole());
-            });
+            onboardedProductResponses.forEach(onboardedProductResponse -> roles.add(onboardedProductResponse.getProductRole()));
             productDetails = new ProductDetails();
             productDetails.setRole(PartyRole.valueOf(onboardedProductResponses.get(0).getRole()));
             productDetails.setProductId(productId);
             productDetails.setRoles(roles);
-            productDetails.setCreatedAt(onboardedProductResponses.get(0).getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime());
+            if(onboardedProductResponses.get(0).getCreatedAt() != null) {
+                productDetails.setCreatedAt(onboardedProductResponses.get(0).getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime());
+            }
         }
         result = UserDetailsWrapper.builder()
                 .userId(userId)

@@ -14,6 +14,7 @@
     "billing": {
       "vatNumber": "numero_iva",
       "recipientCode": "example_recipient_code",
+      "taxCodeInvoicing": "example_tax_code_invoicing",
       "publicServices": true
     },
     "state": "ACTIVE",
@@ -68,6 +69,7 @@
     "billing": {
       "vatNumber": "numero_iva",
       "recipientCode": "example_recipient_code",
+      "taxCodeInvoicing": "example_tax_code_invoicing",
       "publicServices": true
     },
     "state": "DELETED",

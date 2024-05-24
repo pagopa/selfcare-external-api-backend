@@ -1,337 +1,214 @@
 package it.pagopa.selfcare.external_api.core;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.commons.base.utils.ProductId;
+import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInfoResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.core.io.ClassPathResource;
 
-import java.time.LocalDateTime;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.checkNotNullFields;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceImplTest extends BaseServiceTestUtils {
 
     @InjectMocks
     private UserServiceImpl userService;
-
     @Mock
-    private UserRegistryConnector userRegistryConnector;
-
+    private MsCoreConnector msCoreConnectorMock;
     @Mock
-    private UserMsConnector userMsConnector;
-
-
-    @Mock
-    private MsCoreConnector msCoreConnector;
-
+    private UserMsConnector userMsConnectorMock;
     @Spy
-    OnboardingInstitutionMapper onboardingInstitutionMapper = new OnboardingInstitutionMapperImpl();
-
-    private static final String fiscalCode = "MNCCSD01R13A757G";
-    private static final String productRoleExample = "product-role";
+    private OnboardingInstitutionMapperImpl onboardingInstitutionMapper;
 
     @BeforeEach
-    void beforeEach() {
-        TestSecurityContextHolder.clearContext();
-    }
-
-    private final static User dummyUser;
-
-    static {
-        dummyUser = new User();
-        dummyUser.setFiscalCode("MNCCSD01R13A757G");
-        dummyUser.setId("id");
-        CertifiedField<String> fieldName = new CertifiedField<>();
-        fieldName.setCertification(Certification.SPID);
-        fieldName.setValue("testName");
-        CertifiedField<String> fieldEmail = new CertifiedField<>();
-        fieldEmail.setCertification(Certification.SPID);
-        fieldEmail.setValue("test@email.com");
-        dummyUser.setEmail(fieldEmail);
-        dummyUser.setName(fieldName);
-    }
-
-    private OnboardingInfoResponse buildOnboardingInfoResponse() {
-        OnboardingInfoResponse response = new OnboardingInfoResponse();
-        OnboardedInstitutionResponse institutionResponse = new OnboardedInstitutionResponse();
-        institutionResponse.setId("id");
-        institutionResponse.setAddress("address");
-        response.setInstitutions(List.of(institutionResponse));
-        return response;
+    public void setUp() {
+        super.setUp();
     }
 
 
     @Test
-    void getUserOnbaordedProductDetailsV2(){
-        //given
-        final String institutionId = "institutionId";
-        final String userId = UUID.randomUUID().toString();
-        final String productId = "prod-io";
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId(institutionId);
-        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
-        onboardedProductResponse.setProductId(productId);
-        onboardedProductResponse.setStatus("ACTIVE");
-        onboardedProductResponse.setRole("MANAGER");
-        onboardedProductResponse.setProductRole("admin");
-        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
-        userInstitution.setProducts(List.of(onboardedProductResponse));
-        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+    void getUserOnboardedProductDetailsV2() throws Exception {
+        String userId = "123e4567-e89b-12d3-a456-426614174000";
+        String institutionId = "123e4567-e89b-12d3-a456-426614174000";
+        String productId = "product1";
 
-        //when
-        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
-        //then
-        checkNotNullFields(userDetailsWrapper);
-        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+        ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(eq(userId), eq(institutionId), any(), any(), any(), eq(List.of(productId)), any(), any())).thenReturn(userInstitutions);
+
+        ClassPathResource expectationResource = new ClassPathResource("expectations/UserDetailsWrapper.json");
+        byte[] expectationStream = Files.readAllBytes(expectationResource.getFile().toPath());
+        UserDetailsWrapper expectation = objectMapper.readValue(expectationStream, new TypeReference<>() {
+        });
+
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));
     }
 
     @Test
-    void getUserOnbaordedProductDetailsV2_noMatchProduct(){
-        //given
-        final String institutionId = "institutionId";
-        final String userId = UUID.randomUUID().toString();
-        final String productId = "prod-io";
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId(institutionId);
-        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
-        onboardedProductResponse.setProductId("prod");
-        onboardedProductResponse.setStatus("ACTIVE");
-        onboardedProductResponse.setRole("MANAGER");
-        onboardedProductResponse.setProductRole("admin");
-        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
-        userInstitution.setProducts(List.of(onboardedProductResponse));
-        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
+    void getUserOnboardedProductDetailsV2CheckDateMapping() throws Exception {
+        String userId = "123e4567-e89b-12d3-a456-426614174000";
+        String institutionId = "123e4567-e89b-12d3-a456-426614174000";
+        String productId = "product1";
 
-        //when
-        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
-        //then
-        assertNull(userDetailsWrapper.getProductDetails());
-        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+        ClassPathResource resource = new ClassPathResource("expectations/UserInstitutionWithDate.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(eq(userId), eq(institutionId), any(), any(), any(), eq(List.of(productId)), any(), any())).thenReturn(userInstitutions);
+
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        Assertions.assertNotNull(result.getProductDetails().getCreatedAt());
     }
 
     @Test
-    void getUserOnbaordedProductDetailsV2_noMatchInstitution(){
-        //given
-        final String institutionId = "institutionId";
-        final String userId = UUID.randomUUID().toString();
-        final String productId = "prod-io";
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId("institution");
-        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
-        onboardedProductResponse.setProductId("prod");
-        onboardedProductResponse.setStatus("ACTIVE");
-        onboardedProductResponse.setRole("MANAGER");
-        onboardedProductResponse.setProductRole("admin");
-        onboardedProductResponse.setCreatedAt(LocalDateTime.now());
-        userInstitution.setProducts(List.of(onboardedProductResponse));
-        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
-
-        //when
-        UserDetailsWrapper userDetailsWrapper = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
-        //then
-        assertNull(userDetailsWrapper.getProductDetails());
-        verify(userMsConnector, times(1)).getUsersInstitutions(eq(userId), eq(institutionId), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
-    }
-
-
-
-    @Test
-    void getUserInfoV2_shouldBeDeleted() {
-        //given
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId("id");
-        userInstitution.setProducts(dummyOnboardedProductResponses());
-
-        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
-        onboardedInstitutionInfo.setId("id");
-        ProductInfo productInfo = new ProductInfo();
-        productInfo.setId(ProductId.PROD_IO.name());
-        productInfo.setStatus(RelationshipState.ACTIVE.name());
-        onboardedInstitutionInfo.setProductInfo(productInfo);
-        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
-        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
-        onboardedInstitutionResponse.setId("id");
-        // when
-        when(userMsConnector.searchUserByExternalId(anyString()))
-                .thenReturn(dummyUser);
-        when(userMsConnector.getUsersInstitutions(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
-        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
-
-        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, null);
-        // then
-        assertNotNull(userWrapper);
-        assertNotNull(userWrapper.getUser());
-        assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
-        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
-        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getState());
-        assertEquals(RelationshipState.DELETED.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getStatus());
-    }
-
-
-
-    private List<OnboardedProductResponse> dummyOnboardedProductResponses() {
-        OnboardedProductResponse onboardedProductActive = new OnboardedProductResponse();
-        onboardedProductActive.setProductId(ProductId.PROD_PAGOPA.name());
-        onboardedProductActive.setStatus(RelationshipState.ACTIVE.name());
-        onboardedProductActive.setProductRole(productRoleExample);
-        onboardedProductActive.setRole(PartyRole.MANAGER.name());
-        OnboardedProductResponse onboardedProductPagopaDeleted = new OnboardedProductResponse();
-        onboardedProductPagopaDeleted.setProductId(ProductId.PROD_PAGOPA.name());
-        onboardedProductPagopaDeleted.setStatus(RelationshipState.DELETED.name());
-        onboardedProductPagopaDeleted.setProductRole(productRoleExample);
-        OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
-        onboardedProductResponse.setProductId(ProductId.PROD_IO.name());
-        onboardedProductResponse.setStatus(RelationshipState.DELETED.name());
-        onboardedProductResponse.setProductRole(productRoleExample);
-        OnboardedProductResponse onboardedProductPending = new OnboardedProductResponse();
-        onboardedProductPending.setProductId(ProductId.PROD_IO.name());
-        onboardedProductPending.setStatus(RelationshipState.PENDING.name());
-        onboardedProductPending.setProductRole(productRoleExample);
-        return List.of(onboardedProductResponse, onboardedProductPending, onboardedProductActive, onboardedProductPagopaDeleted);
+    void getUserOnboardedProductDetailsV2WithoutMatch() throws Exception {
+        String userId = "userId";
+        String institutionId = "institutionId";
+        String productId = "productId";
+        ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(eq(userId), eq(institutionId), any(), any(), any(), eq(List.of(productId)), any(), any())).thenReturn(userInstitutions);
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        Assertions.assertNull(result.getProductDetails());
     }
 
     @Test
-    void getUserInfoV2_shouldBeEmptyWhenFilterState() {
-        //given
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId("id");
-        userInstitution.setProducts(dummyOnboardedProductResponses());
+    void getOnboardedInstitutionDetailsActiveEmptyList() throws Exception {
+        String userId = "123e4567-e89b-12d3-a456-426614174000";
+        String institutionId = "123e4567-e89b-12d3-a456-426614174000";
+        String productId = "product1";
+        String productIdDeleted = "prod-deleted";
 
-        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
-        onboardedInstitutionInfo.setId("id");
-        ProductInfo productInfo = new ProductInfo();
-        productInfo.setId(ProductId.PROD_IO.name());
-        productInfo.setStatus(RelationshipState.ACTIVE.name());
-        onboardedInstitutionInfo.setProductInfo(productInfo);
-        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
-        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
-        onboardedInstitutionResponse.setId("id");
-        // when
-        when(userMsConnector.searchUserByExternalId(anyString()))
-                .thenReturn(dummyUser);
-        when(userMsConnector.getUsersInstitutions(anyString(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
-        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
+        ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(userId, null, null, null, null, List.of(productId), null, null)).thenReturn(userInstitutions);
 
-        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
-        // then
-        assertNotNull(userWrapper);
-        assertNotNull(userWrapper.getUser());
-        assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
-        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
-        assertTrue(userWrapper.getOnboardedInstitutions().isEmpty());
+        OnboardedInstitutionInfo onboardedInstitutionActive = new OnboardedInstitutionInfo();
+        onboardedInstitutionActive.setState(RelationshipState.SUSPENDED.name());
+        ProductInfo productInfoActive = new ProductInfo();
+        productInfoActive.setId(productId);
+        productInfoActive.setStatus(RelationshipState.SUSPENDED.name());
+        onboardedInstitutionActive.setProductInfo(productInfoActive);
+        OnboardedInstitutionInfo onboardedInstitutionDeleted = new OnboardedInstitutionInfo();
+        ProductInfo productInfoDeleted = new ProductInfo();
+        productInfoDeleted.setId(productIdDeleted);
+        productInfoDeleted.setStatus(RelationshipState.SUSPENDED.name());
+        onboardedInstitutionDeleted.setProductInfo(productInfoDeleted);
+        Mockito.when(msCoreConnectorMock.getInstitutionDetails(institutionId)).thenReturn(List.of(onboardedInstitutionActive, onboardedInstitutionDeleted));
+
+        List<OnboardedInstitutionInfo> result = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
-    void getUserInfoV2() {
-        //given
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId("id");
-        userInstitution.setProducts(dummyOnboardedProductResponses());
-        OnboardedInstitutionInfo onboardedInstitutionInfo = new OnboardedInstitutionInfo();
-        onboardedInstitutionInfo.setId("id");
-        ProductInfo productInfo = new ProductInfo();
-        productInfo.setId(ProductId.PROD_PAGOPA.name());
-        productInfo.setStatus(RelationshipState.ACTIVE.name());
-        onboardedInstitutionInfo.setProductInfo(productInfo);
-        OnboardedInstitutionResponse onboardedInstitutionResponse = new OnboardedInstitutionResponse();
-        onboardedInstitutionInfo.setState(RelationshipState.ACTIVE.name());
-        onboardedInstitutionResponse.setId("id");
-        // when
-        when(userMsConnector.searchUserByExternalId(fiscalCode))
-                .thenReturn(dummyUser);
-        when(userMsConnector.getUsersInstitutions(eq(dummyUser.getId()), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull())).thenReturn(List.of(userInstitution));
-        when(msCoreConnector.getInstitutionDetails(userInstitution.getInstitutionId())).thenReturn(List.of(onboardedInstitutionInfo));
-
-        UserInfoWrapper userWrapper = userService.getUserInfoV2(fiscalCode, List.of(RelationshipState.ACTIVE));
-        // then
-        assertNotNull(userWrapper);
-        assertNotNull(userWrapper.getUser());
-        assertNotNull(userWrapper.getOnboardedInstitutions());
-        assertEquals(dummyUser.getName().getValue(),  userWrapper.getUser().getName().getValue());
-        assertEquals(dummyUser.getEmail().getValue(),  userWrapper.getUser().getEmail().getValue());
-        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getState());
-        assertEquals(RelationshipState.ACTIVE.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getStatus());
-        assertEquals(productRoleExample,  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getProductRole());
-        assertEquals(PartyRole.MANAGER.name(),  userWrapper.getOnboardedInstitutions().get(0).getProductInfo().getRole());
-    }
-
-
-
-    @Test
-    void getOnboardedInstitutionsDetailsActive(){
-        //given
-        final String institutionId = "institutionId";
-        final String userId = UUID.randomUUID().toString();
-        final String productId = "prod-io";
-        final String productIdDeleted = "prod-deleted";
-        UserInstitution userInstitution = new UserInstitution();
-        userInstitution.setInstitutionId(institutionId);
-
-        //Add onboardedProduct Active
-        OnboardedProductResponse onboardedProductActive = new OnboardedProductResponse();
-        onboardedProductActive.setProductId(productId);
-        onboardedProductActive.setStatus(RelationshipState.ACTIVE.name());
-        onboardedProductActive.setRole(PartyRole.MANAGER.name());
-        onboardedProductActive.setProductRole("admin");
-        onboardedProductActive.setCreatedAt(LocalDateTime.now());
-
-        //Add onboardedProduct Deleted
-        OnboardedProductResponse onboardedProductDeleted = new OnboardedProductResponse();
-        onboardedProductDeleted.setProductId(productIdDeleted);
-        onboardedProductDeleted.setStatus(RelationshipState.DELETED.name());
-
-        userInstitution.setProducts(List.of(onboardedProductActive, onboardedProductDeleted));
-
-        //Add to institution both product in state ACTIVE
+    void getOnboardedInstitutionDetailsActive() throws Exception {
+        String userId = "123e4567-e89b-12d3-a456-426614174000";
+        String institutionId = "123e4567-e89b-12d3-a456-426614174000";
+        String productId = "product1";
+        String productIdDeleted = "prod-deleted";
+        ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
         OnboardedInstitutionInfo onboardedInstitutionActive = new OnboardedInstitutionInfo();
         onboardedInstitutionActive.setState(RelationshipState.ACTIVE.name());
-
         ProductInfo productInfoActive = new ProductInfo();
         productInfoActive.setId(productId);
         productInfoActive.setStatus(RelationshipState.ACTIVE.name());
         onboardedInstitutionActive.setProductInfo(productInfoActive);
         OnboardedInstitutionInfo onboardedInstitutionDeleted = new OnboardedInstitutionInfo();
-
         ProductInfo productInfoDeleted = new ProductInfo();
         productInfoDeleted.setId(productIdDeleted);
         productInfoDeleted.setStatus(RelationshipState.ACTIVE.name());
         onboardedInstitutionDeleted.setProductInfo(productInfoDeleted);
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(userId, null, null, null, null, List.of(productId), null, null)).thenReturn(userInstitutions);
+        Mockito.when(msCoreConnectorMock.getInstitutionDetails(institutionId)).thenReturn(List.of(onboardedInstitutionActive, onboardedInstitutionDeleted));
+        List<OnboardedInstitutionInfo> result = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
+        Assertions.assertNotNull(result);
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(1, result.size());
+    }
 
-        when(userMsConnector.getUsersInstitutions(anyString(), any(), any(), any(), any(), any(), any(), any())).thenReturn(List.of(userInstitution));
-        when(msCoreConnector.getInstitutionDetails(institutionId)).thenReturn(List.of(onboardedInstitutionActive, onboardedInstitutionDeleted));
+    @Test
+    void getUserInfoV2WithEmptyOnboardedInstitutions() throws Exception {
+        String taxCode = "MNCCSD01R13A757G";
 
-        //when
-        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
-        //then expect only association ACTIVE
-        assertNotNull(onboardedInstitutionInfos);
-        assertFalse(onboardedInstitutionInfos.isEmpty());
-        assertEquals(1, onboardedInstitutionInfos.size());
-        verify(userMsConnector, times(1))
-                .getUsersInstitutions(eq(userId), isNull(), isNull(), isNull(), isNull(), eq(List.of(productId)), isNull(), isNull());
+        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
+        List<UserInstitution> userInstitution = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
+        });
+
+        ClassPathResource onboardedInstitutionInfoResource = new ClassPathResource("expectations/OnboardedInstitutionInfoV2.json");
+        byte[] onboardedInstitutionInfoStream = Files.readAllBytes(onboardedInstitutionInfoResource.getFile().toPath());
+        OnboardedInstitutionInfo onboardedInstitutionInfo = objectMapper.readValue(onboardedInstitutionInfoStream, OnboardedInstitutionInfo.class);
+
+        ClassPathResource userResource = new ClassPathResource("expectations/User.json");
+        byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
+        User user = objectMapper.readValue(userStream, User.class);
+        Mockito.when(userMsConnectorMock.searchUserByExternalId(taxCode)).thenReturn(user);
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(userInstitution);
+        Mockito.when(msCoreConnectorMock.getInstitutionDetails(any())).thenReturn(List.of(onboardedInstitutionInfo));
+
+        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(RelationshipState.ACTIVE));
+
+        Assertions.assertNotNull(userInfoWrapper);
+        Assertions.assertNotNull(userInfoWrapper.getUser());
+        Assertions.assertEquals(0, userInfoWrapper.getOnboardedInstitutions().size());
+        Assertions.assertEquals(user.getName().getValue(), userInfoWrapper.getUser().getName().getValue());
+        Assertions.assertEquals(user.getEmail().getValue(), userInfoWrapper.getUser().getEmail().getValue());
+    }
+
+    @Test
+    void getUserInfoV2WithValidOnboardedInstitutions() throws Exception {
+        String taxCode = "MNCCSD01R13A757G";
+
+        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitution.json");
+        byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
+        List<UserInstitution> userInstitution = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
+        });
+
+        ClassPathResource onboardedInstitutionInfoResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
+        byte[] onboardedInstitutionInfoStream = Files.readAllBytes(onboardedInstitutionInfoResource.getFile().toPath());
+        OnboardedInstitutionInfo onboardedInstitutionInfo = objectMapper.readValue(onboardedInstitutionInfoStream, OnboardedInstitutionInfo.class);
+
+        ClassPathResource userResource = new ClassPathResource("expectations/User.json");
+        byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
+        User user = objectMapper.readValue(userStream, User.class);
+        Mockito.when(userMsConnectorMock.searchUserByExternalId(taxCode)).thenReturn(user);
+        Mockito.when(userMsConnectorMock.getUsersInstitutions(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(userInstitution);
+        Mockito.when(msCoreConnectorMock.getInstitutionDetails(any())).thenReturn(List.of(onboardedInstitutionInfo));
+
+        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(RelationshipState.ACTIVE));
+
+        ClassPathResource userInfoWrapperResource = new ClassPathResource("expectations/UserInfoWrapperV2.json");
+        byte[] userInfoWrapperStream = Files.readAllBytes(userInfoWrapperResource.getFile().toPath());
+        UserInfoWrapper expectation = objectMapper.readValue(userInfoWrapperStream, UserInfoWrapper.class);
+
+        Assertions.assertNotNull(userInfoWrapper);
+        Assertions.assertNotNull(userInfoWrapper.getUser());
+        Assertions.assertEquals(1, userInfoWrapper.getOnboardedInstitutions().size());
+        Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(userInfoWrapper));
     }
 }
