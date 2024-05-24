@@ -2,13 +2,16 @@ package it.pagopa.selfcare.external_api.web.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.core.ProductService;
-import it.pagopa.selfcare.external_api.model.product.Product;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapperImpl;
+import it.pagopa.selfcare.product.entity.Product;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,6 +34,9 @@ class ProductControllerTest extends BaseControllerTest{
 
     @Mock
     private ProductService productService;
+
+    @Spy
+    private ProductsMapper productsMapper = new ProductsMapperImpl();
 
     @BeforeEach
     void setUp(){

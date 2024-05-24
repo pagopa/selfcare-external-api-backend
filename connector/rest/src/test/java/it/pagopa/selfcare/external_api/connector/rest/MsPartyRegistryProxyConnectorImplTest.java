@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsPartyRegistryProxyRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.model.product.Product;
+import it.pagopa.selfcare.product.entity.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

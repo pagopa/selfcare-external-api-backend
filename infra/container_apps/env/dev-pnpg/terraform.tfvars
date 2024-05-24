@@ -77,10 +77,6 @@ app_settings = [
     value = "http://selc-d-pnpg-ms-core-ca"
   },
   {
-    name  = "MS_PRODUCT_URL"
-    value = "http://selc-d-pnpg-product-ca"
-  },
-  {
     name  = "USERVICE_USER_REGISTRY_URL"
     value = "https://api.uat.pdv.pagopa.it/user-registry/v1"
   },
@@ -99,4 +95,6 @@ secrets_names = {
   "BLOB_STORAGE_CONN_STRING"              = "web-storage-connection-string"
   "USERVICE_USER_REGISTRY_API_KEY"        = "user-registry-api-key"
   "JWT_TOKEN_PUBLIC_KEY"                  = "jwt-public-key"
+  "BLOB_STORAGE_PRODUCT_CONNECTION_STRING"   = "blob-storage-product-connection-string"
+
 }

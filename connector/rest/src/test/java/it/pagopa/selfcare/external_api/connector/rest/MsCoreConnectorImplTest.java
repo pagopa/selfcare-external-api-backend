@@ -21,7 +21,6 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

@@ -6,7 +6,6 @@ import it.pagopa.selfcare.external_api.connector.rest.client.UserRegistryRestCli
 import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.connector.rest.model.user_registry.EmbeddedExternalId;
 import it.pagopa.selfcare.external_api.model.user.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;

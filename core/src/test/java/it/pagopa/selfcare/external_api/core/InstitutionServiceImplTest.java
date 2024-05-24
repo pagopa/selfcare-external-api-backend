@@ -13,11 +13,11 @@ import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
-import it.pagopa.selfcare.external_api.model.product.Product;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
+import it.pagopa.selfcare.product.entity.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
@@ -332,5 +333,12 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         String expectation = institutionService.addInstitution(createPnPgInstitution);
         Assertions.assertEquals(institution.getId(), expectation);
         Mockito.verify(msCoreConnectorMock, Mockito.times(1)).createPnPgInstitution(createPnPgInstitution);
+    }
+
+    private Product createDummyProduct(int bias){
+        Product product = new Product();
+        product.setId("id"+bias);
+        product.setTitle("title"+bias);
+        return product;
     }
 }

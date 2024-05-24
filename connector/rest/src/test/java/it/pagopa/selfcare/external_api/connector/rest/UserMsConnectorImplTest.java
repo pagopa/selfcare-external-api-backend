@@ -10,7 +10,6 @@ import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,11 +1,11 @@
 package it.pagopa.selfcare.external_api.core.strategy;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+
+import java.util.Map;
+import java.util.Set;
 
 class ConfigMapAllowedListOnboardingValidationStrategyTest {
     ConfigMapAllowedListOnboardingValidationStrategyTest() {

@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
-import it.pagopa.selfcare.external_api.model.product.Product;
+
+import it.pagopa.selfcare.product.entity.Product;
 
 public interface ProductService {
 

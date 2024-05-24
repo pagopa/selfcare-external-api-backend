@@ -8,10 +8,6 @@
     "description": "ProductDescription",
     "urlPublic": "urlPublic",
     "urlBO": "backOfficeUrl",
-    "activatedAt": "2007-12-03T10:15:30+01:00",
-    "authorized": true,
-    "userRole": "userRole",
-    "productOnboardingStatus": "ACTIVE",
     "status": "ACTIVE",
     "identityTokenAudience": "audience",
     "roleMappings": {
@@ -47,10 +43,6 @@
     "description": "ProductDescription",
     "urlPublic": "urlPublic",
     "urlBO": "backOfficeUrl",
-    "activatedAt": "2007-12-03T10:15:30+01:00",
-    "authorized": true,
-    "userRole": "userRole",
-    "productOnboardingStatus": "ACTIVE",
     "status": "ACTIVE",
     "identityTokenAudience": "audience",
     "roleMappings": {
