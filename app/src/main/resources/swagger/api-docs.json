@@ -1929,7 +1929,18 @@
       },
       "LegalVerificationResource" : {
         "title" : "LegalVerificationResource",
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "resultCode" : {
+            "type" : "string"
+          },
+          "resultDetail" : {
+            "type" : "string"
+          },
+          "verificationResult" : {
+            "type" : "boolean"
+          }
+        }
       },
       "LegalsResource" : {
         "title" : "LegalsResource",
@@ -2687,6 +2698,7 @@
       },
       "VerifyRequestDto" : {
         "title" : "VerifyRequestDto",
+        "required" : [ "taxId", "vatNumber" ],
         "type" : "object",
         "properties" : {
           "taxId" : {

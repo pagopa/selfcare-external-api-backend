@@ -72,13 +72,6 @@
                             </configOptions>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.3.0</version>
-                <executions>
                     <execution>
                         <id>selfcare-ms-onboarding</id>
                         <goals>
@@ -111,13 +104,6 @@
                             </configOptions>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.3.0</version>
-                <executions>
                     <execution>
                         <id>user-ms</id>
                         <goals>
@@ -149,13 +135,6 @@
                             </configOptions>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.3.0</version>
-                <executions>
                     <execution>
                         <id>registry-proxy-ms</id>
                         <goals>

@@ -203,7 +203,6 @@ class InstitutionServiceImpl implements InstitutionService {
     @Override
     public LegalVerification verifyLegal(String taxId, String vatNumber) {
         log.trace("verifyLegal start");
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "verifyLegal vatNumber = {}, taxId = {}", vatNumber, taxId);
         LegalVerification legalVerification = msPartyRegistryProxyConnector.verifyLegal(taxId, vatNumber);
         log.trace("verifyLegal end");
         return legalVerification;

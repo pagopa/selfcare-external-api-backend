@@ -1,6 +1,5 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
-import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.external_api.api.MsPartyRegistryProxyConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsPartyRegistryProxyRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsRegistryProxyNationalRegistryRestClient;
@@ -47,7 +46,6 @@ public class MsPartyRegistryProxyConnectorImpl implements MsPartyRegistryProxyCo
     @Override
     public LegalVerification verifyLegal(String taxId, String vatNumber){
         log.trace("verifyLegal start");
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "verifyLegal vatNumber = {}, taxId = {}", vatNumber, taxId);
         ResponseEntity<LegalVerificationResult> legalVerificationResultResponseEntity = nationalRegistryRestClient._verifyLegalUsingGET(taxId, vatNumber);
         log.trace("verifyLegal end");
         return registryProxyMapper.toLegalVerification(legalVerificationResultResponseEntity.getBody());

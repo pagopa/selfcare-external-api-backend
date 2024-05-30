@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.web.model.mapper.NationalRegistryMapper;
@@ -14,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -32,9 +33,8 @@ public class NationalRegistryController {
     @PostMapping(value = "/legal-tax/verification", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
-    public LegalVerificationResource verifyLegal(@RequestBody VerifyRequestDto requestDto){
+    public LegalVerificationResource verifyLegal(@RequestBody @Valid VerifyRequestDto requestDto){
         log.trace("verifyLegal start");
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "verifyLegal dto = {}", requestDto);
         LegalVerification legalVerification = institutionService.verifyLegal(requestDto.getTaxId(), requestDto.getVatNumber());
         log.trace("verifyLegal end");
         return nationalRegistryMapper.toResource(legalVerification);
