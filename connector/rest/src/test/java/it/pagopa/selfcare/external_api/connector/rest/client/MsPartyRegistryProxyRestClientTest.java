@@ -56,6 +56,7 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
         @Autowired
         private MsPartyRegistryProxyRestClient restClient;
 
+
         @Test
         void findInstitution_fullyValued() {
                 //given
