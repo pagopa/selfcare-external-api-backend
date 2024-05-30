@@ -1,0 +1,8 @@
+package it.pagopa.selfcare.external_api.connector.rest.client;
+
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.api.NationalRegistriesApi;
+import org.springframework.cloud.openfeign.FeignClient;
+
+@FeignClient(name = "${rest-client.ms-registry-proxy-national-registries.serviceCode}", url = "${rest-client.ms-party-registry-proxy.base-url}")
+public interface MsRegistryProxyNationalRegistryRestClient extends NationalRegistriesApi {
+}

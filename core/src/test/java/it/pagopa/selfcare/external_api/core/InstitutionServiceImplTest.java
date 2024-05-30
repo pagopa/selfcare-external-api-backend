@@ -3,10 +3,7 @@ package it.pagopa.selfcare.external_api.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
-import it.pagopa.selfcare.external_api.api.MsCoreConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
@@ -60,6 +57,9 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
     @MockBean
     private UserMsConnector userMsConnectorMock;
+
+    @MockBean
+    private MsPartyRegistryProxyConnector registryProxyConnector;
 
     @BeforeEach
     public void setUp() {
