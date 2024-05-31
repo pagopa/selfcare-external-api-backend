@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.LegalVerificationResult;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class MsPartyRegistryProxyConnectorImpl implements MsPartyRegistryProxyCo
     @Override
     public LegalVerification verifyLegal(String taxId, String vatNumber){
         log.trace("verifyLegal start");
+        log.debug("verifyLegal taxId = {}, vatNumber = {}", Encode.forJava(taxId), Encode.forJava(vatNumber));
         ResponseEntity<LegalVerificationResult> legalVerificationResultResponseEntity = nationalRegistryRestClient._verifyLegalUsingGET(taxId, vatNumber);
         log.trace("verifyLegal end");
         return registryProxyMapper.toLegalVerification(legalVerificationResultResponseEntity.getBody());

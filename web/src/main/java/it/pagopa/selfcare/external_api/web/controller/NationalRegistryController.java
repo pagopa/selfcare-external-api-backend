@@ -10,6 +10,7 @@ import it.pagopa.selfcare.external_api.web.model.mapper.NationalRegistryMapper;
 import it.pagopa.selfcare.external_api.web.model.national_registries.LegalVerificationResource;
 import it.pagopa.selfcare.external_api.web.model.national_registries.VerifyRequestDto;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,7 @@ public class NationalRegistryController {
     @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
     public LegalVerificationResource verifyLegal(@RequestBody @Valid VerifyRequestDto requestDto){
         log.trace("verifyLegal start");
+        log.debug("verifyLegal taxId = {}, vatNumber = {}", Encode.forJava(requestDto.getTaxId()), Encode.forJava(requestDto.getVatNumber()));
         LegalVerification legalVerification = institutionService.verifyLegal(requestDto.getTaxId(), requestDto.getVatNumber());
         log.trace("verifyLegal end");
         return nationalRegistryMapper.toResource(legalVerification);

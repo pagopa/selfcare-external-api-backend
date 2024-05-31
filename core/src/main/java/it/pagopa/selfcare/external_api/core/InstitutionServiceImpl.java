@@ -14,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.product.entity.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -203,6 +204,7 @@ class InstitutionServiceImpl implements InstitutionService {
     @Override
     public LegalVerification verifyLegal(String taxId, String vatNumber) {
         log.trace("verifyLegal start");
+        log.debug("verifyLegal taxId = {}, vatNumber = {}", Encode.forJava(taxId), Encode.forJava(vatNumber));
         LegalVerification legalVerification = msPartyRegistryProxyConnector.verifyLegal(taxId, vatNumber);
         log.trace("verifyLegal end");
         return legalVerification;
