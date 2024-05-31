@@ -4,18 +4,17 @@ import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareAuthority;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
-import it.pagopa.selfcare.external_api.api.MsCoreConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.product.entity.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -44,15 +43,18 @@ class InstitutionServiceImpl implements InstitutionService {
     private static final String TAG_LOG_INSTITUTION_USER_PRODUCTS = "getInstitutionUserProducts";
     private final Set<String> serviceType;
 
+    private final MsPartyRegistryProxyConnector msPartyRegistryProxyConnector;
+
     @Autowired
     InstitutionServiceImpl(ProductsConnector productsConnector,
                            MsCoreConnector msCoreConnector, UserRegistryConnector userRegistryConnector,
-                           UserMsConnector userMsConnector, @Value("${external_api.allowed-service-types}")String[] serviceType) {
+                           UserMsConnector userMsConnector, @Value("${external_api.allowed-service-types}")String[] serviceType, MsPartyRegistryProxyConnector msPartyRegistryProxyConnector) {
         this.productsConnector = productsConnector;
         this.msCoreConnector = msCoreConnector;
         this.userRegistryConnector = userRegistryConnector;
         this.userMsConnector = userMsConnector;
         this.serviceType = Set.of(serviceType);
+        this.msPartyRegistryProxyConnector = msPartyRegistryProxyConnector;
     }
 
 
@@ -197,6 +199,15 @@ class InstitutionServiceImpl implements InstitutionService {
         log.debug("addInstitution result = {}", institutionInternalId);
         log.trace("addInstitution end");
         return institutionInternalId;
+    }
+
+    @Override
+    public LegalVerification verifyLegal(String taxId, String vatNumber) {
+        log.trace("verifyLegal start");
+        log.debug("verifyLegal taxId = {}, vatNumber = {}", Encode.forJava(taxId), Encode.forJava(vatNumber));
+        LegalVerification legalVerification = msPartyRegistryProxyConnector.verifyLegal(taxId, vatNumber);
+        log.trace("verifyLegal end");
+        return legalVerification;
     }
 
 }

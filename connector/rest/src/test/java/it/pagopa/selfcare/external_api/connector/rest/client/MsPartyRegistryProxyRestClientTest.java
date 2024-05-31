@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest.client;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import feign.FeignException;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.connector.rest.config.MsPartyRegistryProxyRestClientTestConfig;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestPropertySource(
-        locations = "classpath:config/ms-party-registry-proxy-client.properties",
+        locations = "classpath:config/ms-party-registry-proxy-rest-client.properties",
         properties = {
                 "logging.level.it.pagopa.selfcare.external_api.connector.rest=DEBUG",
                 "spring.application.name=selc-external-api-connector-rest",
@@ -56,6 +55,7 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
 
         @Autowired
         private MsPartyRegistryProxyRestClient restClient;
+
 
         @Test
         void findInstitution_fullyValued() {

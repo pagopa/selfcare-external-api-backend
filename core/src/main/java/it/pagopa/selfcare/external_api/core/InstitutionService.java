@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.core;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.product.entity.Product;
@@ -24,4 +25,6 @@ public interface InstitutionService {
     Collection<Institution> getInstitutionsByGeoTaxonomies(Set<String> geoTaxIds, SearchMode searchMode);
 
     String addInstitution(CreatePnPgInstitution request);
+
+    LegalVerification verifyLegal(String taxId, String vatNumber);
 }

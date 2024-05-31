@@ -3,14 +3,12 @@ package it.pagopa.selfcare.external_api.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
-import it.pagopa.selfcare.external_api.api.MsCoreConnector;
-import it.pagopa.selfcare.external_api.api.ProductsConnector;
-import it.pagopa.selfcare.external_api.api.UserMsConnector;
-import it.pagopa.selfcare.external_api.api.UserRegistryConnector;
+import it.pagopa.selfcare.external_api.api.*;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
+import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
@@ -37,9 +35,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class})
 @ContextConfiguration(classes = InstitutionServiceImpl.class)
@@ -60,6 +58,9 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
     @MockBean
     private UserMsConnector userMsConnectorMock;
+
+    @MockBean
+    private MsPartyRegistryProxyConnector registryProxyConnector;
 
     @BeforeEach
     public void setUp() {
@@ -333,6 +334,22 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         String expectation = institutionService.addInstitution(createPnPgInstitution);
         Assertions.assertEquals(institution.getId(), expectation);
         Mockito.verify(msCoreConnectorMock, Mockito.times(1)).createPnPgInstitution(createPnPgInstitution);
+    }
+
+    @Test
+    void verifyLegal(){
+        final String taxId = "taxId";
+        final String vatNumber = "vatNumber";
+
+        when(registryProxyConnector.verifyLegal(anyString(), anyString())).thenReturn(new LegalVerification());
+
+        //when
+        LegalVerification result = institutionService.verifyLegal(taxId, vatNumber);
+
+        //then
+        assertNotNull(result);
+        verify(registryProxyConnector, times(1)).verifyLegal(taxId, vatNumber);
+
     }
 
     private Product createDummyProduct(int bias){

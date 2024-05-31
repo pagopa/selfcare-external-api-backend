@@ -26,6 +26,9 @@
     "name" : "institutions-pnpg",
     "description" : "Pn Pg Controller"
   }, {
+    "name" : "national-registries",
+    "description" : "National Registry Controller"
+  }, {
     "name" : "onboarding",
     "description" : "Onboarding operations"
   }, {
@@ -565,6 +568,68 @@
           },
           "404" : {
             "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
+    "/v2/national-registries/legal-tax/verification" : {
+      "post" : {
+        "tags" : [ "external-v2", "national-registries" ],
+        "summary" : "verifyLegal",
+        "description" : "Verify if given taxId is legal of given institution identified with vatNumber",
+        "operationId" : "verifyLegalByPOST",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VerifyRequestDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LegalVerificationResource"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -1862,6 +1927,21 @@
           }
         }
       },
+      "LegalVerificationResource" : {
+        "title" : "LegalVerificationResource",
+        "type" : "object",
+        "properties" : {
+          "resultCode" : {
+            "type" : "string"
+          },
+          "resultDetail" : {
+            "type" : "string"
+          },
+          "verificationResult" : {
+            "type" : "boolean"
+          }
+        }
+      },
       "LegalsResource" : {
         "title" : "LegalsResource",
         "type" : "object",
@@ -2613,6 +2693,19 @@
           "surname" : {
             "type" : "string",
             "description" : "User's surname"
+          }
+        }
+      },
+      "VerifyRequestDto" : {
+        "title" : "VerifyRequestDto",
+        "required" : [ "taxId", "vatNumber" ],
+        "type" : "object",
+        "properties" : {
+          "taxId" : {
+            "type" : "string"
+          },
+          "vatNumber" : {
+            "type" : "string"
           }
         }
       }
