@@ -28,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/institutions", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "institutions")
+@Api(tags = "Institution")
 public class InstitutionController {
 
     private final InstitutionService institutionService;

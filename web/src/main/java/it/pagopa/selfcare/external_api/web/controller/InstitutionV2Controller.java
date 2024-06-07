@@ -36,7 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/institutions", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "institutions")
+@Api(tags = "Institution")
 public class InstitutionV2Controller {
 
     private final ContractService contractService;
@@ -56,7 +56,6 @@ public class InstitutionV2Controller {
         this.userService = userService;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
