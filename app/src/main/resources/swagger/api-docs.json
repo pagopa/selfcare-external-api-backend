@@ -1140,7 +1140,7 @@
     },
     "/v2/users" : {
       "post" : {
-        "tags" : [ "external-v2", "support", "users" ],
+        "tags" : [ "external-v2", "support" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "V2getUserInfoUsingGET",
