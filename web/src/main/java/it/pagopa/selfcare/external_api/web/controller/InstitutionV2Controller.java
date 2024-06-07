@@ -75,7 +75,7 @@ public class InstitutionV2Controller {
         return institutionResources;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
+    @Tags({@Tag(name = "external-v2"), @Tag(name = "support")})
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
@@ -95,7 +95,7 @@ public class InstitutionV2Controller {
         return ResponseEntity.ok().headers(headers).body(contract.getData());
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @Tags({@Tag(name = "external-v2")})
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
@@ -111,7 +111,7 @@ public class InstitutionV2Controller {
         return productResources;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @Tags({@Tag(name = "external-v2")})
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")

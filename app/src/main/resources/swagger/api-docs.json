@@ -20,31 +20,31 @@
     }
   } ],
   "tags" : [ {
-    "name" : "institutions",
-    "description" : "Instituions operations"
+    "name" : "Institution",
+    "description" : "Institution V 2 Controller"
+  }, {
+    "name" : "Onboarding",
+    "description" : "Onboarding V 2 Controller"
+  }, {
+    "name" : "Product",
+    "description" : "Product Controller"
+  }, {
+    "name" : "Proxy",
+    "description" : "National Registry Controller"
+  }, {
+    "name" : "Token",
+    "description" : "Token Controller"
+  }, {
+    "name" : "User",
+    "description" : "User V 2 Controller"
   }, {
     "name" : "institutions-pnpg",
     "description" : "Pn Pg Controller"
-  }, {
-    "name" : "national-registries",
-    "description" : "National Registry Controller"
-  }, {
-    "name" : "onboarding",
-    "description" : "Onboarding operations"
-  }, {
-    "name" : "product",
-    "description" : "Products operations"
-  }, {
-    "name" : "tokens",
-    "description" : "Token Controller"
-  }, {
-    "name" : "users",
-    "description" : "User V 2 Controller"
   } ],
   "paths" : {
     "/v1/institutions/byGeoTaxonomies" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions" ],
+        "tags" : [ "Institution" ],
         "summary" : "getInstitutionsByGeoTaxonomies",
         "description" : "The service retrieves all the institutions based on given a list of geotax ids and a searchMode",
         "operationId" : "getInstitutionsByGeoTaxonomiesUsingGET",
@@ -131,7 +131,7 @@
     },
     "/v1/institutions/{institutionId}/geographicTaxonomy" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions" ],
+        "tags" : [ "Institution" ],
         "summary" : "getInstitutionGeographicTaxonomies",
         "description" : "The service retrieve the institution's geographic taxonomy",
         "operationId" : "getInstitutionGeographicTaxonomiesUsingGET",
@@ -207,7 +207,7 @@
     },
     "/v2/institutions" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions" ],
+        "tags" : [ "Institution" ],
         "summary" : "getInstitutions",
         "description" : "The service retrieves all the onboarded institutions related to the logged user",
         "operationId" : "getInstitutionsUsingGET",
@@ -323,7 +323,7 @@
     },
     "/v2/institutions/{institutionId}/contract" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions", "support" ],
+        "tags" : [ "external-v2", "support" ],
         "summary" : "getContract",
         "description" : "Service to retrieve a contract given institutionId and productId",
         "operationId" : "getContractUsingGET",
@@ -406,7 +406,7 @@
     },
     "/v2/institutions/{institutionId}/products" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionUserProducts",
         "description" : "Service to retrieve all active products for given institution and logged user",
         "operationId" : "getInstitutionUserProductsUsingGET",
@@ -482,7 +482,7 @@
     },
     "/v2/institutions/{institutionId}/products/{productId}/users" : {
       "get" : {
-        "tags" : [ "external-v2", "institutions" ],
+        "tags" : [ "external-v2" ],
         "summary" : "getInstitutionProductsUsers",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionProductsUsersUsingGET",
@@ -594,7 +594,7 @@
     },
     "/v2/national-registries/legal-tax/verification" : {
       "post" : {
-        "tags" : [ "external-v2", "national-registries" ],
+        "tags" : [ "Proxy" ],
         "summary" : "verifyLegal",
         "description" : "Verify if given taxId is legal of given institution identified with vatNumber",
         "operationId" : "verifyLegalByPOST",
@@ -656,7 +656,7 @@
     },
     "/v2/onboarding" : {
       "post" : {
-        "tags" : [ "onboarding" ],
+        "tags" : [ "Onboarding" ],
         "summary" : "onboarding",
         "description" : "The service allows the onboarding of Users to a subunit of an Institution",
         "operationId" : "onboardingUsingPOST",
@@ -827,7 +827,7 @@
     },
     "/v2/onboarding/{externalInstitutionId}" : {
       "post" : {
-        "tags" : [ "onboarding" ],
+        "tags" : [ "Onboarding" ],
         "summary" : "oldContractOnboarding",
         "description" : "The service allows the import of old institutions' contracts",
         "operationId" : "oldContractOnboardingUsingPOST",
@@ -974,7 +974,7 @@
     },
     "/v1/products/{productId}" : {
       "get" : {
-        "tags" : [ "product" ],
+        "tags" : [ "Product" ],
         "summary" : "getProduct",
         "description" : "The service retrieves Product information from product id",
         "operationId" : "getProductUsingGET",
@@ -1047,10 +1047,10 @@
     },
     "/v1/tokens/products/{productId}" : {
       "get" : {
-        "tags" : [ "tokens" ],
+        "tags" : [ "external-v2" ],
         "summary" : "Service to retrieve tokens from product's identifier",
         "description" : "Service to retrieve tokens from product's identifier",
-        "operationId" : "findFromProductUsingGET",
+        "operationId" : "getTokensFromProductUsingGET",
         "parameters" : [ {
           "name" : "productId",
           "in" : "path",
@@ -1202,7 +1202,7 @@
     },
     "/v2/users/{id}/onboarded-product" : {
       "get" : {
-        "tags" : [ "users" ],
+        "tags" : [ "User" ],
         "summary" : "getUserProductInfo",
         "description" : "Service to retrieve user's onboarded product info",
         "operationId" : "V2getUserProductInfoUsingGET",
