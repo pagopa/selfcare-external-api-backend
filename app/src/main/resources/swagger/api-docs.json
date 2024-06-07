@@ -407,15 +407,24 @@
     "/v2/institutions/{institutionId}/products" : {
       "get" : {
         "tags" : [ "external-v2" ],
-        "summary" : "getInstitutionUserProducts",
+        "summary" : "getInstitutionProducts",
         "description" : "Service to retrieve all active products for given institution and logged user",
-        "operationId" : "getInstitutionUserProductsUsingGET",
+        "operationId" : "getInstitutionProductsUsingGET",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
           "description" : "Institution's unique internal Id",
           "required" : true,
           "style" : "simple",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "description" : "User's unique identifier",
+          "required" : true,
+          "style" : "form",
           "schema" : {
             "type" : "string"
           }
