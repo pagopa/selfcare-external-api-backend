@@ -221,6 +221,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
         when(institutionService.getInstitutionUserProductsV2(anyString(), anyString())).thenReturn(products);
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products", "testInstitutionId")
+                        .param("userId", "testUserId")
                 .contentType(APPLICATION_JSON_VALUE).accept(APPLICATION_JSON_VALUE))
                 .andExpect(content().string(expectedResource))
                 .andExpect(jsonPath("$", hasSize(2)))
