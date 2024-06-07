@@ -51,9 +51,9 @@ public class TokenController {
      */
     @Tag(name = "external-v2")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}")
+    @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}", nickname = "getTokensFromProductUsingGET")
     @GetMapping(value = "/products/{productId}")
-    public ResponseEntity<TokensResource> findFromProduct(@ApiParam("${swagger.external_api.api.tokens.productId}")
+    public ResponseEntity<TokensResource> getTokensFromProductUsingGET(@ApiParam("${swagger.external_api.api.tokens.productId}")
                                                           @PathVariable(value = "productId") String productId,
                                                           @ApiParam("${swagger.external_api.page.number}")
                                                           @RequestParam(name = "page", defaultValue = "0") Integer page,
