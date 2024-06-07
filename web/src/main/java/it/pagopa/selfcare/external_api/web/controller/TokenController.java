@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/tokens", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "tokens")
+@Api(tags = "Tokens")
 public class TokenController {
 
     private final TokenService tokenService;
@@ -49,6 +49,7 @@ public class TokenController {
      * * Code: 200, Message: successful operation
      * * Code: 404, Message: product not found
      */
+    @Tag(name = "external-v2")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}")
     @GetMapping(value = "/products/{productId}")
