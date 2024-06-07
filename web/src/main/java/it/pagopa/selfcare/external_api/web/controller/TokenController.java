@@ -13,6 +13,7 @@ import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.tokens.TokensResource;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +61,8 @@ public class TokenController {
                                                           @ApiParam("${swagger.external_api.page.size}")
                                                           @RequestParam(name = "size", defaultValue = "100") Integer size) {
         log.trace("findFromProduct start");
-        log.debug("findFromProduct productId = {}", productId);
-        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(productId, page, size);
+        log.debug("findFromProduct productId = {}", Encode.forJava(productId));
+        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(Encode.forJava(productId), page, size);
 
         TokensResource tokenListResponse = new TokensResource(
                 tokens.stream()
