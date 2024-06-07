@@ -32,8 +32,8 @@ public class UserV2Controller {
         this.userService = userService;
         this.userInfoResourceMapper = userInfoResourceMapper;
     }
-
-    @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
+    @Tag(name = "support")
+    @Tag(name = "external-v2")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}", nickname = "V2getUserInfoUsingGET")

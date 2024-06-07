@@ -66,7 +66,7 @@ public class TokenController {
         TokensResource tokenListResponse = new TokensResource(
                 tokens.stream()
                         .map(tokenResourceMapper::toResponse)
-                        .collect(Collectors.toList()));
+                        .toList());
 
         log.trace("findFromProduct end");
         return ResponseEntity.ok().body(tokenListResponse);

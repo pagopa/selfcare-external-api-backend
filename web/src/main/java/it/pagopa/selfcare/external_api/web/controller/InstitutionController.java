@@ -70,7 +70,7 @@ public class InstitutionController {
         log.trace("getInstitutionByGeoTaxonomies start");
         log.debug("getInstitutionByGeoTaxonomies geoTaxonomies = {}, searchMode = {}", geoTaxonomies, searchMode);
         Collection<Institution> institutions = institutionService.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode.orElse(null));
-        List<InstitutionDetailResource> result = institutions.stream().map(institutionResourceMapper::toResource).collect(Collectors.toList());
+        List<InstitutionDetailResource> result = institutions.stream().map(institutionResourceMapper::toResource).toList();
         log.debug("getInstitutionByGeoTaxonomies result = {}", result);
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;
