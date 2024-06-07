@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/tokens", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "Tokens")
+@Api(tags = "Token")
 public class TokenController {
 
     private final TokenService tokenService;

@@ -22,7 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/users", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "users")
+@Api(tags = "User")
 public class UserV2Controller {
 
     private final UserService userService;
