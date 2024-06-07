@@ -218,7 +218,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
         ClassPathResource outputResource = new ClassPathResource("expectations/ProductResources.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
-        when(institutionService.getInstitutionUserProductsV2(anyString())).thenReturn(products);
+        when(institutionService.getInstitutionUserProductsV2(anyString(), anyString())).thenReturn(products);
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products", "testInstitutionId")
                 .contentType(APPLICATION_JSON_VALUE).accept(APPLICATION_JSON_VALUE))
@@ -232,9 +232,11 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     @Test
     public void getInstitutionUserProductsWithEmptyList() throws Exception {
 
-        when(institutionService.getInstitutionUserProductsV2("testInstitutionId")).thenReturn(Collections.emptyList());
+
+        when(institutionService.getInstitutionUserProductsV2("testInstitutionId", "testUserId")).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products", "testInstitutionId")
+                        .param("userId", "testUserId")
                 .contentType(APPLICATION_JSON_VALUE).accept(APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(0)))
                 .andExpect(status().isOk())

@@ -68,23 +68,6 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void getInstitutionUserProductsWithoutAuth() {
-        String institutionId = "institutionId";
-        Executable executable = () -> institutionService.getInstitutionUserProductsV2(institutionId);
-        IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, executable);
-        Assertions.assertEquals("Authentication is required", e.getMessage());
-    }
-
-    @Test
-    void getInstitutionUserProductsWithoutPrincipal() {
-        String institutionId = "institutionId";
-        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(null, null));
-        Executable executable = () -> institutionService.getInstitutionUserProductsV2(institutionId);
-        IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, executable);
-        Assertions.assertEquals("Not SelfCareUser principal", e.getMessage());
-    }
-
-    @Test
     void getInstitutionUserProductsWithProductEmpty() {
         String institutionId = "institutionId";
         PartyProduct partyProduct = new PartyProduct();
@@ -92,10 +75,8 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         partyProduct.setRole(PartyRole.MANAGER);
         partyProduct.setId("123");
         String userId = UUID.randomUUID().toString();
-        SelfCareUser selfCareUser = SelfCareUser.builder(userId).email("test@example.com").name("name").surname("surname").build();
-        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
         when(productsConnectorMock.getProducts()).thenReturn(Collections.emptyList());
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId);
+        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(0, expectation.size());
     }
 
@@ -110,11 +91,9 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         partyProduct.setRole(PartyRole.MANAGER);
         partyProduct.setId("123");
         String userId = UUID.randomUUID().toString();
-        SelfCareUser selfCareUser = SelfCareUser.builder(userId).email("test@example.com").name("name").surname("surname").build();
-        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
         when(productsConnectorMock.getProducts()).thenReturn(products);
-        when(msCoreConnectorMock.getInstitutionUserProductsV2(institutionId, selfCareUser.getId())).thenReturn(List.of(partyProduct.getId()));
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId);
+        when(msCoreConnectorMock.getInstitutionUserProductsV2(institutionId, userId)).thenReturn(List.of(partyProduct.getId()));
+        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(1, expectation.size());
         Assertions.assertEquals(expectation.get(0), products.get(0));
         Mockito.verify(msCoreConnectorMock, Mockito.times(1)).getInstitutionUserProductsV2(institutionId, userId);
@@ -139,11 +118,9 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         partyProduct2.setId("321");
 
         String userId = UUID.randomUUID().toString();
-        SelfCareUser selfCareUser = SelfCareUser.builder(userId).email("test@example.com").name("name").surname("surname").build();
-        TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(selfCareUser, null));
         when(productsConnectorMock.getProducts()).thenReturn(products);
-        when(msCoreConnectorMock.getInstitutionUserProductsV2(institutionId, selfCareUser.getId())).thenReturn(List.of(partyProduct.getId(), partyProduct2.getId()));
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId);
+        when(msCoreConnectorMock.getInstitutionUserProductsV2(institutionId, userId)).thenReturn(List.of(partyProduct.getId(), partyProduct2.getId()));
+        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(2, expectation.size());
         Assertions.assertEquals(expectation, products);
         Mockito.verify(msCoreConnectorMock, Mockito.times(1)).getInstitutionUserProductsV2(institutionId, userId);

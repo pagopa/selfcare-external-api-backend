@@ -59,16 +59,13 @@ class InstitutionServiceImpl implements InstitutionService {
 
 
     @Override
-    public List<Product> getInstitutionUserProductsV2(String institutionId) {
+    public List<Product> getInstitutionUserProductsV2(String institutionId, String userId) {
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " start");
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Assert.state(authentication != null, "Authentication is required");
-        Assert.state(authentication.getPrincipal() instanceof SelfCareUser, "Not SelfCareUser principal");
-        SelfCareUser user = (SelfCareUser) authentication.getPrincipal();
+
         List<Product> products = productsConnector.getProducts();
         if (!products.isEmpty()) {
-            List<String> productIds = msCoreConnector.getInstitutionUserProductsV2(institutionId, user.getId());
+            List<String> productIds = msCoreConnector.getInstitutionUserProductsV2(institutionId, userId);
             products = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
                     .toList();

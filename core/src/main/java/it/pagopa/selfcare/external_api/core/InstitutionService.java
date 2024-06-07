@@ -16,7 +16,7 @@ import java.util.Set;
 public interface InstitutionService {
 
 
-    List<Product> getInstitutionUserProductsV2(String institutionId);
+    List<Product> getInstitutionUserProductsV2(String institutionId, String userId);
 
     Collection<UserInfo> getInstitutionProductUsersV2(String institutionId, String productId, String userId, Optional<Set<String>> productRoles, String xSelfCareUid);
 

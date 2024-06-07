@@ -23,6 +23,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -100,10 +102,12 @@ public class InstitutionV2Controller {
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
-    public List<ProductResource> getInstitutionUserProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                            @PathVariable("institutionId") String institutionId) {
+    public List<ProductResource> getInstitutionProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                            @PathVariable("institutionId") String institutionId,
+                                                          @ApiParam("${swagger.external_api.user.model.id}")
+                                                          @RequestParam(value = "userId") String userId) {
         log.trace("getInstitutionUserProducts start");
-        List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId)
+        List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId)
                 .stream()
                 .map(productsMapper::toResource)
                 .toList();
