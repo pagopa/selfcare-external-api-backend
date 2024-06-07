@@ -28,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/institutions", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "institutions")
+@Api(tags = "Institution")
 public class InstitutionController {
 
     private final InstitutionService institutionService;
@@ -43,9 +43,6 @@ public class InstitutionController {
         this.institutionResourceMapper = institutionResourceMapper;
     }
 
-
-
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/{institutionId}/geographicTaxonomy")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionGeographicTaxonomy}")
@@ -63,7 +60,6 @@ public class InstitutionController {
         return geographicTaxonomies;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "/byGeoTaxonomies")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionByGeoTaxonomies}")
@@ -74,7 +70,7 @@ public class InstitutionController {
         log.trace("getInstitutionByGeoTaxonomies start");
         log.debug("getInstitutionByGeoTaxonomies geoTaxonomies = {}, searchMode = {}", geoTaxonomies, searchMode);
         Collection<Institution> institutions = institutionService.getInstitutionsByGeoTaxonomies(geoTaxonomies, searchMode.orElse(null));
-        List<InstitutionDetailResource> result = institutions.stream().map(institutionResourceMapper::toResource).collect(Collectors.toList());
+        List<InstitutionDetailResource> result = institutions.stream().map(institutionResourceMapper::toResource).toList();
         log.debug("getInstitutionByGeoTaxonomies result = {}", result);
         log.trace("getInstitutionByGeoTaxonomies end");
         return result;

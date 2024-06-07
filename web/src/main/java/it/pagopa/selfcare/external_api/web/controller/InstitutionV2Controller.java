@@ -36,7 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/institutions", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "institutions")
+@Api(tags = "Institution")
 public class InstitutionV2Controller {
 
     private final ContractService contractService;
@@ -56,7 +56,6 @@ public class InstitutionV2Controller {
         this.userService = userService;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
@@ -76,7 +75,8 @@ public class InstitutionV2Controller {
         return institutionResources;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "support"), @Tag(name = "institutions")})
+    @Tag(name = "external-v2")
+    @Tag(name = "support")
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
@@ -96,7 +96,7 @@ public class InstitutionV2Controller {
         return ResponseEntity.ok().headers(headers).body(contract.getData());
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @Tag(name = "external-v2")
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
@@ -112,7 +112,7 @@ public class InstitutionV2Controller {
         return productResources;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "institutions")})
+    @Tag(name = "external-v2")
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
@@ -131,7 +131,7 @@ public class InstitutionV2Controller {
          Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
         List<UserResource> result = userInfos.stream()
                 .map(model -> UserMapper.toUserResource(model, productId))
-                .collect(Collectors.toList());
+                .toList();
         log.debug("getInstitutionProductUsers result = {}", result);
         log.trace("getInstitutionProductUsers end");
         return result;

@@ -38,7 +38,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/onboarding", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "onboarding")
+@Api(tags = "Onboarding")
 public class OnboardingV2Controller {
 
     private final OnboardingService onboardingService;
@@ -112,7 +112,8 @@ public class OnboardingV2Controller {
      * * Code: 400, Message: Invalid request, DataType: Problem
      */
     @ResponseStatus(HttpStatus.OK)
-    @Tags({@Tag(name = "support"), @Tag(name = "Onboarding")})
+    @Tag(name = "support")
+    @Tag(name = "Onboarding")
     @ApiOperation(value = "${swagger.mscore.onboarding.users}", notes = "${swagger.mscore.onboarding.users}")
     @PostMapping(value = "/users")
     public ResponseEntity<List<RelationshipResult>> onboardingInstitutionUsers(@RequestBody @Valid OnboardingInstitutionUsersRequest request,

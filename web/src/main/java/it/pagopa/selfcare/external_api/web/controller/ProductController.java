@@ -16,7 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/products", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "product")
+@Api(tags = "Product")
 public class ProductController {
 
     private final ProductService productService;

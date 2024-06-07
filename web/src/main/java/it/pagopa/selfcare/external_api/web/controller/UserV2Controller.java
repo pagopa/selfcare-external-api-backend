@@ -22,7 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/users", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "users")
+@Api(tags = "User")
 public class UserV2Controller {
 
     private final UserService userService;
@@ -32,8 +32,8 @@ public class UserV2Controller {
         this.userService = userService;
         this.userInfoResourceMapper = userInfoResourceMapper;
     }
-
-    @Tags({@Tag(name = "support"), @Tag(name = "external-v2"), @Tag(name = "users")})
+    @Tag(name = "support")
+    @Tag(name = "external-v2")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}", nickname = "V2getUserInfoUsingGET")

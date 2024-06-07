@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@Api(tags = "national-registries")
+@Api(tags = "Proxy")
 @RequestMapping(value = "/v2/national-registries", produces = MediaType.APPLICATION_JSON_VALUE)
 public class NationalRegistryController {
     private final InstitutionService institutionService;
@@ -30,7 +30,6 @@ public class NationalRegistryController {
         this.nationalRegistryMapper = nationalRegistryMapper;
     }
 
-    @Tags({@Tag(name = "external-v2"), @Tag(name = "national-registries")})
     @PostMapping(value = "/legal-tax/verification", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
