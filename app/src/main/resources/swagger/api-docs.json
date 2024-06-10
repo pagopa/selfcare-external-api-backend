@@ -491,7 +491,7 @@
     },
     "/v2/institutions/{institutionId}/products/{productId}/users" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2" ],
+        "tags" : [ "Institution" ],
         "summary" : "getInstitutionProductsUsers",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionProductsUsersUsingGET",
