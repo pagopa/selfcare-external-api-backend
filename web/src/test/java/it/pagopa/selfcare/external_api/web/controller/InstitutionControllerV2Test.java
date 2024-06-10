@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InstitutionControllerV2Test extends BaseControllerTest{
+class InstitutionControllerV2Test extends BaseControllerTest{
 
     private static final String BASE_URL = "/v2/institutions";
 
@@ -64,7 +64,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionsWith2Elements() throws Exception {
+    void getInstitutionsWith2Elements() throws Exception {
 
         ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
         byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
@@ -101,7 +101,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionsWith1Elements() throws Exception {
+    void getInstitutionsWith1Elements() throws Exception {
 
         ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
         byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
@@ -137,7 +137,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionsWithoutElement() throws Exception {
+    void getInstitutionsWithoutElement() throws Exception {
 
         SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
         Authentication authentication = mock(Authentication.class);
@@ -165,7 +165,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionsWithoutProductId() throws Exception {
+    void getInstitutionsWithoutProductId() throws Exception {
 
         Authentication authentication = mock(Authentication.class);
         //when
@@ -210,7 +210,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionUserProductsWith2Elements() throws Exception {
+    void getInstitutionUserProductsWith2Elements() throws Exception {
         ClassPathResource inputResource = new ClassPathResource("expectations/Product.json");
         byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
         List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
@@ -231,7 +231,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionUserProductsWithEmptyList() throws Exception {
+    void getInstitutionUserProductsWithEmptyList() throws Exception {
 
 
         when(institutionService.getInstitutionUserProductsV2("testInstitutionId", "testUserId")).thenReturn(Collections.emptyList());
@@ -246,7 +246,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionProductsUsersWith2ReturnedElements() throws Exception {
+    void getInstitutionProductsUsersWith2ReturnedElements() throws Exception {
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
         byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
@@ -268,7 +268,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionProductsUsersWithEmptyList() throws Exception {
+    void getInstitutionProductsUsersWithEmptyList() throws Exception {
 
         when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
                 .thenReturn(Collections.emptyList());
@@ -285,7 +285,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
 
 
     @Test
-    public void getInstitutionUsersByProductsWith2ReturnedElements() throws Exception {
+    void getInstitutionUsersByProductsWith2ReturnedElements() throws Exception {
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
         byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
@@ -308,7 +308,7 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    public void getInstitutionUsersByProductsWithEmptyList() throws Exception {
+    void getInstitutionUsersByProductsWithEmptyList() throws Exception {
 
         when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
                 .thenReturn(Collections.emptyList());
