@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.CreatePgInstitutionRequest;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
@@ -45,19 +46,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     protected static final String INSTITUTION_ID_IS_REQUIRED = "An institutionId is required ";
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
-
-
-
-    @Override
-    public String createPnPgInstitution(CreatePnPgInstitution request) {
-        log.trace("createPnPgInstitution start");
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "createPnPgInstitution request = {}", request);
-        CreatePnPgInstitutionRequest institutionRequest = new CreatePnPgInstitutionRequest(request);
-        InstitutionPnPgResponse pnPgInstitution = restClient.createPnPgInstitution(institutionRequest);
-        log.debug("createPnPgInstitution result = {}", pnPgInstitution.getId());
-        log.trace("createPnPgInstitution end");
-        return pnPgInstitution.getId();
-    }
 
     @Override
     public InstitutionOnboarding getInstitutionOnboardings(String institutionId, String productId) {
@@ -151,5 +139,18 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
             }).toList();
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String createPgInstitution(String description, String taxId) {
+        log.trace("createPgInstitution start");
+        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(description, false, taxId);
+        InstitutionResponse institutionResponse = Objects.requireNonNull(institutionApiClient.
+                _createPgInstitutionUsingPOST(createPgInstitutionRequest)
+                .getBody());
+
+        log.trace("createPgInstitution end");
+
+        return institutionResponse.getId();
     }
 }

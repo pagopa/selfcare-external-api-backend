@@ -2,9 +2,7 @@ package it.pagopa.selfcare.external_api.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.api.*;
-import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
@@ -25,8 +23,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -288,29 +284,14 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void addInstitutionExists() {
+    void addInstitution() {
         CreatePnPgInstitution createPnPgInstitution = new CreatePnPgInstitution();
-        createPnPgInstitution.setExternalId("externalId");
-        Institution institution = new Institution();
-        institution.setId("externalId");
-        when(msCoreConnectorMock.getInstitutionByExternalId(createPnPgInstitution.getExternalId())).thenReturn(institution);
+        createPnPgInstitution.setDescription("description");
+        createPnPgInstitution.setExternalId("taxId");
+        String institutionId = UUID.randomUUID().toString();
+        when(msCoreConnectorMock.createPgInstitution("description", "taxId")).thenReturn(institutionId);
         String expectation = institutionService.addInstitution(createPnPgInstitution);
-        Assertions.assertEquals(institution.getId(), expectation);
-        Mockito.verify(msCoreConnectorMock, Mockito.times(1)).getInstitutionByExternalId(createPnPgInstitution.getExternalId());
-        Mockito.verifyNoMoreInteractions(msCoreConnectorMock);
-    }
-
-    @Test
-    void addInstitutionNotExists() {
-        CreatePnPgInstitution createPnPgInstitution = new CreatePnPgInstitution();
-        createPnPgInstitution.setExternalId("externalId");
-        Institution institution = new Institution();
-        institution.setId("internalId");
-        when(msCoreConnectorMock.getInstitutionByExternalId(createPnPgInstitution.getExternalId())).thenThrow(ResourceNotFoundException.class);
-        when(msCoreConnectorMock.createPnPgInstitution(createPnPgInstitution)).thenReturn(institution.getId());
-        String expectation = institutionService.addInstitution(createPnPgInstitution);
-        Assertions.assertEquals(institution.getId(), expectation);
-        Mockito.verify(msCoreConnectorMock, Mockito.times(1)).createPnPgInstitution(createPnPgInstitution);
+        Assertions.assertEquals(institutionId, expectation);
     }
 
     @Test
@@ -327,12 +308,5 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         assertNotNull(result);
         verify(registryProxyConnector, times(1)).verifyLegal(taxId, vatNumber);
 
-    }
-
-    private Product createDummyProduct(int bias){
-        Product product = new Product();
-        product.setId("id"+bias);
-        product.setTitle("title"+bias);
-        return product;
     }
 }
