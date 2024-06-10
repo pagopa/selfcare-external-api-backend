@@ -26,4 +26,7 @@ public interface MsCoreConnector {
     Collection<Institution> getInstitutionsByGeoTaxonomies(String geoTaxIds, SearchMode searchMode);
 
     List<String> getInstitutionUserProductsV2(String institutionId, String id);
+
+    String createPgInstitution(String description, String taxId);
+
 }

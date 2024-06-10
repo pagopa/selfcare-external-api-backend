@@ -187,12 +187,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
         log.debug("addInstitution request = {}", request);
-        String institutionInternalId;
-        try {
-            institutionInternalId = msCoreConnector.getInstitutionByExternalId(request.getExternalId()).getId();
-        } catch (ResourceNotFoundException e) {
-            institutionInternalId = msCoreConnector.createPnPgInstitution(request);
-        }
+        String institutionInternalId = msCoreConnector.createPgInstitution(request.getDescription(), request.getExternalId());
         log.debug("addInstitution result = {}", institutionInternalId);
         log.trace("addInstitution end");
         return institutionInternalId;

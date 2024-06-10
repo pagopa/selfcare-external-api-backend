@@ -34,10 +34,7 @@ import org.springframework.http.ResponseEntity;
 import javax.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
@@ -326,6 +323,20 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
         assertEquals(1, onboardedInstitutionInfos.size());
         assertEquals(expectation, onboardedInstitutionInfos);
         verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
+
+    }
+
+    @Test
+    void createPgInstitution() {
+        String institutionId = UUID.randomUUID().toString();
+        //given
+        InstitutionResponse response = new InstitutionResponse();
+        response.setId(institutionId);
+        when(institutionApiClient._createPgInstitutionUsingPOST(any())).thenReturn(ResponseEntity.of(Optional.of(response)));
+        //when
+        String institutionPnPgResponse = msCoreConnector.createPgInstitution("description",  "taxId");
+        //then
+        assertEquals(institutionId, institutionPnPgResponse);
 
     }
 }

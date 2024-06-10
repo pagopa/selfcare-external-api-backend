@@ -288,29 +288,14 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void addInstitutionExists() {
+    void addInstitution() {
         CreatePnPgInstitution createPnPgInstitution = new CreatePnPgInstitution();
-        createPnPgInstitution.setExternalId("externalId");
-        Institution institution = new Institution();
-        institution.setId("externalId");
-        when(msCoreConnectorMock.getInstitutionByExternalId(createPnPgInstitution.getExternalId())).thenReturn(institution);
+        createPnPgInstitution.setDescription("description");
+        createPnPgInstitution.setExternalId("taxId");
+        String institutionId = UUID.randomUUID().toString();
+        when(msCoreConnectorMock.createPgInstitution("description", "taxId")).thenReturn(institutionId);
         String expectation = institutionService.addInstitution(createPnPgInstitution);
-        Assertions.assertEquals(institution.getId(), expectation);
-        Mockito.verify(msCoreConnectorMock, Mockito.times(1)).getInstitutionByExternalId(createPnPgInstitution.getExternalId());
-        Mockito.verifyNoMoreInteractions(msCoreConnectorMock);
-    }
-
-    @Test
-    void addInstitutionNotExists() {
-        CreatePnPgInstitution createPnPgInstitution = new CreatePnPgInstitution();
-        createPnPgInstitution.setExternalId("externalId");
-        Institution institution = new Institution();
-        institution.setId("internalId");
-        when(msCoreConnectorMock.getInstitutionByExternalId(createPnPgInstitution.getExternalId())).thenThrow(ResourceNotFoundException.class);
-        when(msCoreConnectorMock.createPnPgInstitution(createPnPgInstitution)).thenReturn(institution.getId());
-        String expectation = institutionService.addInstitution(createPnPgInstitution);
-        Assertions.assertEquals(institution.getId(), expectation);
-        Mockito.verify(msCoreConnectorMock, Mockito.times(1)).createPnPgInstitution(createPnPgInstitution);
+        Assertions.assertEquals(institutionId, expectation);
     }
 
     @Test

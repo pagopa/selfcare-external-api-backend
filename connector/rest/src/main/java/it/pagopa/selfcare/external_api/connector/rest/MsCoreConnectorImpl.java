@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.CreatePgInstitutionRequest;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
@@ -151,5 +152,19 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
             }).toList();
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String createPgInstitution(String description, String taxId) {
+        log.trace("createPgInstitution start");
+        log.debug("createPgInstitution description = {},  taxId = {}", description, taxId);
+        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(description, false, taxId);
+        InstitutionResponse institutionResponse = Objects.requireNonNull(institutionApiClient.
+                _createPgInstitutionUsingPOST(createPgInstitutionRequest)
+                .getBody());
+
+        log.trace("createPgInstitution end");
+
+        return institutionResponse.getId();
     }
 }
