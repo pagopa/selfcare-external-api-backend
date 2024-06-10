@@ -1168,7 +1168,7 @@
     },
     "/v1/tokens/products/{productId}" : {
       "get" : {
-        "tags" : [ "external-v2" ],
+        "tags" : [ "Token", "external-v2" ],
         "summary" : "Service to retrieve tokens from product's identifier",
         "description" : "Service to retrieve tokens from product's identifier",
         "operationId" : "getTokensFromProductUsingGET",
@@ -1260,8 +1260,152 @@
       }
     },
     "/v2/users" : {
+      "get" : {
+        "tags" : [ "User", "external-v2" ],
+        "summary" : "getUserInstitution",
+        "description" : "The API retrieves paged users with optional filters in input as query params",
+        "operationId" : "v2getUserInstitution",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "query",
+          "description" : "institutionId",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "description" : "userId",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "roles",
+          "in" : "query",
+          "description" : "roles",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+          }
+        }, {
+          "name" : "states",
+          "in" : "query",
+          "description" : "states",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "products",
+          "in" : "query",
+          "description" : "products",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productRoles",
+          "in" : "query",
+          "description" : "productRoles",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "page",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "size",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UserInstitutionResource"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      },
       "post" : {
-        "tags" : [ "external-v2", "support" ],
+        "tags" : [ "User", "external-v2", "support" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "V2getUserInfoUsingGET",
@@ -2774,6 +2918,68 @@
           "user" : {
             "description" : "Object that includes all info about a user",
             "$ref" : "#/components/schemas/UserResource"
+          }
+        }
+      },
+      "UserInstitutionResource" : {
+        "title" : "UserInstitutionResource",
+        "required" : [ "userId" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "institutionDescription" : {
+            "type" : "string",
+            "description" : "Institution's description"
+          },
+          "institutionId" : {
+            "type" : "string",
+            "description" : "Institution's Id"
+          },
+          "institutionRootName" : {
+            "type" : "string"
+          },
+          "products" : {
+            "type" : "array",
+            "description" : "Object that includes all info about onboarded institutions linked to a user",
+            "items" : {
+              "$ref" : "#/components/schemas/UserProductResource"
+            }
+          },
+          "userId" : {
+            "type" : "string",
+            "description" : "User's unique identifier"
+          }
+        }
+      },
+      "UserProductResource" : {
+        "title" : "UserProductResource",
+        "type" : "object",
+        "properties" : {
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "productId" : {
+            "type" : "string"
+          },
+          "productRole" : {
+            "type" : "string"
+          },
+          "role" : {
+            "type" : "string",
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "tokenId" : {
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
           }
         }
       },
