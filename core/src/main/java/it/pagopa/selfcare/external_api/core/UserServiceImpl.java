@@ -1,12 +1,12 @@
 package it.pagopa.selfcare.external_api.core;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         if (!onboardedProductResponses.isEmpty()) {
             onboardedProductResponses.forEach(onboardedProductResponse -> roles.add(onboardedProductResponse.getProductRole()));
             productDetails = new ProductDetails();
-            productDetails.setRole(PartyRole.valueOf(onboardedProductResponses.get(0).getRole()));
+            productDetails.setRole(it.pagopa.selfcare.commons.base.security.PartyRole.valueOf(onboardedProductResponses.get(0).getRole()));
             productDetails.setProductId(productId);
             productDetails.setRoles(roles);
             if(onboardedProductResponses.get(0).getCreatedAt() != null) {
@@ -168,5 +168,10 @@ public class UserServiceImpl implements UserService {
                 });
 
         return onboardedInstitutionsInfo;
+    }
+
+    @Override
+    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states){
+        return userMsConnector.getUsersInstitutions(userId,institutionId, page, size, productRoles, products, roles, states);
     }
 }

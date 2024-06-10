@@ -1,10 +1,10 @@
 package it.pagopa.selfcare.external_api.api;
 
-import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapper;
@@ -34,7 +35,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     }
 
     @Override
-    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<it.pagopa.selfcare.commons.base.security.PartyRole> roles, List<String> states) {
+    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states) {
 
         return Objects.requireNonNull(msUserApiRestClient._usersGet(
                         institutionId, page, productRoles, products, toDtoPartyRole(roles)
@@ -48,7 +49,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
         return userMapper.toUserFromUserDetailResponse(msUserApiRestClient._usersSearchPost(null, searchUserDto).getBody());
     }
 
-    private List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> toDtoPartyRole(List<it.pagopa.selfcare.commons.base.security.PartyRole> roles) {
+    private List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> toDtoPartyRole(List<PartyRole> roles) {
         List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> partyRoles = new ArrayList<>();
         if (roles != null) {
             roles.forEach(partyRole -> {
@@ -66,7 +67,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
 
         Product1 product = Product1.builder()
                 .productId(productId)
-                .role(PartyRole.valueOf(role))
+                .role(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.valueOf(role))
                 .productRoles(productRoles)
                 .build();
 
@@ -88,7 +89,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     public String addUserRole(String userId, Institution institution, String productId, String role, List<String> productRoles) {
         it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product = it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
                 .productId(productId)
-                .role(PartyRole.valueOf(role))
+                .role(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.valueOf(role))
                 .productRoles(productRoles)
                 .build();
 

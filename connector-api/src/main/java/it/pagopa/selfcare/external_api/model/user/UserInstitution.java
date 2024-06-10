@@ -7,8 +7,11 @@ import java.util.List;
 
 @Data
 public class UserInstitution {
-    private String institutionId;
 
+    private String id;
+    private String institutionId;
+    private String institutionDescription;
+    private String institutionRootName;
     private String userId;
     private String userMailUuid;
 

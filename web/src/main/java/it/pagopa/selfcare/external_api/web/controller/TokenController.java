@@ -51,6 +51,7 @@ public class TokenController {
      * * Code: 404, Message: product not found
      */
     @Tag(name = "external-v2")
+    @Tag(name = "Token")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}", nickname = "getTokensFromProductUsingGET")
     @GetMapping(value = "/products/{productId}")

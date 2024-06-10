@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 import com.fasterxml.jackson.core.type.TypeReference;
-import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapperImpl;

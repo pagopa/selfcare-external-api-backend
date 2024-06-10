@@ -3,9 +3,11 @@ package it.pagopa.selfcare.external_api.web.model.mapper;
 import it.pagopa.selfcare.external_api.model.user.ProductDetails;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
+import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardedProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
+import it.pagopa.selfcare.external_api.web.model.user.UserInstitutionResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -24,4 +26,6 @@ public interface UserInfoResourceMapper {
 
     @Named("toOnboardedProductResource")
     OnboardedProductResource toOnboardedProductResource(ProductDetails productDetails);
+
+    UserInstitutionResource toUserInstitutionResource(UserInstitution entity);
 }
