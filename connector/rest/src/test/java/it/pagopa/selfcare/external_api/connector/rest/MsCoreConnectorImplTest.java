@@ -10,20 +10,16 @@ import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient
 import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institutions;
-import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -36,7 +32,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static it.pagopa.selfcare.commons.utils.TestUtils.mockInstance;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,27 +54,6 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
 
     @Spy
     InstitutionMapperImpl institutionMapper;
-
-    @Test
-    void createPnPgInstitutionOK() {
-        //given
-        CreatePnPgInstitution request = mockInstance(new CreatePnPgInstitution());
-        InstitutionPnPgResponse institutionPnPgResponse = mockInstance(new InstitutionPnPgResponse());
-        when(msCoreRestClient.createPnPgInstitution(any()))
-                .thenReturn(institutionPnPgResponse);
-        //when
-        String response = msCoreConnector.createPnPgInstitution(request);
-        //then
-        ArgumentCaptor<CreatePnPgInstitutionRequest> requestCaptor = ArgumentCaptor.forClass(CreatePnPgInstitutionRequest.class);
-        verify(msCoreRestClient, times(1))
-                .createPnPgInstitution(requestCaptor.capture());
-        verifyNoMoreInteractions(msCoreRestClient);
-        CreatePnPgInstitutionRequest capturedRequest = requestCaptor.getValue();
-        assertEquals(request.getExternalId(), capturedRequest.getTaxId());
-        assertEquals(request.getDescription(), capturedRequest.getDescription());
-        assertEquals(institutionPnPgResponse.getId(), response);
-
-    }
 
 
     @Test

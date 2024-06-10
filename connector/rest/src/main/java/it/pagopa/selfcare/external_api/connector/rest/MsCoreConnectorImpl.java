@@ -47,19 +47,6 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     protected static final String USER_ID_IS_REQUIRED = "A userId is required";
     protected static final String REQUIRED_INSTITUTION_ID_MESSAGE = "An Institution external id is required";
 
-
-
-    @Override
-    public String createPnPgInstitution(CreatePnPgInstitution request) {
-        log.trace("createPnPgInstitution start");
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "createPnPgInstitution request = {}", request);
-        CreatePnPgInstitutionRequest institutionRequest = new CreatePnPgInstitutionRequest(request);
-        InstitutionPnPgResponse pnPgInstitution = restClient.createPnPgInstitution(institutionRequest);
-        log.debug("createPnPgInstitution result = {}", pnPgInstitution.getId());
-        log.trace("createPnPgInstitution end");
-        return pnPgInstitution.getId();
-    }
-
     @Override
     public InstitutionOnboarding getInstitutionOnboardings(String institutionId, String productId) {
         log.trace("getInstitutionOnboardings start");
