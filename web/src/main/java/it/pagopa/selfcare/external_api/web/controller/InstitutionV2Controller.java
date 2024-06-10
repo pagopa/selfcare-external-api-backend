@@ -58,6 +58,7 @@ public class InstitutionV2Controller {
         this.userService = userService;
     }
 
+    @Tag(name = "Institution")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
@@ -79,6 +80,7 @@ public class InstitutionV2Controller {
 
     @Tag(name = "external-v2")
     @Tag(name = "support")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
@@ -99,6 +101,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
@@ -116,7 +119,7 @@ public class InstitutionV2Controller {
         return productResources;
     }
 
-    @Tag(name = "external-v2")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
@@ -132,7 +135,33 @@ public class InstitutionV2Controller {
                                                           @RequestParam(value = "productRoles", required = false)
                                                           Optional<Set<String>> productRoles,
                                                           @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
-         Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
+        List<UserResource> result = userInfos.stream()
+                .map(model -> UserMapper.toUserResource(model, productId))
+                .toList();
+        log.debug("getInstitutionProductUsers result = {}", result);
+        log.trace("getInstitutionProductUsers end");
+        return result;
+    }
+
+    @Tag(name = "external-v2")
+    @Tag(name = "Institution")
+    @GetMapping(value = "/{institutionId}/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
+    public List<UserResource> getInstitutionUsersByProduct(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                          @PathVariable("institutionId") String institutionId,
+                                                          @ApiParam("${swagger.external_api.products.model.id}")
+                                                          @RequestParam("productId")
+                                                          String productId,
+                                                          @ApiParam("${swagger.external_api.user.model.id}")
+                                                          @RequestParam(value = "userId", required = false)
+                                                          Optional<String> userId,
+                                                          @ApiParam("${swagger.external_api.model.productRoles}")
+                                                          @RequestParam(value = "productRoles", required = false)
+                                                          Optional<Set<String>> productRoles,
+                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
         List<UserResource> result = userInfos.stream()
                 .map(model -> UserMapper.toUserResource(model, productId))
                 .toList();
