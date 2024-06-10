@@ -119,7 +119,6 @@ public class InstitutionV2Controller {
         return productResources;
     }
 
-    @Tag(name = "external-v2")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
@@ -144,7 +143,7 @@ public class InstitutionV2Controller {
         log.trace("getInstitutionProductUsers end");
         return result;
     }
-    
+
     @Tag(name = "external-v2")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/users")
