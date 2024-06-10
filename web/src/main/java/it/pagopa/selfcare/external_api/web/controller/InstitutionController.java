@@ -43,6 +43,7 @@ public class InstitutionController {
         this.institutionResourceMapper = institutionResourceMapper;
     }
 
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/geographicTaxonomy")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionGeographicTaxonomy}")
@@ -60,6 +61,7 @@ public class InstitutionController {
         return geographicTaxonomies;
     }
 
+    @Tag(name = "Institution")
     @GetMapping(value = "/byGeoTaxonomies")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external-api.institutions.api.getInstitutionByGeoTaxonomies}")

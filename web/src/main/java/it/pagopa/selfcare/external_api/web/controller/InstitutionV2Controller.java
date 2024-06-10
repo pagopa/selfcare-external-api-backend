@@ -58,6 +58,7 @@ public class InstitutionV2Controller {
         this.userService = userService;
     }
 
+    @Tag(name = "Institution")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
@@ -79,6 +80,7 @@ public class InstitutionV2Controller {
 
     @Tag(name = "external-v2")
     @Tag(name = "support")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.documents.api.getContract}")
@@ -99,6 +101,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
@@ -117,6 +120,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products/{productId}/users")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
