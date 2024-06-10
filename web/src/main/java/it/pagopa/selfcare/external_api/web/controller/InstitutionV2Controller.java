@@ -144,4 +144,30 @@ public class InstitutionV2Controller {
         log.trace("getInstitutionProductUsers end");
         return result;
     }
+    
+    @Tag(name = "external-v2")
+    @Tag(name = "Institution")
+    @GetMapping(value = "/{institutionId}/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
+    public List<UserResource> getInstitutionUsersByProduct(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                          @PathVariable("institutionId") String institutionId,
+                                                          @ApiParam("${swagger.external_api.products.model.id}")
+                                                          @RequestParam("productId")
+                                                          String productId,
+                                                          @ApiParam("${swagger.external_api.user.model.id}")
+                                                          @RequestParam(value = "userId", required = false)
+                                                          Optional<String> userId,
+                                                          @ApiParam("${swagger.external_api.model.productRoles}")
+                                                          @RequestParam(value = "productRoles", required = false)
+                                                          Optional<Set<String>> productRoles,
+                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
+        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
+        List<UserResource> result = userInfos.stream()
+                .map(model -> UserMapper.toUserResource(model, productId))
+                .toList();
+        log.debug("getInstitutionProductUsers result = {}", result);
+        log.trace("getInstitutionProductUsers end");
+        return result;
+    }
 }

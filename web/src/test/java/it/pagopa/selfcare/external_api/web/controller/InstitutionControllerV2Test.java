@@ -281,4 +281,45 @@ public class InstitutionControllerV2Test extends BaseControllerTest{
                 .andExpect(content().contentType(APPLICATION_JSON_VALUE))
                 .andReturn();
     }
+
+
+
+    @Test
+    public void getInstitutionUsersByProductsWith2ReturnedElements() throws Exception {
+
+        ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
+        byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
+        List<UserInfo> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
+
+        ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
+        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
+
+        when(institutionService.getInstitutionProductUsersV2(any(), any(), any(), any(), any())).thenReturn(userInfo);
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/users", "testInstitutionId")
+                        .param("productId", "testProductId")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(content().string(expectedResource))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
+
+    @Test
+    public void getInstitutionUsersByProductsWithEmptyList() throws Exception {
+
+        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/v2/institutions/{institutionId}/users", "testInstitutionId")
+                        .param("productId", "testProductId")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .accept(APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
 }
