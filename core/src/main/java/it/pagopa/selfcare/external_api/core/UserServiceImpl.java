@@ -169,4 +169,9 @@ public class UserServiceImpl implements UserService {
 
         return onboardedInstitutionsInfo;
     }
+
+    @Override
+    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states){
+        return userMsConnector.getUsersInstitutions(userId,institutionId, page, size, productRoles, products, roles, states);
+    }
 }

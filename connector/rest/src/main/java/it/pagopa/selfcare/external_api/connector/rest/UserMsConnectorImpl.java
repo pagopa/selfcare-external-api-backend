@@ -35,7 +35,7 @@ public class UserMsConnectorImpl implements UserMsConnector {
     }
 
     @Override
-    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<it.pagopa.selfcare.commons.base.security.PartyRole> roles, List<String> states) {
+    public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states) {
 
         return Objects.requireNonNull(msUserApiRestClient._usersGet(
                         institutionId, page, productRoles, products, toDtoPartyRole(roles)

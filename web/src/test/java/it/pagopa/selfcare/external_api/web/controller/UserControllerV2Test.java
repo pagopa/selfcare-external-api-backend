@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -187,6 +187,29 @@ class UserControllerV2Test extends BaseControllerTest{
         product.setRole(PartyRole.MANAGER);
         product.setCreatedAt(OffsetDateTime.parse("2024-04-17T01:00:00+01:00"));
         return product;
+    }
+
+
+
+    @Test
+    void getUserInstitution() throws Exception {
+
+        final String userId = "userId";
+        final String institutionId = "institutionId";
+        final String productId = "productId";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_URL)
+                        .queryParam("userId", userId)
+                        .queryParam("institutionId", "institutionId")
+                        .queryParam("products", productId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(userService, times(1))
+                .getUsersInstitutions(userId, institutionId, 0, 100, null, List.of(productId), null, null);
     }
 
 }

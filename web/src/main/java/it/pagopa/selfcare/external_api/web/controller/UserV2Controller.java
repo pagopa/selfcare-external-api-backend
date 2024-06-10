@@ -4,18 +4,23 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
+import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.user.SearchUserDto;
 import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
+import it.pagopa.selfcare.external_api.web.model.user.UserInstitutionResource;
+import it.pagopa.selfcare.onboarding.common.PartyRole;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -34,6 +39,7 @@ public class UserV2Controller {
     }
     @Tag(name = "support")
     @Tag(name = "external-v2")
+    @Tag(name = "User")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}", nickname = "V2getUserInfoUsingGET")
@@ -62,5 +68,28 @@ public class UserV2Controller {
         log.debug("getUserProductInfo result = {}", userDetailsResource);
         log.trace("getUserProductInfo end");
         return userDetailsResource;
+    }
+
+
+    @Tag(name = "external-v2")
+    @Tag(name = "User")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "", notes = "The API retrieves paged users with optional filters in input as query params", nickname = "v2getUserInstitution")
+    public List<UserInstitutionResource> getUserInstitution(@RequestParam(value = "institutionId", required = false) String institutionId,
+                                                      @RequestParam(value = "userId", required = false) String userId,
+                                                      @RequestParam(value = "roles", required = false) List<PartyRole> roles,
+                                                      @RequestParam(value = "states", required = false) List<String> states,
+                                                      @RequestParam(value = "products", required = false) List<String> products,
+                                                      @RequestParam(value = "productRoles", required = false) List<String> productRoles,
+                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                      @RequestParam(value = "size", defaultValue = "100") Integer size) {
+
+        log.trace("getUserInstitution start, institutionId: {}, userId: {}", Encode.forJava(institutionId), Encode.forJava(userId));
+        List<UserInstitution> userInstitutions = userService.getUsersInstitutions(userId, institutionId, page, size, productRoles, products, roles, states);
+        log.trace("getUserInstitution end");
+        return userInstitutions.stream()
+                .map(userInfoResourceMapper::toUserInstitutionResource)
+                .toList();
     }
 }
