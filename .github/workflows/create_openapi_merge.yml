@@ -57,16 +57,14 @@ jobs:
             az storage blob download-batch --auth-mode key -d ./docs/ --account-name selcdcheckoutsa  -s selc-openapi --pattern pagopa/**
 
       - name: Install openapi-merge-cli
-        run: |
-            ls -l docs
-            npm install --location global openapi-merge-cli
+        run: npm install --location global openapi-merge-cli
         shell: bash
 
       - name: Merge OpenAPI and PostProcess External API
         if: ${{ inputs.external }}
         run: | 
             npx openapi-merge-cli --config ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
-            node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
+            node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
 
       - name: Configure Git
         working-directory: selfcare-external-api-backend
@@ -75,7 +73,6 @@ jobs:
             git config --global user.name "selfcare-github-bot"
 
       - name: Create new branch an commit
-        if: false
         working-directory: selfcare-external-api-backend
         run: |
           BRANCH_NAME="docs/openapi-update-$(date +%Y%m%d%H%M%S)"
@@ -84,7 +81,6 @@ jobs:
           git commit -m "Update openapi"
             
       - name: Push changes
-        if: false
         working-directory: selfcare-external-api-backend
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
