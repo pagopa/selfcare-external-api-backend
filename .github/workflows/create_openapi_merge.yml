@@ -32,6 +32,7 @@ jobs:
         id-token: write
         contents: write
         actions: write
+        pull-requests: write
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
