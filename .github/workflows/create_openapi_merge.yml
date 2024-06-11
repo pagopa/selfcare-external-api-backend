@@ -57,15 +57,17 @@ jobs:
             az storage blob download-batch --auth-mode key -d ./docs/ --account-name selcdcheckoutsa  -s selc-openapi --pattern pagopa/**
 
       - name: Install openapi-merge-cli
-        run: npm install --location global openapi-merge-cli
+        run: |
+            ls -l
+            npm install --location global openapi-merge-cli
         shell: bash
 
       - name: Merge OpenAPI and PostProcess External API
         if: ${{ inputs.external }}
         working-directory: selfcare-external-api-backend
         run: | 
-            npx openapi-merge-cli --config ./infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
-            node ./infra/api/openapi_merge/remove_v_and_tags.js  ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
+            npx openapi-merge-cli --config ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
+            node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
 
       - name: Configure Git
         working-directory: selfcare-external-api-backend
