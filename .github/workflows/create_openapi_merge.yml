@@ -89,7 +89,6 @@ jobs:
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03 #v6.0.5
-        if: false
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             commit-message: "Update openapi"
