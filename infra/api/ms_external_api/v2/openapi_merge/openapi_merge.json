@@ -31,5 +31,5 @@
         }
       }
     ], 
-    "output": "./openapi.external.json"
+    "output": "../openapi.json"
   }
