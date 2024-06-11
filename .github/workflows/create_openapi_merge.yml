@@ -58,13 +58,12 @@ jobs:
 
       - name: Install openapi-merge-cli
         run: |
-            ls -l
+            ls -l docs
             npm install --location global openapi-merge-cli
         shell: bash
 
       - name: Merge OpenAPI and PostProcess External API
         if: ${{ inputs.external }}
-        working-directory: selfcare-external-api-backend
         run: | 
             npx openapi-merge-cli --config ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
             node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
