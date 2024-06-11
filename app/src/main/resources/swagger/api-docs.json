@@ -843,8 +843,8 @@
     "/v2/onboarding/users" : {
       "post" : {
         "tags" : [ "Onboarding", "support" ],
-        "summary" : "Api to persist users to product",
-        "description" : "Api to persist users to product",
+        "summary" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
+        "description" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "operationId" : "onboardingInstitutionUsersUsingPOST",
         "parameters" : [ {
           "name" : "authenticated",
@@ -1168,7 +1168,7 @@
     },
     "/v1/tokens/products/{productId}" : {
       "get" : {
-        "tags" : [ "Token", "external-v2" ],
+        "tags" : [ "Token", "external-v2", "support" ],
         "summary" : "Service to retrieve tokens from product's identifier",
         "description" : "Service to retrieve tokens from product's identifier",
         "operationId" : "getTokensFromProductUsingGET",
@@ -1200,6 +1200,15 @@
           "schema" : {
             "type" : "integer",
             "format" : "int32"
+          }
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Token's status. Available values: REQUEST, TOBEVALIDATED, PENDING, COMPLETED, FAILED, REJECTED, DELETED",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
           }
         } ],
         "responses" : {
@@ -2223,7 +2232,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           }
         }
       },
@@ -2290,7 +2299,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",
@@ -2460,7 +2469,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roleLabel" : {
             "type" : "string"
@@ -2735,7 +2744,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "state" : {
             "type" : "string",
@@ -2892,7 +2901,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "surname" : {
             "type" : "string",
@@ -3008,7 +3017,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",

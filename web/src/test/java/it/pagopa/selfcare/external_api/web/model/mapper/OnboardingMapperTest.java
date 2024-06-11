@@ -81,7 +81,8 @@ class OnboardingMapperTest {
         assertEquals(PROD_IO, resource.getProductId());
         assertTrue(resource.getInstitutionUpdate().getImported());
         assertNull(resource.getInstitutionType());
-        reflectionEqualsByName(users.get(0), resource.getUsers().get(0));
+        reflectionEqualsByName(users.get(0), resource.getUsers().get(0), "role");
+        assertEquals(users.get(0).getRole(), resource.getUsers().get(0).getRole());
         reflectionEqualsByName(importContractDto, resource.getContractImported());
     }
 
@@ -138,7 +139,8 @@ class OnboardingMapperTest {
         assertEquals(INSTITUTION_ID, resource.getInstitutionExternalId());
         assertEquals(productId, resource.getProductId());
         reflectionEqualsByName(billingDataDto, resource.getBilling());
-        reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0));
+        reflectionEqualsByName(userDtos.get(0), resource.getUsers().get(0), "role");
+        assertEquals(userDtos.get(0).getRole(), resource.getUsers().get(0).getRole());
         reflectionEqualsByName(model.getBillingData(), resource.getInstitutionUpdate());
         reflectionEqualsByName(model.getPspData(), resource.getInstitutionUpdate().getPaymentServiceProvider(), "dpoData");
         reflectionEqualsByName(model.getPspData().getDpoData(), resource.getInstitutionUpdate().getDataProtectionOfficer());

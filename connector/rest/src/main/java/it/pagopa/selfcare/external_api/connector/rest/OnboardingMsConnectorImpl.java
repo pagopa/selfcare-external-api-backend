@@ -54,9 +54,9 @@ public class OnboardingMsConnectorImpl implements OnboardingMsConnector {
     }
 
     @Override
-    public List<TokenOnboardedUsers> getOnboardings(String productId, int page, int size) {
+    public List<TokenOnboardedUsers> getOnboardings(String productId, int page, int size, String status) {
         return Objects.requireNonNull(
-                        onboardingControllerApi._v1OnboardingGet(null, page, productId, size, null, null, null).getBody())
+                        onboardingControllerApi._v1OnboardingGet(null, page, productId, size, status, null, null).getBody())
                 .getItems().stream()
                 .map(tokenMapper::toEntity)
                 .toList();

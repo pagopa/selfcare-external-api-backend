@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.core.TokenService;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapperImpl;
+import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,13 +53,14 @@ class TokenControllerTest extends BaseControllerTest {
         ClassPathResource outputResource = new ClassPathResource("expectations/TokensResource.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
-        when(tokenService.findByProductId(productId, 1, 10))
+        when(tokenService.findByProductId(productId, 1, 10, OnboardingStatus.REJECTED.name()))
                 .thenReturn(tokens);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(BASE_URL + "/products/{productId}", productId)
                         .queryParam("page", "1")
                         .queryParam("size", "10")
+                        .queryParam("status", OnboardingStatus.REJECTED.name())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
@@ -71,7 +73,7 @@ class TokenControllerTest extends BaseControllerTest {
     void getTokensByProductNotFound() throws Exception {
         String productId = "productId";
 
-        when(tokenService.findByProductId(productId, 1, 10))
+        when(tokenService.findByProductId(productId, 1, 10, null))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders
