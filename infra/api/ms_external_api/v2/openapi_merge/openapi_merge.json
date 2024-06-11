@@ -13,19 +13,19 @@
           }
         },
       {
-        "inputFile": "../../../../../../docs/selfcare-ms-core/openapi.json",
+        "inputFile": "../../../../../docs/selfcare-ms-core/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
       },
       {
-        "inputFile": "../../../../../../docs/selfcare-user-ms/openapi.json",
+        "inputFile": "../../../../../docs/selfcare-user-ms/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
       },
       {
-        "inputFile": "../../../../../../docs/selfcare-user-group-ms/openapi.json",
+        "inputFile": "../../../../../docs/selfcare-user-group-ms/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
