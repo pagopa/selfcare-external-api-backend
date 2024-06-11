@@ -80,16 +80,6 @@ jobs:
             npx openapi-merge-cli --config ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
             node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
 
-      - name: Push changes
-        if: false
-        working-directory: selfcare-external-api-backend
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git add .
-          git commit -m "Update openapi" || exit 0
-          git push origin HEAD
-
       - name: Create pull request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03 #v6.0.5
         with:
