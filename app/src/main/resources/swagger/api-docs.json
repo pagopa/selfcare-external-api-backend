@@ -2232,7 +2232,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           }
         }
       },
@@ -2299,7 +2299,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",
@@ -2469,7 +2469,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roleLabel" : {
             "type" : "string"
@@ -2744,7 +2744,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "state" : {
             "type" : "string",
@@ -2901,7 +2901,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "surname" : {
             "type" : "string",
@@ -3017,7 +3017,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",
