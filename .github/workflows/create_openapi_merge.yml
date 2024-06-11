@@ -81,6 +81,7 @@ jobs:
             node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
 
       - name: Push changes
+        if: false
         working-directory: selfcare-external-api-backend
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
