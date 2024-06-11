@@ -13,34 +13,19 @@
           }
         },
       {
-        "inputFile": "../../../../../../docs/selfcare-ms-core/app/src/main/resources/swagger/api-docs.json",
+        "inputFile": "../../../../../../docs/selfcare-ms-core/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
       },
       {
-        "inputFile": "../../../../../../docs/selfcare-user/apps/user-group-ms/app/src/main/docs/openapi.json",
+        "inputFile": "../../../../../../docs/selfcare-user-ms/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
       },
       {
-        "inputFile": "../../../../../../docs/selfcare-user/apps/user-ms/src/main/docs/openapi.json",
-        "operationSelection": {
-          "includeTags": ["external-v2"]
-        }
-      },
-      {
-        "inputFile": "../../../../../../docs/selfcare-onboarding/apps/onboarding-ms/src/main/docs/openapi.json",
-        "operationSelection": {
-          "includeTags": ["external-v2"]
-        }
-      },
-      {
-        "inputFile": "../../../../../../docs/selfcare-ms-external-interceptor/app/src/main/resources/swagger/api-docs.json",
-        "pathModification": {
-          "stripStart": "/interceptor/acknowledgment/{productId}"
-        },
+        "inputFile": "../../../../../../docs/selfcare-user-group-ms/openapi.json",
         "operationSelection": {
           "includeTags": ["external-v2"]
         }
