@@ -16,10 +16,18 @@ on:
             description: Enable creation of Support PNPG API
             default: True
 
+env:
+    ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+    ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
+    ARM_USE_OIDC: true
+    ARM_USE_AZUREAD: true
+    ARM_STORAGE_USE_AZUREAD: true
+
 jobs:
     create_branch:
       name: 'Create OpenAPI merge'
       runs-on: ubuntu-20.04
+      environment: dev-cd
       permissions:
         contents: write
         actions: write
