@@ -62,6 +62,7 @@ jobs:
 
       - name: Merge OpenAPI and PostProcess External API
         if: ${{ inputs.external }}
+        working-directory: selfcare-external-api-backend
         run: | 
             npx openapi-merge-cli --config ./infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
             node ./infra/api/openapi_merge/remove_v_and_tags.js  ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
