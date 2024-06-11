@@ -29,6 +29,7 @@ jobs:
       runs-on: ubuntu-20.04
       environment: dev-cd
       permissions:
+        id-token: write
         contents: write
         actions: write
       env:
