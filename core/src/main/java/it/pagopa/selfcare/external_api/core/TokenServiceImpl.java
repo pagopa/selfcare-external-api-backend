@@ -1,17 +1,12 @@
 package it.pagopa.selfcare.external_api.core;
 
-import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.OnboardingMsConnector;
-import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,10 +20,10 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public List<TokenOnboardedUsers> findByProductId(String productId, int page, int size) {
+    public List<TokenOnboardedUsers> findByProductId(String productId, int page, int size, String status) {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
-        final List<TokenOnboardedUsers> tokens = onboardingMsConnector.getOnboardings(productId, page, size);
+        final List<TokenOnboardedUsers> tokens = onboardingMsConnector.getOnboardings(productId, page, size, status);
         log.trace("findByProductId end");
         return tokens;
     }

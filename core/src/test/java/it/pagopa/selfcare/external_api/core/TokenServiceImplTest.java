@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.api.OnboardingMsConnector;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,15 +37,15 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
         ClassPathResource inputResource = new ClassPathResource("expectations/TokenOnboardedUsers.json");
         byte[] tokenOnboardedUsersStream = Files.readAllBytes(inputResource.getFile().toPath());
         List<TokenOnboardedUsers> tokenOnboardedUsers = objectMapper.readValue(tokenOnboardedUsersStream, new TypeReference<>() {});
-        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10)).thenReturn(tokenOnboardedUsers);
-        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10);
+        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10, OnboardingStatus.COMPLETED.name())).thenReturn(tokenOnboardedUsers);
+        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, OnboardingStatus.COMPLETED.name());
         Assertions.assertEquals(tokenOnboardedUsers, tokens);
     }
 
     @Test
     void findByProductIdEmptyList(){
-        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10)).thenReturn(Collections.emptyList());
-        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10);
+        Mockito.when(this.onboardingMsConnector.getOnboardings("id", 1, 10, null)).thenReturn(Collections.emptyList());
+        List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, null);
         Assertions.assertEquals(0, tokens.size());
     }
 }

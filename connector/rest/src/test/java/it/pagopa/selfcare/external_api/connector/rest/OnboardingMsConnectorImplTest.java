@@ -14,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -247,9 +248,9 @@ public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
 
         OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
         onboardingGetResponse.setItems(Collections.emptyList());
-        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
+        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, OnboardingStatus.TOBEVALIDATED.name(), null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
 
-        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1);
+        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1, OnboardingStatus.TOBEVALIDATED.name());
 
         Assertions.assertEquals(0, response.size());
     }
@@ -263,7 +264,7 @@ public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
         onboardingGetResponse.setItems(new ArrayList<>());
         when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
 
-        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1);
+        List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1, null);
 
         //JSON
         List<TokenOnboardedUsers> expectation = new ArrayList<>();

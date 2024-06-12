@@ -4,12 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
-import it.pagopa.selfcare.external_api.core.OnboardingService;
 import it.pagopa.selfcare.external_api.core.TokenService;
-import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
-import it.pagopa.selfcare.external_api.web.model.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.TokenResourceMapper;
 import it.pagopa.selfcare.external_api.web.model.tokens.TokensResource;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -52,6 +47,7 @@ public class TokenController {
      */
     @Tag(name = "external-v2")
     @Tag(name = "Token")
+    @Tag(name = "support")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}", nickname = "getTokensFromProductUsingGET")
     @GetMapping(value = "/products/{productId}")
@@ -60,10 +56,12 @@ public class TokenController {
                                                           @ApiParam("${swagger.external_api.page.number}")
                                                           @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                           @ApiParam("${swagger.external_api.page.size}")
-                                                          @RequestParam(name = "size", defaultValue = "100") Integer size) {
+                                                          @RequestParam(name = "size", defaultValue = "100") Integer size,
+                                                          @ApiParam("${swagger.external_api.api.tokens.status}")
+                                                          @RequestParam(name = "status", required = false) String status) {
         log.trace("findFromProduct start");
         log.debug("findFromProduct productId = {}", Encode.forJava(productId));
-        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(Encode.forJava(productId), page, size);
+        List<TokenOnboardedUsers> tokens = tokenService.findByProductId(Encode.forJava(productId), page, size, status);
 
         TokensResource tokenListResponse = new TokensResource(
                 tokens.stream()
