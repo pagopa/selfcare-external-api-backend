@@ -715,7 +715,7 @@
     },
     "/v2/national-registries/legal-tax/verification" : {
       "post" : {
-        "tags" : [ "Proxy" ],
+        "tags" : [ "NationalRegistry", "support-pnpg" ],
         "summary" : "verifyLegal",
         "description" : "Verify if given taxId is legal of given institution identified with vatNumber",
         "operationId" : "verifyLegalByPOST",
@@ -1414,7 +1414,7 @@
         } ]
       },
       "post" : {
-        "tags" : [ "User", "external-v2", "support" ],
+        "tags" : [ "User", "external-v2", "support", "support-pnpg" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "V2getUserInfoUsingGET",
