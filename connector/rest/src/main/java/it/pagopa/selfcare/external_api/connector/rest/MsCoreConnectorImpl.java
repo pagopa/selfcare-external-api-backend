@@ -144,7 +144,7 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
     @Override
     public String createPgInstitution(String description, String taxId) {
         log.trace("createPgInstitution start");
-        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(description, false, taxId);
+        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(description, true, taxId);
         InstitutionResponse institutionResponse = Objects.requireNonNull(institutionApiClient.
                 _createPgInstitutionUsingPOST(createPgInstitutionRequest)
                 .getBody());
