@@ -61,11 +61,14 @@ public interface InstitutionMapper {
     @Named("setBillingData")
     static Billing setBillingData(List<OnboardedProductResponse> onboardings) {
         if(Objects.nonNull(onboardings) && !onboardings.isEmpty()) {
-            Billing billing = new Billing();
+            Billing billing = null;
             BillingResponse billingResponse = onboardings.get(0).getBilling();
-            billing.setRecipientCode(billingResponse.getRecipientCode());
-            billing.setVatNumber(billingResponse.getVatNumber());
-            billing.setPublicServices(billingResponse.getPublicServices());
+            if(Objects.nonNull(billingResponse)) {
+                billing = new Billing();
+                billing.setRecipientCode(billingResponse.getRecipientCode());
+                billing.setVatNumber(billingResponse.getVatNumber());
+                billing.setPublicServices(billingResponse.getPublicServices());
+            }
             return billing;
         }
         return null;

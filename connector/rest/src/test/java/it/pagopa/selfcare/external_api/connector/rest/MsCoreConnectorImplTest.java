@@ -313,4 +313,30 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
         assertEquals(institutionId, institutionPnPgResponse);
 
     }
+
+    @Test
+    void getInstitutionsDetailsBillingNull() throws IOException {
+        String institutionId = "institutionId";
+
+        ClassPathResource resource = new ClassPathResource("stubs/institutionResponse.json");
+        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
+        InstitutionResponse response = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        response.getOnboarding().forEach(onboardedProductResponse -> onboardedProductResponse.setBilling(null));
+
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(anyString()))
+                .thenReturn(ResponseEntity.of(Optional.of(response)));
+
+        ClassPathResource expectationResource = new ClassPathResource("stubs/OnboardedInstitutionInfo.json");
+        byte[] expectationStream = Files.readAllBytes(expectationResource.getFile().toPath());
+        List<OnboardedInstitutionInfo> expectation = objectMapper.readValue(expectationStream, new TypeReference<>() {
+        });
+        expectation.forEach(onboardedInstitutionInfo -> onboardedInstitutionInfo.setBilling(null));
+
+        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = msCoreConnector.getInstitutionDetails(institutionId);
+        assertEquals(1, onboardedInstitutionInfos.size());
+        assertEquals(expectation, onboardedInstitutionInfos);
+        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
+
+    }
 }
