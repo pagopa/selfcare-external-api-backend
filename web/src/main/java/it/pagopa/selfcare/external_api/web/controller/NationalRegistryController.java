@@ -3,7 +3,6 @@ package it.pagopa.selfcare.external_api.web.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.web.model.mapper.NationalRegistryMapper;
@@ -32,6 +31,8 @@ public class NationalRegistryController {
 
     @PostMapping(value = "/legal-tax/verification", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
+    @Tag(name = "NationalRegistry")
+    @Tag(name = "support-pnpg")
     @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
     public LegalVerificationResource verifyLegal(@RequestBody @Valid VerifyRequestDto requestDto){
         log.trace("verifyLegal start");
