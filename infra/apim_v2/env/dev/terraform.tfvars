@@ -1,8 +1,8 @@
 # general
-env_short           = "d"
-env                 = "dev"
-location            = "westeurope"
-location_short      = "weu"
+env_short      = "d"
+env            = "dev"
+location       = "westeurope"
+location_short = "weu"
 
 tags = {
   CreatedBy   = "Terraform"
@@ -15,7 +15,7 @@ tags = {
 lock_enable = false
 
 # networking
-cidr_subnet_apim                  = ["10.1.161.0/24"]
+cidr_subnet_apim = ["10.1.161.0/24"]
 
 # dns
 dns_zone_prefix    = "dev.selfcare"
@@ -29,7 +29,7 @@ apim_sku            = "Developer_1"
 # aks
 private_dns_name            = "selc.internal.dev.selfcare.pagopa.it"
 private_onboarding_dns_name = "selc-d-onboarding-ms-ca.gentleflower-c63e62fe.westeurope.azurecontainerapps.io"
-ca_suffix_dns_private_name      = "politewater-9af33050.westeurope.azurecontainerapps.io"
+ca_suffix_dns_private_name  = "politewater-9af33050.westeurope.azurecontainerapps.io"
 
 # app_gateway
 app_gateway_api_certificate_name      = "api-dev-selfcare-pagopa-it"

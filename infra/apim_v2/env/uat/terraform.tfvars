@@ -1,8 +1,8 @@
 # general
-env                 = "uat"
-env_short           = "u"
-location            = "westeurope"
-location_short      = "weu"
+env            = "uat"
+env_short      = "u"
+location       = "westeurope"
+location_short = "weu"
 
 tags = {
   CreatedBy   = "Terraform"
@@ -15,7 +15,7 @@ tags = {
 lock_enable = true
 
 # networking
-cidr_subnet_apim                  = ["10.1.161.0/24"]
+cidr_subnet_apim = ["10.1.161.0/24"]
 
 # dns
 dns_zone_prefix    = "uat.selfcare"
@@ -29,7 +29,7 @@ apim_sku            = "Developer_1"
 # aks
 private_dns_name            = "selc.internal.uat.selfcare.pagopa.it"
 private_onboarding_dns_name = "selc-u-onboarding-ms-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
-ca_suffix_dns_private_name      = "proudglacier-20652b81.westeurope.azurecontainerapps.io"
+ca_suffix_dns_private_name  = "proudglacier-20652b81.westeurope.azurecontainerapps.io"
 
 # app_gateway
 app_gateway_api_certificate_name      = "api-dev-selfcare-pagopa-it"

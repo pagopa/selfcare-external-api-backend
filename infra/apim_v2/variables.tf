@@ -1,6 +1,6 @@
 # general
 locals {
-  project      = "${var.prefix}-${var.env_short}"
+  project = "${var.prefix}-${var.env_short}"
 }
 
 variable "prefix" {
