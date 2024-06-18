@@ -19,8 +19,8 @@ resource "azurerm_resource_group" "rg_api" {
 
 locals {
   apim_cert_name_proxy_endpoint = format("%s-proxy-endpoint-cert", local.project)
-
-  api_domain      = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
+  # TODO: in migration remove v2 from domain
+  api_domain      = format("apiv2.%s.%s", var.dns_zone_prefix, var.external_domain)
   logo_api_domain = format("%s.%s", var.dns_zone_prefix, var.external_domain)
   apim_base_url   = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
 }
