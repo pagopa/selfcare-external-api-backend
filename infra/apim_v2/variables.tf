@@ -82,3 +82,8 @@ variable "app_gateway_api_certificate_name" {
   type        = string
   description = "Application gateway: api certificate name on Key Vault"
 }
+
+variable "ca_suffix_dns_private_name" {
+  type        = string
+  description = "CA suffix private DNS record"
+}

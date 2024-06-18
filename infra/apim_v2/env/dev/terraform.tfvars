@@ -29,6 +29,7 @@ apim_sku            = "Developer_1"
 # aks
 private_dns_name            = "selc.internal.dev.selfcare.pagopa.it"
 private_onboarding_dns_name = "selc-d-onboarding-ms-ca.gentleflower-c63e62fe.westeurope.azurecontainerapps.io"
+ca_suffix_dns_private_name      = "politewater-9af33050.westeurope.azurecontainerapps.io"
 
 # app_gateway
 app_gateway_api_certificate_name      = "api-dev-selfcare-pagopa-it"
