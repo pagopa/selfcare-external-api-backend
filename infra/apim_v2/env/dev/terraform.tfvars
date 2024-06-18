@@ -8,14 +8,14 @@ tags = {
   CreatedBy   = "Terraform"
   Environment = "Dev"
   Owner       = "SelfCare"
-  Source      = "https://github.com/pagopa/selfcare-infra"
+  Source      = "https://github.com/pagopa/selfcare-external-api-backend"
   CostCenter  = "TS310 - PAGAMENTI & SERVIZI"
 }
 
 lock_enable = false
 
 # networking
-cidr_subnet_apim                  = ["10.1.136.0/24"]
+cidr_subnet_apim                  = ["10.1.161.0/24"]
 
 # dns
 dns_zone_prefix    = "dev.selfcare"
