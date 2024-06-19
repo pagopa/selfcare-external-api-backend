@@ -12,8 +12,7 @@ on:
       - ready_for_review
     paths:
       - ./src/infra/apim_v2/**
-      - ./.github/workflows/call_code_review.yml
-      - ./.github/workflows/pr_core_infra.yml
+      - ./.github/workflows/apim_infra_plan.yml
 
   workflow_dispatch:
     inputs:
@@ -48,6 +47,7 @@ jobs:
   plan:
     name: Terraform Plan
     runs-on: 'ubuntu-latest'
+    environment: ${{ inputs.environment }}-ci
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         name: Checkout
