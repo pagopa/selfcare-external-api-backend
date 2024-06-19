@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - releases/**
     types:
       - opened
       - edited
@@ -31,13 +32,13 @@ on:
         description: "Path of the terraform code to be planned"
         default: infra/apim_v2
       self-hosted-agent:
-          required: false
-          type: choice
-          description: "Is agent self-hosted"
-          default: "false"
-          options:
-            - "true"
-            - "false"
+        required: false
+        type: choice
+        description: "Is agent self-hosted"
+        default: "false"
+        options:
+          - "true"
+          - "false"
 
 concurrency:
   group: ${{ github.workflow }}
@@ -46,9 +47,21 @@ concurrency:
 jobs:
   plan:
     name: Terraform Plan
-    runs-on: 'ubuntu-latest'
-    environment: ${{ inputs.environment }}-ci
+    runs-on: ${{ inputs['self-hosted-agent'] == 'true' && 'self-hosted' || 'ubuntu-latest' }}
     steps:
+      - name: Set Environment Variable
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          else
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              echo "environment=dev" >> $GITHUB_ENV
+            else
+              echo "environment=uat" >> $GITHUB_ENV
+            fi
+          fi
+
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         name: Checkout
 
@@ -71,15 +84,15 @@ jobs:
           terraform_wrapper: true
 
       - name: Terraform Init
-        working-directory: ${{ inputs.dir }}
+        working-directory: ${{ github.event.inputs.dir || 'infra/apim_v2' }}
         run: |
-          bash ./terraform.sh init ${{ inputs.environment }}
+          bash ./terraform.sh init ${{ env.environment }}
 
       - name: Terraform Plan
-        working-directory: ${{ inputs.dir }}
+        working-directory: ${{ github.event.inputs.dir || 'infra/apim_v2' }}
         continue-on-error: true
         run: |
-          bash ./terraform.sh plan ${{ inputs.environment }} | tee plan_output.txt
+          bash ./terraform.sh plan ${{ env.environment }} | tee plan_output.txt
           echo "plan terminated"
           OUTPUT="$(cat plan_output.txt | grep -v "Refreshing state" | tail -c 60000)"
           echo "$OUTPUT" > plan_output_multiline.txt
