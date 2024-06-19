@@ -63,6 +63,7 @@ jobs:
               echo "environment=uat" >> $GITHUB_ENV
               echo "::set-output name=environment::uat"
             fi
+          fi
   plan:
     name: Terraform Plan
     runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
