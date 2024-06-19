@@ -53,21 +53,18 @@ jobs:
         id: set-env
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-            echo "::set-output name=environment::${{ github.event.inputs.environment }}"
+            echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           else
             if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-              echo "environment=dev" >> $GITHUB_ENV
-              echo "::set-output name=environment::dev"
+              echo "environ=dev" >> $GITHUB_OUTPUT
             else
-              echo "environment=uat" >> $GITHUB_ENV
-              echo "::set-output name=environment::uat"
+              echo "environ=uat" >> $GITHUB_OUTPUT
             fi
           fi
   plan:
     name: Terraform Plan
     runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
-    environment: ${{ needs.setup.outputs.environment }}-ci
+    environment: ${{ needs.setup.outputs.environ }}-ci
     needs: setup
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -94,13 +91,13 @@ jobs:
       - name: Terraform Init
         working-directory: ${{ github.event.inputs.dir || 'infra/apim_v2' }}
         run: |
-          bash ./terraform.sh init ${{ env.environment }}
+          bash ./terraform.sh init ${{ needs.setup.outputs.environ }}
 
       - name: Terraform Plan
         working-directory: ${{ github.event.inputs.dir || 'infra/apim_v2' }}
         continue-on-error: true
         run: |
-          bash ./terraform.sh plan ${{ env.environment }} | tee plan_output.txt
+          bash ./terraform.sh plan ${{ needs.setup.outputs.environ }} | tee plan_output.txt
           echo "plan terminated"
           OUTPUT="$(cat plan_output.txt | grep -v "Refreshing state" | tail -c 60000)"
           echo "$OUTPUT" > plan_output_multiline.txt
