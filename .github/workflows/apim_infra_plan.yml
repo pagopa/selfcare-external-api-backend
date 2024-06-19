@@ -45,23 +45,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  plan:
+  setup:
     name: Terraform Plan
-    runs-on: ${{ inputs['self-hosted-agent'] == 'true' && 'self-hosted' || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
     steps:
       - name: Set Environment Variable
         id: set-env
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+            echo "::set-output name=environment::${{ github.event.inputs.environment }}"
           else
             if [ "${{ github.ref }}" == "refs/heads/main" ]; then
               echo "environment=dev" >> $GITHUB_ENV
+              echo "::set-output name=environment::dev"
             else
               echo "environment=uat" >> $GITHUB_ENV
+              echo "::set-output name=environment::uat"
             fi
-          fi
-
+  plan:
+    name: Terraform Plan
+    runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
+    environment: ${{ needs.setup.outputs.environment }}-ci
+    steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         name: Checkout
 
