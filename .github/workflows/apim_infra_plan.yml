@@ -46,8 +46,8 @@ concurrency:
 
 jobs:
   setup:
-    name: Terraform Plan
-    runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
+    name: Setup Environment
+    runs-on: 'ubuntu-latest'
     steps:
       - name: Set Environment Variable
         id: set-env
@@ -67,6 +67,7 @@ jobs:
     name: Terraform Plan
     runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
     environment: ${{ needs.setup.outputs.environment }}-ci
+    needs: setup
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         name: Checkout
