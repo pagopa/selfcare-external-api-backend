@@ -31,14 +31,6 @@ on:
         type: string
         description: "Path of the terraform code to be planned"
         default: infra/apim_v2
-      self-hosted-agent:
-        required: false
-        type: choice
-        description: "Is agent self-hosted"
-        default: "false"
-        options:
-          - "true"
-          - "false"
 
 concurrency:
   group: ${{ github.workflow }}
@@ -69,7 +61,7 @@ jobs:
           fi
   plan:
     name: Terraform Plan
-    runs-on: ${{ inputs.self-hosted-agent == 'true' && 'self-hosted' || 'ubuntu-latest' }}
+    runs-on: 'self-hosted'
     environment: ${{ needs.setup.outputs.environ }}-ci
     needs: setup
     env: 
