@@ -104,5 +104,5 @@ jobs:
         run: |
           bash ./terraform.sh plan ${{ needs.setup.outputs.environ }} | tee plan_output.txt
           echo "plan terminated"
-          OUTPUT="$(cat plan_output.txt | grep -v "Refreshing state" | tail -c 60000)"
+          OUTPUT="$(cat plan_output.txt | grep -v "Refreshing state")"
           echo "$OUTPUT" > plan_output_multiline.txt
