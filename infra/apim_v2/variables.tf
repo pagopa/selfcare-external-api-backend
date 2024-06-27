@@ -87,3 +87,19 @@ variable "ca_suffix_dns_private_name" {
   type        = string
   description = "CA suffix private DNS record"
 }
+
+variable "location_short" {
+  type    = string
+  default = "weu"
+}
+
+variable "domain" {
+  type = string
+  validation {
+    condition = (
+      length(var.domain) <= 12
+    )
+    error_message = "Max length is 12 chars."
+  }
+  default = "pnpg"
+}
