@@ -32,5 +32,5 @@ private_onboarding_dns_name = "selc-p-onboarding-ms-ca.greensand-62fc96da.westeu
 ca_suffix_dns_private_name  = "greensand-62fc96da.westeurope.azurecontainerapps.io"
 
 # app_gateway
-app_gateway_api_certificate_name      = "api-dev-selfcare-pagopa-it"
-app_gateway_api_pnpg_certificate_name = "api-pnpg-dev-selfcare-pagopa-it"
+app_gateway_api_certificate_name      = "api-selfcare-pagopa-it"
+app_gateway_api_pnpg_certificate_name = "api-pnpg-selfcare-pagopa-it"

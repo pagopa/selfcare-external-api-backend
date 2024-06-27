@@ -32,5 +32,5 @@ private_onboarding_dns_name = "selc-u-onboarding-ms-ca.calmsky-143987c1.westeuro
 ca_suffix_dns_private_name  = "proudglacier-20652b81.westeurope.azurecontainerapps.io"
 
 # app_gateway
-app_gateway_api_certificate_name      = "api-dev-selfcare-pagopa-it"
-app_gateway_api_pnpg_certificate_name = "api-pnpg-dev-selfcare-pagopa-it"
+app_gateway_api_certificate_name      = "api-uat-selfcare-pagopa-it"
+app_gateway_api_pnpg_certificate_name = "api-pnpg-uat-selfcare-pagopa-it"
