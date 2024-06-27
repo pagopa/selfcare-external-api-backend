@@ -10,6 +10,31 @@ module "apim_snet" {
   service_endpoints                         = ["Microsoft.Web"]
 }
 
+resource "azurerm_network_security_group" "nsg_apim" {
+  name                = format("%s-apim-v2-nsg", local.project)
+  resource_group_name = format("%s-vnet-rg", local.project)
+  location            = var.location
+
+  security_rule {
+    name                       = "managementapim"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3443"
+    source_address_prefix      = "ApiManagement"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  tags = var.tags
+}
+
+resource "azurerm_subnet_network_security_group_association" "snet_nsg" {
+  subnet_id                 = module.apim_snet.id
+  network_security_group_id = azurerm_network_security_group.nsg_apim.id
+}
+
 resource "azurerm_resource_group" "rg_api" {
   name     = format("%s-api-v2-rg", local.project)
   location = var.location
@@ -19,10 +44,20 @@ resource "azurerm_resource_group" "rg_api" {
 
 locals {
   apim_cert_name_proxy_endpoint = format("%s-proxy-endpoint-cert", local.project)
-  # TODO: in migration remove v2 from domain
-  api_domain      = format("apiv2.%s.%s", var.dns_zone_prefix, var.external_domain)
+  api_domain      = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
   logo_api_domain = format("%s.%s", var.dns_zone_prefix, var.external_domain)
   apim_base_url   = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
+}
+
+resource "azurerm_key_vault_access_policy" "api_management_policy" {
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = module.apim.principal_id
+
+  key_permissions         = []
+  secret_permissions      = ["Get", "List"]
+  certificate_permissions = ["Get", "List"]
+  storage_permissions     = []
 }
 
 resource "azurerm_api_management_custom_domain" "api_custom_domain" {
@@ -964,7 +999,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_contracts_p
 }
 
 module "apim_external_api_contract_public_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v7.50.1"
+  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
   name                = format("%s-external-api-contracts-public", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
