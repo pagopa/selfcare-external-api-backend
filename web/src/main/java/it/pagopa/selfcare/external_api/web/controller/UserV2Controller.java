@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -38,6 +37,7 @@ public class UserV2Controller {
         this.userInfoResourceMapper = userInfoResourceMapper;
     }
     @Tag(name = "support")
+    @Tag(name = "support-pnpg")
     @Tag(name = "external-v2")
     @Tag(name = "User")
     @PostMapping

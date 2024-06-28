@@ -715,7 +715,7 @@
     },
     "/v2/national-registries/legal-tax/verification" : {
       "post" : {
-        "tags" : [ "Proxy" ],
+        "tags" : [ "NationalRegistry", "support-pnpg" ],
         "summary" : "verifyLegal",
         "description" : "Verify if given taxId is legal of given institution identified with vatNumber",
         "operationId" : "verifyLegalByPOST",
@@ -843,8 +843,8 @@
     "/v2/onboarding/users" : {
       "post" : {
         "tags" : [ "Onboarding", "support" ],
-        "summary" : "Api to persist users to product",
-        "description" : "Api to persist users to product",
+        "summary" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
+        "description" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "operationId" : "onboardingInstitutionUsersUsingPOST",
         "parameters" : [ {
           "name" : "authenticated",
@@ -1168,7 +1168,7 @@
     },
     "/v1/tokens/products/{productId}" : {
       "get" : {
-        "tags" : [ "Token", "external-v2" ],
+        "tags" : [ "Token", "external-v2", "support" ],
         "summary" : "Service to retrieve tokens from product's identifier",
         "description" : "Service to retrieve tokens from product's identifier",
         "operationId" : "getTokensFromProductUsingGET",
@@ -1200,6 +1200,15 @@
           "schema" : {
             "type" : "integer",
             "format" : "int32"
+          }
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Token's status. Available values: REQUEST, TOBEVALIDATED, PENDING, COMPLETED, FAILED, REJECTED, DELETED",
+          "required" : false,
+          "style" : "form",
+          "schema" : {
+            "type" : "string"
           }
         } ],
         "responses" : {
@@ -1405,7 +1414,7 @@
         } ]
       },
       "post" : {
-        "tags" : [ "User", "external-v2", "support" ],
+        "tags" : [ "User", "external-v2", "support", "support-pnpg" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "V2getUserInfoUsingGET",
