@@ -22,6 +22,7 @@ env:
     ARM_USE_OIDC: true
     ARM_USE_AZUREAD: true
     ARM_STORAGE_USE_AZUREAD: true
+    INFRA_APIM_FOLDER: './selfcare-external-api-backend/infra/apim_v2'
 
 jobs:
     create_branch:
@@ -77,8 +78,8 @@ jobs:
       - name: Merge OpenAPI and PostProcess External API
         if: ${{ inputs.external }}
         run: | 
-            npx openapi-merge-cli --config ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi_merge.json
-            node ./selfcare-external-api-backend/infra/api/openapi_merge/remove_v_and_tags.js  ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json ./selfcare-external-api-backend/infra/api/ms_external_api/v2/openapi_merge/openapi.external.json
+            npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api/ms_external_api/v2/openapi_merge/openapi_merge.json
+            node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/ms_external_api/v2/openapi_merge/openapi.external.json ${{ env.INFRA_APIM_FOLDER }}/api/ms_external_api/v2/openapi_merge/openapi.external.json
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03 #v6.0.5
