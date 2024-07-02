@@ -88,6 +88,11 @@ variable "ca_suffix_dns_private_name" {
   description = "CA suffix private DNS record"
 }
 
+variable "ca_pnpg_suffix_dns_private_name" {
+  type        = string
+  description = "CA PNPG suffix private DNS record"
+}
+
 variable "location_short" {
   type    = string
   default = "weu"
