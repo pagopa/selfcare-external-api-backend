@@ -15,7 +15,7 @@ tags = {
 lock_enable = true
 
 # networking
-cidr_subnet_apim = ["10.1.161.0/24"]
+cidr_subnet_apim = ["10.1.162.0/24"]
 
 # dns
 dns_zone_prefix    = "selfcare"
