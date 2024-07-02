@@ -509,6 +509,50 @@ paths:
       security:
         - bearerAuth:
             - global
+  '/onboarding/institutionOnboardings':
+    get:
+      tags:
+        - Onboarding Controller
+      summary: Returns onboardings record by institution taxCode/subunitCode/origin/originId
+      description: Returns onboardings record by institution taxCode/subunitCode/origin/originId
+      operationId: onboardingInstitutionUsingGET
+      parameters:
+        - name: origin
+          in: query
+          schema:
+            type: string
+        - name: originId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/OnboardingStatus'
+        - name: subunitCode
+          in: query
+          schema:
+            type: string
+        - name: taxCode
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OnboardingResponse'
+        '401':
+          description: Not Authorized
+        '403':
+          description: Not Allowed
+      security:
+        - bearerAuth:
+            - global
   '/onboarding/{onboardingId}/consume':
     put:
       tags:
@@ -546,6 +590,134 @@ paths:
           description: Not Authorized
         '403':
           description: Not Allowed
+      security:
+        - bearerAuth:
+            - global
+  '/onboarding/{onboardingId}/update':
+    put:
+      tags:
+      - Onboarding
+      operationId: updateOnboardiUsingPUT
+      summary: 'Update onboarding request receiving onboarding id.Function can change
+        some values. '
+      parameters:
+      - name: onboardingId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          $ref: '#/components/schemas/OnboardingStatus'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingDefaultRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+        "403":
+          description: Not Allowed
+        "401":
+          description: Not Authorized
+      security:
+        - bearerAuth:
+            - global
+  '/api/ResendNotification':
+    post:
+      tags:
+        - Notification
+      operationId: sendOnboardigNotificationUsingPOST
+      summary: ''
+      description: ''
+      parameters:
+        - name: onboardingId
+          in: query
+          description: Onboarding Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: ''
+          content:
+            application/json: {}
+      security:
+        - bearerAuth:
+            - global
+  '/tokens/products/{productId}':
+    get:
+      tags:
+        - Token
+      summary: Service to retrieve tokens from product's identifier
+      description: Service to retrieve tokens from product's identifier
+      operationId: getTokensFromProductUsingGET
+      parameters:
+        - name: productId
+          in: path
+          description: Product's identifier
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Number of page
+          required: false
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: Number of elements per page
+          required: false
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: status
+          in: query
+          description: 'Token''s status. Available values: REQUEST, TOBEVALIDATED, PENDING, COMPLETED, FAILED, REJECTED, DELETED'
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResource'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+               application/problem+json:
+                 schema:
+                   $ref: '#/components/schemas/Problem'
       security:
         - bearerAuth:
             - global
@@ -812,6 +984,19 @@ components:
         zipCode:
           type: string
           description: Institution's zip code
+    InstitutionType:
+      enum:
+      - PA
+      - PG
+      - GSP
+      - SA
+      - PT
+      - SCP
+      - PSP
+      - AS
+      - REC
+      - CON
+      type: string
     ProductInfo:
       title: ProductInfo
       type: object
@@ -965,6 +1150,17 @@ components:
           type: string
         desc:
           type: string
+    Origin:
+      enum:
+      - MOCK
+      - IPA
+      - SELC
+      - ANAC
+      - UNKNOWN
+      - ADE
+      - INFOCAMERE
+      - IVASS
+      type: string
     GeographicTaxonomies:
       title: GeographicTaxonomies
       type: object
@@ -1001,46 +1197,6 @@ components:
           type: string
         vatNumberGroup:
           type: boolean
-    OnboardingsResponse:
-      title: OnboardingsResponse
-      type: object
-      properties:
-        onboardings:
-          type: array
-          items:
-            $ref: '#/components/schemas/OnboardingResponse'
-    OnboardingResponse:
-      title: OnboardingResponse
-      type: object
-      properties:
-        billing:
-          $ref: '#/components/schemas/BillingResponse'
-        closedAt:
-          type: string
-          format: date-time
-        contract:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        pricingPlan:
-          type: string
-        productId:
-          type: string
-        status:
-          type: string
-          enum:
-            - ACTIVE
-            - DELETED
-            - PENDING
-            - REJECTED
-            - SUSPENDED
-            - TOBEVALIDATED
-        tokenId:
-          type: string
-        updatedAt:
-          type: string
-          format: date-time
     BillingResponse:
       title: BillingResponse
       type: object
@@ -1519,6 +1675,258 @@ components:
           type: string
         taxCode:
           type: string
+    TokensResource:
+      title: TokensResource
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenResource'
+    TokenResource:
+      title: TokenResource
+      type: object
+      properties:
+        checksum:
+          type: string
+        closedAt:
+          type: string
+          format: date-time
+        contentType:
+          type: string
+        contractSigned:
+          type: string
+        contractTemplate:
+          type: string
+        contractVersion:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiringDate:
+          type: string
+          format: date-time
+        id:
+          type: string
+        institutionId:
+          type: string
+        institutionUpdate:
+          $ref: '#/components/schemas/InstitutionUpdate'
+        legals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegalsResource'
+        productId:
+          type: string
+        status:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    LegalsResource:
+      title: LegalsResource
+      type: object
+      properties:
+        env:
+          type: string
+          enum:
+            - COLL
+            - DEV
+            - PROD
+            - ROOT
+        partyId:
+          type: string
+        relationshipId:
+          type: string
+        role:
+          type: string
+          enum:
+            - DELEGATE
+            - MANAGER
+            - OPERATOR
+            - SUB_DELEGATE
+    OnboardingDefaultRequest:
+      required:
+      - productId
+      - users
+      - institution
+      type: object
+      properties:
+        productId:
+          minLength: 1
+          type: string
+        users:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRequest'
+        pricingPlan:
+          type: string
+        signContract:
+          type: boolean
+        institution:
+          $ref: '#/components/schemas/InstitutionBaseRequest'
+        billing:
+          $ref: '#/components/schemas/BillingRequest'
+        additionalInformations:
+          $ref: '#/components/schemas/AdditionalInformationsDto'
+    BillingRequest:
+      type: object
+      properties:
+        vatNumber:
+          type: string
+        recipientCode:
+          type: string
+        publicServices:
+          type: boolean
+    UserRequest:
+      type: object
+      properties:
+        taxCode:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        role:
+          $ref: '#/components/schemas/PartyRole'
+    InstitutionBaseRequest:
+      required:
+      - institutionType
+      - digitalAddress
+      type: object
+      properties:
+        institutionType:
+          $ref: '#/components/schemas/InstitutionType'
+        taxCode:
+          type: string
+        subunitCode:
+          type: string
+        subunitType:
+          $ref: '#/components/schemas/InstitutionPaSubunitType'
+        origin:
+          $ref: '#/components/schemas/Origin'
+        originId:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        county:
+          type: string
+        description:
+          type: string
+        digitalAddress:
+          minLength: 1
+          type: string
+        address:
+          type: string
+        zipCode:
+          type: string
+        geographicTaxonomies:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeographicTaxonomyDto'
+        rea:
+          type: string
+        shareCapital:
+          type: string
+        businessRegisterPlace:
+          type: string
+        supportEmail:
+          type: string
+        supportPhone:
+          type: string
+        imported:
+          type: boolean
+    GeographicTaxonomyDto:
+      type: object
+      properties:
+        code:
+          type: string
+        desc:
+          type: string
+    OnboardingResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        workflowType:
+          type: string
+        institution:
+          $ref: '#/components/schemas/InstitutionResponse'
+        pricingPlan:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserOnboardingResponse'
+        billing:
+          $ref: '#/components/schemas/BillingResponse'
+        status:
+          type: string
+        additionalInformations:
+          $ref: '#/components/schemas/AdditionalInformationsDto'
+        userRequestUid:
+          type: string
+    InstitutionPaSubunitType:
+      enum:
+      - AOO
+      - UO
+      type: string
+    UserOnboardingResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        role:
+          $ref: '#/components/schemas/PartyRole'
+        productRole:
+          type: string
+        userMailUuid:
+          type: string
+    AdditionalInformationsDto:
+      type: object
+      properties:
+        belongRegulatedMarket:
+          type: boolean
+        regulatedMarketNote:
+          type: string
+        ipa:
+          type: boolean
+        ipaCode:
+          type: string
+        establishedByRegulatoryProvision:
+          type: boolean
+        establishedByRegulatoryProvisionNote:
+          type: string
+        agentOfPublicService:
+          type: boolean
+        agentOfPublicServiceNote:
+          type: string
+        otherNote:
+          type: string
+    PartyRole:
+      enum:
+        - MANAGER
+        - DELEGATE
+        - SUB_DELEGATE
+        - OPERATOR
+      type: string
+    OnboardingStatus:
+      enum:
+        - REQUEST
+        - TOBEVALIDATED
+        - PENDING
+        - COMPLETED
+        - FAILED
+        - REJECTED
+        - DELETED
+      type: string
     UsersNotificationResponse:
       title: UsersNotificationResponse
       type: object
