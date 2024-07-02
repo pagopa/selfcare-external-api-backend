@@ -60,6 +60,17 @@ resource "azurerm_key_vault_access_policy" "api_management_policy" {
   storage_permissions     = []
 }
 
+resource "azurerm_key_vault_access_policy" "api_management_policy_pnpg" {
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = module.apim.principal_id
+
+  key_permissions         = []
+  secret_permissions      = ["Get", "List"]
+  certificate_permissions = ["Get", "List"]
+  storage_permissions     = []
+}
+
 resource "azurerm_api_management_custom_domain" "api_custom_domain" {
   api_management_id = module.apim.id
 
