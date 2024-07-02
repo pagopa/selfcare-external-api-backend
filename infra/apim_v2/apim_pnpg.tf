@@ -88,7 +88,7 @@ module "apim_pnpg_external_api_data_vault_v1" {
         CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
         PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
         API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -98,7 +98,7 @@ module "apim_pnpg_external_api_data_vault_v1" {
         CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
         PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
         API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     }
@@ -157,7 +157,7 @@ module "apim_pnpg_external_api_ms_v2" {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
         CDN_STORAGE_URL            = "https://${local.cdn_storage_hostname}"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -166,7 +166,7 @@ module "apim_pnpg_external_api_ms_v2" {
       xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/jwt_auth_op_policy_user_group.xml.tpl", {
         USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/user-groups/v1/"
         API_DOMAIN                  = local.api_pnpg_domain
-        KID                         = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                         = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT  = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -176,7 +176,7 @@ module "apim_pnpg_external_api_ms_v2" {
         CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
         PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
         API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     }
@@ -223,7 +223,7 @@ module "apim_pnpg_support_service_v2" {
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -232,7 +232,7 @@ module "apim_pnpg_support_service_v2" {
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/jwt_auth_op_policy_user_group.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/user-groups/v1"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -241,7 +241,7 @@ module "apim_pnpg_support_service_v2" {
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -250,7 +250,7 @@ module "apim_pnpg_support_service_v2" {
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
@@ -259,7 +259,7 @@ module "apim_pnpg_support_service_v2" {
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
         API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
     },
