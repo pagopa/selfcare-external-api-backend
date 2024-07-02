@@ -873,12 +873,47 @@ module "apim_selfcare_support_service_v1" {
       )
     },
     {
+      operation_id = "onboardingInstitutionUsingGET"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      }
+      )
+    },
+    {
       operation_id = "getAllTokensUsingGET"
       xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
         API_DOMAIN                 = local.api_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      })
+    },
+    {
+      operation_id = "getTokensFromProductUsingGET"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v1/"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      })
+    },
+    {
+      operation_id = "updateOnboardiUsingPUT"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      })
+    },
+    {
+      operation_id = "sendOnboardigNotificationUsingPOST"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
     }
   ]
@@ -1440,5 +1475,10 @@ data "azurerm_key_vault_secret" "apim_backend_access_token" {
 
 data "azurerm_key_vault_secret" "external-oauth2-issuer" {
   name         = "external-oauth2-issuer"
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+}
+
+data "azurerm_key_vault_secret" "fn-onboarding-primary-key" {
+  name         = "fn-onboarding-primary-key"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
