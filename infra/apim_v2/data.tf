@@ -5,6 +5,11 @@ data "azurerm_key_vault" "key_vault" {
   resource_group_name = "${local.project}-sec-rg"
 }
 
+data "azurerm_key_vault" "key_vault_pnpg" {
+  name                = "${local.project}-pnpg-kv"
+  resource_group_name = "${local.project}-pnpg-sec-rg"
+}
+
 data "azurerm_virtual_network" "vnet" {
   name                = "${local.project}-vnet"
   resource_group_name = "${local.project}-vnet-rg"
