@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
@@ -23,8 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -117,31 +114,6 @@ public class InstitutionV2Controller {
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
         return productResources;
-    }
-
-    @Tag(name = "Institution")
-    @GetMapping(value = "/{institutionId}/products/{productId}/users")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
-    public List<UserResource> getInstitutionProductsUsers(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                          @PathVariable("institutionId") String institutionId,
-                                                          @ApiParam("${swagger.external_api.products.model.id}")
-                                                          @PathVariable("productId")
-                                                          String productId,
-                                                          @ApiParam("${swagger.external_api.user.model.id}")
-                                                          @RequestParam(value = "userId", required = false)
-                                                          Optional<String> userId,
-                                                          @ApiParam("${swagger.external_api.model.productRoles}")
-                                                          @RequestParam(value = "productRoles", required = false)
-                                                          Optional<Set<String>> productRoles,
-                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
-        Collection<UserInfo> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null), productRoles, xSelfCareUid.orElse(null));
-        List<UserResource> result = userInfos.stream()
-                .map(model -> UserMapper.toUserResource(model, productId))
-                .toList();
-        log.debug("getInstitutionProductUsers result = {}", result);
-        log.trace("getInstitutionProductUsers end");
-        return result;
     }
 
     @Tag(name = "external-v2")
