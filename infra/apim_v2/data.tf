@@ -60,3 +60,8 @@ data "azurerm_key_vault_certificate" "app_gw_platform" {
   name         = var.app_gateway_api_certificate_name
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
+
+data "azurerm_key_vault_secret" "jwt_kid_pnpg" {
+  name         = "jwt-kid"
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+}
