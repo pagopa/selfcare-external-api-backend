@@ -51,11 +51,6 @@ data "azurerm_key_vault_certificate" "app_gw_platform" {
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
-data "azurerm_key_vault" "key_vault_pnpg" {
-  name                = "${local.project}-pnpg-kv"
-  resource_group_name = "${local.project}-pnpg-sec-rg"
-}
-
 data "azurerm_key_vault_secret" "jwt_kid_pnpg" {
   name         = "jwt-kid"
   key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
