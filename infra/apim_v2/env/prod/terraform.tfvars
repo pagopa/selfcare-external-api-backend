@@ -15,7 +15,7 @@ tags = {
 lock_enable = true
 
 # networking
-cidr_subnet_apim = ["10.1.161.0/24"]
+cidr_subnet_apim = ["10.1.162.0/24"]
 
 # dns
 dns_zone_prefix    = "selfcare"
@@ -30,6 +30,7 @@ apim_sku            = "Premium_1" # TODO
 private_dns_name            = "selc.internal.selfcare.pagopa.it"
 private_onboarding_dns_name = "selc-p-onboarding-ms-ca.greensand-62fc96da.westeurope.azurecontainerapps.io"
 ca_suffix_dns_private_name  = "greensand-62fc96da.westeurope.azurecontainerapps.io"
+ca_pnpg_suffix_dns_private_name   = "calmmoss-0be48755.westeurope.azurecontainerapps.io"
 
 # app_gateway
 app_gateway_api_certificate_name      = "api-selfcare-pagopa-it"
