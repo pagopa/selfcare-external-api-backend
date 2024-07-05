@@ -5,6 +5,11 @@ data "azurerm_key_vault" "key_vault" {
   resource_group_name = "${local.project}-sec-rg"
 }
 
+data "azurerm_key_vault" "key_vault_pnpg" {
+  name                = "${local.project}-pnpg-kv"
+  resource_group_name = "${local.project}-pnpg-sec-rg"
+}
+
 data "azurerm_virtual_network" "vnet" {
   name                = "${local.project}-vnet"
   resource_group_name = "${local.project}-vnet-rg"
@@ -40,8 +45,23 @@ data "azurerm_key_vault_secret" "jwt_private_key_pem" {
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
+data "azurerm_key_vault_secret" "jwt_certificate_data_pem_pnpg" {
+  name         = "jwt-cert"
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+}
+
+data "azurerm_key_vault_secret" "jwt_private_key_pem_pnpg" {
+  name         = "jwt-private-key"
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+}
+
 # certificate api.selfcare.pagopa.it
 data "azurerm_key_vault_certificate" "app_gw_platform" {
   name         = var.app_gateway_api_certificate_name
   key_vault_id = data.azurerm_key_vault.key_vault.id
+}
+
+data "azurerm_key_vault_secret" "jwt_kid_pnpg" {
+  name         = "jwt-kid"
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
 }

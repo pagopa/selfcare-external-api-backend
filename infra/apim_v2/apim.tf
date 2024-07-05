@@ -60,6 +60,17 @@ resource "azurerm_key_vault_access_policy" "api_management_policy" {
   storage_permissions     = []
 }
 
+resource "azurerm_key_vault_access_policy" "api_management_policy_pnpg" {
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = module.apim.principal_id
+
+  key_permissions         = []
+  secret_permissions      = ["Get", "List"]
+  certificate_permissions = ["Get", "List"]
+  storage_permissions     = []
+}
+
 resource "azurerm_api_management_custom_domain" "api_custom_domain" {
   api_management_id = module.apim.id
 
@@ -963,15 +974,15 @@ module "apim_notification_event_api_v1" {
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
-    },
-    {
-      operation_id = "countUsersUsingGET"
-      xml_content = templatefile("./api/notification_event_api/v1/internal_jwt_base_policy.xml.tpl", {
-        API_DOMAIN                 = local.api_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      })
-    },
+    }
+    #{
+    #  operation_id = "countUsersUsingGET"
+    #  xml_content = templatefile("./api/notification_event_api/v1/internal_jwt_base_policy.xml.tpl", {
+    #    API_DOMAIN                 = local.api_domain
+    #    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    #    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+    #  })
+    #},
   ]
 }
 resource "azurerm_api_management_api_version_set" "apim_external_api_contract" {
