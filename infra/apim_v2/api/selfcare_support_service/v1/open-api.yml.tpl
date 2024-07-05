@@ -669,44 +669,6 @@ paths:
       security:
         - bearerAuth:
             - global
-  '/api/CountNotifications':
-    get:
-      tags:
-        - Notification
-      summary: Count notifications by filters
-      description: Performs for every product a count of relative onboarding notifications sent
-      operationId: countNotificationsUsingGET
-      parameters:
-        - name: from
-          in: query
-          description: from date (in YYYY-MM-DD format)
-          required: false
-          schema:
-            type: string
-        - name: to
-          in: query
-          description: to date (in YYYY-MM-DD format)
-          required: false
-          schema:
-            type: string
-        - name: productId
-          in: query
-          description: productId
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NotificationCountResult'
-      security:
-        - bearerAuth:
-            - global
 components:
   schemas:
     InvalidParam:
