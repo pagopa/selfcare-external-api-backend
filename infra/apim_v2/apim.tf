@@ -911,13 +911,6 @@ module "apim_selfcare_support_service_v1" {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
         FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
-    },
-    {
-      operation_id = "countNotificationsUsingGET"
-      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
-        FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
-      })
     }
   ]
 }
@@ -977,15 +970,15 @@ module "apim_notification_event_api_v1" {
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
       })
-    },
-    {
-      operation_id = "countUsersUsingGET"
-      xml_content = templatefile("./api/notification_event_api/v1/internal_jwt_base_policy.xml.tpl", {
-        API_DOMAIN                 = local.api_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      })
-    },
+    }
+    #{
+    #  operation_id = "countUsersUsingGET"
+    #  xml_content = templatefile("./api/notification_event_api/v1/internal_jwt_base_policy.xml.tpl", {
+    #    API_DOMAIN                 = local.api_domain
+    #    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    #    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+    #  })
+    #},
   ]
 }
 resource "azurerm_api_management_api_version_set" "apim_external_api_contract" {
@@ -1478,11 +1471,6 @@ data "azurerm_key_vault_secret" "apim_backend_access_token" {
 
 data "azurerm_key_vault_secret" "external-oauth2-issuer" {
   name         = "external-oauth2-issuer"
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-}
-
-data "azurerm_key_vault_secret" "fn-onboarding-primary-key" {
-  name         = "fn-onboarding-primary-key"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
