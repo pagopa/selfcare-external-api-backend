@@ -1485,8 +1485,3 @@ data "azurerm_key_vault_secret" "fn-onboarding-primary-key" {
   name         = "fn-onboarding-primary-key"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
-
-data "azurerm_key_vault_secret" "fn-onboarding-primary-key" {
-  name         = "fn-onboarding-primary-key"
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-}
