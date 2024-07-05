@@ -1661,16 +1661,7 @@ components:
         - FAILED
         - REJECTED
         - DELETED
-          type: string
-    NotificationCountResult:
-      title: NotificationCountResult
-      type: object
-      properties:
-        notificationCount:
-          type: integer
-          format: int32
-        productId:
-          type: string
+      type: string
   securitySchemes:
     bearerAuth:
       type: http
