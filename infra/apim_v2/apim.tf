@@ -44,9 +44,9 @@ resource "azurerm_resource_group" "rg_api" {
 
 locals {
   apim_cert_name_proxy_endpoint = format("%s-proxy-endpoint-cert", local.project)
-  api_domain      = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
-  logo_api_domain = format("%s.%s", var.dns_zone_prefix, var.external_domain)
-  apim_base_url   = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
+  api_domain                    = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
+  logo_api_domain               = format("%s.%s", var.dns_zone_prefix, var.external_domain)
+  apim_base_url                 = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
 }
 
 resource "azurerm_key_vault_access_policy" "api_management_policy" {
@@ -866,7 +866,7 @@ module "apim_selfcare_support_service_v1" {
         API_DOMAIN                 = local.api_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      }
+        }
       )
     },
     {
@@ -890,8 +890,8 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "sendOnboardigNotificationUsingPOST"
       xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
-        FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+        BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
     },
     {
