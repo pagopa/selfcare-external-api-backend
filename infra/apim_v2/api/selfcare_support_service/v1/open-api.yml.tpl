@@ -669,7 +669,7 @@ paths:
       security:
         - bearerAuth:
             - global
-  '/api/CountNotifications':
+  '/api/onboardings/notifications/count':
      get:
        tags:
          - Notification
