@@ -302,82 +302,6 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
   versioning_scheme   = "Segment"
 }
 
-module "apim_external_api_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name                = format("%s-ms-external-api", local.project)
-  api_management_name = module.apim.name
-  resource_group_name = azurerm_resource_group.rg_api.name
-  version_set_id      = azurerm_api_management_api_version_set.apim_external_api_ms.id
-
-  description  = "This service is the proxy for external services"
-  display_name = "External API service"
-  path         = "external"
-  api_version  = "v1"
-  protocols = [
-    "https"
-  ]
-
-  service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
-
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_external_api/v1/open-api.yml.tpl", {
-    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
-    basePath = "v1"
-  })
-
-  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
-    API_DOMAIN                 = local.api_domain
-    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-  })
-
-  subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "getInstitutionsUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/getInstitutions_op_policy.xml.tpl", {
-        CDN_STORAGE_URL = "https://${data.azurerm_storage_account.checkout.primary_web_host}"
-      })
-    },
-    {
-      operation_id = "getInstitutionUserProductsUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getInstitutionGeographicTaxonomiesUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getInstitutionsByGeoTaxonomiesUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getUserGroupsUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
-      })
-    },
-    {
-      operation_id = "getInstitution"
-      xml_content = templatefile("./api/ms_external_api/v1/getInstitution_op_policy.xml.tpl", {
-        CDN_STORAGE_URL                = "https://${data.azurerm_storage_account.checkout.primary_web_host}"
-        PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "getProductUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/getProduct_op_policy.xml.tpl", {
-        MS_PRODUCT_BACKEND_BASE_URL = "https://selc-${var.env_short}-product-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "getInstitutionProductUsersUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    }
-  ]
-}
-
 module "apim_external_api_ms_v2" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
   name                = format("%s-ms-external-api", local.project)
@@ -902,8 +826,8 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "countNotificationsUsingGET"
       xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
-        FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+        BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
     }
   ]
