@@ -540,7 +540,7 @@ module "apim_external_api_ms_v2" {
     },
     {
       operation_id = "messageAcknowledgmentUsingPOST"
-      xml_content = templatefile("./api/ms_external_api/v2/messageAcknowledgment_op_policy_fn.xml", {
+      xml_content = templatefile("./api/ms_external_api/v2/messageAcknowledgment_op_policy_fn.xml.tpl", {
         BACKEND_BASE_URL              = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
         FN_KEY                        = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
         API_DOMAIN                    = local.api_domain
