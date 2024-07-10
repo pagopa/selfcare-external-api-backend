@@ -17,7 +17,7 @@ const outputFilePathComplete = path.join(outputFilePath);
 
 
 // Lista dei tag da mantenere (puoi modificare questi tag o passare dinamicamente come argomento del comando)
-const tagsToKeep = ["Institution", "User", "Delegation", "UserGroup", "Onboarding", "Token"];
+const tagsToRemove = ["support", "external-v2", "contract"];
 
 // Leggi il file openapi.json
 fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
@@ -36,7 +36,7 @@ fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
 
     // Filtra i tag nel file openapi
     if (openapi.tags && Array.isArray(openapi.tags)) {
-        openapi.tags = openapi.tags.filter(tag => tagsToKeep.includes(tag.name));
+        openapi.tags = openapi.tags.filter(tag => !tagsToRemove.includes(tag.name));
     }
 
     // Rimuovi v* dal path
@@ -59,7 +59,7 @@ fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
             const pathItem = openapi.paths[path];
             ['get', 'post', 'put', 'delete', 'options', 'head', 'patch', 'trace'].forEach(method => {
                 if (pathItem[method] && Array.isArray(pathItem[method].tags)) {
-                    pathItem[method].tags = pathItem[method].tags.filter(tag => tagsToKeep.includes(tag));
+                    pathItem[method].tags = pathItem[method].tags.filter(tag => !tagsToRemove.includes(tag));
                 }
             });
         });
