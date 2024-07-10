@@ -1,6 +1,6 @@
 <policies>
     <inbound>
-        <base/>
+        <base />
         <set-variable name="jwt" value="@{
             // 1) Construct the Base64Url-encoded header
             var header = new { typ = "JWT", alg = "RS256", kid = "${KID}" };
@@ -32,7 +32,8 @@
             return $"Bearer {jwtHeaderBase64UrlEncoded}.{jwtPayloadBase64UrlEncoded}.{jwtSignatureBase64UrlEncoded}";
             }
 
-            }"/>
+            }"
+        />
         <choose>
             <when condition="@(((string)context.Variables["productId"]).Contains("prod-fd"))">
                 <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized" require-expiration-time="false" require-scheme="Bearer" require-signed-tokens="true">
@@ -45,16 +46,21 @@
                 </validate-jwt>
             </when>
         </choose>
-        <set-backend-service base-url="${MS_EXTERNAL_INTERCEPTOR_BACKEND_BASE_URL}" />
-        <set-header name="Authorization" exists-action="override">
-            <value>@((string)context.Variables["jwt"])</value>
+        <set-variable name="fnkey" value="${FN_KEY}" />
+        <set-header name="X-FUNCTIONS-KEY" exists-action="override">
+            <value>@((string)context.Variables["fnkey"])</value>
         </set-header>
-        <rewrite-uri template="@("/interceptor/acknowledgment/" + (string)context.Variables["productId"] + "/message/{messageId}/status/{status}")" />
+        <set-backend-service base-url="${BACKEND_BASE_URL}" />
+        <rewrite-uri template="@("/api/acknowledgment/" + (string)context.Variables["productId"] + "/message/{messageId}/status/{status}")" />
+
     </inbound>
     <backend>
-        <base/>
+        <forward-request timeout="240" />
     </backend>
+    <outbound>
+        <base />
+    </outbound>
     <on-error>
-        <base/>
+        <base />
     </on-error>
 </policies>
