@@ -540,9 +540,14 @@ module "apim_external_api_ms_v2" {
     },
     {
       operation_id = "messageAcknowledgmentUsingPOST"
-      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
-        FN_KEY                     = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+      xml_content = templatefile("./api/ms_external_api/v2/messageAcknowledgment_op_policy_fn.xml", {
+        BACKEND_BASE_URL              = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY                        = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+        API_DOMAIN                    = local.api_domain
+        KID                           = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT    = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        TENANT_ID                     = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER        = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
     },
     {
