@@ -10,7 +10,9 @@ function getSchemaReferences(paths) {
   const schemaRefs = new Set();
   
   function extractRefsFromContent(content) {
-    if (content && content.schema && content.schema.$ref) {
+    if (content && content.schema && content.schema.type === 'array' && content.schema.items.$ref) {
+      schemaRefs.add(content.schema.items.$ref);
+    } else if (content && content.schema && content.schema.$ref) {
       schemaRefs.add(content.schema.$ref);
     }
   }
@@ -31,6 +33,13 @@ function getSchemaReferences(paths) {
       if (requestBody && requestBody.content) {
         for (const mediaType in requestBody.content) {
           extractRefsFromContent(requestBody.content[mediaType]);
+        }
+      }
+
+      const parameters = paths[path][method].parameters;
+      if (parameters) {
+        for (const index in parameters) {
+          extractRefsFromContent(parameters[index]);
         }
       }
     }
