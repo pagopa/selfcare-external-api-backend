@@ -323,7 +323,7 @@
     },
     "/v2/institutions/{institutionId}/contract" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2", "support" ],
+        "tags" : [ "Institution", "contract", "external-v2", "support" ],
         "summary" : "getContract",
         "description" : "Service to retrieve a contract given institutionId and productId",
         "operationId" : "getContractUsingGET",

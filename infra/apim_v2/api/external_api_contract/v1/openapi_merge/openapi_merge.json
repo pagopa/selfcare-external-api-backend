@@ -1,0 +1,17 @@
+{
+    "inputs": [
+        {
+          "description": {
+              "append":true
+          },
+          "inputFile": "./openapi_template.json"
+        },
+        {
+          "inputFile": "../../../../../../app/src/main/resources/swagger/api-docs.json",
+          "operationSelection": {
+            "includeTags": ["contract"]
+          }
+        }
+    ], 
+    "output": "../openapi.json"
+  }
