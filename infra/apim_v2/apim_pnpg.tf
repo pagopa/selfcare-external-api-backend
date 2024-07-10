@@ -24,11 +24,11 @@ locals {
     subscription_required = false
     service_url           = null
   }
-  apim_name        = module.apim.name
-  apim_rg          = azurerm_resource_group.rg_api.name
-  api_pnpg_domain       = format("api-pnpg.%s.%s", var.dns_zone_prefix, var.external_domain)
-  pnpg_hostname    = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
-  project_pnpg = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
+  apim_name       = module.apim.name
+  apim_rg         = azurerm_resource_group.rg_api.name
+  api_pnpg_domain = format("api-pnpg.%s.%s", var.dns_zone_prefix, var.external_domain)
+  pnpg_hostname   = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
+  project_pnpg    = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
 
   cdn_storage_hostname = "${var.prefix}${var.env_short}${var.location_short}${var.domain}checkoutsa"
 }
