@@ -1,6 +1,15 @@
 name: Swagger Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/*
+    paths:
+      - "app/**"
+      - "connector/**"
+      - "connector-api/**"
+      - "core/**"
+      - "web/**"
     types: [ opened, synchronize, reopened ]
     
 permissions:
