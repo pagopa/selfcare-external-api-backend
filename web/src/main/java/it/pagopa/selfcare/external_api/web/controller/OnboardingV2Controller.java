@@ -54,6 +54,8 @@ public class OnboardingV2Controller {
         this.onboardingResourceMapper = onboardingResourceMapper;
     }
 
+
+    @Tag(name = "internal-v1")
     @ApiResponse(responseCode = "403",
             description = "Forbidden",
             content = {
@@ -112,6 +114,7 @@ public class OnboardingV2Controller {
      * * Code: 400, Message: Invalid request, DataType: Problem
      */
     @ResponseStatus(HttpStatus.OK)
+    @Tag(name = "internal-v1")
     @Tag(name = "support")
     @Tag(name = "Onboarding")
     @ApiOperation(value = "${swagger.mscore.onboarding.users}", notes = "${swagger.mscore.onboarding.users}")
