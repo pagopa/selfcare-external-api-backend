@@ -681,8 +681,8 @@ module "apim_selfcare_support_service_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/selfcare_support_service/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/selfcare_support_service/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
