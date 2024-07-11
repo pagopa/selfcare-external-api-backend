@@ -319,8 +319,8 @@ module "apim_external_api_ms_v2" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_external_api/v2/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_external_api/v2/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v2"
   })
