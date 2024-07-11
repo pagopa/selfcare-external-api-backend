@@ -17,7 +17,7 @@ const outputFilePathComplete = path.join(outputFilePath);
 
 
 // Lista dei tag da mantenere (puoi modificare questi tag o passare dinamicamente come argomento del comando)
-const tagsToRemove = ["support", "external-v2", "contract", "internal-v1"];
+const tagsToRemove = ["support", "external-v2", "contract", "internal-v1","support-pnpg"];
 
 // Leggi il file openapi.json
 fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
