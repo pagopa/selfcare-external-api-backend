@@ -271,8 +271,8 @@ module "apim_user_group_ms_v1" {
 
   service_url = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_user_group/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_user_group/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "user-groups/v1/"
   })
