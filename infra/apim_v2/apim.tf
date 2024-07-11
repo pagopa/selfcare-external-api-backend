@@ -627,10 +627,6 @@ module "apim_internal_api_ms_v1" {
       })
     },
     {
-      operation_id = "autoApprovalOnboardingFromPdaUsingPOST"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
       operation_id = "onboardingInstitutionUsersUsingPOST"
       xml_content = templatefile("./api/ms_internal_api/v1/external_op_policy.xml.tpl", {
         MS_EXTERNAL_BACKEND_BASE_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
@@ -653,12 +649,6 @@ module "apim_internal_api_ms_v1" {
     },
     {
       operation_id = "updateCreatedAtUsingPUT"
-      xml_content = templatefile("./api/ms_internal_api/v1/core_op_policy.xml.tpl", {
-        MS_CORE_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "resendContractsByInstitutionIdAndTokenIdUsingPUT"
       xml_content = templatefile("./api/ms_internal_api/v1/core_op_policy.xml.tpl", {
         MS_CORE_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
       })

@@ -59,6 +59,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "Institution")
+    @Tag(name = "external-pnpg")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
@@ -80,6 +81,7 @@ public class InstitutionV2Controller {
 
     @Tag(name = "external-v2")
     @Tag(name = "support")
+    @Tag(name = "contract")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/contract", produces = APPLICATION_OCTET_STREAM_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -145,6 +147,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "internal-v1")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/users")
     @ResponseStatus(HttpStatus.OK)
