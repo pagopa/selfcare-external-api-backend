@@ -62,8 +62,8 @@ module "apim_pnpg_external_api_data_vault_v1" {
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/external_api_data_vault/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/external_api_data_vault/v1/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })
@@ -130,8 +130,8 @@ module "apim_pnpg_external_api_ms_v2" {
 
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/external_api_for_pnpg/v2/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/external_api_for_pnpg/v2/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })
@@ -208,8 +208,8 @@ module "apim_pnpg_support_service_v2" {
 
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/pnpg_support_service/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/pnpg_support_service/v1/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })

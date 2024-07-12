@@ -31,7 +31,7 @@ resource "null_resource" "upload_developer_index_v1" {
 
 resource "null_resource" "download_apim_external_api_v2" {
   triggers = {
-    file_sha1 = filesha1("./api/ms_external_api/v2/open-api.yml.tpl")
+    file_sha1 = filesha1("./api/ms_external_api/v2/openapi.${var.env}.json")
   }
 
   depends_on = [module.apim_external_api_ms_v2]
@@ -50,7 +50,7 @@ resource "null_resource" "download_apim_external_api_v2" {
 
 resource "null_resource" "upload_developer_external_api_v2" {
   triggers = {
-    file_sha1 = filesha1("./api/ms_external_api/v2/open-api.yml.tpl")
+    file_sha1 = filesha1("./api/ms_external_api/v2/openapi.${var.env}.json")
   }
 
   depends_on = [null_resource.download_apim_external_api_v2]

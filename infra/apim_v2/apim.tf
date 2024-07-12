@@ -184,8 +184,8 @@ module "apim_external_api_onboarding_auto_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external-api-onboarding-auto/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external-api-onboarding-auto/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "/onboarding-api/v1"
   })
@@ -223,8 +223,8 @@ module "apim_external_api_onboarding_io_v1" {
 
   service_url = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external-api-onboarding-io/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external-api-onboarding-io/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "/onboarding-api/v1"
   })
@@ -271,8 +271,8 @@ module "apim_user_group_ms_v1" {
 
   service_url = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_user_group/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_user_group/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "user-groups/v1/"
   })
@@ -319,8 +319,8 @@ module "apim_external_api_ms_v2" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_external_api/v2/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_external_api/v2/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v2"
   })
@@ -576,8 +576,8 @@ module "apim_internal_api_ms_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_internal_api/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_internal_api/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -681,8 +681,8 @@ module "apim_selfcare_support_service_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/selfcare_support_service/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/selfcare_support_service/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -848,8 +848,8 @@ module "apim_notification_event_api_v1" {
 
   service_url = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/notification_event_api/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/notification_event_api/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -914,8 +914,8 @@ module "apim_external_api_contract_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v2/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external_api_contract/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external_api_contract/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -965,8 +965,8 @@ module "apim_external_api_contract_public_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v2/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external_api_contract/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external_api_contract/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
