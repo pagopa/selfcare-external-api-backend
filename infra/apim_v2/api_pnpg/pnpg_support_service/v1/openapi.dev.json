@@ -210,23 +210,61 @@
         ]
       }
     },
-    "/institutions/{institutionId}/groups": {
+    "/user-groups": {
       "get": {
         "tags": [
-          "institutions"
+          "UserGroup"
         ],
         "summary": "getUserGroups",
-        "description": "Service that allows to get a list of UserGroup entities filtered by the product related to Subscription Key",
+        "description": "Service that allows to get a list of UserGroup entities",
         "operationId": "getUserGroupsUsingGET",
         "parameters": [
           {
             "name": "institutionId",
-            "in": "path",
+            "in": "query",
             "description": "Institution's unique identifier",
-            "required": true,
-            "style": "simple",
+            "required": false,
+            "style": "form",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page number to access (0 indexed, defaults to 0)",
+            "required": false,
+            "style": "form",
+            "allowReserved": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of records per page (defaults to 20, max 2000)",
+            "required": false,
+            "style": "form",
+            "allowReserved": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required": false,
+            "style": "form",
+            "allowReserved": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -719,6 +757,7 @@
             "description": "Users group's status",
             "enum": [
               "ACTIVE",
+              "DELETED",
               "SUSPENDED"
             ]
           }
