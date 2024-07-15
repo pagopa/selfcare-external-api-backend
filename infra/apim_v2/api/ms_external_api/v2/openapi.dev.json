@@ -113,7 +113,7 @@
             "name": "status",
             "in": "path",
             "description": "Kafka message consumption acknowledgment status",
-            "required": true,
+            "required": false,
             "style": "simple",
             "schema": {
               "type": "string",
