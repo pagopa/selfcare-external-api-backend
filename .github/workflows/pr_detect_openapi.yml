@@ -16,4 +16,3 @@ jobs:
     secrets: inherit
     with:
         path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.dev.json
-        github_token: ${{ secrets.GITHUB_TOKEN }}
