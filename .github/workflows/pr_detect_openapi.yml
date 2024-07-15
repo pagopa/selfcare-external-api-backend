@@ -1,9 +1,6 @@
 name: APIM - Detect Conflict and Update
 on:
   pull_request:
-    branches:
-      - main
-      - releases/*
     paths:
       - "infra/apim_v2/api/**"
       - "infra/apim_v2/api_pnpg/**"
