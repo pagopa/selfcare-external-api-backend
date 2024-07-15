@@ -1,4 +1,4 @@
-name: Swagger Detect Conflict and Update
+name: APIM - Detect Conflict and Update
 on:
   pull_request:
     branches:
