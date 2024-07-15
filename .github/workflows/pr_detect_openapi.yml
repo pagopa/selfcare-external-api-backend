@@ -11,12 +11,9 @@ permissions:
 
 jobs:
   selc_detect_external_dev:  
-    runs-on: ubuntu-20.04
-    permissions: write-all
+    uses: ./.github/workflows/call_detect_openapi.yml
     name: "[DEV] Selc External - Detect Rules and Conflict"
-    steps:
-      - id: selc-external-detect-dev
-        uses: ./.github/workflows/call_detect_openapi.yml
-        with:
-          path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.dev.json
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    secrets: inherit
+    with:
+        path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.dev.json
+        github_token: ${{ secrets.GITHUB_TOKEN }}
