@@ -103,7 +103,7 @@
             "name": "messageId",
             "in": "path",
             "description": "Kafka message unique identifier",
-            "required": true,
+            "required": false,
             "style": "simple",
             "schema": {
               "type": "string"
