@@ -4,7 +4,12 @@ on:
     paths:
       - "infra/apim_v2/api/**"
       - "infra/apim_v2/api_pnpg/**"
-    types: [ opened, synchronize, reopened ]
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
     
 permissions:
   contents: write
