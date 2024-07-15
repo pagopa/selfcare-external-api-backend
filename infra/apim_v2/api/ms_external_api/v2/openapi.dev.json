@@ -103,7 +103,7 @@
             "name": "messageId",
             "in": "path",
             "description": "Kafka message unique identifier",
-            "required": false,
+            "required": true,
             "style": "simple",
             "schema": {
               "type": "string"
@@ -113,7 +113,7 @@
             "name": "status",
             "in": "path",
             "description": "Kafka message consumption acknowledgment status",
-            "required": false,
+            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
