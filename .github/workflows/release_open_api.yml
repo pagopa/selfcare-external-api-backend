@@ -1,4 +1,4 @@
-name: Swagger Detect Conflict and Update
+name: External MS - Swagger Detect Conflict and Update
 on:
   pull_request:
     branches:
