@@ -1,9 +1,8 @@
-name: APIM - Detect Conflict and Update
+name: APIM Selc External - Detect Conflict and Update
 on:
   pull_request:
     paths:
-      - "infra/apim_v2/api/**"
-      - "infra/apim_v2/api_pnpg/**"
+      - "infra/apim_v2/api/ms_external_api/v2/**"
     types:
       - opened
       - edited
@@ -28,3 +27,10 @@ jobs:
     secrets: inherit
     with:
         path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.uat.json
+
+  selc_detect_external_prod:  
+    uses: ./.github/workflows/call_detect_openapi.yml
+    name: "[PROD] Selc External - Detect Rules and Conflict"
+    secrets: inherit
+    with:
+        path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.prod.json
