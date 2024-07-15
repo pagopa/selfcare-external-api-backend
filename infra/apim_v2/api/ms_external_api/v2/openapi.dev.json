@@ -113,7 +113,7 @@
             "name": "status",
             "in": "path",
             "description": "Kafka message consumption acknowledgment status",
-            "required": false,
+            "required": true,
             "style": "simple",
             "schema": {
               "type": "string",
@@ -212,7 +212,7 @@
             "name": "searchMode",
             "in": "query",
             "description": "Searching mode to find institutions based on geotax",
-            "required": false,
+            "required": true,
             "style": "form",
             "schema": {
               "type": "string",
