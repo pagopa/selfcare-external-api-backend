@@ -16,3 +16,10 @@ jobs:
     secrets: inherit
     with:
         path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.dev.json
+
+  selc_detect_external_uat:  
+    uses: ./.github/workflows/call_detect_openapi.yml
+    name: "[UAT] Selc External - Detect Rules and Conflict"
+    secrets: inherit
+    with:
+        path_openapi_docs: infra/apim_v2/api/ms_external_api/v2/openapi.uat.json
