@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/pn-pg/institutions/add": {
+    "/pn-pg/institutions/add/info": {
       "post": {
         "tags": [
           "institutions-pnpg"

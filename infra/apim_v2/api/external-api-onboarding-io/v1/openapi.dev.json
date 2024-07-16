@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/onboarding/{externalInstitutionId}": {
+    "/onboarding/{externalInstitutionId}/info": {
       "post": {
         "tags": [
           "onboarding"

@@ -90,7 +90,7 @@
         ]
       }
     },
-    "/message/{messageId}/status/{status}": {
+    "/message/{messageId}/status/{status}/info": {
       "post": {
         "tags": [
           "interceptor"

@@ -28,7 +28,7 @@
     }
   ],
   "paths": {
-    "/onboarding/{externalInstitutionId}/products/{productId}": {
+    "/onboarding/{externalInstitutionId}/products/{productId}/info": {
       "post": {
         "tags": [
           "onboarding"

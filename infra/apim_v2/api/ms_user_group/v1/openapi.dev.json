@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/": {
+    "/info": {
       "get": {
         "tags": [
           "user-group"

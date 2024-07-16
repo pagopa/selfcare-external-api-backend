@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/users/{id}/status": {
+    "/users/{id}/status/info": {
       "put": {
         "tags": [
           "support"

@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/institutions/{institutionId}/contract": {
+    "/institutions/{institutionId}/contract/info": {
       "get": {
         "tags": [
           "institutions"

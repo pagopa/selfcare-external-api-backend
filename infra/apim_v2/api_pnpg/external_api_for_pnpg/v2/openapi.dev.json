@@ -21,7 +21,7 @@
     }
   ],
   "paths": {
-    "/institutions/byGeoTaxonomies": {
+    "/institutions/byGeoTaxonomies/info": {
       "get": {
         "tags": [
           "institutions"
