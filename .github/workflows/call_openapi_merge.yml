@@ -30,15 +30,16 @@ jobs:
     setup:
       name: 'Setup Environment'
       runs-on: ubuntu-20.04
-
+      outputs:
+        environ: ${{ steps.set-env.outputs.env_short }}
       steps:
         - name: Set Environment Variable
           id: set-env
           run: |
-            if [ "${{ github.env }}" == "prod" ]; then
+            if [ "${{ inputs.env }}" == "prod" ]; then
               echo "env_short=p" >> $GITHUB_OUTPUT
             else
-              if [ "${{ github.env }}" == "uat" ]; then
+              if [ "${{ inputs.env }}" == "uat" ]; then
                 echo "env_short=u" >> $GITHUB_OUTPUT
               else
                 echo "env_short=d" >> $GITHUB_OUTPUT
