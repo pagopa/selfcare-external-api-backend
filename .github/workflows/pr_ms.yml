@@ -6,6 +6,13 @@ on:
     branches:
       - main
       - releases/**
+    paths:
+      - "app/**"
+      - "connector/**"
+      - "connector-api/**"
+      - "core/**"
+      - "web/**"
+      - "pom.xml"
     types:
       - opened
       - edited
