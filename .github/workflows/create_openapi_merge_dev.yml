@@ -3,17 +3,13 @@ name: Create OpenAPI merge
 on:
     workflow_dispatch:
         inputs:
-          external:
+          selc-ms-external-api:
             type: boolean
-            description: Enable creation of External API
+            description: Enable creation of Selc External API
             default: True
-          support-selc:
+          selc-external-api-contract:
             type: boolean
-            description: Enable creation of Support Selc API
-            default: True
-          support-pnpg:
-            type: boolean
-            description: Enable creation of Support PNPG API
+            description: Enable creation of Selc External Contract API
             default: True
           env:
             type: choice
@@ -29,8 +25,7 @@ jobs:
       name: "Create OpenAPI merge"
       secrets: inherit
       with:
-        external: ${{ inputs.external }}
-        support-selc: ${{ inputs.support-selc }}
-        support-pnpg: ${{ inputs.support-pnpg }}
+        selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
+        sselc-external-api-contract: ${{ inputs.selc-external-api-contract }}
         env: ${{ inputs.env }}
     
