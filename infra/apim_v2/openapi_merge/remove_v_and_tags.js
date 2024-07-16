@@ -74,4 +74,14 @@ fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
 
         console.log(`File salvato con successo in ${outputFilePathComplete}`);
     });
+
+     // Elimina il file
+     fs.unlink(inputFilePathComplete, err => {
+        if (err) {
+            console.error(`Errore durante l'eliminazione del file: ${err}`);
+            return;
+        }
+
+        console.log(`File eliminato con successo: ${inputFilePathComplete}`);
+    });
 });
