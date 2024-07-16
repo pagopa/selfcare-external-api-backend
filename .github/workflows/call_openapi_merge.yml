@@ -50,7 +50,11 @@ jobs:
       runs-on: ubuntu-20.04
       needs: setup
       environment: ${{ inputs.env }}-ci
-
+      permissions:
+        id-token: write
+        contents: write
+        actions: write
+        pull-requests: write
       steps:
 
       - name: Azure Login
