@@ -2,7 +2,7 @@ name: APIM Selc External Contract - Detect Conflict and Update
 on:
   pull_request:
     paths:
-      - "infra/apim_v2/api/external-api-contract/v1/**"
+      - "infra/apim_v2/api/external_api_contract/v1/**"
     types:
       - opened
       - edited
@@ -19,18 +19,18 @@ jobs:
     name: "[DEV] Selc External Contract - Detect Rules and Conflict"
     secrets: inherit
     with:
-        path_openapi_docs: infra/apim_v2/api/external-api-contract/v1/openapi.dev.json
+        path_openapi_docs: infra/apim_v2/api/external_api_contract/v1/openapi.dev.json
 
   selc_detect_ext_contract_uat:
     uses: ./.github/workflows/call_detect_openapi.yml
     name: "[UAT] Selc External Contract - Detect Rules and Conflict"
     secrets: inherit
     with:
-        path_openapi_docs: infra/apim_v2/api/external-api-contract/v1/openapi.uat.json
+        path_openapi_docs: infra/apim_v2/api/external_api_contract/v1/openapi.uat.json
 
   selc_detect_ext_contract_prod:
     uses: ./.github/workflows/call_detect_openapi.yml
     name: "[PROD] Selc External Contract - Detect Rules and Conflict"
     secrets: inherit
     with:
-        path_openapi_docs: infra/apim_v2/api/external-api-contract/v1/openapi.prod.json
+        path_openapi_docs: infra/apim_v2/api/external_api_contract/v1/openapi.prod.json
