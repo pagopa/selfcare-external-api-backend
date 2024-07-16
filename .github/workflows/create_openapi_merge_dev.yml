@@ -1,0 +1,36 @@
+name: Create OpenAPI merge DEV
+
+on:
+    workflow_dispatch:
+        inputs:
+          external:
+            type: boolean
+            description: Enable creation of External API
+            default: True
+          support-selc:
+            type: boolean
+            description: Enable creation of Support Selc API
+            default: True
+          support-pnpg:
+            type: boolean
+            description: Enable creation of Support PNPG API
+            default: True
+          env:
+            type: choice
+            description: Environment
+            options: 
+            - dev
+            - uat
+            - prod
+
+jobs:
+    openapi_merge:
+      uses: ./.github/workflows/call_openapi_merge.yml
+      name: "[DEV] Selc External - Detect Rules and Conflict"
+      secrets: inherit
+      with:
+        external: ${{ inputs.external }}
+        support-selc: ${{ inputs.support-selc }}
+        support-pnpg: ${{ inputs.support-pnpg }}
+        env: ${{ inputs.env }}
+    
