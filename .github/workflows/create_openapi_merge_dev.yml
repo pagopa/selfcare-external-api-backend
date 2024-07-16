@@ -26,6 +26,6 @@ jobs:
       secrets: inherit
       with:
         selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
-        sselc-external-api-contract: ${{ inputs.selc-external-api-contract }}
+        selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
         env: ${{ inputs.env }}
     
