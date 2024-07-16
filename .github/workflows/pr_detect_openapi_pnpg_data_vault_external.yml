@@ -16,7 +16,7 @@ permissions:
 jobs:
   pnpg_detect_data_vault_dev:
     uses: ./.github/workflows/call_detect_openapi.yml
-    name: "[DEV] PNPG External - Detect Rules and Conflict"
+    name: "[DEV] PNPG Data Vaul External - Detect Rules and Conflict"
     secrets: inherit
     with:
         path_openapi_docs: infra/apim_v2/api_pnpg/external_api_data_vault/v1/openapi.dev.json
