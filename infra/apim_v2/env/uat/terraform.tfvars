@@ -27,9 +27,9 @@ apim_publisher_name = "pagoPA SelfCare UAT"
 apim_sku            = "Developer_1"
 
 # aks
-private_dns_name            = "selc.internal.uat.selfcare.pagopa.it"
-private_onboarding_dns_name = "selc-u-onboarding-ms-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
-ca_suffix_dns_private_name  = "proudglacier-20652b81.westeurope.azurecontainerapps.io"
+private_dns_name                = "selc.internal.uat.selfcare.pagopa.it"
+private_onboarding_dns_name     = "selc-u-onboarding-ms-ca.calmsky-143987c1.westeurope.azurecontainerapps.io"
+ca_suffix_dns_private_name      = "mangopond-2a5d4d65.westeurope.azurecontainerapps.io"
 ca_pnpg_suffix_dns_private_name = "orangeground-0bd2d4dc.westeurope.azurecontainerapps.io"
 
 # app_gateway
