@@ -1,6 +1,9 @@
 name: APIM PNPG Support - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api_pnpg/pnpg_support_service/v1/**"
     types:

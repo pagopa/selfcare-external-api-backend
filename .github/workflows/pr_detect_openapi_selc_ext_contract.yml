@@ -1,6 +1,9 @@
 name: APIM Selc External Contract - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api/external_api_contract/v1/**"
     types:

@@ -1,6 +1,9 @@
 name: APIM Selc Support - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api/selfcare_support_service/v1/**"
     types:

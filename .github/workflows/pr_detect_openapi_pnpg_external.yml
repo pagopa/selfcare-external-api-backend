@@ -1,6 +1,9 @@
 name: APIM PNPG External - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api_pnpg/external_api_for_pnpg/v2/**"
     types:
