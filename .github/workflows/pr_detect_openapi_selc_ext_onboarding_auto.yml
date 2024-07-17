@@ -1,6 +1,9 @@
 name: APIM Selc External Onboarding Auto - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api/external-api-onboarding-auto/v1/**"
     types:

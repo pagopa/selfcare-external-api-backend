@@ -1,6 +1,9 @@
 name: APIM Selc Notification Event - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api/notification_event_api/v1/**"
     types:

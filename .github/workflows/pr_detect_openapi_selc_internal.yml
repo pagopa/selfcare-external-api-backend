@@ -1,6 +1,9 @@
 name: APIM Selc Internal - Detect Conflict and Update
 on:
   pull_request:
+    branches:
+      - main
+      - releases/**
     paths:
       - "infra/apim_v2/api/ms_internal_api/v1/**"
     types:
