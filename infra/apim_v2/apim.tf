@@ -401,7 +401,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/ms_external_api/v2/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
+        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
         TENANT_ID                   = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER      = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -717,7 +717,7 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/selfcare_support_service/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
+        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
         API_DOMAIN                  = local.api_domain
         KID                         = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT  = azurerm_api_management_certificate.jwt_certificate.thumbprint

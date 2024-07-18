@@ -581,10 +581,10 @@
     "/user-groups": {
       "get": {
         "tags": [
-          "user-group"
+          "UserGroup"
         ],
         "summary": "getUserGroups",
-        "description": "Service that allows to get a list of UserGroup entities filtered by the product related to Subscription Key",
+        "description": "Service that allows to get a list of UserGroup entities",
         "operationId": "getUserGroupsUsingGET",
         "parameters": [
           {
@@ -656,6 +656,7 @@
               "type": "string",
               "enum": [
                 "ACTIVE",
+                "DELETED",
                 "SUSPENDED"
               ]
             }
@@ -1306,6 +1307,7 @@
             "description": "Users group's status",
             "enum": [
               "ACTIVE",
+              "DELETED",
               "SUSPENDED"
             ]
           }
