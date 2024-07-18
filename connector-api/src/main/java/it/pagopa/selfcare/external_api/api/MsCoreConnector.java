@@ -24,6 +24,8 @@ public interface MsCoreConnector {
 
     List<String> getInstitutionUserProductsV2(String institutionId, String id);
 
+    Institution getInstitution(String institutionId);
+
     String createPgInstitution(String description, String taxId);
 
 }

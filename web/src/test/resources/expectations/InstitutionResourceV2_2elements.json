@@ -13,7 +13,7 @@
     "taxCodeInvoicing": "example_tax_code_invoicing",
     "origin":"example_origin",
     "userProductRoles":[
-      "role1"
+      "admin","manager"
     ],
     "recipientCode":"example_recipient_code",
     "companyInformations":{
@@ -62,7 +62,7 @@
     "taxCodeInvoicing": "example_tax_code_invoicing",
     "origin":"example_origin",
     "userProductRoles":[
-      "role1"
+      "admin"
     ],
     "recipientCode":"example_recipient_code",
     "companyInformations":{

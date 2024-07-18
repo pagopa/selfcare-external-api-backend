@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.connector.rest.model.institution.Institut
 import it.pagopa.selfcare.external_api.model.institutions.AssistanceContacts;
 import it.pagopa.selfcare.external_api.model.institutions.CompanyInformations;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.institutions.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
@@ -85,6 +86,28 @@ public interface InstitutionMapper {
 
     @Named("toOffsetDateTime")
     default OffsetDateTime map(LocalDateTime localDateTime) {
+        return Optional.ofNullable(localDateTime)
+                .map(time -> time.atZone(ZoneId.systemDefault()).toOffsetDateTime())
+                .orElse(null);
+    }
+
+    @Mapping(target = "onboarding", source = "onboarding", qualifiedByName = "convertOnboading")
+    Institution toInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse body);
+
+    @Named("convertOnboading")
+    default Onboarding convertOnboarding(OnboardedProductResponse onboardedProductResponse) {
+        Onboarding onboarding = toOnboarding(onboardedProductResponse);
+        onboarding.setCreatedAt(convertDate(onboardedProductResponse.getCreatedAt()));
+        onboarding.setUpdatedAt(convertDate(onboardedProductResponse.getUpdatedAt()));
+        return onboarding;
+    }
+
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "closedAt", ignore = true)
+    Onboarding toOnboarding(OnboardedProductResponse onboardedProductResponse);
+
+    default OffsetDateTime convertDate(LocalDateTime localDateTime) {
         return Optional.ofNullable(localDateTime)
                 .map(time -> time.atZone(ZoneId.systemDefault()).toOffsetDateTime())
                 .orElse(null);
