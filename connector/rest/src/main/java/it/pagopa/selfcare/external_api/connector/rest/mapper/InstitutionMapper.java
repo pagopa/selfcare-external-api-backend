@@ -91,12 +91,12 @@ public interface InstitutionMapper {
                 .orElse(null);
     }
 
-    @Mapping(target = "onboarding", source = "onboarding", qualifiedByName = "convertOnboarding")
+    @Mapping(target = "onboarding", source = "onboarding", qualifiedByName = "toOnboardingWithDate")
     Institution toInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse body);
 
-    @Named("convertOnboarding")
-    default Onboarding convertOnboarding(OnboardedProductResponse onboardedProductResponse) {
-        Onboarding onboarding = toOnboarding(onboardedProductResponse);
+    @Named("toOnboardingWithDate")
+    default Onboarding toOnboardingWithDate(OnboardedProductResponse onboardedProductResponse) {
+        Onboarding onboarding = toOnboardingWithoutDate(onboardedProductResponse);
         onboarding.setCreatedAt(convertDate(onboardedProductResponse.getCreatedAt()));
         onboarding.setUpdatedAt(convertDate(onboardedProductResponse.getUpdatedAt()));
         return onboarding;
@@ -105,7 +105,7 @@ public interface InstitutionMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "closedAt", ignore = true)
-    Onboarding toOnboarding(OnboardedProductResponse onboardedProductResponse);
+    Onboarding toOnboardingWithoutDate(OnboardedProductResponse onboardedProductResponse);
 
     default OffsetDateTime convertDate(LocalDateTime localDateTime) {
         return Optional.ofNullable(localDateTime)

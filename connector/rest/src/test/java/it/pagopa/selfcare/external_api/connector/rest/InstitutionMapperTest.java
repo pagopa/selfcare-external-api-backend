@@ -20,7 +20,7 @@ public class InstitutionMapperTest {
     InstitutionMapperImpl institutionMapperImpl;
 
     @Test
-    void convertOnboarding(){
+    void toOnboardingWithDate(){
         InstitutionResponse institutionResponse = new InstitutionResponse();
         OnboardedProductResponse onboardedProductResponse = new OnboardedProductResponse();
         onboardedProductResponse.setProductId("productId");
