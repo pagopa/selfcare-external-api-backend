@@ -91,10 +91,10 @@ public interface InstitutionMapper {
                 .orElse(null);
     }
 
-    @Mapping(target = "onboarding", source = "onboarding", qualifiedByName = "convertOnboading")
+    @Mapping(target = "onboarding", source = "onboarding", qualifiedByName = "convertOnboarding")
     Institution toInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse body);
 
-    @Named("convertOnboading")
+    @Named("convertOnboarding")
     default Onboarding convertOnboarding(OnboardedProductResponse onboardedProductResponse) {
         Onboarding onboarding = toOnboarding(onboardedProductResponse);
         onboarding.setCreatedAt(convertDate(onboardedProductResponse.getCreatedAt()));
