@@ -1,10 +1,7 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
 import it.pagopa.selfcare.external_api.model.institutions.*;
-import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
-import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.web.model.institutions.InstitutionResource;
 import it.pagopa.selfcare.external_api.web.model.institutions.*;
 import org.mapstruct.Mapper;
@@ -19,6 +16,7 @@ import java.util.Set;
 public interface InstitutionResourceMapper {
 
     @Mapping(target = "recipientCode", source = "model.billing.recipientCode")
+    @Mapping(target = "taxCodeInvoicing", source = "model.billing.taxCodeInvoicing")
     @Mapping(target = "pspData", source = "model.paymentServiceProvider", qualifiedByName = "toPspDataResource")
     @Mapping(target = "companyInformations", source = "model.businessData", qualifiedByName = "toCompanyInformationResource")
     @Mapping(target = "assistanceContacts", source = "model.supportContact", qualifiedByName = "toAssistanceContactsResource")
@@ -43,6 +41,16 @@ public interface InstitutionResourceMapper {
     @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
     @Mapping(target = "userProductRoles", source = "productInfo", qualifiedByName = "toUserProductRoles")
     InstitutionResource toResource(OnboardedInstitutionInfo model);
+
+    @Mapping(target = "pspData", source = "paymentServiceProvider", qualifiedByName = "toPspDataResource")
+    @Mapping(target = "companyInformations.rea", source = "rea")
+    @Mapping(target = "companyInformations.shareCapital", source = "shareCapital")
+    @Mapping(target = "companyInformations.businessRegisterPlace", source = "businessRegisterPlace")
+    @Mapping(target = "assistanceContacts.supportPhone", source = "supportPhone")
+    @Mapping(target = "assistanceContacts.supportEmail", source = "supportEmail")
+    @Mapping(target = "dpoData", source = "dataProtectionOfficer", qualifiedByName = "toDpoDataResource")
+    @Mapping(target = "rootParent", source = "rootParent", qualifiedByName = "toRootParentResource")
+    InstitutionResource toResource(OnboardedInstitutionResource model);
 
     @Named("toUserProductRoles")
     static Collection<String> toUserProductRoles(ProductInfo productInfo) {

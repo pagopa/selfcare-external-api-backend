@@ -2,7 +2,10 @@ package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.api.MsCoreConnector;
 import it.pagopa.selfcare.external_api.api.UserMsConnector;
+import it.pagopa.selfcare.external_api.model.institutions.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
@@ -10,10 +13,13 @@ import it.pagopa.selfcare.onboarding.common.PartyRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Stream;
+
+import static it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus.ACTIVE;
 
 @Service
 @Slf4j
@@ -136,39 +142,51 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetailsActive(String userId, String productId) {
-        List<UserInstitution> institutionsWithProductActive = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, null)
+    public List<OnboardedInstitutionResource> getOnboardedInstitutionsDetailsActive(String userId, String productId) {
+        List<UserInstitution> institutionsWithProductActive = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, List.of(ACTIVE.name()))
                 .stream()
                 .filter(item -> Objects.nonNull(item.getProducts()))
-                .filter(item -> item.getProducts().stream()
-                        .filter(product -> Objects.nonNull(product.getProductId()))
-                        .anyMatch(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus())))
-                .peek(item -> item.setProducts(item.getProducts().stream()
-                        .filter(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus()))
-                        .toList()))
                 .toList();
 
-        List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
+        return institutionsWithProductActive.stream()
+                .map(userInstitution -> {
+                    Institution institution = msCoreConnector.getInstitution(userInstitution.getInstitutionId());
+                    OnboardedInstitutionResource onboardedInstitutionResource = null;
+                    if(Objects.nonNull(institution) && checkInstitutionOnboardingStatus(institution, productId)) {
+                        onboardedInstitutionResource = onboardingInstitutionMapper.toOnboardedInstitutionResource(institution, userInstitution, productId);
+                        retrieveBilling(institution, productId, onboardedInstitutionResource);
+                    }
+                    return onboardedInstitutionResource;
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
 
-        institutionsWithProductActive
-                .forEach(institution -> {
-                    List<OnboardedInstitutionInfo> institutionOnboardings = msCoreConnector.getInstitutionDetails(institution.getInstitutionId());
-                    onboardedInstitutionsInfo.addAll(institutionOnboardings.stream()
-                            .filter(onboardedInstitution -> RelationshipState.ACTIVE.name().equals(onboardedInstitution.getState()))
-                            .filter(onboardedInstitutionInfo -> institution.getProducts().stream()
-                                    .anyMatch(product -> product.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
-                            )
-                            .peek(onboardedInstitution -> {
-                                onboardedInstitution.getProductInfo().setRole(institution.getProducts().stream()
-                                        .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
-                                                product.getStatus().equals(onboardedInstitution.getProductInfo().getStatus()))
-                                        .map(OnboardedProductResponse::getProductRole).findFirst().orElse(null));
-                                onboardedInstitution.setUserMailUuid(institution.getUserMailUuid());
-                            })
-                            .toList());
-                });
+    private boolean checkInstitutionOnboardingStatus(Institution institution, String productId) {
+        return institution.getOnboarding().stream()
+                .anyMatch(onboarding -> productId.equalsIgnoreCase(onboarding.getProductId())
+                        && RelationshipState.ACTIVE.equals(onboarding.getStatus()));
+    }
 
-        return onboardedInstitutionsInfo;
+    private void retrieveBilling(Institution institution, String productId, OnboardedInstitutionResource onboardedInstitutionResource){
+        List<Billing> billingList = new ArrayList<>();
+
+        institution.getOnboarding().forEach(onboarding -> {
+            if (productId.equalsIgnoreCase(onboarding.getProductId())) {
+                if (Objects.nonNull(onboarding.getBilling())) {
+                    billingList.add(onboarding.getBilling());
+                } else if (Objects.nonNull(institution.getBilling())) {
+                    billingList.add(institution.getBilling());
+                }
+            }
+        });
+
+        Billing billing = billingList.stream().findFirst().orElse(null);
+
+        if (Objects.nonNull(billing)) {
+            onboardedInstitutionResource.setTaxCodeInvoicing(billing.getTaxCodeInvoicing());
+            onboardedInstitutionResource.setRecipientCode(billing.getRecipientCode());
+        }
     }
 
     @Override

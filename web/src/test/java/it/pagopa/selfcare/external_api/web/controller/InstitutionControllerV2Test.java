@@ -6,7 +6,7 @@ import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
@@ -68,8 +68,8 @@ class InstitutionControllerV2Test extends BaseControllerTest{
 
         ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
         byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
-        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
-        onboardedInstitutionInfos.forEach(onboardedInstitutionInfo -> onboardedInstitutionInfo.setState("ACTIVE"));
+        List<OnboardedInstitutionResource> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
+        onboardedInstitutionInfos.forEach(onboardedInstitutionInfo -> onboardedInstitutionInfo.setStatus("ACTIVE"));
 
         ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2_2elements.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
@@ -105,7 +105,8 @@ class InstitutionControllerV2Test extends BaseControllerTest{
 
         ClassPathResource inputResource = new ClassPathResource("expectations/OnboardedInstitutionInfo.json");
         byte[] institutionInfoStream = Files.readAllBytes(inputResource.getFile().toPath());
-        List<OnboardedInstitutionInfo> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
+        List<OnboardedInstitutionResource> onboardedInstitutionInfos = objectMapper.readValue(institutionInfoStream, new TypeReference<>() {});
+        onboardedInstitutionInfos.remove(1);
 
         ClassPathResource outputResource = new ClassPathResource("expectations/InstitutionResourceV2_1element.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));

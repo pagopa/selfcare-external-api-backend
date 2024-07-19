@@ -1,11 +1,11 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapperImpl;
+import it.pagopa.selfcare.external_api.connector.rest.mapper.UserResourceMapperImpl;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.config.BaseConnectorTest;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.UserMapperImpl;
-import it.pagopa.selfcare.external_api.connector.rest.mapper.UserResourceMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
@@ -85,7 +85,7 @@ class UserMsConnectorImplTest extends BaseConnectorTest {
     }
 
     @Test
-    public void searchUserByExternalId_returnsUser() {
+    void searchUserByExternalId_returnsUser() {
 
         String fiscalCode = "fiscalCode";
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);
@@ -103,7 +103,7 @@ class UserMsConnectorImplTest extends BaseConnectorTest {
     }
 
     @Test
-    public void searchUserByExternalId_returnsNull_whenUserDoesNotExist() {
+    void searchUserByExternalId_returnsNull_whenUserDoesNotExist() {
 
         String fiscalCode = "fiscalCode";
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);
