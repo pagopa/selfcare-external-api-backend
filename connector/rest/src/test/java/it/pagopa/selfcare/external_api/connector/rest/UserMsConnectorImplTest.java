@@ -85,7 +85,7 @@ class UserMsConnectorImplTest extends BaseConnectorTest {
     }
 
     @Test
-    public void searchUserByExternalId_returnsUser() {
+    void searchUserByExternalId_returnsUser() {
 
         String fiscalCode = "fiscalCode";
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);
@@ -103,7 +103,7 @@ class UserMsConnectorImplTest extends BaseConnectorTest {
     }
 
     @Test
-    public void searchUserByExternalId_returnsNull_whenUserDoesNotExist() {
+    void searchUserByExternalId_returnsNull_whenUserDoesNotExist() {
 
         String fiscalCode = "fiscalCode";
         SearchUserDto searchUserDto = new SearchUserDto(fiscalCode);

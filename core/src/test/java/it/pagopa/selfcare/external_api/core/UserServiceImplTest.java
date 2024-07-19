@@ -8,7 +8,6 @@ import it.pagopa.selfcare.external_api.model.institutions.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
-import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.*;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +42,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
     private OnboardingInstitutionMapperImpl onboardingInstitutionMapper;
 
     @BeforeEach
-    public void setUp() {
+    public void init() {
         super.setUp();
     }
 

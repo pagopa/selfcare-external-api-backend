@@ -6,7 +6,6 @@ import it.pagopa.selfcare.external_api.core.ContractService;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;

@@ -139,7 +139,8 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
 
     @Override
     public Institution getInstitution(String institutionId) {
-        return institutionMapper.toInstitution(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId).getBody());
+        return institutionMapper.toInstitution(Objects.requireNonNull(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId))
+                .getBody());
     }
 
 
