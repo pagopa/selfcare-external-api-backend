@@ -146,7 +146,6 @@ public class UserServiceImpl implements UserService {
         List<UserInstitution> institutionsWithProductActive = userMsConnector.getUsersInstitutions(userId, null, null, null, null, Objects.isNull(productId) ? null : List.of(productId), null, List.of(ACTIVE.name()))
                 .stream()
                 .filter(item -> Objects.nonNull(item.getProducts()))
-                .map(userInstitution -> filterProductList(userInstitution, productId))
                 .toList();
 
         return institutionsWithProductActive.stream()
@@ -188,16 +187,6 @@ public class UserServiceImpl implements UserService {
             onboardedInstitutionResource.setTaxCodeInvoicing(billing.getTaxCodeInvoicing());
             onboardedInstitutionResource.setRecipientCode(billing.getRecipientCode());
         }
-    }
-
-    private UserInstitution filterProductList(UserInstitution userInstitution, String productId) {
-        if (StringUtils.hasText(productId)) {
-            userInstitution.setProducts(userInstitution.getProducts().stream()
-                    .filter(product -> product.getProductId().equals(productId) && RelationshipState.ACTIVE.name().equals(product.getStatus()))
-                    .toList());
-        }
-
-        return userInstitution;
     }
 
     @Override
