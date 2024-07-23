@@ -44,6 +44,7 @@ jobs:
         contents: write
         pull-requests: write
         actions: write
+        id-token: write
       with:
         selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
         selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
