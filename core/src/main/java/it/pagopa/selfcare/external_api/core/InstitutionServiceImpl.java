@@ -83,7 +83,7 @@ class InstitutionServiceImpl implements InstitutionService {
         List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, institutionId, null, null, productRolesList, List.of(productId), null, List.of(ACTIVE.name()));
         if(Objects.isNull(usersInstitutions) || usersInstitutions.isEmpty()) return List.of();
         Collection<UserProductResponse> userProductResponses = usersInstitutions.stream()
-                .filter(userInstitution -> Objects.nonNull(userInstitution.getProducts()))
+                .filter(userInstitution -> !CollectionUtils.isEmpty(userInstitution.getProducts()))
                 .map(userInstitution -> {
                     UserProductResponse userProduct = new UserProductResponse();
                     userProduct.setUserMailUuid(userInstitution.getUserMailUuid());
