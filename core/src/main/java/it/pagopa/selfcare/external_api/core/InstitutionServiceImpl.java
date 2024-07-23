@@ -83,6 +83,7 @@ class InstitutionServiceImpl implements InstitutionService {
         List<UserInstitution> usersInstitutions = userMsConnector.getUsersInstitutions(userId, institutionId, null, null, productRolesList, List.of(productId), null, List.of(ACTIVE.name()));
         if(Objects.isNull(usersInstitutions) || usersInstitutions.isEmpty()) return List.of();
         Collection<UserProductResponse> userProductResponses = usersInstitutions.stream()
+                .filter(userInstitution -> Objects.nonNull(userInstitution.getProducts()))
                 .map(userInstitution -> {
                     UserProductResponse userProduct = new UserProductResponse();
                     userProduct.setUserMailUuid(userInstitution.getUserMailUuid());
@@ -105,7 +106,7 @@ class InstitutionServiceImpl implements InstitutionService {
                 .map(PartyRole::valueOf)
                 .toList();
 
-        return Collections.min(roles);
+        return CollectionUtils.isEmpty(roles) ? null : Collections.min(roles);
     }
 
     private User retrieveUserFromUserRegistry(UserInstitution userInstitution, String xSelfCareUid) {
