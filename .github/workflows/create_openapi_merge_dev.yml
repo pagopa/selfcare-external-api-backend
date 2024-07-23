@@ -43,6 +43,7 @@ jobs:
       permissions:
         contents: write
         pull-requests: write
+        actions: write
       with:
         selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
         selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
