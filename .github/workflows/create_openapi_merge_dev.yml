@@ -40,6 +40,9 @@ jobs:
       uses: ./.github/workflows/call_openapi_merge.yml
       name: "Create OpenAPI merge"
       secrets: inherit
+      permissions:
+        contents: write
+        pull-requests: write
       with:
         selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
         selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
