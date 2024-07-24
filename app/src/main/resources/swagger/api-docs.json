@@ -1301,7 +1301,7 @@
           "explode" : true,
           "schema" : {
             "type" : "string",
-            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           }
         }, {
           "name" : "states",
