@@ -8,14 +8,14 @@
         "productId": "productId",
         "status": "ACTIVE",
         "role": "DELEGATE",
-        "productRole": "productRole",
+        "productRole": "admin",
         "createdAt": "2022-08-08T09:13:00.837Z"
       },
     {
       "productId": "productId",
       "status": "ACTIVE",
       "role": "DELEGATE",
-      "productRole": "productRole",
+      "productRole": "operator",
       "createdAt": "2022-08-08T09:13:00.837Z"
     }
     ]

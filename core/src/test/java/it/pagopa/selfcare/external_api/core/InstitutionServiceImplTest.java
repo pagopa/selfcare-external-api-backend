@@ -11,8 +11,8 @@ import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
 import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInfo;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
+import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.product.entity.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
+import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -127,8 +128,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     void getInstitutionProductUserWithoutInstitutionId() {
         String productId = "productId";
         String userId = "userId";
-        Optional<Set<String>> productRole = Optional.empty();
-        Executable executable = () -> institutionService.getInstitutionProductUsersV2(null, productId, userId, productRole, null);
+        Executable executable = () -> institutionService.getInstitutionProductUsersV2(null, productId, userId, null, null);
         IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals("An Institution id is required", e.getMessage());
     }
@@ -137,8 +137,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     void getInstitutionProductUserWithoutProductId() {
         String institutionId = "institutionId";
         String userId = "userId";
-        Optional<Set<String>> productRole = Optional.empty();
-        Executable executable = () -> institutionService.getInstitutionProductUsersV2(institutionId, null, userId, productRole, null);
+        Executable executable = () -> institutionService.getInstitutionProductUsersV2(institutionId, null, userId, null, null);
         IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, executable);
         Assertions.assertEquals("A Product id is required", e.getMessage());
     }
@@ -147,7 +146,6 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     void getInstitutionProductUserV2EmptyList() throws Exception {
         String institutionId = "institutionId";
         String productId = "productId";
-        Optional<Set<String>> productRole = Optional.empty();
         String userId = UUID.randomUUID().toString();
         String xSelfCareUid = "onboarding-interceptor";
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
@@ -158,7 +156,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
         when(userRegistryConnectorMock.getUserByInternalId(eq(userId), any())).thenReturn(user);
-        Collection<UserInfo> expectation = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, xSelfCareUid);
+        Collection<UserProductResponse> expectation = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
         Assertions.assertEquals(0, expectation.size());
     }
 
@@ -166,24 +164,23 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     void getInstitutionProductUserV2WithUuidInServiceType() throws Exception {
         String institutionId = "id";
         String productId = "productId";
-        Optional<Set<String>> productRole = Optional.empty();
         String userId = "123e4567-e89b-12d3-a456-426614174000";
         String xSelfCareUid = "onboarding-interceptor";
 
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitutionV2.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
-        when(userMsConnectorMock.getUsersInstitutions(userId, institutionId, null, null, null, null, null,null)).thenReturn(userInstitutions);
+        when(userMsConnectorMock.getUsersInstitutions(userId, institutionId, null, null, null, List.of(productId), null,List.of(ACTIVE.name()))).thenReturn(userInstitutions);
 
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
         when(userRegistryConnectorMock.getUserByInternalId(eq(userId), any())).thenReturn(user);
-        Collection<UserInfo> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, xSelfCareUid);
+        Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 
         ClassPathResource userInfoResource = new ClassPathResource("expectations/UserInfoV2.json");
         byte[] userInfoStrean = Files.readAllBytes(userInfoResource.getFile().toPath());
-        List<UserInfo> expectation = objectMapper.readValue(userInfoStrean, new TypeReference<>() {});
+        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStrean, new TypeReference<>() {});
 
         Assertions.assertEquals(1, expectation.size());
         Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));
@@ -193,25 +190,23 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     void getInstitutionProductUserV2WithoutUuidInServiceType() throws Exception {
         String institutionId = "id";
         String productId = "productId";
-        Optional<Set<String>> productRole = Optional.empty();
         String userId = "123e4567-e89b-12d3-a456-426614174000";
         String xSelfCareUid = "uuid";
 
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitutionV2.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
-        when(userMsConnectorMock.getUsersInstitutions(userId, institutionId, null, null, null, null, null,null)).thenReturn(userInstitutions);
-
+        when(userMsConnectorMock.getUsersInstitutions(userId, institutionId, null, null, null, List.of(productId), null,List.of(ACTIVE.name()))).thenReturn(userInstitutions);
         ClassPathResource userResource = new ClassPathResource("expectations/UserV2.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
         when(userRegistryConnectorMock.getUserByInternalId(eq(userId), any())).thenReturn(user);
 
-        Collection<UserInfo> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, productRole, xSelfCareUid);
+        Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 
         ClassPathResource userInfoResource = new ClassPathResource("expectations/UserInfoWithoutTaxCode.json");
         byte[] userInfoStream = Files.readAllBytes(userInfoResource.getFile().toPath());
-        List<UserInfo> expectation = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
+        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
 
         Assertions.assertEquals(1, expectation.size());
         Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));

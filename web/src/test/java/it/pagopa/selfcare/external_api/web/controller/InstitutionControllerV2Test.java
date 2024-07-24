@@ -7,9 +7,9 @@ import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
-import it.pagopa.selfcare.external_api.model.user.UserInfo;
+import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
+import it.pagopa.selfcare.external_api.web.model.mapper.*;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
-import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapperImpl;
 import it.pagopa.selfcare.product.entity.Product;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +58,9 @@ class InstitutionControllerV2Test extends BaseControllerTest{
     private ProductsMapper productsMapper = new ProductsMapperImpl();
     @Spy
     private InstitutionResourceMapperImpl institutionResourceMapperImpl;
+
+    @Spy
+    private it.pagopa.selfcare.external_api.web.model.mapper.UserInfoResourceMapperImpl userInfoResourceMapper;
 
     @BeforeEach
     void setUp(){
@@ -251,7 +255,7 @@ class InstitutionControllerV2Test extends BaseControllerTest{
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
         byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<UserInfo> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
+        List<UserProductResponse> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
 
         ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
@@ -271,7 +275,7 @@ class InstitutionControllerV2Test extends BaseControllerTest{
     @Test
     void getInstitutionProductsUsersWithEmptyList() throws Exception {
 
-        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
+        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, null, null))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
@@ -290,12 +294,12 @@ class InstitutionControllerV2Test extends BaseControllerTest{
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
         byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<UserInfo> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
+        Collection<UserProductResponse> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
 
         ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 
-        when(institutionService.getInstitutionProductUsersV2(any(), any(), any(), any(), any())).thenReturn(userInfo);
+        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, null, null)).thenReturn(userInfo);
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/users", "testInstitutionId")
                         .param("productId", "testProductId")
@@ -311,7 +315,7 @@ class InstitutionControllerV2Test extends BaseControllerTest{
     @Test
     void getInstitutionUsersByProductsWithEmptyList() throws Exception {
 
-        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, java.util.Optional.empty(), null))
+        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, null, null))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/v2/institutions/{institutionId}/users", "testInstitutionId")
