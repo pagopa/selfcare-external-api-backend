@@ -3,7 +3,7 @@
     "info": {
       "title": "Contract API service",
       "description": "This service is the proxy for getting file contract ",
-      "version": "0.0.1-SNAPSHOT"
+      "version": "1.0.0"
     },
     "servers": [
       {

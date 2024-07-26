@@ -3,7 +3,7 @@
   "info": {
     "title": "selc-user-group",
     "description": "The services described in this section deal with the management of UserGroup entity, providing the necessary  methods for its creation, consultation and activation.",
-    "version": "1.0-SNAPSHOT"
+    "version": "1.0.0"
   },
   "servers": [
     {
