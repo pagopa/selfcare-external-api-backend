@@ -11,6 +11,22 @@ on:
             type: boolean
             description: Enable creation of Selc External Contract API
             default: True
+          selc-ms-internal-api:
+            type: boolean
+            description: Enable creation of Selc Internal API
+            default: True
+          selc-support-service:
+            type: boolean
+            description: Enable creation of Selc Support Service API
+            default: True
+          pnpg-ms-external-api:
+            type: boolean
+            description: Enable creation of PNPG External API
+            default: True
+          pnpg-support-service:
+            type: boolean
+            description: Enable creation of PNPG Support Service API
+            default: True
           env:
             type: choice
             description: Environment
@@ -27,5 +43,9 @@ jobs:
       with:
         selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
         selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
+        selc-ms-internal-api: ${{ inputs.selc-ms-internal-api }}
+        selc-support-service: ${{ inputs.selc-support-service }}
+        pnpg-ms-external-api: ${{ inputs.pnpg-ms-external-api }}
+        pnpg-support-service: ${{ inputs.pnpg-support-service }}
         env: ${{ inputs.env }}
     
