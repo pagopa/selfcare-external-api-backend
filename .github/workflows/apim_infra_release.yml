@@ -88,7 +88,7 @@ jobs:
                 tenant_id: ${{ vars.ARM_TENANT_ID }}
                 subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
                 dir: ${{ env.DIR }}
-                azure_environment: ${{ inputs.tf_environment }}
+                azure_environment: ${{ needs.setup.outputs.environ }}
                 env:
                 TF_VAR_image_tag: ${{ steps.setsha.outputs.short_sha }}
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,15 +97,15 @@ jobs:
               uses: actions/upload-artifact@694cdabd8bdb0f10b2cea11669e1bf5453eed0a6 # v4.2.0
               with:
                 name: tfplan
-                path: ${{ env.DIR }}/tfplan-${{ inputs.tf_environment }}-${{ github.sha }}
+                path: ${{ env.DIR }}/tfplan-${{ needs.setup.outputs.environ }}-${{ github.sha }}
                 if-no-files-found: error
                 retention-days: 14
 
     release:
         name: 'Release'
         runs-on: ubuntu-20.04
-        needs: [tf_plan]
-        environment: ${{ inputs.environment }}-cd
+        needs: [setup,tf_plan]
+        environment: ${{ needs.setup.outputs.environ }}-cd
         permissions:
           id-token: write
           contents: read
@@ -149,13 +149,13 @@ jobs:
             shell: bash
             working-directory: ${{ env.DIR }}
             run: |
-              bash ./terraform.sh init ${{ inputs.tf_environment }}
+              bash ./terraform.sh init ${{ needs.setup.outputs.environ }}
 
           - name: Terraform Apply
             shell: bash
             working-directory: ${{ env.DIR }}
             run: |
-              terraform apply -lock-timeout=3000s -auto-approve -input=false tfplan-${{ inputs.tf_environment }}-${{ github.sha }}
+              terraform apply -lock-timeout=3000s -auto-approve -input=false tfplan-${{ needs.setup.outputs.environ }}-${{ github.sha }}
             env:
               TF_VAR_image_tag: ${{ needs.tf_plan.outputs.image_tag }}
 
