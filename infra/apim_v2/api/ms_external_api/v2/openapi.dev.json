@@ -3,7 +3,7 @@
   "info": {
     "title": "selc-external-api",
     "description": "This service acts as an orchestrator for information coming from different services and as a proxy",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "servers": [
     {
