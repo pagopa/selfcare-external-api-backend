@@ -46,13 +46,12 @@
         <choose>
             <when condition="@(context.Response.StatusCode == 200)">
                 <set-body>@{
-                    JObject response = context.Response.Body.As<JObject>();
-                    JArray onboardedInstitutions = (JArray)response["onboardedInstitutions"];
-                    foreach(JObject item in onboardedInstitutions.Children<JObject>()) {
-                        item.Add("logo", new JValue(new Uri($"${LOGO_URL}/institutions/" + item.GetValue("id") + "/logo.png")));
+                    JArray response = context.Response.Body.As<JArray>();
+                    foreach(JObject item in response.Children()) {
+                    item.Add("logo", new JValue(new Uri("${LOGO_URL}/institutions/" + item.GetValue("id") + "/logo.png")));
                     }
                     return response.ToString();
-                }</set-body>
+                    }</set-body>
             </when>
         </choose>
     </outbound>
