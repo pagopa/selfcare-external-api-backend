@@ -542,6 +542,7 @@ module "apim_external_api_ms_v2" {
       xml_content = templatefile("./api/ms_external_api/v2/getUserInstitutionUsingGet_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
         API_DOMAIN                 = local.api_domain
+        LOGO_URL                   = "https://${local.logo_api_domain}"
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
         TENANT_ID                  = data.azurerm_client_config.current.tenant_id
