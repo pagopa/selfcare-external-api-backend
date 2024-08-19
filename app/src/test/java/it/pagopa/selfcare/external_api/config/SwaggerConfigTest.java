@@ -1,8 +1,7 @@
 package it.pagopa.selfcare.external_api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.pagopa.selfcare.external_api.config.SwaggerConfig;
-import it.pagopa.selfcare.external_api.config.WebConfig;
+import it.pagopa.selfcare.external_api.mapper.*;
 import it.pagopa.selfcare.external_api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @EnableOpenApi
 @EnableWebMvc
-@ComponentScan(basePackages = {"it.pagopa.selfcare.external_api.web.controller","it.pagopa.selfcare.external_api.web.model" })
+@ComponentScan(basePackages = {"it.pagopa.selfcare.external_api.controller","it.pagopa.selfcare.external_api.model" })
 @TestPropertySource(locations = "classpath:config/application.yml")
 @Slf4j
 class SwaggerConfigTest {
@@ -45,6 +44,24 @@ class SwaggerConfigTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private InstitutionResourceMapper institutionResourceMapper;
+
+    @MockBean
+    private ProductsMapper productsMapper;
+
+    @MockBean
+    private UserInfoResourceMapper userInfoResourceMapper;
+
+    @MockBean
+    private NationalRegistryMapper nationalRegistryMapper;
+
+    @MockBean
+    private OnboardingResourceMapper onboardingResourceMapper;
+
+    @MockBean
+    private TokenResourceMapper tokenResourceMapper;
 
     @MockBean
     private OnboardingService onboardingService;

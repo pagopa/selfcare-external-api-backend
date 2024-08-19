@@ -20,6 +20,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static it.pagopa.selfcare.commons.web.swagger.BaseSwaggerConfig.*;
 
@@ -57,11 +58,11 @@ public class SwaggerConfig {
     public Docket swaggerSpringPlugin(@Autowired TypeResolver typeResolver) {
         return (new Docket(DocumentationType.OAS_30))
                 .apiInfo(new ApiInfoBuilder()
-                        .title(environment.getProperty("swagger.title", environment.getProperty("spring.application.name")))
+                        .title(environment.getProperty("swagger.title", Objects.requireNonNull(environment.getProperty("spring.application.name"))))
                         .description(environment.getProperty("swagger.description", "Api and Models"))
-                        .version(environment.getProperty("swagger.version", environment.getProperty("spring.application.version")))
+                        .version(environment.getProperty("swagger.version", Objects.requireNonNull(environment.getProperty("spring.application.version"))))
                         .build())
-                .select().apis(RequestHandlerSelectors.basePackage("it.pagopa.selfcare.external_api.web.controller")).build()
+                .select().apis(RequestHandlerSelectors.basePackage("it.pagopa.selfcare.external_api.controller")).build()
                 .directModelSubstitute(LocalTime.class, String.class)
                 .ignoredParameterTypes(Pageable.class)
                 .forCodeGeneration(true)
