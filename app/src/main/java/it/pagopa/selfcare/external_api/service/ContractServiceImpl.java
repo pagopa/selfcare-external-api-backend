@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -54,7 +56,9 @@ public class ContractServiceImpl implements ContractService {
                         .getBody())
                 .getOnboardings();
 
-        InstitutionOnboarding institutionOnboarding =  onboardings.stream()
+        InstitutionOnboarding institutionOnboarding = Optional.ofNullable(onboardings)
+                .orElse(Collections.emptyList())
+                .stream()
                 .findFirst()
                 .map(institutionMapper::toEntity)
                 .orElseThrow(ResourceNotFoundException::new);

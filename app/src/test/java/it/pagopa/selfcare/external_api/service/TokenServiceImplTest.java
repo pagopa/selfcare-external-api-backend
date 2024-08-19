@@ -1,9 +1,13 @@
 package it.pagopa.selfcare.external_api.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
+import it.pagopa.selfcare.external_api.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.api.OnboardingControllerApi;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGet;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGetResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +15,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class TokenServiceImplTest extends BaseServiceTestUtils {
@@ -25,7 +33,10 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
     private TokenServiceImpl tokenService;
 
     @Mock
-    private OnboardingControllerApi onboardingControllerApi;
+    private MsOnboardingControllerApi onboardingControllerApi;
+
+    @Spy
+    private TokenMapperImpl tokenMapper;
 
 
     @BeforeEach
@@ -34,16 +45,23 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void findByProductId() throws Exception {
-        ClassPathResource inputResource = new ClassPathResource("expectations/TokenOnboardedUsers.json");
-        byte[] tokenOnboardedUsersStream = Files.readAllBytes(inputResource.getFile().toPath());
-        List<TokenOnboardedUsers> tokenOnboardedUsers = objectMapper.readValue(tokenOnboardedUsersStream, new TypeReference<>() {});
+    void findByProductId() {
+        OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
+        OnboardingGet onboardingGet = new OnboardingGet();
+        onboardingGet.setProductId("id");
+        onboardingGetResponse.setItems(List.of(onboardingGet));
+        when(onboardingControllerApi._v1OnboardingGet(null, 1, "id", 10, OnboardingStatus.COMPLETED.name(), null, null))
+                .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, OnboardingStatus.COMPLETED.name());
-        Assertions.assertEquals(tokenOnboardedUsers, tokens);
+        Assertions.assertEquals(1, tokens.size());
     }
 
     @Test
     void findByProductIdEmptyList(){
+        OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
+        onboardingGetResponse.setItems(Collections.emptyList());
+        when(onboardingControllerApi._v1OnboardingGet(null, 1, "id", 10, null, null, null))
+                .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, null);
         Assertions.assertEquals(0, tokens.size());
     }

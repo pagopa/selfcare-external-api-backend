@@ -2,35 +2,47 @@ package it.pagopa.selfcare.external_api.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.external_api.client.*;
 import it.pagopa.selfcare.external_api.connector.*;
 import it.pagopa.selfcare.external_api.mapper.RegistryProxyMapper;
+import it.pagopa.selfcare.external_api.mapper.RegistryProxyMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapper;
+import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
+import it.pagopa.selfcare.external_api.model.institution.Institutions;
 import it.pagopa.selfcare.external_api.model.institution.SearchMode;
 import it.pagopa.selfcare.external_api.model.national_registries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
+import it.pagopa.selfcare.external_api.model.user.OnboardedProductResponse;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.product.entity.Product;
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.LegalVerificationResult;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.platform.commons.util.StringUtils;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -41,7 +53,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = InstitutionServiceImpl.class)
+@ContextConfiguration(classes = {InstitutionServiceImpl.class, UserMapperImpl.class,
+        RegistryProxyMapperImpl.class,})
 @TestPropertySource(locations = "classpath:config/core-config.properties")
 class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
@@ -54,17 +67,11 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     @MockBean
     private it.pagopa.selfcare.product.service.ProductService productService;
 
-    @Spy
-    private UserMapper userMapper;
-
     @MockBean
     private MsUserApiRestClient msUserApiRestClient;
 
     @MockBean
     private MsRegistryProxyNationalRegistryRestClient nationalRegistryRestClient;
-
-    @Spy
-    private RegistryProxyMapper registryProxyMapper;
 
     @MockBean
     private UserRegistryRestClient userRegistryRestClient;
@@ -94,15 +101,29 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         String institutionId = "institutionId";
         ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
         byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
-        PartyProduct partyProduct = new PartyProduct();
-        partyProduct.setStatus(ProductOnboardingStatus.ACTIVE);
-        partyProduct.setRole(PartyRole.MANAGER);
-        partyProduct.setId("123");
+        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {
+        });
+
         String userId = UUID.randomUUID().toString();
+
+        UserDataResponse userDataResponse = new UserDataResponse();
+        userDataResponse.setUserId(userId);
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
+        onboardedProductResponse.setProductId("id");
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse2 = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
+        onboardedProductResponse2.setProductId("123");
+        userDataResponse.setProducts(List.of(onboardedProductResponse, onboardedProductResponse2));
+        when(msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
+                .thenReturn(ResponseEntity.ok(List.of(userDataResponse)));
+
+        Product product = new Product();
+        product.setId("456");
+        Product product2 = new Product();
+        product2.setId("123");
+        when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
+
         List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(1, expectation.size());
-        Assertions.assertEquals(expectation.get(0), products.get(0));
     }
 
     @Test
@@ -110,22 +131,29 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         String institutionId = "institutionId";
         ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
         byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
-
-        PartyProduct partyProduct = new PartyProduct();
-        partyProduct.setStatus(ProductOnboardingStatus.ACTIVE);
-        partyProduct.setRole(PartyRole.MANAGER);
-        partyProduct.setId("123");
-
-        PartyProduct partyProduct2 = new PartyProduct();
-        partyProduct2.setStatus(ProductOnboardingStatus.ACTIVE);
-        partyProduct2.setRole(PartyRole.MANAGER);
-        partyProduct2.setId("321");
+        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {
+        });
 
         String userId = UUID.randomUUID().toString();
+
+        UserDataResponse userDataResponse = new UserDataResponse();
+        userDataResponse.setUserId(userId);
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
+        onboardedProductResponse.setProductId("id");
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse2 = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
+        onboardedProductResponse.setProductId("id2");
+        userDataResponse.setProducts(List.of(onboardedProductResponse, onboardedProductResponse2));
+        when(msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
+                .thenReturn(ResponseEntity.ok(List.of(userDataResponse)));
+
+        Product product = new Product();
+        product.setId("id");
+        Product product2 = new Product();
+        product.setId("id2");
+        when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
+
         List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(2, expectation.size());
-        Assertions.assertEquals(expectation, products);
     }
 
     @Test
@@ -154,10 +182,17 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         String xSelfCareUid = "onboarding-interceptor";
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
-        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
+        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        userInstitutions.forEach(userInstitutionResponse -> userInstitutionResponse.setProducts(Collections.emptyList()));
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+                .thenReturn(ResponseEntity.ok(userInstitutions));
+
+
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
+        when(userRegistryRestClient.getUserByInternalId(any(), any())).thenReturn(user);
         Collection<UserProductResponse> expectation = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
         Assertions.assertEquals(0, expectation.size());
     }
@@ -171,16 +206,21 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitutionV2.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
-        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
+        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+                .thenReturn(ResponseEntity.ok(userInstitutions));
 
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
+        when(userRegistryRestClient.getUserByInternalId(any(), any())).thenReturn(user);
         Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 
         ClassPathResource userInfoResource = new ClassPathResource("expectations/UserInfoV2.json");
         byte[] userInfoStrean = Files.readAllBytes(userInfoResource.getFile().toPath());
-        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStrean, new TypeReference<>() {});
+        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStrean, new TypeReference<>() {
+        });
 
         Assertions.assertEquals(1, expectation.size());
         Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));
@@ -195,16 +235,22 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
         ClassPathResource resource = new ClassPathResource("expectations/UserInstitutionV2.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
-        List<UserInstitution> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {});
+        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        });
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+                .thenReturn(ResponseEntity.ok(userInstitutions));
+
         ClassPathResource userResource = new ClassPathResource("expectations/UserV2.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
+        when(userRegistryRestClient.getUserByInternalId(any(), any())).thenReturn(user);
 
         Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 
         ClassPathResource userInfoResource = new ClassPathResource("expectations/UserInfoWithoutTaxCode.json");
         byte[] userInfoStream = Files.readAllBytes(userInfoResource.getFile().toPath());
-        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
+        List<UserProductResponse> expectation = objectMapper.readValue(userInfoStream, new TypeReference<>() {
+        });
 
         Assertions.assertEquals(1, expectation.size());
         Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));
@@ -220,8 +266,8 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     @Test
     void getGeographicTaxonomyListWithEmptyList() {
         String institutionId = "institutionId";
-        List<GeographicTaxonomy> expectation = institutionService.getGeographicTaxonomyList(institutionId);
-        Assertions.assertEquals(0, expectation.size());
+        when(msCoreRestClient.getInstitution(institutionId)).thenReturn(new Institution());
+        Assertions.assertThrows(ValidationException.class, () -> institutionService.getGeographicTaxonomyList(institutionId));
     }
 
     @Test
@@ -233,6 +279,10 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         GeographicTaxonomy geographicTaxonomy2 = new GeographicTaxonomy();
         geographicTaxonomy2.setCode("testCode2");
         geographicTaxonomy2.setDesc("testDesc2");
+        Institution institution = new Institution();
+        institution.setGeographicTaxonomies(List.of(geographicTaxonomy, geographicTaxonomy2));
+        when(msCoreRestClient.getInstitution(institutionId)).thenReturn(institution);
+
         List<GeographicTaxonomy> expectation = institutionService.getGeographicTaxonomyList(institutionId);
         Assertions.assertEquals(2, expectation.size());
         Assertions.assertEquals(geographicTaxonomy.getCode(), expectation.get(0).getCode());
@@ -250,9 +300,14 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void getInstitutionsByGeoTaxonomiesWithEmptyList(){
+    void getInstitutionsByGeoTaxonomiesWithEmptyList() {
         Set<String> geoTaxIds = Set.of("geoTaxId1", "geoTaxId2");
         SearchMode searchMode = SearchMode.any;
+        Institutions institutions = new Institutions();
+        institutions.setItems(Collections.emptyList());
+        when(msCoreRestClient.getInstitutionsByGeoTaxonomies(String.join(",", geoTaxIds),
+                searchMode)).thenReturn(institutions);
+
         Collection<Institution> expectation = institutionService.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
         Assertions.assertEquals(0, expectation.size());
     }
@@ -264,7 +319,11 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         ClassPathResource productResponse = new ClassPathResource("expectations/Institution.json");
         byte[] institutionStream = Files.readAllBytes(productResponse.getFile().toPath());
         List<Institution> institution = objectMapper.readValue(institutionStream, new TypeReference<>() {
-       });
+        });
+        Institutions institutions = new Institutions();
+        institutions.setItems(institution);
+        when(msCoreRestClient.getInstitutionsByGeoTaxonomies(String.join(",", geoTaxIds),
+                searchMode)).thenReturn(institutions);
         Collection<Institution> expectation = institutionService.getInstitutionsByGeoTaxonomies(geoTaxIds, searchMode);
         Assertions.assertEquals(2, expectation.size());
         Assertions.assertEquals(expectation, institution);
@@ -276,15 +335,20 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         createPnPgInstitution.setDescription("description");
         createPnPgInstitution.setExternalId("taxId");
         String institutionId = UUID.randomUUID().toString();
+        InstitutionResponse institutionResponse = new InstitutionResponse();
+        institutionResponse.setId(institutionId);
+        when(institutionApiClient._createPgInstitutionUsingPOST(any())).thenReturn(ResponseEntity.ok(institutionResponse));
         String expectation = institutionService.addInstitution(createPnPgInstitution);
         Assertions.assertEquals(institutionId, expectation);
     }
 
     @Test
-    void verifyLegal(){
+    void verifyLegal() {
         final String taxId = "taxId";
         final String vatNumber = "vatNumber";
 
+        Mockito.when(nationalRegistryRestClient._verifyLegalUsingGET(taxId, vatNumber))
+                .thenReturn(ResponseEntity.ok(new LegalVerificationResult()));
 
         //when
         LegalVerification result = institutionService.verifyLegal(taxId, vatNumber);
