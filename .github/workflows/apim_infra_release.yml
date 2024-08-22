@@ -33,7 +33,6 @@ jobs:
     setup:
       name: Setup Environment
       runs-on: 'ubuntu-latest'
-      if: false
       outputs:
         environ: ${{ steps.set-env.outputs.environ }}
       steps:
@@ -52,6 +51,7 @@ jobs:
     tf_plan:
         name: 'Terraform Plan'
         runs-on: ubuntu-20.04
+        if: false
         environment: ${{ needs.setup.outputs.environ }}-ci
         needs: setup
         permissions:
