@@ -196,7 +196,7 @@ jobs:
               az storage blob upload --auth-mode key \
                 --container '$web' \
                 --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa \
-                --file "${{ env.DIR }}/api/ms_external_api/v2/openapi${{ needs.setup.outputs.environ }}.json" \
+                --file "${{ env.DIR }}/api/ms_external_api/v2/openapi.${{ needs.setup.outputs.environ }}.json" \
                 --overwrite true \
                 --name 'developer/external/v2/ms-external-api.json' &&
               az cdn endpoint purge \
