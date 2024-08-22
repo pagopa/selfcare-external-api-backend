@@ -168,7 +168,7 @@ jobs:
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
-        docs_openapi_path: developer/external/v2/ms-external-api.json
+        docs_openapi_path: /developer/external/v2/ms-external-api.json
 
     notify_changes:
       name: "[MS External] Notify using Slack"
