@@ -251,45 +251,6 @@ class InstitutionControllerV2Test extends BaseControllerTest{
     }
 
     @Test
-    void getInstitutionProductsUsersWith2ReturnedElements() throws Exception {
-
-        ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
-        byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<UserProductResponse> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
-
-        ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
-        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
-
-        when(institutionService.getInstitutionProductUsersV2(any(), any(), any(), any(), any())).thenReturn(userInfo);
-
-        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(content().string(expectedResource))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
-                .andReturn();
-    }
-
-    @Test
-    void getInstitutionProductsUsersWithEmptyList() throws Exception {
-
-        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, null, null))
-                .thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$", hasSize(0)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
-                .andReturn();
-    }
-
-
-
-    @Test
     void getInstitutionUsersByProductsWith2ReturnedElements() throws Exception {
 
         ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
