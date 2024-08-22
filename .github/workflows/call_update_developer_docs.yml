@@ -23,6 +23,10 @@ jobs:
   detect:
     name: 'Detect'
     runs-on: ubuntu-20.04
+    environment: ${{ inputs.env }}-cd
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
 
