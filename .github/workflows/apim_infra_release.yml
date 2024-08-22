@@ -218,6 +218,6 @@ jobs:
           shell: bash
           if: ${{ steps.optic_diff.outputs.changes_detected }}
           run: |
-            changed_operations=$(awk '/Operations/{flag=1; next} /Rerun this/{flag=0} flag' optic_diff_output.txt > changed_operations.txt)
+            changed_operations=$(awk '/Operations/{flag=1; next} /Rerun this/{flag=0} flag' optic_diff_output.txt)
             echo "$changed_operations"
-            echo "changed_operations_md=$changed_operations" >> $GITHUB_OUTPUT
+            echo "$changed_operations" > changed_operations.txt
