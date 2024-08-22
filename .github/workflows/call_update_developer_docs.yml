@@ -27,7 +27,7 @@ env:
 
 jobs:
   detect:
-    name: 'Detect'
+    name: 'Update Developer Docs'
     runs-on: ubuntu-20.04
     environment: ${{ inputs.env }}-cd
     permissions:
