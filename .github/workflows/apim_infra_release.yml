@@ -33,6 +33,7 @@ jobs:
     setup:
       name: Setup Environment
       runs-on: 'ubuntu-latest'
+      if: false
       outputs:
         environ: ${{ steps.set-env.outputs.environ }}
       steps:
@@ -201,7 +202,7 @@ jobs:
           id: optic_diff
           shell: bash
           run: |
-            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.dev.json --base origin/main)
+            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.dev.json --last-change)
             echo "$optic_output"
             echo "optic_diff_output=$optic_output" >> $GITHUB_OUTPUT
             if grep -q "Operations: No operation changed" optic_diff_output.txt; then
