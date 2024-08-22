@@ -182,6 +182,7 @@ jobs:
     notify_changes:
       name: Notify changes using Slack
       runs-on: ubuntu-latest
+      needs: setup
       environment: ${{ needs.setup.outputs.environ }}-cd
       permissions:
         id-token: write
