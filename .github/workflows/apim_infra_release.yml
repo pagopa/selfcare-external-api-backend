@@ -177,3 +177,44 @@ jobs:
             env: ${{ needs.setup.outputs.environ }}
             api_folder_path: /api/ms_external_api/v2
             docs_openapi_path: developer/external/v2/ms-external-api.json
+
+    notify_changes:
+      name: Notify changes using Slack
+      runs-on: ubuntu-latest
+      environment: ${{ needs.setup.outputs.environ }}-cd
+      permissions:
+        id-token: write
+        contents: read
+      env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  
+      steps:
+        - name: Checkout
+          id: checkout
+          uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
+
+        - name: Install Optic
+          run: npm install --location global @useoptic/optic
+          shell: bash
+
+        - name: Verify if operation changes
+          id: optic_diff
+          shell: bash
+          run: |
+            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.dev.json --base origin/main)
+            echo "$optic_output"
+            echo "optic_diff_output=$optic_output" >> $GITHUB_OUTPUT
+            if grep -q "Operations: No operation changed" optic_diff_output.txt; then
+              echo "changes_detected=false" >> $GITHUB_OUTPUT
+            else
+              echo "changes_detected=true" >> $GITHUB_OUTPUT
+            fi
+
+        - name: Extract changes MD
+          id: extract_change_md
+          shell: bash
+          if: ${{ steps.optic_diff.outputs.changes_detected }}
+          run: |
+            changed_operations=$(echo "${{ steps.optic_diff.outputs.optic_diff_output }}" | awk '/operation changed/{flag=1; next} /Rerun this/{flag=0} flag')
+            echo "$changed_operations"
+            echo "changed_operations_md=$changed_operations" >> $GITHUB_OUTPUT
