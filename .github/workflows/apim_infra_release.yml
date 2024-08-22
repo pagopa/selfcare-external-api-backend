@@ -221,3 +221,13 @@ jobs:
             changed_operations=$(awk '/Operations/{flag=1; next} /Rerun this/{flag=0} flag' optic_diff_output.txt)
             echo "$changed_operations"
             echo "$changed_operations" > changed_operations.txt
+
+        - name: Send HTTP POST notification using Slack
+          if: ${{ steps.optic_diff.outputs.changes_detected }}
+          run: |
+            body_content=$(cat changed_operations.txt)
+            curl -X POST https://hooks.slack.com/triggers/${{ secrets.API_NOTIFICATION_TRIGGERS_ID }} \
+            -H "Content-Type: application/json" \
+            -d '{
+                  "body": "'"$body_content"'"
+                }'
