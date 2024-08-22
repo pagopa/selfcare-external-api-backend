@@ -173,7 +173,7 @@ jobs:
   
       steps:
         - name: "[MS External] Update Developer Docs"
-          uses: ./.github/workflows/call_update_developer_docs.yml
+          uses: .github/workflows/call_update_developer_docs.yml
           with:
             env: ${{ needs.setup.outputs.environ }}
             api_folder_path: /api/ms_external_api/v2
@@ -192,8 +192,7 @@ jobs:
   
       steps:
         - name: "[MS External] Notify using Slack"
-          uses: ./.github/workflows/call_api_notification_slack.yml
+          uses: .github/workflows/call_api_notification_slack.yml
           with:
             env: ${{ needs.setup.outputs.environ }}
             api_folder_path: /api/ms_external_api/v2
-            docs_openapi_path: developer/external/v2/ms-external-api.json
