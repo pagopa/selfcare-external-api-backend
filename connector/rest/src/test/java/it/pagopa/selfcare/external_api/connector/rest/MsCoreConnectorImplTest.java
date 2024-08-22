@@ -151,7 +151,7 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
     }
 
     @Test
-    void getInstitutionsByGeoTaxonomiesWithInstitutionNull()  {
+    void getInstitutionsByGeoTaxonomiesWithInstitutionNull() {
 
         String geoTaxIds = "geoTaxIds";
         SearchMode searchMode = SearchMode.any;
@@ -219,11 +219,11 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
 
         List<String> response = msCoreConnector.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(1, response.size());
-        Assertions.assertEquals("productId",String.join(",", response));
+        Assertions.assertEquals("productId", String.join(",", response));
     }
 
     @Test
-    void getInstitutionUserProductsV2EmptyList1()  {
+    void getInstitutionUserProductsV2EmptyList1() {
 
         String institutionId = "institutionId";
         String userId = "userId";
@@ -308,7 +308,7 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
         response.setId(institutionId);
         when(institutionApiClient._createPgInstitutionUsingPOST(any())).thenReturn(ResponseEntity.of(Optional.of(response)));
         //when
-        String institutionPnPgResponse = msCoreConnector.createPgInstitution("description",  "taxId");
+        String institutionPnPgResponse = msCoreConnector.createPgInstitution("description", "taxId");
         //then
         assertEquals(institutionId, institutionPnPgResponse);
 
@@ -338,5 +338,20 @@ class MsCoreConnectorImplTest extends BaseConnectorTest {
         assertEquals(expectation, onboardedInstitutionInfos);
         verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
 
+    }
+
+    @Test
+    void getInstitution_happyPath() {
+        String institutionId = "institutionId";
+        InstitutionResponse institutionResponse = new InstitutionResponse();
+        institutionResponse.setId(institutionId);
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institutionResponse));
+        when(institutionMapper.toInstitution(any(InstitutionResponse.class))).thenReturn(new Institution());
+
+        Institution result = msCoreConnector.getInstitution(institutionId);
+
+        assertNotNull(result);
+        verify(institutionApiClient, times(1))._retrieveInstitutionByIdUsingGET(institutionId);
+        verify(institutionMapper, times(1)).toInstitution(any(InstitutionResponse.class));
     }
 }

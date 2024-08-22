@@ -207,7 +207,7 @@
     },
     "/v2/institutions" : {
       "get" : {
-        "tags" : [ "Institution" ],
+        "tags" : [ "Institution", "external-pnpg" ],
         "summary" : "getInstitutions",
         "description" : "The service retrieves all the onboarded institutions related to the logged user",
         "operationId" : "getInstitutionsUsingGET",
@@ -323,7 +323,7 @@
     },
     "/v2/institutions/{institutionId}/contract" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2", "support" ],
+        "tags" : [ "Institution", "contract", "external-v2", "support" ],
         "summary" : "getContract",
         "description" : "Service to retrieve a contract given institutionId and productId",
         "operationId" : "getContractUsingGET",
@@ -491,7 +491,7 @@
     },
     "/v2/institutions/{institutionId}/users" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2" ],
+        "tags" : [ "Institution", "external-v2", "internal-v1" ],
         "summary" : "getInstitutionUsersByProduct",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionUsersByProductUsingGET",
@@ -665,7 +665,7 @@
     },
     "/v2/onboarding" : {
       "post" : {
-        "tags" : [ "Onboarding" ],
+        "tags" : [ "internal-v1" ],
         "summary" : "onboarding",
         "description" : "The service allows the onboarding of Users to a subunit of an Institution",
         "operationId" : "onboardingUsingPOST",
@@ -730,7 +730,7 @@
     },
     "/v2/onboarding/users" : {
       "post" : {
-        "tags" : [ "Onboarding", "support" ],
+        "tags" : [ "Onboarding", "internal-v1", "support" ],
         "summary" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "description" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "operationId" : "onboardingInstitutionUsersUsingPOST",

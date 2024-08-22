@@ -1,0 +1,41 @@
+{
+    "inputs": [
+        {
+          "description": {
+              "append":true
+          },
+          "inputFile": "./openapi_template.json"
+        },
+        {
+          "inputFile": "../../../../../../app/src/main/resources/swagger/api-docs.json",
+          "operationSelection": {
+            "includeTags": ["support-pnpg"]
+          }
+        },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-ms-core/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support-pnpg"]
+        }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-user-ms/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support-pnpg"]
+        }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-onboarding-ms/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support-pnpg"]
+        }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-user-group-ms/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support-pnpg"]
+        }
+      }
+    ], 
+    "output": "../openapi.json"
+  }

@@ -1,16 +1,16 @@
 package it.pagopa.selfcare.external_api.web.model.mapper;
 
-import it.pagopa.selfcare.external_api.model.user.ProductDetails;
-import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
-import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
-import it.pagopa.selfcare.external_api.model.user.UserInstitution;
+import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.web.model.onboarding.OnboardedProductResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserDetailsResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInfoResource;
 import it.pagopa.selfcare.external_api.web.model.user.UserInstitutionResource;
+import it.pagopa.selfcare.external_api.web.model.user.UserResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import java.util.Objects;
 
 @Mapper(componentModel = "spring")
 public interface UserInfoResourceMapper {
@@ -28,4 +28,27 @@ public interface UserInfoResourceMapper {
     OnboardedProductResource toOnboardedProductResource(ProductDetails productDetails);
 
     UserInstitutionResource toUserInstitutionResource(UserInstitution entity);
+
+
+    @Mapping(source = "user.id", target = "id")
+    @Mapping(source = "user.name", target = "name", qualifiedByName = "fromCertifiedField")
+    @Mapping(source = "user.familyName", target = "surname", qualifiedByName = "fromCertifiedField")
+    @Mapping(target = "email", expression = "java(fromWorkContact(userProductResponse))")
+    @Mapping(source = "user.fiscalCode", target = "fiscalCode")
+    UserResource toUserResource(UserProductResponse userProductResponse);
+
+    @Named("fromCertifiedField")
+    default String fromCertifiedField(CertifiedField<String> certifiedField) {
+        return Objects.nonNull(certifiedField) ? certifiedField.getValue() : null;
+    }
+
+    @Named("fromWorkContact")
+    default String fromWorkContact(UserProductResponse userProductResponse) {
+        WorkContact workContact = userProductResponse.getUser()
+                .getWorkContact(userProductResponse.getUserMailUuid());
+        if(Objects.nonNull(workContact) && Objects.nonNull(workContact.getEmail())){
+            return workContact.getEmail().getValue();
+        }
+        return null;
+    }
 }

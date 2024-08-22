@@ -43,6 +43,17 @@
     </backend>
     <outbound>
         <base />
+        <choose>
+            <when condition="@(context.Response.StatusCode == 200)">
+                <set-body>@{
+                    JArray response = context.Response.Body.As<JArray>();
+                    foreach(JObject item in response.Children()) {
+                    item.Add("logo", new JValue(new Uri("${LOGO_URL}/institutions/" + item.GetValue("id") + "/logo.png")));
+                    }
+                    return response.ToString();
+                    }</set-body>
+            </when>
+        </choose>
     </outbound>
     <on-error>
         <base/>

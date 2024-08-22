@@ -24,11 +24,11 @@ locals {
     subscription_required = false
     service_url           = null
   }
-  apim_name        = module.apim.name
-  apim_rg          = azurerm_resource_group.rg_api.name
-  api_pnpg_domain       = format("api-pnpg.%s.%s", var.dns_zone_prefix, var.external_domain)
-  pnpg_hostname    = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
-  project_pnpg = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
+  apim_name       = module.apim.name
+  apim_rg         = azurerm_resource_group.rg_api.name
+  api_pnpg_domain = format("api-pnpg.%s.%s", var.dns_zone_prefix, var.external_domain)
+  pnpg_hostname   = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
+  project_pnpg    = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
 
   cdn_storage_hostname = "${var.prefix}${var.env_short}${var.location_short}${var.domain}checkoutsa"
 }
@@ -62,8 +62,8 @@ module "apim_pnpg_external_api_data_vault_v1" {
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/external_api_data_vault/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/external_api_data_vault/v1/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })
@@ -130,8 +130,8 @@ module "apim_pnpg_external_api_ms_v2" {
 
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/external_api_for_pnpg/v2/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/external_api_for_pnpg/v2/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })
@@ -164,7 +164,7 @@ module "apim_pnpg_external_api_ms_v2" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/user-groups/v1/"
+        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
         API_DOMAIN                  = local.api_pnpg_domain
         KID                         = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT  = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
@@ -208,8 +208,8 @@ module "apim_pnpg_support_service_v2" {
 
   service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api_pnpg/pnpg_support_service/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/pnpg_support_service/v1/openapi.${var.env}.json", {
     host     = local.pnpg_hostname
     basePath = "v1"
   })
@@ -230,7 +230,7 @@ module "apim_pnpg_support_service_v2" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/user-groups/v1"
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
         API_DOMAIN                 = local.api_pnpg_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint

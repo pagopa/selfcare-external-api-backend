@@ -1,6 +1,5 @@
 package it.pagopa.selfcare.external_api.connector.rest;
 
-import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.CreatePgInstitutionRequest;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
@@ -9,15 +8,12 @@ import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreInstitutionAp
 import it.pagopa.selfcare.external_api.connector.rest.client.MsCoreRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.connector.rest.mapper.InstitutionMapper;
-import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.CreatePnPgInstitutionRequest;
-import it.pagopa.selfcare.external_api.connector.rest.model.pnpg.InstitutionPnPgResponse;
 import it.pagopa.selfcare.external_api.exceptions.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institutions.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.institutions.SearchMode;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
-import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
 import lombok.RequiredArgsConstructor;
@@ -140,6 +136,13 @@ public class MsCoreConnectorImpl implements MsCoreConnector {
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public Institution getInstitution(String institutionId) {
+        return institutionMapper.toInstitution(Objects.requireNonNull(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId))
+                .getBody());
+    }
+
 
     @Override
     public String createPgInstitution(String description, String taxId) {

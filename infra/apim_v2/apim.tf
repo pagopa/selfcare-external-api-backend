@@ -44,9 +44,9 @@ resource "azurerm_resource_group" "rg_api" {
 
 locals {
   apim_cert_name_proxy_endpoint = format("%s-proxy-endpoint-cert", local.project)
-  api_domain      = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
-  logo_api_domain = format("%s.%s", var.dns_zone_prefix, var.external_domain)
-  apim_base_url   = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
+  api_domain                    = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
+  logo_api_domain               = format("%s.%s", var.dns_zone_prefix, var.external_domain)
+  apim_base_url                 = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
 }
 
 resource "azurerm_key_vault_access_policy" "api_management_policy" {
@@ -184,8 +184,8 @@ module "apim_external_api_onboarding_auto_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external-api-onboarding-auto/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external-api-onboarding-auto/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "/onboarding-api/v1"
   })
@@ -223,8 +223,8 @@ module "apim_external_api_onboarding_io_v1" {
 
   service_url = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external-api-onboarding-io/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external-api-onboarding-io/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "/onboarding-api/v1"
   })
@@ -271,8 +271,8 @@ module "apim_user_group_ms_v1" {
 
   service_url = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_user_group/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_user_group/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "user-groups/v1/"
   })
@@ -302,82 +302,6 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
   versioning_scheme   = "Segment"
 }
 
-module "apim_external_api_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name                = format("%s-ms-external-api", local.project)
-  api_management_name = module.apim.name
-  resource_group_name = azurerm_resource_group.rg_api.name
-  version_set_id      = azurerm_api_management_api_version_set.apim_external_api_ms.id
-
-  description  = "This service is the proxy for external services"
-  display_name = "External API service"
-  path         = "external"
-  api_version  = "v1"
-  protocols = [
-    "https"
-  ]
-
-  service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
-
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_external_api/v1/open-api.yml.tpl", {
-    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
-    basePath = "v1"
-  })
-
-  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
-    API_DOMAIN                 = local.api_domain
-    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-  })
-
-  subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "getInstitutionsUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/getInstitutions_op_policy.xml.tpl", {
-        CDN_STORAGE_URL = "https://${data.azurerm_storage_account.checkout.primary_web_host}"
-      })
-    },
-    {
-      operation_id = "getInstitutionUserProductsUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getInstitutionGeographicTaxonomiesUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getInstitutionsByGeoTaxonomiesUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
-      operation_id = "getUserGroupsUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
-      })
-    },
-    {
-      operation_id = "getInstitution"
-      xml_content = templatefile("./api/ms_external_api/v1/getInstitution_op_policy.xml.tpl", {
-        CDN_STORAGE_URL                = "https://${data.azurerm_storage_account.checkout.primary_web_host}"
-        PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "getProductUsingGET"
-      xml_content = templatefile("./api/ms_external_api/v1/getProduct_op_policy.xml.tpl", {
-        MS_PRODUCT_BACKEND_BASE_URL = "https://selc-${var.env_short}-product-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "getInstitutionProductUsersUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    }
-  ]
-}
-
 module "apim_external_api_ms_v2" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
   name                = format("%s-ms-external-api", local.project)
@@ -395,8 +319,8 @@ module "apim_external_api_ms_v2" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_external_api/v2/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_external_api/v2/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v2"
   })
@@ -477,7 +401,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/ms_external_api/v2/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
+        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
         TENANT_ID                   = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER      = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -540,13 +464,14 @@ module "apim_external_api_ms_v2" {
     },
     {
       operation_id = "messageAcknowledgmentUsingPOST"
-      xml_content = templatefile("./api/ms_external_api/v2/messageAcknowledgment_op_policy.xml.tpl", {
-        MS_EXTERNAL_INTERCEPTOR_BACKEND_BASE_URL = "https://selc-${var.env_short}-ext-interceptor-ca.${var.ca_suffix_dns_private_name}/v1"
-        API_DOMAIN                               = local.api_domain
-        KID                                      = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT               = azurerm_api_management_certificate.jwt_certificate.thumbprint
-        TENANT_ID                                = data.azurerm_client_config.current.tenant_id
-        EXTERNAL-OAUTH2-ISSUER                   = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+      xml_content = templatefile("./api/ms_external_api/v2/messageAcknowledgment_op_policy_fn.xml.tpl", {
+        BACKEND_BASE_URL              = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY                        = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+        API_DOMAIN                    = local.api_domain
+        KID                           = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT    = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        TENANT_ID                     = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER        = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
     },
     {
@@ -617,6 +542,7 @@ module "apim_external_api_ms_v2" {
       xml_content = templatefile("./api/ms_external_api/v2/getUserInstitutionUsingGet_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
         API_DOMAIN                 = local.api_domain
+        LOGO_URL                   = "https://${local.logo_api_domain}"
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
         TENANT_ID                  = data.azurerm_client_config.current.tenant_id
@@ -651,8 +577,8 @@ module "apim_internal_api_ms_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/ms_internal_api/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/ms_internal_api/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -702,10 +628,6 @@ module "apim_internal_api_ms_v1" {
       })
     },
     {
-      operation_id = "autoApprovalOnboardingFromPdaUsingPOST"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    },
-    {
       operation_id = "onboardingInstitutionUsersUsingPOST"
       xml_content = templatefile("./api/ms_internal_api/v1/external_op_policy.xml.tpl", {
         MS_EXTERNAL_BACKEND_BASE_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
@@ -728,12 +650,6 @@ module "apim_internal_api_ms_v1" {
     },
     {
       operation_id = "updateCreatedAtUsingPUT"
-      xml_content = templatefile("./api/ms_internal_api/v1/core_op_policy.xml.tpl", {
-        MS_CORE_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
-      })
-    },
-    {
-      operation_id = "resendContractsByInstitutionIdAndTokenIdUsingPUT"
       xml_content = templatefile("./api/ms_internal_api/v1/core_op_policy.xml.tpl", {
         MS_CORE_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
       })
@@ -766,8 +682,8 @@ module "apim_selfcare_support_service_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/selfcare_support_service/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/selfcare_support_service/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -802,7 +718,7 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/selfcare_support_service/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
+        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
         API_DOMAIN                  = local.api_domain
         KID                         = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT  = azurerm_api_management_certificate.jwt_certificate.thumbprint
@@ -864,15 +780,6 @@ module "apim_selfcare_support_service_v1" {
       )
     },
     {
-      operation_id = "getTokensFromProductUsingGET"
-      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v1/"
-        API_DOMAIN                 = local.api_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      })
-    },
-    {
       operation_id = "onboardingInstitutionUsingGET"
       xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
@@ -883,12 +790,35 @@ module "apim_selfcare_support_service_v1" {
       )
     },
     {
+      operation_id = "getTokensFromProductUsingGET"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v1/"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      })
+    },
+    {
       operation_id = "updateOnboardiUsingPUT"
       xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
         API_DOMAIN                 = local.api_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+      })
+    },
+    {
+      operation_id = "sendOnboardigNotificationUsingPOST"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
+        BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+      })
+    },
+    {
+      operation_id = "countNotificationsUsingGET"
+      xml_content = templatefile("./api/selfcare_support_service/v1/support_op_policy_fn.xml.tpl", {
+        BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
     }
   ]
@@ -919,8 +849,8 @@ module "apim_notification_event_api_v1" {
 
   service_url = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
 
-  content_format = "openapi"
-  content_value = templatefile("./api/notification_event_api/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/notification_event_api/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -985,8 +915,8 @@ module "apim_external_api_contract_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v2/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external_api_contract/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external_api_contract/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -1036,8 +966,8 @@ module "apim_external_api_contract_public_v1" {
 
   service_url = format("https://selc-%s-ext-api-backend-ca.%s/v2/", var.env_short, var.ca_suffix_dns_private_name)
 
-  content_format = "openapi"
-  content_value = templatefile("./api/external_api_contract/v1/open-api.yml.tpl", {
+  content_format = "openapi+json"
+  content_value = templatefile("./api/external_api_contract/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
     basePath = "v1"
   })
@@ -1450,5 +1380,10 @@ data "azurerm_key_vault_secret" "apim_backend_access_token" {
 
 data "azurerm_key_vault_secret" "external-oauth2-issuer" {
   name         = "external-oauth2-issuer"
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+}
+
+data "azurerm_key_vault_secret" "fn-onboarding-primary-key" {
+  name         = "fn-onboarding-primary-key"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }

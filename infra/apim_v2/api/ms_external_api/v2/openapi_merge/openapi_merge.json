@@ -1,0 +1,35 @@
+{
+    "inputs": [
+        {
+          "description": {
+              "append":true
+          },
+          "inputFile": "./openapi_template.json"
+        },
+        {
+          "inputFile": "../../../../../../app/src/main/resources/swagger/api-docs.json",
+          "operationSelection": {
+            "includeTags": ["external-v2"]
+          }
+        },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-ms-core/openapi.json",
+        "operationSelection": {
+          "includeTags": ["external-v2"]
+        }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-user-ms/openapi.json",
+        "operationSelection": {
+          "includeTags": ["external-v2"]
+        }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-user-group-ms/openapi.json",
+        "operationSelection": {
+          "includeTags": ["external-v2"]
+        }
+      }
+    ], 
+    "output": "../openapi.json"
+  }

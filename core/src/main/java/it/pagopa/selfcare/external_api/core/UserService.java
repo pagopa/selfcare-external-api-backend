@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.core;
 
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
@@ -18,7 +19,7 @@ public interface UserService {
 
     UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId);
 
-    List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetailsActive(String userId, String productId);
+    List<OnboardedInstitutionResource> getOnboardedInstitutionsDetailsActive(String userId, String productId);
 
     List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states);
 }

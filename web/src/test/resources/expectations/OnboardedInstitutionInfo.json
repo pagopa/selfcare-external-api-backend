@@ -10,25 +10,16 @@
     "address": "example_address",
     "zipCode": "example_zip_code",
     "taxCode": "example_tax_code",
-    "pricingPlan": "piano_tariffario",
-    "billing": {
-      "vatNumber": "numero_iva",
-      "recipientCode": "example_recipient_code",
-      "taxCodeInvoicing": "example_tax_code_invoicing",
-      "publicServices": true
-    },
-    "state": "ACTIVE",
-    "role": "MANAGER",
-    "productInfo": {
-      "id": "prod123",
-      "role": "role1",
-      "createdAt": "2023-01-01T00:00:00+00:00",
-      "status": "example_status"
-    },
+    "recipientCode": "example_recipient_code",
+    "taxCodeInvoicing": "example_tax_code_invoicing",
+    "status": "ACTIVE",
+    "userProductRoles": [
+      "admin",
+      "manager"
+    ],
     "subunitCode": "example_subunit_code",
     "subunitType": "example_subunit_type",
     "aooParentCode": "example_aoo_parent_code",
-    "userMailUuid": "uuid_mail_utente",
     "city": "example_city",
     "country": "example_country",
     "county": "example_county",
@@ -65,25 +56,15 @@
     "address": "example_address",
     "zipCode": "example_zip_code",
     "taxCode": "example_tax_code",
-    "pricingPlan": "piano_tariffario",
-    "billing": {
-      "vatNumber": "numero_iva",
-      "recipientCode": "example_recipient_code",
-      "taxCodeInvoicing": "example_tax_code_invoicing",
-      "publicServices": true
-    },
-    "state": "DELETED",
-    "role": "MANAGER",
-    "productInfo": {
-      "id": "prod123",
-      "role": "role1",
-      "createdAt": "2023-01-01T00:00:00+00:00",
-      "status": "example_status"
-    },
+    "recipientCode": "example_recipient_code",
+    "taxCodeInvoicing": "example_tax_code_invoicing",
+    "status": "DELETED",
+    "userProductRoles": [
+      "admin"
+    ],
     "subunitCode": "example_subunit_code",
     "subunitType": "example_subunit_type",
     "aooParentCode": "example_aoo_parent_code",
-    "userMailUuid": "uuid_mail_utente",
     "city": "example_city",
     "country": "example_country",
     "county": "example_county",
