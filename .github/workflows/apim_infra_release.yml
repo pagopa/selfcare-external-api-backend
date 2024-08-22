@@ -202,7 +202,7 @@ jobs:
           id: optic_diff
           shell: bash
           run: |
-            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.dev.json --last-change)
+            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.${{ needs.setup.outputs.environ }}.json --base origin/main)
             echo "optic_diff_output=$optic_output" >> $GITHUB_OUTPUT
             if [[ "$optic_output" == *"Operations: No operation changed"* ]]; then
               echo "changes_detected=false" >> $GITHUB_OUTPUT
