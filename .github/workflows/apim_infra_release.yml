@@ -191,8 +191,9 @@ jobs:
   
       steps:
         - name: Checkout
-          id: checkout
           uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
+          with:
+            fetch-depth: 0
 
         - name: Install Optic
           run: npm install --location global @useoptic/optic
