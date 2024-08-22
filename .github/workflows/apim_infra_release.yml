@@ -188,6 +188,7 @@ jobs:
             env=${{ needs.setup.outputs.environ }}
             echo "env_short=${env:0:1}" >> $GITHUB_OUTPUT
             echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
+            echo "checkout_cdn_profile=selc-${env:0:1}-checkout-cdn-profile" >> $GITHUB_OUTPUT
   
         - name: Upload to blob storage
           uses: azure/CLI@965c8d7571d2231a54e321ddd07f7b10317f34d9 # v2
@@ -202,6 +203,6 @@ jobs:
               az cdn endpoint purge \
                 --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}-checkout-fe-rg \
                 --name ${{ steps.extract_env_short.outputs.checkout_cdn_name }} \
-                --profile-name ${replace(${{ steps.extract_env_short.outputs.checkout_cdn_name }}, "-cdn-endpoint", "-cdn-profile")}  \
+                --profile-name ${{ steps.extract_env_short.outputs.checkout_cdn_profile }} \
                 --content-paths "/developer/external/v2/ms-external-api.json" \
                 --no-wait
