@@ -205,4 +205,4 @@ jobs:
           shell: bash
           run: |
             optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.${{ needs.setup.outputs.environ }}.json --base origin/main)
-            echo "optic_diff_output=$optic_output" >> $GITHUB_OUTPUT
+            echo "optic_diff_output=example" >> $GITHUB_OUTPUT
