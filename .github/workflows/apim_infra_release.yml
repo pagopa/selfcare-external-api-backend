@@ -163,6 +163,7 @@ jobs:
     update_developer_docs:
       name: "[MS External] Update Developer Docs"
       uses: ./.github/workflows/call_update_developer_docs.yml
+      secrets: inherit
       needs: [setup]
       with:
         env: ${{ needs.setup.outputs.environ }}
@@ -172,6 +173,7 @@ jobs:
     notify_changes:
       name: "[MS External] Notify using Slack"
       uses: ./.github/workflows/call_api_notification_slack.yml
+      secrets: inherit
       needs: [setup]
       with:
         env: ${{ needs.setup.outputs.environ }}
