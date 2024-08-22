@@ -204,7 +204,7 @@ jobs:
           id: optic_diff
           shell: bash
           run: |
-            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.${{ needs.setup.outputs.environ }}.json --base origin/main)
+            optic_output=$(optic diff infra/apim_v2/api/ms_external_api/v2/openapi.${{ needs.setup.outputs.environ }}.json --last-change)
             echo "$optic_output"
             echo "$optic_output" > optic_diff_output.txt
             if grep -q "Operations: No operations changed" optic_diff_output.txt; then
@@ -218,6 +218,6 @@ jobs:
           shell: bash
           if: ${{ steps.optic_diff.outputs.changes_detected }}
           run: |
-            changed_operations=$(echo "${{ steps.optic_diff.outputs.optic_diff_output }}" | awk '/Operation/{flag=1; next} /Rerun this/{flag=0} flag')
+            changed_operations=$(awk '/Operations/{flag=1; next} /Rerun this/{flag=0} flag' optic_diff_output.txt > changed_operations.txt)
             echo "$changed_operations"
             echo "changed_operations_md=$changed_operations" >> $GITHUB_OUTPUT
