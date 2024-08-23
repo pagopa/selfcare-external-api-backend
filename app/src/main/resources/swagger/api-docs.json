@@ -406,7 +406,7 @@
     },
     "/v2/institutions/{institutionId}/products" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2" ],
+        "tags" : [ "Institution", "external-pnpg", "external-v2" ],
         "summary" : "getInstitutionProducts",
         "description" : "Service to retrieve all active products for given institution and logged user",
         "operationId" : "getInstitutionProductsUsingGET",
@@ -491,7 +491,7 @@
     },
     "/v2/institutions/{institutionId}/users" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2", "internal-v1" ],
+        "tags" : [ "Institution", "external-pnpg", "external-v2", "internal-v1" ],
         "summary" : "getInstitutionUsersByProduct",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionUsersByProductUsingGET",

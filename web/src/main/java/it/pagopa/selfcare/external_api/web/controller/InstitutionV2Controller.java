@@ -89,6 +89,7 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "external-pnpg")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
@@ -109,6 +110,7 @@ public class InstitutionV2Controller {
 
     @Tag(name = "external-v2")
     @Tag(name = "internal-v1")
+    @Tag(name = "external-pnpg")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/users")
     @ResponseStatus(HttpStatus.OK)
