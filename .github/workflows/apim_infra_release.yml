@@ -159,24 +159,15 @@ jobs:
             env:
               TF_VAR_image_tag: ${{ needs.tf_plan.outputs.image_tag }}
 
-    update_developer_docs:
-      name: "[MS External] Update Developer Docs"
-      uses: ./.github/workflows/call_update_developer_docs.yml
+    update_docs_and_notification:
+      name: "[MS External] Update Developer Docs and Notify using Slack"
+      uses: ./.github/workflows/call_update_docs_and_notification.yml
       secrets: inherit
       needs: [setup,release]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
         docs_openapi_path: /developer/external/v2/ms-external-api.json
-
-    notify_changes:
-      name: "[MS External] Notify using Slack"
-      uses: ./.github/workflows/call_api_notification_slack.yml
-      secrets: inherit
-      needs: [setup,release]
-      with:
-        env: ${{ needs.setup.outputs.environ }}
-        api_folder_path: /api/ms_external_api/v2
   
       
        
