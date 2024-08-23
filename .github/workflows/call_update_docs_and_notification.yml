@@ -27,7 +27,7 @@ env:
 
 jobs:
   detect:
-    name: 'Update Developer Docs'
+    name: 'Update Developer Docs And Sending Slack notification'
     runs-on: ubuntu-20.04
     environment: ${{ inputs.env }}-cd
     permissions:
