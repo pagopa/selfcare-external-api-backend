@@ -6,8 +6,8 @@ on:
         - main
         - releases/**
       paths:
-        - ./infra/apim_v2/**
-        - ./.github/workflows/apim_infra_plan.yml
+        - infra/apim_v2/**
+        - .github/workflows/apim_infra_plan.yml
 
     workflow_dispatch:
       inputs:
