@@ -51,7 +51,6 @@ jobs:
     tf_plan:
         name: 'Terraform Plan'
         runs-on: ubuntu-20.04
-        if: false
         environment: ${{ needs.setup.outputs.environ }}-ci
         needs: setup
         permissions:
@@ -164,7 +163,7 @@ jobs:
       name: "[MS External] Update Developer Docs"
       uses: ./.github/workflows/call_update_developer_docs.yml
       secrets: inherit
-      needs: [setup]
+      needs: [setup,release]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
@@ -174,7 +173,7 @@ jobs:
       name: "[MS External] Notify using Slack"
       uses: ./.github/workflows/call_api_notification_slack.yml
       secrets: inherit
-      needs: [setup]
+      needs: [setup,release]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
