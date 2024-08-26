@@ -35,6 +35,12 @@
         "operationSelection": {
           "includeTags": ["support"]
         }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-onboarding-functions/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support"]
+        }
       }
     ], 
     "output": "../openapi.json"
