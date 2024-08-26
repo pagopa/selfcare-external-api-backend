@@ -2,7 +2,13 @@ package it.pagopa.selfcare.external_api.web.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.core.InstitutionService;
 import it.pagopa.selfcare.external_api.model.nationalRegistries.LegalVerification;
 import it.pagopa.selfcare.external_api.web.model.mapper.NationalRegistryMapper;
@@ -34,6 +40,13 @@ public class NationalRegistryController {
     @Tag(name = "NationalRegistry")
     @Tag(name = "support-pnpg")
     @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = LegalVerificationResource.class)), mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json"))
+    })
     public LegalVerificationResource verifyLegal(@RequestBody @Valid VerifyRequestDto requestDto){
         log.trace("verifyLegal start");
         log.debug("verifyLegal taxId = {}, vatNumber = {}", Encode.forJava(requestDto.getTaxId()), Encode.forJava(requestDto.getVatNumber()));
