@@ -237,6 +237,7 @@
           "User"
         ],
         "summary": "Update user status with optional filter for institution, product, role and productRole",
+        "operationId": "updateUserStatusUsingPUT",
         "parameters": [
           {
             "name": "id",
@@ -580,6 +581,26 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -604,6 +625,7 @@
       "put": {
         "tags": [],
         "summary": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
+        "operationId": "completeOnboardingUsingPUT",
         "parameters": [
           {
             "name": "onboardingId",
@@ -661,6 +683,7 @@
           "Onboarding"
         ],
         "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
+        "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
             "name": "onboardingId",
