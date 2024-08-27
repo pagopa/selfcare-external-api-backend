@@ -245,55 +245,6 @@ module "apim_external_api_onboarding_io_v1" {
   ]
 }
 
-resource "azurerm_api_management_api_version_set" "apim_user_group_ms" {
-  name                = format("%s-ms-user-group-api", var.env_short)
-  resource_group_name = azurerm_resource_group.rg_api.name
-  api_management_name = module.apim.name
-  display_name        = "User Group Micro Service"
-  versioning_scheme   = "Segment"
-}
-
-module "apim_user_group_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name                = format("%s-ms-user-group-api", local.project)
-  api_management_name = module.apim.name
-  resource_group_name = azurerm_resource_group.rg_api.name
-  version_set_id      = azurerm_api_management_api_version_set.apim_user_group_ms.id
-
-
-  description  = "This service is the user group micro service"
-  display_name = "User Group Micro Service"
-  path         = "external/user-groups"
-  api_version  = "v1"
-  protocols = [
-    "https"
-  ]
-
-  service_url = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/user-groups/v1/"
-
-  content_format = "openapi+json"
-  content_value = templatefile("./api/ms_user_group/v1/openapi.${var.env}.json", {
-    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
-    basePath = "user-groups/v1/"
-  })
-
-  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
-    API_DOMAIN                 = local.api_domain
-    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-  })
-
-  subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "getUserGroupsUsingGET"
-      xml_content  = file("./api/jwt_auth_op_policy_user_group.xml")
-    }
-  ]
-}
-
-
 resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
   name                = format("%s-ms-external-api", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
