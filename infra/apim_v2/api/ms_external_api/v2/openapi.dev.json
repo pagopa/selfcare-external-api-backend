@@ -3314,10 +3314,6 @@
             "items": {
               "$ref": "#/components/schemas/OnboardedProductResponse"
             }
-          },
-          "logo": {
-            "type": "string",
-            "description": "URL to institution logo."
           }
         }
       },
