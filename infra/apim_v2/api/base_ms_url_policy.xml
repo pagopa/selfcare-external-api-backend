@@ -1,14 +1,13 @@
 <policies>
   <inbound>
     <base/>
-    <set-header name="Authorization" exists-action="override">
-      <value>@((string)context.Variables["jwt"])</value>
-    </set-header>
     <set-header name="x-selfcare-uid" exists-action="override">
       <value>@(context.Request.Headers.GetValueOrDefault("x-selfcare-uid",
         ""))
       </value>
     </set-header>
+
+    <set-backend-service base-url="${MS_BACKEND_URL}" />
   </inbound>
   <backend>
     <base/>

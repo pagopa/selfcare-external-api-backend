@@ -14,7 +14,7 @@
                 var uid = context.Request.Headers.GetValueOrDefault("x-selfcare-uid","");
 
                 if(uid == "") {
-                  return "";
+                  uid = "m2m";
                 }
 
                 var aud = "${API_DOMAIN}";
@@ -37,6 +37,9 @@
                 }"/>
         <set-header name="X-Client-Ip" exists-action="override">
             <value>@(context.Request.IpAddress)</value>
+        </set-header>
+        <set-header name="Authorization" exists-action="override">
+        <value>@((string)context.Variables["jwt"])</value>
         </set-header>
     </inbound>
     <backend>
