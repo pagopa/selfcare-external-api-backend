@@ -420,7 +420,6 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getInstitution"
       xml_content = templatefile("./api/ms_external_api/v2/getInstitution_op_policy.xml.tpl", {
-        LOGO_URL                       = "https://${local.logo_api_domain}"
         PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
         API_DOMAIN                     = local.api_domain
         KID                            = data.azurerm_key_vault_secret.jwt_kid.value
