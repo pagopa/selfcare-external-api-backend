@@ -53,7 +53,10 @@
         <!-- TODO: remove previous elements after Party will accept k8s token -->
 
         <set-backend-service base-url="${BACKEND_BASE_URL}" />
-        <rewrite-uri template="@("/institutions/{institutionId}/products/" + (string)context.Variables["productId"] + "/users")" />
+
+        <set-query-parameter name="productId" exists-action="override">
+              <value>@((string)context.Variables["productId"])</value>
+         </set-query-parameter>
     </inbound>
     <backend>
         <base/>

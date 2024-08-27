@@ -212,46 +212,6 @@
         "description" : "The service retrieves all the onboarded institutions related to the logged user",
         "operationId" : "getInstitutionsUsingGET",
         "parameters" : [ {
-          "name" : "authenticated",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "boolean"
-          }
-        }, {
-          "name" : "authorities[0].authority",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "credentials",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        }, {
-          "name" : "details",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        }, {
-          "name" : "principal",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        }, {
           "name" : "productId",
           "in" : "query",
           "description" : "Product's unique identifier",
@@ -406,7 +366,7 @@
     },
     "/v2/institutions/{institutionId}/products" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2" ],
+        "tags" : [ "Institution", "external-pnpg", "external-v2" ],
         "summary" : "getInstitutionProducts",
         "description" : "Service to retrieve all active products for given institution and logged user",
         "operationId" : "getInstitutionProductsUsingGET",
@@ -489,121 +449,9 @@
         } ]
       }
     },
-    "/v2/institutions/{institutionId}/products/{productId}/users" : {
-      "get" : {
-        "tags" : [ "Institution" ],
-        "summary" : "getInstitutionProductsUsers",
-        "description" : "Service to get all the active users related to a specific pair of institution-product",
-        "operationId" : "getInstitutionProductsUsersUsingGET",
-        "parameters" : [ {
-          "name" : "institutionId",
-          "in" : "path",
-          "description" : "Institution's unique internal Id",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "productId",
-          "in" : "path",
-          "description" : "Product's unique identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "userId",
-          "in" : "query",
-          "description" : "User's unique identifier",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "productRoles",
-          "in" : "query",
-          "description" : "User's roles in product",
-          "required" : false,
-          "style" : "form",
-          "explode" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "x-selfcare-uid",
-          "in" : "header",
-          "description" : "x-selfcare-uid",
-          "required" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/UserResource"
-                  }
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Not Found",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
     "/v2/institutions/{institutionId}/users" : {
       "get" : {
-        "tags" : [ "Institution", "external-v2", "internal-v1" ],
+        "tags" : [ "Institution", "external-pnpg", "external-v2", "internal-v1" ],
         "summary" : "getInstitutionUsersByProduct",
         "description" : "Service to get all the active users related to a specific pair of institution-product",
         "operationId" : "getInstitutionUsersByProductUsingGET",
@@ -759,6 +607,26 @@
               }
             }
           },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "Internal Server Error",
             "content" : {
@@ -846,47 +714,6 @@
         "summary" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "description" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "operationId" : "onboardingInstitutionUsersUsingPOST",
-        "parameters" : [ {
-          "name" : "authenticated",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "boolean"
-          }
-        }, {
-          "name" : "authorities[0].authority",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "credentials",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        }, {
-          "name" : "details",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        }, {
-          "name" : "principal",
-          "in" : "query",
-          "required" : false,
-          "style" : "form",
-          "schema" : {
-            "type" : "object"
-          }
-        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -922,6 +749,26 @@
           },
           "401" : {
             "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
