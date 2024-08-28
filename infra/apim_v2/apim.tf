@@ -197,13 +197,6 @@ module "apim_external_api_onboarding_auto_v1" {
   })
 
   subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "autoApprovalOnboardingUsingPOST"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    }
-  ]
 }
 
 module "apim_external_api_onboarding_io_v1" {
@@ -229,20 +222,13 @@ module "apim_external_api_onboarding_io_v1" {
     basePath = "/onboarding-api/v1"
   })
 
-  xml_content = file("./api/base_policy.xml")
+  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+  })
 
   subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "contractOnboardingUsingPOST"
-      xml_content = templatefile("./api/external-api-onboarding-io/v1/contractOnboarding_op_policy.xml.tpl", {
-        API_DOMAIN                 = local.api_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      })
-    }
-  ]
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
@@ -884,17 +870,6 @@ module "apim_external_api_contract_public_v1" {
   })
 
   subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "getContractUsingGET"
-      xml_content = templatefile("./api/external_api_contract_public/v1/jwt_base_policy.xml.tpl", {
-        API_DOMAIN                 = local.api_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
-      })
-    }
-  ]
 }
 
 ##############
