@@ -197,13 +197,6 @@ module "apim_external_api_onboarding_auto_v1" {
   })
 
   subscription_required = true
-
-  api_operation_policies = [
-    {
-      operation_id = "autoApprovalOnboardingUsingPOST"
-      xml_content  = file("./api/jwt_auth_op_policy.xml")
-    }
-  ]
 }
 
 module "apim_external_api_onboarding_io_v1" {
