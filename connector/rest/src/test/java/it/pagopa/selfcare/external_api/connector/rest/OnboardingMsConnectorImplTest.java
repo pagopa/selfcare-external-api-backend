@@ -12,9 +12,12 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImp
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
