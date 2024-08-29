@@ -133,9 +133,9 @@ module "apim_pnpg_external_api_ms_v2" {
   })
 
   xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
-    API_DOMAIN                 = local.api_domain
-    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
-    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+    API_DOMAIN                 = local.api_pnpg_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
   })
 
   subscription_required = true
