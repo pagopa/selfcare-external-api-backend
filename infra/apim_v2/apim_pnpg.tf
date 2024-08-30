@@ -154,7 +154,7 @@ module "apim_pnpg_external_api_ms_v2" {
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/getInstitutions_op_policy.xml.tpl", {
-        MS_BACKEND_URL             = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
         API_DOMAIN                 = local.api_pnpg_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
