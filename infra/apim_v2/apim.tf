@@ -295,11 +295,13 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
-        TENANT_ID              = data.azurerm_client_config.current.tenant_id
-        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
-        LOGO_URL               = "https://${local.logo_api_domain}"
-
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        LOGO_URL                   = "https://${local.logo_api_domain}"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        TENANT_ID                  = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER     = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
     },
     {
