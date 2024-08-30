@@ -51,7 +51,7 @@ public class InstitutionV2Controller {
     @Tag(name = "external-v2")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}", nickname = "getInstitutionsUsingGETOld")
     public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
                                                      @RequestParam(value = "productId") String productId,
                                                      Authentication authentication) {
