@@ -48,6 +48,7 @@ public class InstitutionV2Controller {
 
     @Tag(name = "Institution")
     @Tag(name = "external-pnpg")
+    @Tag(name = "external-v2")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
