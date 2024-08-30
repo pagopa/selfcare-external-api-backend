@@ -152,7 +152,7 @@ module "apim_pnpg_external_api_ms_v2" {
 
   api_operation_policies = [
     {
-      operation_id = "getInstitutionsUsingGET"
+      operation_id = "getInstitutionsUsingGETOld"
       xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/getInstitutions_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
         API_DOMAIN                 = local.api_pnpg_domain
