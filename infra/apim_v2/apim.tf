@@ -293,7 +293,7 @@ module "apim_external_api_ms_v2" {
 
   api_operation_policies = [
     {
-      operation_id = "getInstitutionsUsingGET"
+      operation_id = "getInstitutionsUsingGETOld"
       xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         LOGO_URL                   = "https://${local.logo_api_domain}"
@@ -385,7 +385,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getInstitutionsByTaxCodeUsingGET"
+      operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
