@@ -293,7 +293,7 @@ module "apim_external_api_ms_v2" {
 
   api_operation_policies = [
     {
-      operation_id = "getInstitutionsUsingGETOld"
+      operation_id = "getInstitutionsUsingGETDeprecated"
       xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
         BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         LOGO_URL                   = "https://${local.logo_api_domain}"

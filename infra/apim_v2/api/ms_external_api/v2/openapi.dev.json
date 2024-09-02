@@ -317,7 +317,7 @@
         "summary": "getInstitutions",
         "deprecated": true,
         "description": "The service retrieves all the onboarded institutions related to the provided user and the product retrieved from Subscription Key. It is deprecated in favor of endpoint /users?institutionId={institutionId}",
-        "operationId": "getInstitutionsUsingGETOld",
+        "operationId": "getInstitutionsUsingGETDeprecated",
         "parameters": [
           {
             "name": "userIdForAuth",
