@@ -135,7 +135,7 @@ jobs:
           node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/retain_necessary_schemas_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/selfcare_support_service/v1/openapi.${{ inputs.env }}.json
 
       - name: Merge OpenAPI and PostProcess - PNPG External API
-        if: ${{ inputs.selc-ms-external-api }}
+        if: ${{ inputs.pnpg-ms-external-api }}
         run: |
           npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/external_api_for_pnpg/v2/openapi_merge/openapi_merge.json
           node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/external_api_for_pnpg/v2/openapi.json ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/external_api_for_pnpg/v2/openapi.${{ inputs.env }}.json

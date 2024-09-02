@@ -21,17 +21,9 @@
         <dependency>
             <groupId>it.pagopa.selfcare</groupId>
             <artifactId>onboarding-sdk-product</artifactId>
-            <version>0.1.14</version>
+            <version>0.1.19</version>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>selfcare-onboarding</id>
-            <name>Selfcare Onboarding SDK</name>
-            <url>https://maven.pkg.github.com/pagopa/selfcare-onboarding</url>
-        </repository>
-    </repositories>
     <!--<build>
         <plugins>
             <plugin>

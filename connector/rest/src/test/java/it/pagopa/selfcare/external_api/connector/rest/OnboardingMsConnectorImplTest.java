@@ -12,6 +12,8 @@ import it.pagopa.selfcare.external_api.connector.rest.mapper.OnboardingMapperImp
 import it.pagopa.selfcare.external_api.connector.rest.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.institutions.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
+import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
 import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
@@ -66,7 +68,7 @@ public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
 
         ClassPathResource resource = new ClassPathResource("stubs/TokenResponse.json");
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
-        TokenResponse tokenResponse = objectMapper.readValue(resourceStream, new TypeReference<>() {
+        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
 
         ClassPathResource expectationResource = new ClassPathResource("stubs/Token.json");
@@ -248,7 +250,7 @@ public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
 
         OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
         onboardingGetResponse.setItems(Collections.emptyList());
-        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, OnboardingStatus.TOBEVALIDATED.name(), null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
+        when(onboardingControllerApi._v1OnboardingGet(null, null, null,0, productId, 1, OnboardingStatus.TOBEVALIDATED.name(), null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
 
         List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1, OnboardingStatus.TOBEVALIDATED.name());
 
@@ -262,7 +264,7 @@ public class OnboardingMsConnectorImplTest extends BaseConnectorTest {
         //JSON
         OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
         onboardingGetResponse.setItems(new ArrayList<>());
-        when(onboardingControllerApi._v1OnboardingGet(null, 0, productId, 1, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
+        when(onboardingControllerApi._v1OnboardingGet(null, null, null, 0, productId, 1, null, null, null, null)).thenReturn(ResponseEntity.ok(onboardingGetResponse));
 
         List<TokenOnboardedUsers> response = onboardingMsConnector.getOnboardings(productId, 0, 1, null);
 
