@@ -11,7 +11,12 @@
             // 2) Construct the Base64Url-encoded payload
             var iat = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();  // sets the expiration of the token to be 30 seconds from now
             var exp = new DateTimeOffset(DateTime.Now.AddMinutes(30)).ToUnixTimeSeconds();  // sets the expiration of the token to be 30 seconds from now
-            var uid = "pnpg";
+            var uid = context.Request.Url.Query.GetValueOrDefault("userIdForAuth", "");
+
+            if(uid == "") {
+              return "";
+            }
+
             var aud = "${API_DOMAIN}";
             var iss = "SPID";
             var name = "apim";
@@ -30,9 +35,10 @@
             }
 
             }"/>
-        <set-header exists-action="override" name="Authorization">
-                  <value>@((string)context.Variables["jwt"])</value>
+        <set-header name="Authorization" exists-action="override">
+            <value>@((string)context.Variables["jwt"])</value>
         </set-header>
+        <!-- TODO: remove previous elements after Party will accept k8s token and after a refactor from external-api backend -->
         <set-query-parameter name="productId" exists-action="override">
             <value>@((string)context.Variables["productId"])</value>
         </set-query-parameter>
@@ -48,7 +54,7 @@
                 <set-body>@{
                     JArray response = context.Response.Body.As<JArray>();
                     foreach(JObject item in response.Children()) {
-                    item.Add("logo", new JValue(new Uri("${CDN_STORAGE_URL}/institutions/" + item.GetValue("id") + "/logo.png")));
+                    item.Add("logo", new JValue(new Uri("${LOGO_URL}/institutions/" + item.GetValue("id") + "/logo.png")));
                     }
                     return response.ToString();
                     }</set-body>

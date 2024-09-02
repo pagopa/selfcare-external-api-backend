@@ -232,7 +232,7 @@
         ],
         "summary": "getInstitutions",
         "description": "The service retrieves all the onboarded institutions related to the provided user and the product retrieved from Subscription Key",
-        "operationId": "getInstitutionsUsingGETOld",
+        "operationId": "getInstitutionsUsingGETDeprecated",
         "parameters": [
           {
             "name": "userIdForAuth",
