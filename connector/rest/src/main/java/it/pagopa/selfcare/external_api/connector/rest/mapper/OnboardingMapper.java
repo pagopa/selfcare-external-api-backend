@@ -41,15 +41,15 @@ public interface OnboardingMapper {
         return date.toLocalDateTime();
     }
     @Named("toInstitutionBase")
-    default InstitutionBaseRequest toInstitutionBase(OnboardingData onboardingData) {
+    default it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionBaseRequest toInstitutionBase(OnboardingData onboardingData) {
         InstitutionBaseRequest institution = new InstitutionBaseRequest();
         institution.institutionType(InstitutionType.valueOf(onboardingData.getInstitutionType().name()));
         institution.taxCode(onboardingData.getTaxCode());
         institution.subunitCode(onboardingData.getSubunitCode());
         institution.subunitType(Optional.ofNullable(onboardingData.getSubunitType())
-                .map(InstitutionPaSubunitType::valueOf)
+                .map(it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionPaSubunitType::valueOf)
                 .orElse(null));
-        institution.setOrigin(Optional.ofNullable(onboardingData.getOrigin()).map(Origin::fromValue).orElse(null));
+        institution.setOrigin(Optional.ofNullable(onboardingData.getOrigin()).map(it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.Origin::fromValue).orElse(null));
         institution.setOriginId(onboardingData.getOriginId());
         if(Objects.nonNull(onboardingData.getLocation())) {
             institution.setCity(onboardingData.getLocation().getCity());
@@ -78,7 +78,7 @@ public interface OnboardingMapper {
     @Named("toInstitutionPsp")
     default InstitutionPspRequest toInstitutionPsp(OnboardingData onboardingData) {
         InstitutionPspRequest institutionPsp = new InstitutionPspRequest();
-        institutionPsp.institutionType(InstitutionType.valueOf(onboardingData.getInstitutionType().name()));
+        institutionPsp.institutionType(it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionType.valueOf(onboardingData.getInstitutionType().name()));
         institutionPsp.taxCode(onboardingData.getTaxCode());
         institutionPsp.subunitCode(onboardingData.getSubunitCode());
         institutionPsp.subunitType(Optional.ofNullable(onboardingData.getSubunitType())
@@ -118,7 +118,7 @@ public interface OnboardingMapper {
     DataProtectionOfficerRequest toDataProtectionOfficerRequest(DataProtectionOfficer dataProtectionOfficer);
 
     @Mapping(target = "institutionUpdate", source = "institution")
-    OnboardingData toOnboardingData(OnboardingGet onboardingGet);
+    OnboardingData toOnboardingData(it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGet onboardingGet);
 
     @Mapping(target = "createdAt", expression = "java(institutionResponse.getCreatedAt() != null ? institutionResponse.getCreatedAt().atOffset(java.time.ZoneOffset.UTC) : null)")
     @Mapping(target = "updatedAt", expression = "java(institutionResponse.getUpdatedAt() != null ? institutionResponse.getCreatedAt().atOffset(java.time.ZoneOffset.UTC) : null)")

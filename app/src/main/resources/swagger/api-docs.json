@@ -485,7 +485,7 @@
         }, {
           "name" : "productRoles",
           "in" : "query",
-          "description" : "User's roles in product",
+          "description" : "Specific role of the user related to the product.",
           "required" : false,
           "style" : "form",
           "explode" : true,
@@ -1119,12 +1119,12 @@
       "get" : {
         "tags" : [ "User", "external-v2" ],
         "summary" : "getUserInstitution",
-        "description" : "The API retrieves paged users with optional filters in input as query params",
+        "description" : "This endpoint retrieves detailed information about a user's association with various products within an institution. The response provides a comprehensive view of the user's roles, product statuses and the relevant timestamps.",
         "operationId" : "v2getUserInstitution",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "query",
-          "description" : "institutionId",
+          "description" : "Institution's unique internal Id",
           "required" : false,
           "style" : "form",
           "schema" : {
@@ -1133,7 +1133,7 @@
         }, {
           "name" : "userId",
           "in" : "query",
-          "description" : "userId",
+          "description" : "User's unique identifier",
           "required" : false,
           "style" : "form",
           "schema" : {
@@ -1142,18 +1142,18 @@
         }, {
           "name" : "roles",
           "in" : "query",
-          "description" : "roles",
+          "description" : "General role of the user related to the product.",
           "required" : false,
           "style" : "form",
           "explode" : true,
           "schema" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           }
         }, {
           "name" : "states",
           "in" : "query",
-          "description" : "states",
+          "description" : "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED",
           "required" : false,
           "style" : "form",
           "explode" : true,
@@ -1173,7 +1173,7 @@
         }, {
           "name" : "productRoles",
           "in" : "query",
-          "description" : "productRoles",
+          "description" : "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED",
           "required" : false,
           "style" : "form",
           "explode" : true,
@@ -1736,7 +1736,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1859,7 +1859,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -1953,7 +1953,7 @@
           },
           "institutionType" : {
             "type" : "string",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "paymentServiceProvider" : {
             "$ref" : "#/components/schemas/PaymentServiceProvider"
@@ -2008,7 +2008,7 @@
           },
           "institutionType" : {
             "type" : "string",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "paymentServiceProvider" : {
             "$ref" : "#/components/schemas/PspDataResource"
@@ -2079,7 +2079,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           }
         }
       },
@@ -2106,7 +2106,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "productInfo" : {
             "description" : "Products' info of onboardings",
@@ -2146,7 +2146,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",
@@ -2230,7 +2230,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -2316,7 +2316,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roleLabel" : {
             "type" : "string"
@@ -2591,7 +2591,7 @@
           },
           "role" : {
             "type" : "string",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "state" : {
             "type" : "string",
@@ -2748,7 +2748,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "surname" : {
             "type" : "string",
@@ -2783,7 +2783,8 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "A unique identifier for the user-institution association record."
           },
           "institutionDescription" : {
             "type" : "string",
@@ -2791,10 +2792,11 @@
           },
           "institutionId" : {
             "type" : "string",
-            "description" : "Institution's Id"
+            "description" : "Institution's unique internal Id"
           },
           "institutionRootName" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "The root name of the institution"
           },
           "products" : {
             "type" : "array",
@@ -2818,20 +2820,24 @@
             "format" : "date-time"
           },
           "productId" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "Product's identifier"
           },
           "productRole" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "The specific role of the user related to the product."
           },
           "role" : {
             "type" : "string",
             "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA"
           },
           "status" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED"
           },
           "tokenId" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "A unique identifier for the token associated with the product."
           },
           "updatedAt" : {
             "type" : "string",
@@ -2864,7 +2870,7 @@
           "role" : {
             "type" : "string",
             "description" : "User's role",
-            "enum" : [ "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
           },
           "roles" : {
             "type" : "array",
