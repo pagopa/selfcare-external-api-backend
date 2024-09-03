@@ -5,6 +5,9 @@
             <value>@((string)context.Variables["jwt"])</value>
         </set-header>
         <set-backend-service base-url="${MS_BACKEND_URL}" />
+        <set-query-parameter name="productId" exists-action="override">
+            <value>@((string)context.Variables["productId"])</value>
+        </set-query-parameter>
     </inbound>
     <backend>
         <base/>
