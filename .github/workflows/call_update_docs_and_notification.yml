@@ -113,7 +113,7 @@ jobs:
                 --no-wait
 
         - name: Extract changes MD
-          if: ${{ inputs.enable_notification == 'true'}}
+          if: ${{ inputs.enable_notification }}
           id: extract_change_md
           shell: bash
           run: |
@@ -122,7 +122,7 @@ jobs:
             echo "$changed_operations" > changed_operations.txt
 
         - name: Send HTTP POST notification using Slack
-          if: ${{ inputs.enable_notification == 'true'}}
+          if: ${{ inputs.enable_notification }}
           run: |
             body_content=$(cat changed_operations.txt)
             curl -X POST https://hooks.slack.com/triggers/${{ secrets.API_NOTIFICATION_TRIGGERS_ID }} \
