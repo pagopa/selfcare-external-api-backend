@@ -169,12 +169,13 @@ jobs:
       name: "[MS External] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
       needs: [setup,release]
-      if: ${{ needs.setup.outputs.notification == 'true' }}
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
         docs_openapi_path: developer/external/v2/ms-external-api.json
         api_title: External API v2
+        enable_notification: ${{ needs.setup.outputs.notification }}
+
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_EXTERNAL }}
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -183,12 +184,12 @@ jobs:
       name: "[Support API] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
       needs: [setup,release]
-      if: ${{ needs.setup.outputs.notification == 'true' }}
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/selfcare_support_service/v1
         docs_openapi_path: developer/support/v1/selc-support-api.json
         api_title: Support API v1
+        enable_notification: ${{ needs.setup.outputs.notification }}
 
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_SUPPORT }}
