@@ -174,7 +174,7 @@ jobs:
         api_folder_path: /api/ms_external_api/v2
         docs_openapi_path: developer/external/v2/ms-external-api.json
         api_title: External API v2
-        enable_notification: ${{ needs.setup.outputs.notification }}
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
 
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_EXTERNAL }}
@@ -189,7 +189,7 @@ jobs:
         api_folder_path: /api/selfcare_support_service/v1
         docs_openapi_path: developer/support/v1/selc-support-api.json
         api_title: Support API v1
-        enable_notification: ${{ needs.setup.outputs.notification }}
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
 
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_SUPPORT }}
