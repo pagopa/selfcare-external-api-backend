@@ -305,7 +305,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getInstitutionUserProductsUsingGET"
+      operation_id = "getInstitutionProductsUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
@@ -337,7 +337,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getUserInfoUsingPOST"
+      operation_id = "V2getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
@@ -345,7 +345,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getInstitution"
+      operation_id = "retrieveInstitutionByIdUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
@@ -353,7 +353,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getInstitutionProductUsersUsingGET"
+      operation_id = "getInstitutionUsersByProductUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
@@ -409,7 +409,7 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
-      operation_id = "getUserInstitutionUsingGET"
+      operation_id = "v2getUserInstitution"
       xml_content = templatefile("./api/ms_external_api/v2/getUserInstitutionUsingGet_op_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
       })

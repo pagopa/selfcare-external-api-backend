@@ -401,7 +401,7 @@
         ],
         "summary": "getInstitutionProductUsers",
         "description": "Service to get all the active users related to the provided institution and the product retrieved from Subscription Key",
-        "operationId": "getInstitutionProductUsersUsingGET",
+        "operationId": "getInstitutionUsersByProductUsingGET",
         "parameters": [
           {
             "name": "institutionId",
