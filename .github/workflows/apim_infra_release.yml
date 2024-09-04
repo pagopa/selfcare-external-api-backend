@@ -20,7 +20,10 @@ on:
                 - dev
                 - uat
                 - prod
-
+        notification:
+          required: true
+          type: boolean
+          default: true
 env:
   DIR: "./infra/apim_v2"
   ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
@@ -35,17 +38,20 @@ jobs:
       runs-on: 'ubuntu-latest'
       outputs:
         environ: ${{ steps.set-env.outputs.environ }}
+        notification: ${{ steps.set-env.outputs.notification }}
       steps:
         - name: Set Environment Variable
           id: set-env
           run: |
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
               echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+              echo "notification=${{ github.event.inputs.notification }}" >> $GITHUB_OUTPUT
             else
               if [ "${{ github.ref }}" == "refs/heads/main" ]; then
                 echo "environ=dev" >> $GITHUB_OUTPUT
               else
                 echo "environ=uat" >> $GITHUB_OUTPUT
+                echo "notification=true" >> $GITHUB_OUTPUT
               fi
             fi
     tf_plan:
@@ -163,6 +169,7 @@ jobs:
       name: "[MS External] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
       needs: [setup,release]
+      if: ${{ needs.setup.outputs.notification == 'true' }}
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
@@ -176,6 +183,7 @@ jobs:
       name: "[Support API] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
       needs: [setup,release]
+      if: ${{ needs.setup.outputs.notification == 'true' }}
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/selfcare_support_service/v1
