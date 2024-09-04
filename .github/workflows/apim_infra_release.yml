@@ -112,6 +112,7 @@ jobs:
         runs-on: ubuntu-20.04
         needs: [setup,tf_plan]
         environment: ${{ needs.setup.outputs.environ }}-cd
+        if: false
         permissions:
           id-token: write
           contents: read
@@ -168,7 +169,7 @@ jobs:
     update_docs_and_notification:
       name: "[MS External] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
-      needs: [setup,release]
+      needs: [setup]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
@@ -183,7 +184,7 @@ jobs:
     update_docs_and_notification_support:
       name: "[Support API] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
-      needs: [setup,release]
+      needs: [setup]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/selfcare_support_service/v1
