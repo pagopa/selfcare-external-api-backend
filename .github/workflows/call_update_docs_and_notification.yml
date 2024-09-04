@@ -15,6 +15,20 @@ on:
           description: Path of docs storage openapi
           required: true
          #developer/external/v2/ms-external-api.json
+        api_title:
+          type: string
+          description: Title of API to show on message
+          required: true
+        enable_notification:
+          required: true
+          type: boolean
+          default: true
+    
+      secrets:
+        API_NOTIFICATION_TRIGGERS_ID:
+          required: true
+        ARM_CLIENT_ID:
+          required: true
 
 env:
   DIR: "./infra/apim_v2"
@@ -71,7 +85,7 @@ jobs:
           id: optic_diff
           shell: bash
           run: |
-            optic_output=$(optic diff ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json ./docs${{ inputs.docs_openapi_path }})
+            optic_output=$(optic diff ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json ./docs/${{ inputs.docs_openapi_path }})
             echo "$optic_output"
             echo "$optic_output" > optic_diff_output.txt
             if grep -q "Operations: No operations changed" optic_diff_output.txt; then
@@ -90,29 +104,30 @@ jobs:
                 --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa \
                 --file "${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json" \
                 --overwrite true \
-                --name '${{ inputs.docs_openapi_path }}' &&
+                --name '/${{ inputs.docs_openapi_path }}' &&
               az cdn endpoint purge \
                 --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}-checkout-fe-rg \
                 --name ${{ steps.extract_env_short.outputs.checkout_cdn_name }} \
                 --profile-name ${{ steps.extract_env_short.outputs.checkout_cdn_profile }} \
-                --content-paths "${{ inputs.docs_openapi_path }}" \
+                --content-paths "/${{ inputs.docs_openapi_path }}" \
                 --no-wait
 
         - name: Extract changes MD
+          if: ${{ inputs.enable_notification && steps.optic_diff.outputs.changes_detected == 'true' }}
           id: extract_change_md
           shell: bash
-          if: ${{ steps.optic_diff.outputs.changes_detected == 'true'}}
           run: |
             changed_operations=$(awk '/Operations/{flag=1; next} /Rerun this/{flag=0} flag' optic_diff_output.txt)
             echo "$changed_operations"
             echo "$changed_operations" > changed_operations.txt
 
         - name: Send HTTP POST notification using Slack
-          if: ${{ steps.optic_diff.outputs.changes_detected == 'true'}}
+          if: ${{ inputs.enable_notification && steps.optic_diff.outputs.changes_detected == 'true' }}
           run: |
             body_content=$(cat changed_operations.txt)
             curl -X POST https://hooks.slack.com/triggers/${{ secrets.API_NOTIFICATION_TRIGGERS_ID }} \
             -H "Content-Type: application/json" \
             -d '{
-                  "body": "'"$body_content"'"
+                  "body": "'"$body_content"'",
+                  "title": "${{ inputs.api_title }}"
                 }'

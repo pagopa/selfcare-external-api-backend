@@ -20,7 +20,11 @@ on:
                 - dev
                 - uat
                 - prod
-
+        notification:
+          required: true
+          type: boolean
+          description: "Send notification to Slack"
+          default: true
 env:
   DIR: "./infra/apim_v2"
   ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
@@ -35,17 +39,20 @@ jobs:
       runs-on: 'ubuntu-latest'
       outputs:
         environ: ${{ steps.set-env.outputs.environ }}
+        notification: ${{ steps.set-env.outputs.notification }}
       steps:
         - name: Set Environment Variable
           id: set-env
           run: |
             if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
               echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+              echo "notification=${{ github.event.inputs.notification }}" >> $GITHUB_OUTPUT
             else
               if [ "${{ github.ref }}" == "refs/heads/main" ]; then
                 echo "environ=dev" >> $GITHUB_OUTPUT
               else
                 echo "environ=uat" >> $GITHUB_OUTPUT
+                echo "notification=true" >> $GITHUB_OUTPUT
               fi
             fi
     tf_plan:
@@ -162,12 +169,31 @@ jobs:
     update_docs_and_notification:
       name: "[MS External] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
-      secrets: inherit
       needs: [setup,release]
       with:
         env: ${{ needs.setup.outputs.environ }}
         api_folder_path: /api/ms_external_api/v2
-        docs_openapi_path: /developer/external/v2/ms-external-api.json
-  
+        docs_openapi_path: developer/external/v2/ms-external-api.json
+        api_title: External API v2
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
+
+      secrets:
+        API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_EXTERNAL }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+
+    update_docs_and_notification_support:
+      name: "[Support API] Update Developer Docs and Notify using Slack"
+      uses: ./.github/workflows/call_update_docs_and_notification.yml
+      needs: [setup,release]
+      with:
+        env: ${{ needs.setup.outputs.environ }}
+        api_folder_path: /api/selfcare_support_service/v1
+        docs_openapi_path: developer/support/v1/selc-support-api.json
+        api_title: Support API v1
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
+
+      secrets:
+        API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_SUPPORT }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       
        
