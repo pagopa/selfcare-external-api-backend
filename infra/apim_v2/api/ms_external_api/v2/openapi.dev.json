@@ -259,6 +259,97 @@
         ]
       }
     },
+    "/institutions/": {
+      "get": {
+        "tags": [
+          "institutions"
+        ],
+        "summary": "Gets institutions filtering by taxCode and/or subunitCode",
+        "description": "Gets institutions filtering by taxCode and/or subunitCode",
+        "operationId": "getInstitutionsUsingGET",
+        "parameters": [
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Institution's tax code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subunitCode",
+            "in": "query",
+            "description": "Institution's subunit code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "origin",
+            "in": "query",
+            "description": "origin",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "originId",
+            "in": "query",
+            "description": "originId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/institutions/{id}": {
       "get": {
         "tags": [
@@ -2616,6 +2707,18 @@
                 "SUSPENDED",
                 "TOBEVALIDATED"
               ]
+            }
+          }
+        }
+      },
+      "InstitutionsResponse": {
+        "title": "InstitutionsResponse",
+        "type": "object",
+        "properties": {
+          "institutions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstitutionResponse"
             }
           }
         }
