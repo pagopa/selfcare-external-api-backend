@@ -21,162 +21,6 @@
     }
   ],
   "paths": {
-    "/support": {
-      "post": {
-        "tags": [
-          "support"
-        ],
-        "summary": "sendSupportRequest",
-        "deprecated": true,
-        "description": "Service to retrieve Support contact's form. It is deprecated because  is no longer used",
-        "operationId": "sendSupportRequestUsingPOST",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SupportRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/message/{messageId}/status/{status}": {
-      "post": {
-        "tags": [
-          "interceptor"
-        ],
-        "summary": "messageAcknowledgment",
-        "description": "Service to acknowledge message consumption by a consumer",
-        "operationId": "messageAcknowledgmentUsingPOST",
-        "parameters": [
-          {
-            "name": "messageId",
-            "in": "path",
-            "description": "Kafka message unique identifier",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "path",
-            "description": "Kafka message consumption acknowledgment status",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "ACK",
-                "NACK"
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AckPayloadRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/institutions/byGeoTaxonomies": {
       "get": {
         "tags": [
@@ -473,7 +317,7 @@
         "summary": "getInstitutions",
         "deprecated": true,
         "description": "The service retrieves all the onboarded institutions related to the provided user and the product retrieved from Subscription Key. It is deprecated in favor of endpoint /users?institutionId={institutionId}",
-        "operationId": "getInstitutionsUsingGET",
+        "operationId": "getInstitutionsUsingGETDeprecated",
         "parameters": [
           {
             "name": "userIdForAuth",
@@ -557,7 +401,7 @@
         ],
         "summary": "getInstitutionProductUsers",
         "description": "Service to get all the active users related to the provided institution and the product retrieved from Subscription Key",
-        "operationId": "getInstitutionProductUsersUsingGET",
+        "operationId": "getInstitutionUsersByProductUsingGET",
         "parameters": [
           {
             "name": "institutionId",
@@ -1047,99 +891,6 @@
         ]
       }
     },
-    "/product": {
-      "get": {
-        "tags": [
-          "product"
-        ],
-        "summary": "getProduct",
-        "deprecated": true,
-        "description": "The service retrieves Product information related to Subscription Key. It is deprecated because  is no longer used",
-        "operationId": "getProductUsingGET",
-        "parameters": [
-          {
-            "name": "institutionType",
-            "in": "query",
-            "description": "Institution's type",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "GSP",
-                "PA",
-                "PSP",
-                "PT",
-                "SCP",
-                "SA",
-                "AS",
-                "REC",
-                "CON"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/delegations": {
       "get": {
         "tags": [
@@ -1531,7 +1282,7 @@
         ],
         "summary": "Gets institutions filtering by taxCode and/or subunitCode",
         "description": "Gets institutions filtering by taxCode and/or subunitCode",
-        "operationId": "getInstitutionsByTaxCodeUsingGET",
+        "operationId": "getInstitutionsUsingGET",
         "parameters": [
           {
             "name": "taxCode",
@@ -1689,19 +1440,6 @@
   },
   "components": {
     "schemas": {
-      "AckPayloadRequest": {
-        "title": "AckPayloadRequest",
-        "required": [
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Acknowledgment request payload message"
-          }
-        }
-      },
       "GeographicTaxonomyResource": {
         "title": "GeographicTaxonomyResource",
         "type": "object",
@@ -1832,29 +1570,6 @@
           "zipCode": {
             "type": "string",
             "description": "Institution's zipCode"
-          }
-        }
-      },
-      "InstitutionLocationDataDto": {
-        "title": "InstitutionLocationDataDto",
-        "required": [
-          "city",
-          "country",
-          "county"
-        ],
-        "type": "object",
-        "properties": {
-          "city": {
-            "type": "string",
-            "description": "Institution's physical address city"
-          },
-          "country": {
-            "type": "string",
-            "description": "Institution's physical address country"
-          },
-          "county": {
-            "type": "string",
-            "description": "Institution's physical address county"
           }
         }
       },
@@ -2909,39 +2624,6 @@
           }
         }
       },
-      "GeographicTaxonomies": {
-        "title": "GeographicTaxonomies",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "country_abbreviation": {
-            "type": "string"
-          },
-          "desc": {
-            "type": "string"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "istat_code": {
-            "type": "string"
-          },
-          "province_abbreviation": {
-            "type": "string"
-          },
-          "province_id": {
-            "type": "string"
-          },
-          "region_id": {
-            "type": "string"
-          }
-        }
-      },
       "PaymentServiceProviderResponse": {
         "title": "PaymentServiceProviderResponse",
         "type": "object",
@@ -3031,33 +2713,6 @@
           },
           "vatNumber": {
             "type": "string"
-          }
-        }
-      },
-      "SupportRequestDto": {
-        "title": "SupportRequestDto",
-        "required": [
-          "email"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email",
-            "example": "email@example.com"
-          },
-          "institutionId": {
-            "type": "string",
-            "description": "Institution's identifier"
-          },
-          "productId": {
-            "type": "string",
-            "description": "Product's identifier"
-          },
-          "userId": {
-            "type": "string",
-            "description": "User's identifier"
           }
         }
       },
