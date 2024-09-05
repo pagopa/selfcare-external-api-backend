@@ -8,8 +8,8 @@ import it.pagopa.selfcare.external_api.core.UserService;
 import it.pagopa.selfcare.external_api.model.documents.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
-import it.pagopa.selfcare.external_api.web.model.mapper.*;
 import it.pagopa.selfcare.external_api.web.model.mapper.InstitutionResourceMapperImpl;
+import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.web.model.mapper.ProductsMapperImpl;
 import it.pagopa.selfcare.product.entity.Product;
 import org.apache.commons.lang3.StringUtils;
@@ -204,15 +204,6 @@ class InstitutionControllerV2Test extends BaseControllerTest{
                 .andExpect(content().bytes(resourceResponse.getData()));
     }
 
-    @Test
-    void getContractOkWithoutProductId() throws Exception {
-
-        String institutionId = "institutionId";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
-                .accept(MediaType.APPLICATION_OCTET_STREAM))
-                .andExpect(status().isBadRequest());
-    }
 
     @Test
     void getInstitutionUserProductsWith2Elements() throws Exception {

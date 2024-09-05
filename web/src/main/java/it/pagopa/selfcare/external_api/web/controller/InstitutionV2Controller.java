@@ -48,7 +48,6 @@ public class InstitutionV2Controller {
 
     @Tag(name = "Institution")
     @Tag(name = "external-pnpg")
-    @Tag(name = "external-v2")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
     @Deprecated
@@ -77,7 +76,7 @@ public class InstitutionV2Controller {
     public ResponseEntity<byte[]> getContract(@ApiParam("${swagger.external_api.institutions.model.id}")
                                               @PathVariable("institutionId") String institutionId,
                                               @ApiParam("${swagger.external_api.products.model.id}")
-                                              @RequestParam(value = "productId") String productId){
+                                              @RequestParam(value = "productId", required = false) String productId){
         log.trace("getContract start");
         log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
         ResourceResponse contract = contractService.getContractV2(institutionId, productId);
@@ -120,10 +119,10 @@ public class InstitutionV2Controller {
     public List<UserResource> getInstitutionUsersByProduct(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                            @PathVariable("institutionId") String institutionId,
                                                            @ApiParam("${swagger.external_api.products.model.id}")
-                                                           @RequestParam("productId")
+                                                           @RequestParam(value = "productId", required = false)
                                                            String productId,
                                                            @ApiParam("${swagger.external_api.user.model.id}")
-                                                           @RequestParam(value = "userId", required = false)
+                                                           @RequestParam(value = "userIdForAuth", required = false)
                                                            Optional<String> userId,
                                                            @ApiParam("${swagger.external_api.model.productRoles}")
                                                            @RequestParam(value = "productRoles", required = false)
