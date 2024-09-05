@@ -268,7 +268,7 @@
     "/institutions": {
       "get": {
         "tags": [
-          "institutions"
+          "Institution"
         ],
         "summary": "getInstitutions",
         "deprecated": true,
