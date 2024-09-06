@@ -166,7 +166,7 @@ jobs:
             env:
               TF_VAR_image_tag: ${{ needs.tf_plan.outputs.image_tag }}
 
-    update_docs_and_notification:
+    update_docs_and_notification_external:
       name: "[MS External] Update Developer Docs and Notify using Slack"
       uses: ./.github/workflows/call_update_docs_and_notification.yml
       needs: [setup,release]
@@ -194,6 +194,21 @@ jobs:
 
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_SUPPORT }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+
+    update_docs_and_notification_internal:
+      name: "[Internal API] Update Developer Docs and Notify using Slack"
+      uses: ./.github/workflows/call_update_docs_and_notification.yml
+      needs: [setup,release]
+      with:
+        env: ${{ needs.setup.outputs.environ }}
+        api_folder_path: /api/ms_internal_api/v1
+        docs_openapi_path: developer/internal/v1/selc-internal-api.json
+        api_title: Internal API v1
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
+
+      secrets:
+        API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_INTERNAL }}
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       
        
