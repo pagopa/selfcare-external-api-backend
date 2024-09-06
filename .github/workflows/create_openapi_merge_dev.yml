@@ -36,7 +36,7 @@ on:
         - prod
 
   schedule:
-    - cron: '00 9 * * 1-5' # DEV
+    - cron: '05 10 * * *' # DEV
     #- cron: '30 5 * * 1,5' # UAT
     #- cron: '30 5 * * 1,5' # PROD
 
