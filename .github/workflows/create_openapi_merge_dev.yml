@@ -1,51 +1,81 @@
 name: Create OpenAPI merge
 
 on:
-    workflow_dispatch:
-        inputs:
-          selc-ms-external-api:
-            type: boolean
-            description: Enable creation of Selc External API
-            default: True
-          selc-external-api-contract:
-            type: boolean
-            description: Enable creation of Selc External Contract API
-            default: True
-          selc-ms-internal-api:
-            type: boolean
-            description: Enable creation of Selc Internal API
-            default: True
-          selc-support-service:
-            type: boolean
-            description: Enable creation of Selc Support Service API
-            default: True
-          pnpg-ms-external-api:
-            type: boolean
-            description: Enable creation of PNPG External API
-            default: True
-          pnpg-support-service:
-            type: boolean
-            description: Enable creation of PNPG Support Service API
-            default: True
-          env:
-            type: choice
-            description: Environment
-            options: 
-            - dev
-            - uat
-            - prod
+  workflow_dispatch:
+    inputs:
+      selc-ms-external-api:
+        type: boolean
+        description: Enable creation of Selc External API
+        default: True
+      selc-external-api-contract:
+        type: boolean
+        description: Enable creation of Selc External Contract API
+        default: True
+      selc-ms-internal-api:
+        type: boolean
+        description: Enable creation of Selc Internal API
+        default: True
+      selc-support-service:
+        type: boolean
+        description: Enable creation of Selc Support Service API
+        default: True
+      pnpg-ms-external-api:
+        type: boolean
+        description: Enable creation of PNPG External API
+        default: True
+      pnpg-support-service:
+        type: boolean
+        description: Enable creation of PNPG Support Service API
+        default: True
+      env:
+        type: choice
+        description: Environment
+        options: 
+        - dev
+        - uat
+        - prod
+
+  schedule:
+    - cron: '00 9 * * 1-5' # DEV
+    #- cron: '30 5 * * 1,5' # UAT
+    #- cron: '30 5 * * 1,5' # PROD
 
 jobs:
-    openapi_merge:
-      uses: ./.github/workflows/call_openapi_merge.yml
-      name: "Create OpenAPI merge"
-      secrets: inherit
-      with:
-        selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
-        selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
-        selc-ms-internal-api: ${{ inputs.selc-ms-internal-api }}
-        selc-support-service: ${{ inputs.selc-support-service }}
-        pnpg-ms-external-api: ${{ inputs.pnpg-ms-external-api }}
-        pnpg-support-service: ${{ inputs.pnpg-support-service }}
-        env: ${{ inputs.env }}
+
+  setup:
+    name: Setup Environment
+    runs-on: 'ubuntu-latest'
+    outputs:
+      environ: ${{ steps.set-env.outputs.environ }}
+    steps:
+      - name: Set Environment Variable
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            if [ "${{ github.event.schedule }}" == "00 11 * * 1-5" ]; then
+              echo "environ=prod" >> $GITHUB_OUTPUT
+            else
+              if [ "${{ github.event.schedule }}" == "00 9 * * 1-5" ]; then
+                echo "environ=dev" >> $GITHUB_OUTPUT
+              else
+                echo "environ=uat" >> $GITHUB_OUTPUT
+              fi
+            fi
+          fi
+
+  openapi_merge:
+    uses: ./.github/workflows/call_openapi_merge.yml
+    name: "Create OpenAPI merge"
+    secrets: inherit
+    needs: setup
+    with:
+      selc-ms-external-api: ${{ inputs.selc-ms-external-api }}
+      selc-external-api-contract: ${{ inputs.selc-external-api-contract }}
+      selc-ms-internal-api: ${{ inputs.selc-ms-internal-api }}
+      selc-support-service: ${{ inputs.selc-support-service }}
+      pnpg-ms-external-api: ${{ inputs.pnpg-ms-external-api }}
+      pnpg-support-service: ${{ inputs.pnpg-support-service }}
+      env: ${{ needs.setup.outputs.environ }}
     
