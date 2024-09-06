@@ -72,6 +72,7 @@ public class UserV2Controller {
 
 
     @Tag(name = "external-v2")
+    @Tag(name = "external-pnpg")
     @Tag(name = "User")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

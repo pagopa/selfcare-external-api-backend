@@ -1118,7 +1118,7 @@
     },
     "/v2/users" : {
       "get" : {
-        "tags" : [ "User", "external-v2" ],
+        "tags" : [ "User", "external-pnpg", "external-v2" ],
         "summary" : "getUserInstitution",
         "description" : "This endpoint retrieves detailed information about a user's association with various products within an institution. The response provides a comprehensive view of the user's roles, product statuses and the relevant timestamps.",
         "operationId" : "v2getUserInstitution",
