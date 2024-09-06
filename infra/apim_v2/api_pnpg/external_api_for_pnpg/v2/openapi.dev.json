@@ -16,6 +16,10 @@
       "description": "Institution V 2 Controller"
     },
     {
+      "name": "User",
+      "description": "User V 2 Controller"
+    },
+    {
       "name": "UserGroup",
       "description": "User group endpoint CRUD operations"
     }
@@ -284,14 +288,14 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "userId",
+            "name": "userIdForAuth",
             "in": "query",
             "description": "User's unique identifier",
             "required": false,
@@ -330,6 +334,173 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/UserResource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "getUserInstitution",
+        "description": "This endpoint retrieves detailed information about a user's association with various products within an institution. The response provides a comprehensive view of the user's roles, product statuses and the relevant timestamps.",
+        "operationId": "v2getUserInstitution",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "Institution's unique internal Id",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "in": "query",
+            "description": "General role of the user related to the product.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ADMIN_EA",
+                "DELEGATE",
+                "MANAGER",
+                "OPERATOR",
+                "SUB_DELEGATE"
+              ]
+            }
+          },
+          {
+            "name": "states",
+            "in": "query",
+            "description": "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "products",
+            "in": "query",
+            "description": "products",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productRoles",
+            "in": "query",
+            "description": "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserInstitutionResource"
                   }
                 }
               }
@@ -1237,6 +1408,76 @@
           "surname": {
             "type": "string",
             "description": "User's surname"
+          }
+        }
+      },
+      "UserInstitutionResource": {
+        "title": "UserInstitutionResource",
+        "required": [
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the user-institution association record."
+          },
+          "institutionDescription": {
+            "type": "string",
+            "description": "Institution's description"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "Institution's unique internal Id"
+          },
+          "institutionRootName": {
+            "type": "string",
+            "description": "The root name of the institution"
+          },
+          "products": {
+            "type": "array",
+            "description": "Object that includes all info about onboarded institutions linked to a user",
+            "items": {
+              "$ref": "#/components/schemas/UserProductResource"
+            }
+          },
+          "userId": {
+            "type": "string",
+            "description": "User's unique identifier"
+          }
+        }
+      },
+      "UserProductResource": {
+        "title": "UserProductResource",
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "productId": {
+            "type": "string",
+            "description": "Product's identifier"
+          },
+          "productRole": {
+            "type": "string",
+            "description": "The specific role of the user related to the product."
+          },
+          "role": {
+            "type": "string",
+            "description": "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA"
+          },
+          "status": {
+            "type": "string",
+            "description": "The current status of the user on the product. <br>Available values: ACTIVE, PENDING, TOBEVALIDATED, SUSPENDED, DELETED, REJECTED"
+          },
+          "tokenId": {
+            "type": "string",
+            "description": "A unique identifier for the token associated with the product."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
