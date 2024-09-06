@@ -36,7 +36,7 @@ on:
         - prod
 
   schedule:
-    - cron: '30 09 * * *' # DEV
+    - cron: '40 09 * * *' # DEV
     #- cron: '30 5 * * 1,5' # UAT
     #- cron: '30 5 * * 1,5' # PROD
 
@@ -69,7 +69,7 @@ jobs:
             if [ "${{ github.event.schedule }}" == "00 11 * * 1-5" ]; then
               echo "environ=prod" >> $GITHUB_OUTPUT
             else
-              if [ "${{ github.event.schedule }}" == "00 9 * * 1-5" ]; then
+              if [ "${{ github.event.schedule }}" == "40 9 * * 1-5" ]; then
                 echo "environ=dev" >> $GITHUB_OUTPUT
               else
                 echo "environ=uat" >> $GITHUB_OUTPUT
