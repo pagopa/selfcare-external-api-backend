@@ -360,14 +360,14 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "userId",
+            "name": "userIdForAuth",
             "in": "query",
             "description": "User's unique identifier",
             "required": false,
@@ -379,7 +379,7 @@
           {
             "name": "productRoles",
             "in": "query",
-            "description": "User's roles in product",
+            "description": "Specific role of the user related to the product.",
             "required": false,
             "style": "form",
             "explode": true,
@@ -982,6 +982,9 @@
           "istatCode": {
             "type": "string"
           },
+          "logo": {
+            "type": "string"
+          },
           "onboarding": {
             "type": "array",
             "items": {
@@ -1263,6 +1266,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1324,6 +1328,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1581,6 +1586,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1626,6 +1632,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1706,6 +1713,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1855,6 +1863,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",

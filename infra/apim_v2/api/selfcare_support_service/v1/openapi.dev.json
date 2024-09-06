@@ -562,7 +562,7 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
@@ -1471,6 +1471,9 @@
           "istatCode": {
             "type": "string"
           },
+          "logo": {
+            "type": "string"
+          },
           "onboarding": {
             "type": "array",
             "items": {
@@ -1841,6 +1844,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1921,6 +1925,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2070,6 +2075,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2202,6 +2208,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2302,6 +2309,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2356,6 +2364,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2415,6 +2424,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2594,14 +2604,16 @@
           "PSP",
           "AS",
           "REC",
-          "CON"
+          "CON",
+          "PRV"
         ],
         "type": "string"
       },
       "InstitutionPaSubunitType": {
         "enum": [
           "AOO",
-          "UO"
+          "UO",
+          "EC"
         ],
         "type": "string"
       },
@@ -2614,7 +2626,8 @@
           "UNKNOWN",
           "ADE",
           "INFOCAMERE",
-          "IVASS"
+          "IVASS",
+          "PDND_INFOCAMERE"
         ],
         "type": "string"
       },
