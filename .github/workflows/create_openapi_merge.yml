@@ -36,9 +36,9 @@ on:
         - prod
 
   schedule:
-    - cron: '35 10 * * 1-5' # DEV
-    #- cron: '30 5 * * 1,5' # UAT
-    #- cron: '30 5 * * 1,5' # PROD
+    - cron: '00 14 * * 1-5' # DEV
+    - cron: '15 14 * * 1,5' # UAT
+    - cron: '30 14 * * 1,5' # PROD
 
 jobs:
 
@@ -66,13 +66,13 @@ jobs:
             echo "pnpg-support-service=${{ github.event.inputs.pnpg-support-service }}" >> $GITHUB_OUTPUT
             echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           else
-            if [ "${{ github.event.schedule }}" == "00 11 * * 1-5" ]; then
+            if [ "${{ github.event.schedule }}" == "30 14 * * 1-5" ]; then
               echo "environ=prod" >> $GITHUB_OUTPUT
             else
-              if [ "${{ github.event.schedule }}" == "35 10 * * 1-5" ]; then
-                echo "environ=dev" >> $GITHUB_OUTPUT
-              else
+              if [ "${{ github.event.schedule }}" == "15 14 * * 1-5" ]; then
                 echo "environ=uat" >> $GITHUB_OUTPUT
+              else
+                echo "environ=dev" >> $GITHUB_OUTPUT
               fi
             fi
 
