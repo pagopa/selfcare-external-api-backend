@@ -36,7 +36,7 @@ on:
         - prod
 
   schedule:
-    - cron: '40 09 * * *' # DEV
+    - cron: '35 10 * * 1-5' # DEV
     #- cron: '30 5 * * 1,5' # UAT
     #- cron: '30 5 * * 1,5' # PROD
 
@@ -76,7 +76,7 @@ jobs:
               fi
             fi
 
-            echo "selc-ms-external-api=true" >> $GITHUB_OUTPUT
+            echo "selc-ms-external-api=false" >> $GITHUB_OUTPUT
             echo "selc-external-api-contract=true" >> $GITHUB_OUTPUT
             echo "selc-ms-internal-api=true" >> $GITHUB_OUTPUT
             echo "selc-support-service=true" >> $GITHUB_OUTPUT
