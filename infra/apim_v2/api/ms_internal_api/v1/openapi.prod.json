@@ -360,14 +360,14 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "userId",
+            "name": "userIdForAuth",
             "in": "query",
             "description": "User's unique identifier",
             "required": false,
@@ -379,7 +379,7 @@
           {
             "name": "productRoles",
             "in": "query",
-            "description": "User's roles in product",
+            "description": "Specific role of the user related to the product.",
             "required": false,
             "style": "form",
             "explode": true,
@@ -625,7 +625,6 @@
       "put": {
         "tags": [],
         "summary": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
-        "operationId": "completeOnboardingUsingPUT",
         "parameters": [
           {
             "name": "onboardingId",
@@ -683,7 +682,6 @@
           "Onboarding"
         ],
         "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
             "name": "onboardingId",
@@ -1266,6 +1264,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1327,6 +1326,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1584,6 +1584,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1629,6 +1630,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1709,6 +1711,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1858,6 +1861,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
