@@ -1416,6 +1416,39 @@
   },
   "components" : {
     "schemas" : {
+      "AdditionalInformationsDto" : {
+        "title" : "AdditionalInformationsDto",
+        "type" : "object",
+        "properties" : {
+          "agentOfPublicService" : {
+            "type" : "boolean"
+          },
+          "agentOfPublicServiceNote" : {
+            "type" : "string"
+          },
+          "belongRegulatedMarket" : {
+            "type" : "boolean"
+          },
+          "establishedByRegulatoryProvision" : {
+            "type" : "boolean"
+          },
+          "establishedByRegulatoryProvisionNote" : {
+            "type" : "string"
+          },
+          "ipa" : {
+            "type" : "boolean"
+          },
+          "ipaCode" : {
+            "type" : "string"
+          },
+          "otherNote" : {
+            "type" : "string"
+          },
+          "regulatedMarketNote" : {
+            "type" : "string"
+          }
+        }
+      },
       "AssistanceContactsDto" : {
         "title" : "AssistanceContactsDto",
         "type" : "object",
@@ -2205,6 +2238,10 @@
         "required" : [ "geographicTaxonomies", "institutionType", "productId", "users" ],
         "type" : "object",
         "properties" : {
+          "additionalInformations" : {
+            "description" : "GSP institution's additional informations",
+            "$ref" : "#/components/schemas/AdditionalInformationsDto"
+          },
           "assistanceContacts" : {
             "description" : "Institution's assistance contacts",
             "$ref" : "#/components/schemas/AssistanceContactsDto"
