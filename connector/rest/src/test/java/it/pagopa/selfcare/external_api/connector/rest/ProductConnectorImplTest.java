@@ -64,7 +64,7 @@ class ProductConnectorImplTest {
         contractStorage.setContractTemplateUpdatedAt(Instant.now());
         contractStorage.setContractTemplatePath("contractTemplatePath");
         contractStorage.setContractTemplateVersion("contractTemplateVersion");
-        final Map<InstitutionType, ContractStorage> contractStorageMap = Map.of(InstitutionType.PA,contractStorage);
+        final Map<String, ContractStorage> contractStorageMap = Map.of(InstitutionType.PA.name(),contractStorage);
         product.setInstitutionContractMappings(contractStorageMap);
         final String productId = "productId";
         when(productService.getProduct(anyString())).thenReturn(product);
@@ -84,7 +84,7 @@ class ProductConnectorImplTest {
         contractStorage.setContractTemplateUpdatedAt(Instant.now());
         contractStorage.setContractTemplatePath("contractTemplatePath");
         contractStorage.setContractTemplateVersion("contractTemplateVersion");
-        final Map<InstitutionType, ContractStorage> contractStorageMap = Map.of(InstitutionType.PA,contractStorage);
+        final Map<String, ContractStorage> contractStorageMap = Map.of(InstitutionType.PA.name(),contractStorage);
         product.setInstitutionContractMappings(contractStorageMap);
         final String productId = "productId";
         when(productService.getProduct(anyString())).thenReturn(product);
