@@ -1314,6 +1314,9 @@
               "$ref": "#/components/schemas/GeographicTaxonomyDto"
             }
           },
+          "additionalInformations" : {
+            "$ref" : "#/components/schemas/AdditionalInformationsDto"
+          },
           "institutionLocationData": {
             "description": "Institution's location Data",
             "$ref": "#/components/schemas/InstitutionLocationDataDto"
@@ -1436,6 +1439,38 @@
           "zipCode": {
             "type": "string",
             "description": "Institution's zipCode"
+          }
+        }
+      },
+      "AdditionalInformationsDto" : {
+        "type" : "object",
+        "properties" : {
+          "belongRegulatedMarket" : {
+            "type" : "boolean"
+          },
+          "regulatedMarketNote" : {
+            "type" : "string"
+          },
+          "ipa" : {
+            "type" : "boolean"
+          },
+          "ipaCode" : {
+            "type" : "string"
+          },
+          "establishedByRegulatoryProvision" : {
+            "type" : "boolean"
+          },
+          "establishedByRegulatoryProvisionNote" : {
+            "type" : "string"
+          },
+          "agentOfPublicService" : {
+            "type" : "boolean"
+          },
+          "agentOfPublicServiceNote" : {
+            "type" : "string"
+          },
+          "otherNote" : {
+            "type" : "string"
           }
         }
       },
