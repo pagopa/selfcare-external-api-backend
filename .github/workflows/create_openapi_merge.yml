@@ -64,7 +64,7 @@ jobs:
             echo "selc-support-service=${{ github.event.inputs.selc-support-service }}" >> $GITHUB_OUTPUT
             echo "pnpg-ms-external-api=${{ github.event.inputs.pnpg-ms-external-api }}" >> $GITHUB_OUTPUT
             echo "pnpg-support-service=${{ github.event.inputs.pnpg-support-service }}" >> $GITHUB_OUTPUT
-            echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "environ=${{ inputs.env }}" >> $GITHUB_OUTPUT
           else
             if [ "${{ github.event.schedule }}" == "30 14 * * 1-5" ]; then
               echo "environ=prod" >> $GITHUB_OUTPUT
