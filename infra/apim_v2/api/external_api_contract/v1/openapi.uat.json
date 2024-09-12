@@ -40,7 +40,7 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
