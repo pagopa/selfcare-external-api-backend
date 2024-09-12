@@ -62,7 +62,7 @@ jobs:
       name: 'Create OpenAPI merge'
       runs-on: ubuntu-20.04
       needs: setup
-      environment: ${{ inputs.env }}-ci
+      environment: ${{ inputs.env }}-cd
       permissions:
         id-token: write
         contents: write
