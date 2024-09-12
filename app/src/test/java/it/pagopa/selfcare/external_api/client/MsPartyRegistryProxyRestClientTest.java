@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.client.config.MsPartyRegistryProxyRestClientTestConfig;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResourceInfo;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
@@ -62,7 +63,7 @@ class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
                 //given
                 String institutionExternalId = "institutionExteranlIdFullyValued";
                 //when
-                InstitutionResourceInfo response = restClient.findInstitution(institutionExternalId, null, null);
+                InstitutionResource response = restClient.findInstitution(institutionExternalId, null, null);
                 //then
                 assertNotNull(response);
         }

@@ -6,10 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 @Mapper(componentModel = "spring")
 public interface InstitutionResourceMapper {
 

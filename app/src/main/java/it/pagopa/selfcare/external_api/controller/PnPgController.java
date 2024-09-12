@@ -34,7 +34,7 @@ public class PnPgController {
     public PnPgInstitutionIdResource addInstitution(@ApiParam("swagger.external-api.institutions.model.searchInstitutionDto")
                                  @RequestBody
                                  @Valid
-                                                    CreatePnPgInstitutionDto createPnPgInstitutionDto) {
+                                 CreatePnPgInstitutionDto createPnPgInstitutionDto) {
         log.trace("addInstitution start");
         log.debug("addInstitution searchInstitutionDto = {}", createPnPgInstitutionDto);
         String institutionId = institutionService.addInstitution(PnPgMapper.fromDto(createPnPgInstitutionDto));

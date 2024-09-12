@@ -67,18 +67,24 @@ public class UserV2Controller {
 
 
     @Tag(name = "external-v2")
+    @Tag(name = "external-pnpg")
     @Tag(name = "User")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "The API retrieves paged users with optional filters in input as query params", nickname = "v2getUserInstitution")
-    public List<UserInstitutionResource> getUserInstitution(@RequestParam(value = "institutionId", required = false) String institutionId,
-                                                            @RequestParam(value = "userId", required = false) String userId,
-                                                            @RequestParam(value = "roles", required = false) List<PartyRole> roles,
-                                                            @RequestParam(value = "states", required = false) List<String> states,
-                                                            @RequestParam(value = "products", required = false) List<String> products,
-                                                            @RequestParam(value = "productRoles", required = false) List<String> productRoles,
-                                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                            @RequestParam(value = "size", defaultValue = "100") Integer size) {
+    @ApiOperation(value = "", notes = "This endpoint retrieves detailed information about a user's association with various products within an institution. The response provides a comprehensive view of the user's roles, product statuses and the relevant timestamps.", nickname = "v2getUserInstitution")
+    public List<UserInstitutionResource> getUserInstitution(@ApiParam("${swagger.external_api.institutions.model.id}")
+                                                      @RequestParam(value = "institutionId", required = false) String institutionId,
+                                                      @ApiParam("${swagger.external_api.user.model.id}")
+                                                      @RequestParam(value = "userId", required = false) String userId,
+                                                      @ApiParam("${swagger.external_api.model.roles}")
+                                                      @RequestParam(value = "roles", required = false) List<PartyRole> roles,
+                                                      @ApiParam("${swagger.external_api.model.states}")
+                                                      @RequestParam(value = "states", required = false) List<String> states,
+                                                      @RequestParam(value = "products", required = false) List<String> products,
+                                                      @ApiParam("${swagger.external_api.model.states}")
+                                                      @RequestParam(value = "productRoles", required = false) List<String> productRoles,
+                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                      @RequestParam(value = "size", defaultValue = "100") Integer size) {
 
         log.trace("getUserInstitution start, institutionId: {}, userId: {}", Encode.forJava(institutionId), Encode.forJava(userId));
         List<UserInstitution> userInstitutions = userService.getUsersInstitutions(userId, institutionId, page, size, productRoles, products, roles, states);

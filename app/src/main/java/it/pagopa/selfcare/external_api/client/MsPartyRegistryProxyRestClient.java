@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.client;
 
+import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResourceInfo;
 import it.pagopa.selfcare.external_api.model.institution.Origin;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,8 +15,8 @@ public interface MsPartyRegistryProxyRestClient {
 
     @GetMapping(value = "${rest-client.ms-party-registry-proxy.findInstitution}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    InstitutionResourceInfo findInstitution(@PathVariable(value = "id") String institutionExternalId,
-                                            @RequestParam(value = "origin", required = false) Origin origin,
-                                            @RequestParam(value = "categories", required = false) String categories);
+    InstitutionResource findInstitution(@PathVariable(value = "id") String institutionExternalId,
+                                        @RequestParam(value = "origin", required = false) Origin origin,
+                                        @RequestParam(value = "categories", required = false) String categories);
 
 }

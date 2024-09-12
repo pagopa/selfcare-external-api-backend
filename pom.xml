@@ -17,7 +17,7 @@
     <name>selc-external-api</name>
     <description>Microservice to manage Self Care External API</description>
     <properties>
-        <selc-commons.version>2.5.1</selc-commons.version>
+        <selc-commons.version>2.5.3</selc-commons.version>
         <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
     </properties>
     <repositories>

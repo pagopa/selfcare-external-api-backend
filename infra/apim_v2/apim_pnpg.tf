@@ -13,7 +13,7 @@ module "apim_pnpg" {
   approval_required     = false
   # subscriptions_limit   = 1000
 
-  policy_xml = file("./api_pnpg/external_api_data_vault/v1/base_policy.xml")
+  policy_xml = file("./api_pnpg/base_policy.xml")
 }
 
 locals {
@@ -68,7 +68,11 @@ module "apim_pnpg_external_api_data_vault_v1" {
     basePath = "v1"
   })
 
-  xml_content = file("./api_pnpg/external_api_data_vault/v1/base_policy.xml")
+  xml_content = templatefile("./api_pnpg/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_pnpg_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+  })
 
   subscription_required = true
   product_ids = [
@@ -84,22 +88,14 @@ module "apim_pnpg_external_api_data_vault_v1" {
   api_operation_policies = [
     {
       operation_id = "addInstitutionUsingPOST"
-      xml_content = templatefile("./api_pnpg/external_api_data_vault/v1/getInstitution_op_policy.xml.tpl", {
-        CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
-        PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
-        API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
     },
     {
       operation_id = "getInstitution"
-      xml_content = templatefile("./api_pnpg/external_api_data_vault/v1/getInstitution_op_policy.xml.tpl", {
-        CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
-        PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
-        API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     }
   ]
@@ -136,7 +132,11 @@ module "apim_pnpg_external_api_ms_v2" {
     basePath = "v1"
   })
 
-  xml_content = file("./api_pnpg/external_api_for_pnpg/v2/base_policy.xml")
+  xml_content = templatefile("./api_pnpg/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_pnpg_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+  })
 
   subscription_required = true
   product_ids = [
@@ -152,32 +152,43 @@ module "apim_pnpg_external_api_ms_v2" {
 
   api_operation_policies = [
     {
-      operation_id = "getInstitutionsUsingGET"
+      operation_id = "getInstitutionsUsingGETDeprecated"
       xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/getInstitutions_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
-        CDN_STORAGE_URL            = "https://${local.cdn_storage_hostname}"
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
         API_DOMAIN                 = local.api_pnpg_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+        LOGO_URL                   = "https://${local.logo_api_domain}"
       })
     },
     {
       operation_id = "getUserGroupsUsingGET"
-      xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/jwt_auth_op_policy_user_group.xml.tpl", {
-        USER_GROUP_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
-        API_DOMAIN                  = local.api_pnpg_domain
-        KID                         = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT  = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      xml_content = templatefile("./api/jwt_auth_op_policy_user_group.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
     },
     {
-      operation_id = "getInstitution"
-      xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/getInstitution_op_policy.xml.tpl", {
-        CDN_STORAGE_URL                = "https://${local.cdn_storage_hostname}"
-        PARTY_PROCESS_BACKEND_BASE_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
-        API_DOMAIN                     = local.api_pnpg_domain
-        KID                            = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT     = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      operation_id = "retrieveInstitutionByIdUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "getInstitutionProductsUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+      })
+    },
+    {
+      operation_id = "getInstitutionUsersByProductUsingGET"
+      xml_content = templatefile("./api/base_ms_url_product_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+      })
+    },
+    {
+      operation_id = "v2getUserInstitution"
+      xml_content = templatefile("./api/base_ms_url_product_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
       })
     }
   ]
@@ -214,53 +225,44 @@ module "apim_pnpg_support_service_v2" {
     basePath = "v1"
   })
 
+  xml_content = templatefile("./api_pnpg/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_pnpg_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+  })
+
 
   subscription_required = true
 
   api_operation_policies = [
     {
-      operation_id = "getUsersByInstitution"
-      xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      operation_id = "getInstitutionUsersUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getUserGroupsUsingGET"
-      xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/jwt_auth_op_policy_user_group.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
     },
     {
-      operation_id = "getInstitutionByTaxCode"
-      xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      operation_id = "getInstitutionsUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "verifyLegalByPOST"
-      xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
       })
     },
     {
-      operation_id = "getUserInfoUsingPOST"
-      xml_content = templatefile("./api_pnpg/pnpg_support_service/v1/support_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+      operation_id = "V2getUserInfoUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
       })
     },
   ]

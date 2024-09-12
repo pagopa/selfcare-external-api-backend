@@ -53,11 +53,11 @@ public class TokenController {
     @GetMapping(value = "/products/{productId}")
     public ResponseEntity<TokensResource> getTokensFromProductUsingGET(@ApiParam("${swagger.external_api.api.tokens.productId}")
                                                           @PathVariable(value = "productId") String productId,
-                                                                       @ApiParam("${swagger.external_api.page.number}")
+                                                          @ApiParam("${swagger.external_api.page.number}")
                                                           @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                                       @ApiParam("${swagger.external_api.page.size}")
+                                                          @ApiParam("${swagger.external_api.page.size}")
                                                           @RequestParam(name = "size", defaultValue = "100") Integer size,
-                                                                       @ApiParam("${swagger.external_api.api.tokens.status}")
+                                                          @ApiParam("${swagger.external_api.api.tokens.status}")
                                                           @RequestParam(name = "status", required = false) String status) {
         log.trace("findFromProduct start");
         log.debug("findFromProduct productId = {}", Encode.forJava(productId));

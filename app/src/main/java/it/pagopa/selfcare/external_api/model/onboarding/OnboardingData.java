@@ -30,6 +30,7 @@ public class OnboardingData {
     private Boolean sendCompleteOnboardingEmail;
     private InstitutionLocation location;
     private OnboardingImportContract contractImported;
+    private AdditionalInformations additionalInformations;
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());

@@ -53,6 +53,25 @@ fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
         });
     }
 
+
+    // Set security bearerAuth
+    if (openapi.paths && typeof openapi.paths === 'object') {
+        Object.keys(openapi.paths).forEach(path => {
+            const pathItem = openapi.paths[path];
+            ['get', 'post', 'put', 'delete', 'options', 'head', 'patch', 'trace'].forEach(method => {
+                if (pathItem[method] && pathItem[method].security) {
+                    pathItem[method].security.forEach(schema => {
+                        if(schema["SecurityScheme"]) {
+                            delete schema["SecurityScheme"];
+                            schema["bearerAuth"] = ["global"]
+                        }
+                    })
+                }
+            });
+           
+        });
+    }
+
     // Filtra i tag nei paths
     if (openapi.paths && typeof openapi.paths === 'object') {
         Object.keys(openapi.paths).forEach(path => {

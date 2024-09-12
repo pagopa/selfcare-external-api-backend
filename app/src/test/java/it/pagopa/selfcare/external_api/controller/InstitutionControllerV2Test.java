@@ -28,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
@@ -206,16 +207,6 @@ class InstitutionControllerV2Test extends BaseControllerTest {
     }
 
     @Test
-    void getContractOkWithoutProductId() throws Exception {
-
-        String institutionId = "institutionId";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{institutionId}/contract", institutionId)
-                .accept(MediaType.APPLICATION_OCTET_STREAM))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void getInstitutionUserProductsWith2Elements() throws Exception {
         ClassPathResource inputResource = new ClassPathResource("expectations/Product.json");
         byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
@@ -250,44 +241,6 @@ class InstitutionControllerV2Test extends BaseControllerTest {
                 .andExpect(content().contentType(APPLICATION_JSON_VALUE))
                 .andReturn();
     }
-
-    @Test
-    void getInstitutionProductsUsersWith2ReturnedElements() throws Exception {
-
-        ClassPathResource productResponse = new ClassPathResource("expectations/UserInfo.json");
-        byte[] userInfoStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<UserProductResponse> userInfo = objectMapper.readValue(userInfoStream, new TypeReference<>() {});
-
-        ClassPathResource outputResource = new ClassPathResource("expectations/UserResource.json");
-        String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
-
-        when(institutionService.getInstitutionProductUsersV2(any(), any(), any(), any(), any())).thenReturn(userInfo);
-
-        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(content().string(expectedResource))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
-                .andReturn();
-    }
-
-    @Test
-    void getInstitutionProductsUsersWithEmptyList() throws Exception {
-
-        when(institutionService.getInstitutionProductUsersV2("testInstitutionId", "testProductId", null, null, null))
-                .thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/v2/institutions/{institutionId}/products/{productId}/users", "testInstitutionId", "testProductId")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .accept(APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$", hasSize(0)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
-                .andReturn();
-    }
-
 
 
     @Test

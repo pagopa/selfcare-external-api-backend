@@ -50,7 +50,8 @@ public class InstitutionV2Controller {
     @Tag(name = "external-pnpg")
     @GetMapping(value = "")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}")
+    @Deprecated
+    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutions}", nickname = "getInstitutionsUsingGETDeprecated")
     public List<InstitutionResource> getInstitutions(@ApiParam("${swagger.external_api.products.model.id}")
                                                      @RequestParam(value = "productId") String productId,
                                                      Authentication authentication) {
@@ -75,7 +76,7 @@ public class InstitutionV2Controller {
     public ResponseEntity<byte[]> getContract(@ApiParam("${swagger.external_api.institutions.model.id}")
                                               @PathVariable("institutionId") String institutionId,
                                               @ApiParam("${swagger.external_api.products.model.id}")
-                                              @RequestParam(value = "productId") String productId){
+                                              @RequestParam(value = "productId", required = false) String productId){
         log.trace("getContract start");
         log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
         ResourceResponse contract = contractService.getContractV2(institutionId, productId);
@@ -89,13 +90,14 @@ public class InstitutionV2Controller {
     }
 
     @Tag(name = "external-v2")
+    @Tag(name = "external-pnpg")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/products")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionUserProducts}")
     public List<ProductResource> getInstitutionProducts(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                             @PathVariable("institutionId") String institutionId,
-                                                        @ApiParam("${swagger.external_api.user.model.id}")
+                                                          @ApiParam("${swagger.external_api.user.model.id}")
                                                           @RequestParam(value = "userId") String userId) {
         log.trace("getInstitutionUserProducts start");
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId)
@@ -107,31 +109,9 @@ public class InstitutionV2Controller {
         return productResources;
     }
 
-    @Tag(name = "Institution")
-    @GetMapping(value = "/{institutionId}/products/{productId}/users")
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "", notes = "${swagger.external_api.institutions.api.getInstitutionProductUsers}")
-    public List<UserResource> getInstitutionProductsUsers(@ApiParam("${swagger.external_api.institutions.model.id}")
-                                                          @PathVariable("institutionId") String institutionId,
-                                                          @ApiParam("${swagger.external_api.products.model.id}")
-                                                          @PathVariable("productId")
-                                                          String productId,
-                                                          @ApiParam("${swagger.external_api.user.model.id}")
-                                                          @RequestParam(value = "userId", required = false)
-                                                          Optional<String> userId,
-                                                          @ApiParam("${swagger.external_api.model.productRoles}")
-                                                          @RequestParam(value = "productRoles", required = false)
-                                                          Optional<Set<String>> productRoles,
-                                                          @RequestHeader(value = "x-selfcare-uid", required = false) Optional<String> xSelfCareUid) {
-        Collection<UserProductResponse> userInfos = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId.orElse(null),productRoles.orElse(null), xSelfCareUid.orElse(null));
-        List<UserResource> result = userInfos.stream().map(userInfoResourceMapper::toUserResource).toList();
-        log.debug("getInstitutionProductUsers result = {}", result);
-        log.trace("getInstitutionProductUsers end");
-        return result;
-    }
-
     @Tag(name = "external-v2")
     @Tag(name = "internal-v1")
+    @Tag(name = "external-pnpg")
     @Tag(name = "Institution")
     @GetMapping(value = "/{institutionId}/users")
     @ResponseStatus(HttpStatus.OK)
@@ -139,10 +119,10 @@ public class InstitutionV2Controller {
     public List<UserResource> getInstitutionUsersByProduct(@ApiParam("${swagger.external_api.institutions.model.id}")
                                                            @PathVariable("institutionId") String institutionId,
                                                            @ApiParam("${swagger.external_api.products.model.id}")
-                                                           @RequestParam("productId")
+                                                           @RequestParam(value = "productId", required = false)
                                                            String productId,
                                                            @ApiParam("${swagger.external_api.user.model.id}")
-                                                           @RequestParam(value = "userId", required = false)
+                                                           @RequestParam(value = "userIdForAuth", required = false)
                                                            Optional<String> userId,
                                                            @ApiParam("${swagger.external_api.model.productRoles}")
                                                            @RequestParam(value = "productRoles", required = false)

@@ -1,7 +1,7 @@
 {
   "openapi" : "3.0.3",
   "info" : {
-    "title" : "onboarding-ms API",
+    "title" : "Onboarding API",
     "version" : "1.0.0"
   },
   "servers" : [ {
@@ -11,13 +11,117 @@
     "url" : "http://0.0.0.0:8080",
     "description" : "Auto generated value"
   } ],
+  "tags" : [ {
+    "name" : "Aggregates Controller"
+  }, {
+    "name" : "Notification Controller"
+  }, {
+    "name" : "Onboarding"
+  }, {
+    "name" : "Onboarding Controller"
+  }, {
+    "name" : "internal-v1"
+  }, {
+    "name" : "support"
+  } ],
   "paths" : {
+    "/v1/aggregates/verification" : {
+      "post" : {
+        "tags" : [ "Aggregates Controller" ],
+        "summary" : "Validate the data related to the aggregated entities present in a CSV file",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "required" : [ "aggregates" ],
+                "type" : "object",
+                "properties" : {
+                  "aggregates" : {
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/VerifyAggregateResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/notification/resend" : {
+      "post" : {
+        "tags" : [ "Notification Controller" ],
+        "summary" : "Resend onboarding notifications for onboarding which are retrieved given a set of filters",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingGetFilters"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/v1/onboarding" : {
       "get" : {
         "tags" : [ "Onboarding Controller" ],
         "summary" : "The API retrieves paged onboarding using optional filter, order by descending creation date",
         "parameters" : [ {
           "name" : "from",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "institutionId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "onboardingId",
           "in" : "query",
           "schema" : {
             "type" : "string"
@@ -46,6 +150,12 @@
           }
         }, {
           "name" : "status",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "subunitCode",
           "in" : "query",
           "schema" : {
             "type" : "string"
@@ -120,6 +230,118 @@
         } ]
       }
     },
+    "/v1/onboarding/aggregation/completion" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform onboarding aggregation as /onboarding but completing the onboarding request to COMPLETED phase. The operation will be performed async due to the possible amount of time the process could take.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingDefaultRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/check-manager" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "In the addition administrator flow, it checks if the new manager is equal from old one, returning true ",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingUserRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/checkRecipientCode" : {
+      "get" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "check if recipientCode is valid or not",
+        "parameters" : [ {
+          "name" : "originId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "recipientCode",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecipientCodeStatus"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/v1/onboarding/completion" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
@@ -158,8 +380,9 @@
     },
     "/v1/onboarding/institutionOnboardings" : {
       "get" : {
-        "tags" : [ "Onboarding Controller" ],
+        "tags" : [ "support", "Onboarding" ],
         "summary" : "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
+        "operationId" : "onboardingInstitutionUsingGET",
         "parameters" : [ {
           "name" : "origin",
           "in" : "query",
@@ -171,6 +394,12 @@
           "in" : "query",
           "schema" : {
             "type" : "string"
+          }
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/OnboardingStatus"
           }
         }, {
           "name" : "subunitCode",
@@ -215,6 +444,42 @@
       "post" : {
         "tags" : [ "Onboarding Controller" ],
         "summary" : "Perform onboarding request for PA institution type, it require billing.recipientCode in additition to default requestUsers data will be saved on personal data vault if it doesn't already exist.At the end, function triggers async activities related to onboarding that consist of create contract and sending mail to institution's digital address.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingPaRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/pa/aggregation" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform onboarding aggregation request for PA institution type, it require billing.recipientCode in additition to default requestUsers data will be saved on personal data vault if it doesn't already exist.At the end, function triggers async activities related to onboarding aggregation that consist of create contract and sending mail to institution's digital address.",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -426,6 +691,96 @@
         } ]
       }
     },
+    "/v1/onboarding/users" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform onboarding users request, it is used all institution types.Users data will be saved on personal data vault if it doesn't already exist.At the end, function triggers async activities related to onboarding based on institution type.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingUserRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/verify" : {
+      "head" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Verify if the onboarded product is already onboarded for the institution",
+        "parameters" : [ {
+          "name" : "origin",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "originId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "subunitCode",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "taxCode",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/v1/onboarding/{onboardingId}" : {
       "get" : {
         "tags" : [ "Onboarding Controller" ],
@@ -494,8 +849,56 @@
     },
     "/v1/onboarding/{onboardingId}/complete" : {
       "put" : {
-        "tags" : [ "Onboarding Controller" ],
+        "tags" : [ "internal-v1" ],
         "summary" : "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
+        "operationId" : "completeOnboardingUsingPUT",
+        "parameters" : [ {
+          "name" : "onboardingId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "required" : [ "contract" ],
+                "type" : "object",
+                "properties" : {
+                  "contract" : {
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/{onboardingId}/completeOnboardingUsers" : {
+      "put" : {
+        "tags" : [ "Onboarding Controller" ],
+        "summary" : "Perform complete operation of an user onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
         "parameters" : [ {
           "name" : "onboardingId",
           "in" : "path",
@@ -541,8 +944,9 @@
     },
     "/v1/onboarding/{onboardingId}/consume" : {
       "put" : {
-        "tags" : [ "Onboarding Controller" ],
+        "tags" : [ "support", "internal-v1", "Onboarding" ],
         "summary" : "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
+        "operationId" : "completeOnboardingTokenConsume",
         "parameters" : [ {
           "name" : "onboardingId",
           "in" : "path",
@@ -638,6 +1042,53 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ReasonRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/{onboardingId}/update" : {
+      "put" : {
+        "tags" : [ "support", "Onboarding" ],
+        "summary" : "Update onboarding request receiving onboarding id.Function can change some values. ",
+        "operationId" : "updateOnboardiUsingPUT",
+        "parameters" : [ {
+          "name" : "onboardingId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/OnboardingStatus"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingDefaultRequest"
               }
             }
           }
@@ -804,6 +1255,42 @@
           }
         }
       },
+      "AggregateInstitutionRequest" : {
+        "required" : [ "taxCode", "description" ],
+        "type" : "object",
+        "properties" : {
+          "taxCode" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "subunitType" : {
+            "type" : "string"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/GeographicTaxonomy"
+            }
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "originId" : {
+            "type" : "string"
+          },
+          "origin" : {
+            "$ref" : "#/components/schemas/Origin"
+          }
+        }
+      },
       "BillingPaRequest" : {
         "type" : "object",
         "properties" : {
@@ -849,6 +1336,20 @@
           }
         }
       },
+      "DataProtectionOfficer" : {
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "pec" : {
+            "type" : "string"
+          }
+        }
+      },
       "DataProtectionOfficerRequest" : {
         "type" : "object",
         "properties" : {
@@ -863,6 +1364,17 @@
           }
         }
       },
+      "GeographicTaxonomy" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "desc" : {
+            "type" : "string"
+          }
+        }
+      },
       "GeographicTaxonomyDto" : {
         "type" : "object",
         "properties" : {
@@ -870,6 +1382,86 @@
             "type" : "string"
           },
           "desc" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Institution" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "institutionType" : {
+            "$ref" : "#/components/schemas/InstitutionType"
+          },
+          "taxCode" : {
+            "type" : "string"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "subunitType" : {
+            "$ref" : "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin" : {
+            "$ref" : "#/components/schemas/Origin"
+          },
+          "originId" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "county" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "digitalAddress" : {
+            "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/GeographicTaxonomy"
+            }
+          },
+          "rea" : {
+            "type" : "string"
+          },
+          "shareCapital" : {
+            "type" : "string"
+          },
+          "businessRegisterPlace" : {
+            "type" : "string"
+          },
+          "supportEmail" : {
+            "type" : "string"
+          },
+          "supportPhone" : {
+            "type" : "string"
+          },
+          "imported" : {
+            "type" : "boolean"
+          },
+          "paymentServiceProvider" : {
+            "$ref" : "#/components/schemas/PaymentServiceProvider"
+          },
+          "dataProtectionOfficer" : {
+            "$ref" : "#/components/schemas/DataProtectionOfficer"
+          },
+          "parentDescription" : {
             "type" : "string"
           }
         }
@@ -1012,7 +1604,7 @@
         }
       },
       "InstitutionPaSubunitType" : {
-        "enum" : [ "AOO", "UO" ],
+        "enum" : [ "AOO", "UO", "EC" ],
         "type" : "string"
       },
       "InstitutionPspRequest" : {
@@ -1115,6 +1707,9 @@
           "origin" : {
             "$ref" : "#/components/schemas/Origin"
           },
+          "originId" : {
+            "type" : "string"
+          },
           "city" : {
             "type" : "string"
           },
@@ -1134,6 +1729,9 @@
             "type" : "string"
           },
           "zipCode" : {
+            "type" : "string"
+          },
+          "parentDescription" : {
             "type" : "string"
           },
           "geographicTaxonomies" : {
@@ -1188,6 +1786,15 @@
             "items" : {
               "$ref" : "#/components/schemas/UserRequest"
             }
+          },
+          "aggregates" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator" : {
+            "type" : "boolean"
           },
           "pricingPlan" : {
             "type" : "string"
@@ -1256,6 +1863,43 @@
           },
           "reasonForReject" : {
             "type" : "string"
+          }
+        }
+      },
+      "OnboardingGetFilters" : {
+        "type" : "object",
+        "properties" : {
+          "productId" : {
+            "type" : "string"
+          },
+          "institutionId" : {
+            "type" : "string"
+          },
+          "onboardingId" : {
+            "type" : "string"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "from" : {
+            "type" : "string"
+          },
+          "to" : {
+            "type" : "string"
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         }
       },
@@ -1332,6 +1976,15 @@
               "$ref" : "#/components/schemas/UserRequest"
             }
           },
+          "aggregates" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator" : {
+            "type" : "boolean"
+          },
           "pricingPlan" : {
             "type" : "string"
           },
@@ -1343,6 +1996,9 @@
           },
           "billing" : {
             "$ref" : "#/components/schemas/BillingPaRequest"
+          },
+          "additionalInformations" : {
+            "$ref" : "#/components/schemas/AdditionalInformationsDto"
           }
         }
       },
@@ -1393,6 +2049,15 @@
               "$ref" : "#/components/schemas/UserRequest"
             }
           },
+          "aggregates" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator" : {
+            "type" : "boolean"
+          },
           "pricingPlan" : {
             "type" : "string"
           },
@@ -1442,6 +2107,45 @@
           },
           "userRequestUid" : {
             "type" : "string"
+          },
+          "isAggregator" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "OnboardingStatus" : {
+        "enum" : [ "REQUEST", "TOBEVALIDATED", "PENDING", "COMPLETED", "FAILED", "REJECTED", "DELETED" ],
+        "type" : "string"
+      },
+      "OnboardingUserRequest" : {
+        "required" : [ "productId", "users" ],
+        "type" : "object",
+        "properties" : {
+          "productId" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "institutionType" : {
+            "$ref" : "#/components/schemas/InstitutionType"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "origin" : {
+            "type" : "string"
+          },
+          "originId" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
+          },
+          "users" : {
+            "minItems" : 1,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserRequest"
+            }
           }
         }
       },
@@ -1450,8 +2154,28 @@
         "type" : "string"
       },
       "PartyRole" : {
-        "enum" : [ "MANAGER", "DELEGATE", "SUB_DELEGATE", "OPERATOR" ],
+        "enum" : [ "MANAGER", "DELEGATE", "SUB_DELEGATE", "OPERATOR", "ADMIN_EA" ],
         "type" : "string"
+      },
+      "PaymentServiceProvider" : {
+        "type" : "object",
+        "properties" : {
+          "abiCode" : {
+            "type" : "string"
+          },
+          "businessRegisterNumber" : {
+            "type" : "string"
+          },
+          "legalRegisterNumber" : {
+            "type" : "string"
+          },
+          "legalRegisterName" : {
+            "type" : "string"
+          },
+          "vatNumberGroup" : {
+            "type" : "boolean"
+          }
+        }
       },
       "PaymentServiceProviderRequest" : {
         "type" : "object",
@@ -1477,6 +2201,26 @@
         "type" : "object",
         "properties" : {
           "reasonForReject" : {
+            "type" : "string"
+          }
+        }
+      },
+      "RecipientCodeStatus" : {
+        "enum" : [ "DENIED_NO_BILLING", "DENIED_NO_ASSOCIATION", "ACCEPTED" ],
+        "type" : "string"
+      },
+      "RowError" : {
+        "required" : [ "row" ],
+        "type" : "object",
+        "properties" : {
+          "row" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "cf" : {
+            "type" : "string"
+          },
+          "reason" : {
             "type" : "string"
           }
         }
@@ -1520,7 +2264,7 @@
         }
       },
       "TokenType" : {
-        "enum" : [ "INSTITUTION", "LEGALS" ],
+        "enum" : [ "INSTITUTION", "LEGALS", "USER" ],
         "type" : "string"
       },
       "UserOnboardingResponse" : {
@@ -1583,6 +2327,23 @@
           },
           "productRole" : {
             "type" : "string"
+          }
+        }
+      },
+      "VerifyAggregateResponse" : {
+        "type" : "object",
+        "properties" : {
+          "aggregates" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Institution"
+            }
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RowError"
+            }
           }
         }
       }

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "selc-external-api",
-    "description": "This service acts as an orchestrator for information coming from different services and as a proxy",
+    "title": "Contract API service",
+    "description": "This service is the proxy for getting file contract",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,19 +12,15 @@
   ],
   "tags": [
     {
-      "name": "institutions",
-      "description": "Institution Controller"
-    },
-    {
-      "name": "product",
-      "description": "Product Controller"
+      "name": "Institution",
+      "description": "Institution V 2 Controller"
     }
   ],
   "paths": {
     "/institutions/{institutionId}/contract": {
       "get": {
         "tags": [
-          "institutions"
+          "Institution"
         ],
         "summary": "getContract",
         "description": "Service to retrieve a contract given institutionId and productId",
@@ -44,7 +40,7 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
@@ -116,24 +112,6 @@
   },
   "components": {
     "schemas": {
-      "InvalidParam": {
-        "title": "InvalidParam",
-        "required": [
-          "name",
-          "reason"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Invalid parameter name."
-          },
-          "reason": {
-            "type": "string",
-            "description": "Invalid parameter reason."
-          }
-        }
-      },
       "Problem": {
         "title": "Problem",
         "required": [
@@ -173,6 +151,24 @@
           }
         },
         "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
+      },
+      "InvalidParam": {
+        "title": "InvalidParam",
+        "required": [
+          "name",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Invalid parameter name."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Invalid parameter reason."
+          }
+        }
       }
     },
     "securitySchemes": {

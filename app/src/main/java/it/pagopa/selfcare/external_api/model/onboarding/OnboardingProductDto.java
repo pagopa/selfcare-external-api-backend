@@ -68,4 +68,7 @@ public class OnboardingProductDto {
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.subUnitType}")
     private String subunitType;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.additionalInformations}")
+    private AdditionalInformationsDto additionalInformations;
 }
