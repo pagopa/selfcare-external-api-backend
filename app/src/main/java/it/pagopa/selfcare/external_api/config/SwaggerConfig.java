@@ -8,7 +8,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.core.Authentication;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.AuthorizationScope;
@@ -59,14 +58,13 @@ class SwaggerConfig {
     public Docket swaggerSpringPlugin(@Autowired TypeResolver typeResolver) {
         return (new Docket(DocumentationType.OAS_30))
                 .apiInfo(new ApiInfoBuilder()
-                        .title(environment.getProperty("swagger.title", environment.getProperty("spring.application.name")))
+                        .title(environment.getProperty("swagger.title", Objects.requireNonNull(environment.getProperty("spring.application.name"))))
                         .description(environment.getProperty("swagger.description", "Api and Models"))
-                        .version(environment.getProperty("swagger.version", environment.getProperty("spring.application.version")))
+                        .version(environment.getProperty("swagger.version", Objects.requireNonNull(environment.getProperty("spring.application.version"))))
                         .build())
-                .select().apis(RequestHandlerSelectors.basePackage("it.pagopa.selfcare.external_api.web.controller")).build()
+                .select().apis(RequestHandlerSelectors.basePackage("it.pagopa.selfcare.external_api.controller")).build()
                 .directModelSubstitute(LocalTime.class, String.class)
                 .ignoredParameterTypes(Pageable.class)
-                .ignoredParameterTypes(Authentication.class)
                 .forCodeGeneration(true)
                 .useDefaultResponseMessages(false)
                 .globalResponses(HttpMethod.GET, List.of(INTERNAL_SERVER_ERROR_RESPONSE, UNAUTHORIZED_RESPONSE, BAD_REQUEST_RESPONSE, NOT_FOUND_RESPONSE))
