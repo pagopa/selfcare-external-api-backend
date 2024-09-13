@@ -104,7 +104,7 @@ jobs:
                 --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa \
                 --file "${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json" \
                 --overwrite true \
-                --name '/${{ inputs.docs_openapi_path }}' &&
+                --name '${{ inputs.docs_openapi_path }}' &&
               az cdn endpoint purge \
                 --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}-checkout-fe-rg \
                 --name ${{ steps.extract_env_short.outputs.checkout_cdn_name }} \
