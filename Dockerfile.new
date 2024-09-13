@@ -24,7 +24,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 
 WORKDIR /app
 
-COPY --from=builder ./target/*.jar ./app.jar
+COPY --from=builder ./app/target/*.jar ./app.jar
 
 ADD https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.2.11/applicationinsights-agent-3.2.11.jar ./applicationinsights-agent.jar
 RUN chmod 755 ./applicationinsights-agent.jar
