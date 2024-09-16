@@ -562,7 +562,7 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
@@ -909,7 +909,6 @@
           "Onboarding"
         ],
         "summary": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
-        "operationId": "onboardingInstitutionUsingGET",
         "parameters": [
           {
             "name": "origin",
@@ -983,7 +982,6 @@
           "Onboarding"
         ],
         "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
             "name": "onboardingId",
@@ -1008,62 +1006,6 @@
                     "type": "string"
                   }
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/onboarding/{onboardingId}/update": {
-      "put": {
-        "tags": [
-          "Onboarding"
-        ],
-        "summary": "Update onboarding request receiving onboarding id.Function can change some values. ",
-        "operationId": "updateOnboardiUsingPUT",
-        "parameters": [
-          {
-            "name": "onboardingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OnboardingStatus"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OnboardingDefaultRequest"
               }
             }
           }
@@ -1844,6 +1786,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1924,6 +1867,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2073,6 +2017,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2205,6 +2150,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2305,6 +2251,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2359,6 +2306,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2418,6 +2366,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2496,7 +2445,7 @@
             "type": "string"
           },
           "additionalInformations": {
-            "$ref": "#/components/schemas/AdditionalInformationsDto"
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
           },
           "userRequestUid": {
             "type": "string"
@@ -2708,7 +2657,7 @@
           }
         }
       },
-      "AdditionalInformationsDto": {
+      "AdditionalInformationsDto1": {
         "type": "object",
         "properties": {
           "belongRegulatedMarket": {
@@ -2751,208 +2700,6 @@
           "DELETED"
         ],
         "type": "string"
-      },
-      "OnboardingDefaultRequest": {
-        "required": [
-          "productId",
-          "users",
-          "institution"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "users": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRequest"
-            }
-          },
-          "aggregates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AggregateInstitutionRequest"
-            }
-          },
-          "isAggregator": {
-            "type": "boolean"
-          },
-          "pricingPlan": {
-            "type": "string"
-          },
-          "signContract": {
-            "type": "boolean"
-          },
-          "institution": {
-            "$ref": "#/components/schemas/InstitutionBaseRequest"
-          },
-          "billing": {
-            "$ref": "#/components/schemas/BillingRequest1"
-          },
-          "additionalInformations": {
-            "$ref": "#/components/schemas/AdditionalInformationsDto"
-          }
-        }
-      },
-      "UserRequest": {
-        "type": "object",
-        "properties": {
-          "taxCode": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "surname": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "role": {
-            "$ref": "#/components/schemas/PartyRole"
-          }
-        }
-      },
-      "AggregateInstitutionRequest": {
-        "required": [
-          "taxCode",
-          "description"
-        ],
-        "type": "object",
-        "properties": {
-          "taxCode": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "subunitCode": {
-            "type": "string"
-          },
-          "subunitType": {
-            "type": "string"
-          },
-          "geographicTaxonomies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GeographicTaxonomy1"
-            }
-          },
-          "address": {
-            "type": "string"
-          },
-          "zipCode": {
-            "type": "string"
-          },
-          "originId": {
-            "type": "string"
-          },
-          "origin": {
-            "$ref": "#/components/schemas/Origin"
-          }
-        }
-      },
-      "GeographicTaxonomy1": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "desc": {
-            "type": "string"
-          }
-        }
-      },
-      "InstitutionBaseRequest": {
-        "required": [
-          "institutionType",
-          "digitalAddress"
-        ],
-        "type": "object",
-        "properties": {
-          "institutionType": {
-            "$ref": "#/components/schemas/InstitutionType"
-          },
-          "taxCode": {
-            "type": "string"
-          },
-          "subunitCode": {
-            "type": "string"
-          },
-          "subunitType": {
-            "$ref": "#/components/schemas/InstitutionPaSubunitType"
-          },
-          "origin": {
-            "$ref": "#/components/schemas/Origin"
-          },
-          "originId": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "county": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "digitalAddress": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "address": {
-            "type": "string"
-          },
-          "zipCode": {
-            "type": "string"
-          },
-          "geographicTaxonomies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GeographicTaxonomyDto1"
-            }
-          },
-          "rea": {
-            "type": "string"
-          },
-          "shareCapital": {
-            "type": "string"
-          },
-          "businessRegisterPlace": {
-            "type": "string"
-          },
-          "supportEmail": {
-            "type": "string"
-          },
-          "supportPhone": {
-            "type": "string"
-          },
-          "imported": {
-            "type": "boolean"
-          }
-        }
-      },
-      "BillingRequest1": {
-        "type": "object",
-        "properties": {
-          "vatNumber": {
-            "type": "string"
-          },
-          "recipientCode": {
-            "type": "string"
-          },
-          "publicServices": {
-            "type": "boolean"
-          }
-        }
       },
       "PageOfUserGroupResource": {
         "title": "PageOfUserGroupResource",
