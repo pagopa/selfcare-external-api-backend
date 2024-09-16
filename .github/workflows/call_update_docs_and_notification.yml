@@ -89,7 +89,7 @@ jobs:
           with:
             inlineScript: |
               mkdir docs
-              az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa  -s '$web' --pattern ${{ inputs.docs_openapi_path }}
+              az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix_storage }}checkoutsa  -s '$web' --pattern ${{ inputs.docs_openapi_path }}
 
         - name: Install Optic
           run: npm install --location global @useoptic/optic
