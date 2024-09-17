@@ -2520,7 +2520,7 @@
             "type": "string"
           },
           "institutionType": {
-            "$ref": "#/components/schemas/InstitutionType"
+            "type": "string"
           },
           "taxCode": {
             "type": "string"
@@ -2592,22 +2592,6 @@
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
           }
         }
-      },
-      "InstitutionType": {
-        "enum": [
-          "PA",
-          "PG",
-          "GSP",
-          "SA",
-          "PT",
-          "SCP",
-          "PSP",
-          "AS",
-          "REC",
-          "CON",
-          "PRV"
-        ],
-        "type": "string"
       },
       "InstitutionPaSubunitType": {
         "enum": [
@@ -2948,6 +2932,22 @@
             "type": "boolean"
           }
         }
+      },
+      "InstitutionType": {
+        "enum": [
+          "PA",
+          "PG",
+          "GSP",
+          "SA",
+          "PT",
+          "SCP",
+          "PSP",
+          "AS",
+          "REC",
+          "CON",
+          "PRV"
+        ],
+        "type": "string"
       },
       "BillingRequest1": {
         "type": "object",
