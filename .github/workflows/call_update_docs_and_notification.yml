@@ -23,6 +23,10 @@ on:
           required: true
           type: boolean
           default: true
+        is_pnpg:
+          type: boolean
+          required: false
+          default: false
     
       secrets:
         API_NOTIFICATION_TRIGGERS_ID:
@@ -67,15 +71,25 @@ jobs:
           run: |
             env=${{ inputs.env }}
             echo "env_short=${env:0:1}" >> $GITHUB_OUTPUT
-            echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
-            echo "checkout_cdn_profile=selc-${env:0:1}-checkout-cdn-profile" >> $GITHUB_OUTPUT
+
+            if ${{ inputs.is_pnpg }}; then
+              echo "checkout_cdn_name=selc-${env:0:1}-weu-pnpg-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
+              echo "checkout_cdn_profile=selc-${env:0:1}-weu-pnpg-checkout-cdn-profile" >> $GITHUB_OUTPUT
+              echo "pnpg_suffix=-weu-pnpg-" >> $GITHUB_OUTPUT
+              echo "pnpg_suffix_storage=weupnpg" >> $GITHUB_OUTPUT
+            else
+              echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
+              echo "checkout_cdn_profile=selc-${env:0:1}-checkout-cdn-profile" >> $GITHUB_OUTPUT
+              echo "pnpg_suffix=''" >> $GITHUB_OUTPUT
+              echo "pnpg_suffix_storage=''" >> $GITHUB_OUTPUT
+            fi
     
         - name: Download Developer OpenAPI from blob storage
           uses: azure/CLI@965c8d7571d2231a54e321ddd07f7b10317f34d9 # v2
           with:
             inlineScript: |
               mkdir docs
-              az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa  -s '$web' --pattern ${{ inputs.docs_openapi_path }}
+              az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix_storage }}checkoutsa  -s '$web' --pattern ${{ inputs.docs_openapi_path }}
 
         - name: Install Optic
           run: npm install --location global @useoptic/optic
@@ -101,12 +115,12 @@ jobs:
             inlineScript: |
               az storage blob upload --auth-mode key \
                 --container '$web' \
-                --account-name selc${{ steps.extract_env_short.outputs.env_short }}checkoutsa \
+                --account-name selc${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix_storage }}checkoutsa \
                 --file "${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json" \
                 --overwrite true \
                 --name '${{ inputs.docs_openapi_path }}' &&
               az cdn endpoint purge \
-                --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}-checkout-fe-rg \
+                --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix }}-checkout-fe-rg \
                 --name ${{ steps.extract_env_short.outputs.checkout_cdn_name }} \
                 --profile-name ${{ steps.extract_env_short.outputs.checkout_cdn_profile }} \
                 --content-paths "/${{ inputs.docs_openapi_path }}" \

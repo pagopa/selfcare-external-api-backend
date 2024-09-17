@@ -27,6 +27,11 @@ data "azurerm_storage_account" "checkout" {
   resource_group_name = "${local.project}-checkout-fe-rg"
 }
 
+data "azurerm_storage_account" "checkout_pnpg" {
+  name                = replace("${local.project}-weu-pnpg-checkout-sa", "-", "")
+  resource_group_name = "${local.project}-weu-pnpg-checkout-fe-rg"
+}
+
 data "azurerm_key_vault_secret" "apim_publisher_email" {
   name         = "apim-publisher-email"
   key_vault_id = data.azurerm_key_vault.key_vault.id
