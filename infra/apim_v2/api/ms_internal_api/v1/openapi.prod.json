@@ -360,14 +360,14 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "userId",
+            "name": "userIdForAuth",
             "in": "query",
             "description": "User's unique identifier",
             "required": false,
@@ -379,7 +379,7 @@
           {
             "name": "productRoles",
             "in": "query",
-            "description": "User's roles in product",
+            "description": "Specific role of the user related to the product.",
             "required": false,
             "style": "form",
             "explode": true,
@@ -1266,6 +1266,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1295,6 +1296,10 @@
         ],
         "type": "object",
         "properties": {
+          "additionalInformations": {
+            "description": "GSP institution's additional informations",
+            "$ref": "#/components/schemas/AdditionalInformationsDto"
+          },
           "assistanceContacts": {
             "description": "Institution's assistance contacts",
             "$ref": "#/components/schemas/AssistanceContactsDto"
@@ -1327,6 +1332,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1372,6 +1378,39 @@
             "items": {
               "$ref": "#/components/schemas/UserDto"
             }
+          }
+        }
+      },
+      "AdditionalInformationsDto": {
+        "title": "AdditionalInformationsDto",
+        "type": "object",
+        "properties": {
+          "agentOfPublicService": {
+            "type": "boolean"
+          },
+          "agentOfPublicServiceNote": {
+            "type": "string"
+          },
+          "belongRegulatedMarket": {
+            "type": "boolean"
+          },
+          "establishedByRegulatoryProvision": {
+            "type": "boolean"
+          },
+          "establishedByRegulatoryProvisionNote": {
+            "type": "string"
+          },
+          "ipa": {
+            "type": "boolean"
+          },
+          "ipaCode": {
+            "type": "string"
+          },
+          "otherNote": {
+            "type": "string"
+          },
+          "regulatedMarketNote": {
+            "type": "string"
           }
         }
       },
@@ -1584,6 +1623,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1629,6 +1669,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1709,6 +1750,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -1858,6 +1900,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",

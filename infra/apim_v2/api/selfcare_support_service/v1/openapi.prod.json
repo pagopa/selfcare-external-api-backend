@@ -562,7 +562,7 @@
             "name": "productId",
             "in": "query",
             "description": "Product's unique identifier",
-            "required": true,
+            "required": false,
             "style": "form",
             "schema": {
               "type": "string"
@@ -1844,6 +1844,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -1924,6 +1925,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2073,6 +2075,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2205,6 +2208,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2305,6 +2309,7 @@
           "role": {
             "type": "string",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2359,6 +2364,7 @@
               "GSP",
               "PA",
               "PG",
+              "PRV",
               "PSP",
               "PT",
               "REC",
@@ -2418,6 +2424,7 @@
             "type": "string",
             "description": "User's role",
             "enum": [
+              "ADMIN_EA",
               "DELEGATE",
               "MANAGER",
               "OPERATOR",
@@ -2496,7 +2503,7 @@
             "type": "string"
           },
           "additionalInformations": {
-            "$ref": "#/components/schemas/AdditionalInformationsDto"
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
           },
           "userRequestUid": {
             "type": "string"
@@ -2597,7 +2604,8 @@
           "PSP",
           "AS",
           "REC",
-          "CON"
+          "CON",
+          "PRV"
         ],
         "type": "string"
       },
@@ -2618,7 +2626,8 @@
           "UNKNOWN",
           "ADE",
           "INFOCAMERE",
-          "IVASS"
+          "IVASS",
+          "PDND_INFOCAMERE"
         ],
         "type": "string"
       },
@@ -2708,7 +2717,7 @@
           }
         }
       },
-      "AdditionalInformationsDto": {
+      "AdditionalInformationsDto1": {
         "type": "object",
         "properties": {
           "belongRegulatedMarket": {
@@ -2793,7 +2802,7 @@
             "$ref": "#/components/schemas/BillingRequest1"
           },
           "additionalInformations": {
-            "$ref": "#/components/schemas/AdditionalInformationsDto"
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
           }
         }
       },
