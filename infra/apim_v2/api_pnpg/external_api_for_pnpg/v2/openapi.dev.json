@@ -775,19 +775,7 @@
             "type": "boolean"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "istatCode": {
             "type": "string"
