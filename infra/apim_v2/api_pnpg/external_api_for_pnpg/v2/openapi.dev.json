@@ -295,7 +295,7 @@
             }
           },
           {
-            "name": "userIdForAuth",
+            "name": "userId",
             "in": "query",
             "description": "User's unique identifier",
             "required": false,
