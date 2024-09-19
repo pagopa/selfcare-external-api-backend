@@ -122,7 +122,7 @@ public class InstitutionV2Controller {
                                                            @RequestParam(value = "productId", required = false)
                                                            String productId,
                                                            @ApiParam("${swagger.external_api.user.model.id}")
-                                                           @RequestParam(value = "userIdForAuth", required = false)
+                                                           @RequestParam(value = "userId", required = false)
                                                            Optional<String> userId,
                                                            @ApiParam("${swagger.external_api.model.productRoles}")
                                                            @RequestParam(value = "productRoles", required = false)
