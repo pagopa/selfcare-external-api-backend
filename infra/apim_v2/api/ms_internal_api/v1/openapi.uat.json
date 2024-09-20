@@ -624,8 +624,9 @@
     "/onboarding/{onboardingId}/complete": {
       "put": {
         "tags": [],
-        "summary": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
-        "operationId": "completeOnboardingUsingPUT",
+        "summary": "Complete onboarding by verifying and uploading contract, then trigger async activities.",
+        "description": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
+        "operationId": "complete",
         "parameters": [
           {
             "name": "onboardingId",
@@ -682,8 +683,9 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "completeOnboardingTokenConsume",
+        "summary": "Complete onboarding without verifying contract signature.",
+        "description": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
+        "operationId": "consume",
         "parameters": [
           {
             "name": "onboardingId",
@@ -771,19 +773,7 @@
             "type": "string"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "productId": {
             "type": "string"
@@ -965,19 +955,7 @@
             "type": "boolean"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "istatCode": {
             "type": "string"
