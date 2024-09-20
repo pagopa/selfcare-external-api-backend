@@ -274,7 +274,8 @@
         "tags": [
           "Institution"
         ],
-        "summary": "The API retrieves user's info including details of roles on products",
+        "summary": "Retrieve user's information including product role details",
+        "description": "Fetches detailed information about users associated with a specific institution, including their roles on various products. This endpoint is useful for administrators to obtain comprehensive user-role mappings within an institution.",
         "operationId": "getInstitutionUsersUsingGET",
         "parameters": [
           {
@@ -355,7 +356,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Retrieves user given userId and optional ProductId",
+        "summary": "Retrieve user information by userId and optional ProductId",
+        "description": "Retrieves user given userId and optional ProductId",
         "operationId": "getUserInfoUsingGET",
         "parameters": [
           {
@@ -908,7 +910,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
+        "summary": "Get onboardings by institution taxCode, subunitCode, origin, or originId.",
+        "description": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
         "operationId": "onboardingInstitutionUsingGET",
         "parameters": [
           {
@@ -982,8 +985,9 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "completeOnboardingTokenConsume",
+        "summary": "Complete onboarding without verifying contract signature.",
+        "description": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
+        "operationId": "consume",
         "parameters": [
           {
             "name": "onboardingId",
@@ -1040,8 +1044,9 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Update onboarding request receiving onboarding id.Function can change some values. ",
-        "operationId": "updateOnboardiUsingPUT",
+        "summary": "Update onboarding request with new values.",
+        "description": "Update onboarding request receiving onboarding id.Function can change some values.",
+        "operationId": "update",
         "parameters": [
           {
             "name": "onboardingId",
