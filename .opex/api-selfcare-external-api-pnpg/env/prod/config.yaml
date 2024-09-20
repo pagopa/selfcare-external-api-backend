@@ -20,11 +20,6 @@ overrides:
       response_time_evaluation_frequency: 10 # Default: 10
       response_time_evaluation_time_window: 30 # Default: 20
       response_time_event_occurrences: 30 # Default: 
-    /institutions/{institutionId}/geographicTaxonomy:
-      response_time_threshold: 1 # Default: 1
-      response_time_evaluation_frequency: 10 # Default: 10
-      response_time_evaluation_time_window: 30 # Default: 20
-      response_time_event_occurrences: 30 # Default: 
     /institutions/{institutionId}/products:
       response_time_threshold: 2 # Default: 1
       response_time_evaluation_frequency: 10 # Default: 10
@@ -32,11 +27,6 @@ overrides:
       response_time_event_occurrences: 30 # Default: 
     /institutions/{institutionId}/users:
       response_time_threshold: 2.5 # Default: 1
-      response_time_evaluation_frequency: 10 # Default: 10
-      response_time_evaluation_time_window: 30 # Default: 20
-      response_time_event_occurrences: 30 # Default: 
-    /institutions/byGeoTaxonomies:
-      response_time_threshold: 1 # Default: 1
       response_time_evaluation_frequency: 10 # Default: 10
       response_time_evaluation_time_window: 30 # Default: 20
       response_time_event_occurrences: 30 # Default: 
