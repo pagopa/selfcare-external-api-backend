@@ -987,7 +987,7 @@
         ],
         "summary": "Complete onboarding without verifying contract signature.",
         "description": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "consume",
+        "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
             "name": "onboardingId",
@@ -1046,7 +1046,7 @@
         ],
         "summary": "Update onboarding request with new values.",
         "description": "Update onboarding request receiving onboarding id.Function can change some values.",
-        "operationId": "update",
+        "operationId": "updateOnboardiUsingPUT",
         "parameters": [
           {
             "name": "onboardingId",

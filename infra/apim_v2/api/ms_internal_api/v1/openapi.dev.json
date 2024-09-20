@@ -627,7 +627,7 @@
         "tags": [],
         "summary": "Complete onboarding by verifying and uploading contract, then trigger async activities.",
         "description": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
-        "operationId": "complete",
+        "operationId": "completeOnboardingUsingPUT",
         "parameters": [
           {
             "name": "onboardingId",
@@ -686,7 +686,7 @@
         ],
         "summary": "Complete onboarding without verifying contract signature.",
         "description": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
-        "operationId": "consume",
+        "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
             "name": "onboardingId",
