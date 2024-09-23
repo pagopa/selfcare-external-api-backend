@@ -75,7 +75,7 @@ jobs:
             if ${{ inputs.is_pnpg }}; then
               echo "checkout_cdn_name=selc-${env:0:1}-weu-pnpg-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
               echo "checkout_cdn_profile=selc-${env:0:1}-weu-pnpg-checkout-cdn-profile" >> $GITHUB_OUTPUT
-              echo "pnpg_suffix=-weu-pnpg-" >> $GITHUB_OUTPUT
+              echo "pnpg_suffix=-weu-pnpg" >> $GITHUB_OUTPUT
               echo "pnpg_suffix_storage=weupnpg" >> $GITHUB_OUTPUT
             else
               echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
