@@ -158,7 +158,7 @@
         ]
       }
     },
-    "/institutions/{institutionId}/createdAt": {
+    "/institutions/{institutionId}/created-at": {
       "put": {
         "tags": [
           "Institution"
