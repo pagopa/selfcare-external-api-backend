@@ -10,8 +10,8 @@ terraform {
 }
 
 provider "azurerm" {
-  features {
-  }
+  features {}
+  skip_provider_registration = true
 }
 
 module "container_app_job_selfhosted_runner" {
