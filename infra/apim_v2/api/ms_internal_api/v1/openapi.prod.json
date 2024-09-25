@@ -236,7 +236,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Update user status with optional filter for institution, product, role and productRole",
+        "summary": "Update a user's product status with optional filters",
+        "description": "Update user status with optional filter for institution, product, role and productRole",
         "operationId": "updateUserStatusUsingPUT",
         "parameters": [
           {
