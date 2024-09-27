@@ -910,7 +910,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
+        "summary": "Get onboardings by institution taxCode, subunitCode, origin, or originId.",
+        "description": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
         "operationId": "onboardingInstitutionUsingGET",
         "parameters": [
           {
@@ -984,7 +985,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
+        "summary": "Complete onboarding without verifying contract signature.",
+        "description": "Perform complete operation of an onboarding request as /complete but without signature verification of the contract",
         "operationId": "completeOnboardingTokenConsume",
         "parameters": [
           {
@@ -1042,7 +1044,8 @@
         "tags": [
           "Onboarding"
         ],
-        "summary": "Update onboarding request receiving onboarding id.Function can change some values. ",
+        "summary": "Update onboarding request with new values.",
+        "description": "Update onboarding request receiving onboarding id.Function can change some values.",
         "operationId": "updateOnboardiUsingPUT",
         "parameters": [
           {
@@ -2498,7 +2501,7 @@
             "type": "string"
           },
           "institutionType": {
-            "$ref": "#/components/schemas/InstitutionType"
+            "type": "string"
           },
           "taxCode": {
             "type": "string"
@@ -2570,22 +2573,6 @@
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
           }
         }
-      },
-      "InstitutionType": {
-        "enum": [
-          "PA",
-          "PG",
-          "GSP",
-          "SA",
-          "PT",
-          "SCP",
-          "PSP",
-          "AS",
-          "REC",
-          "CON",
-          "PRV"
-        ],
-        "type": "string"
       },
       "InstitutionPaSubunitType": {
         "enum": [
@@ -2840,6 +2827,12 @@
           },
           "origin": {
             "$ref": "#/components/schemas/Origin"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
           }
         }
       },
@@ -2926,6 +2919,22 @@
             "type": "boolean"
           }
         }
+      },
+      "InstitutionType": {
+        "enum": [
+          "PA",
+          "PG",
+          "GSP",
+          "SA",
+          "PT",
+          "SCP",
+          "PSP",
+          "AS",
+          "REC",
+          "CON",
+          "PRV"
+        ],
+        "type": "string"
       },
       "BillingRequest1": {
         "type": "object",
