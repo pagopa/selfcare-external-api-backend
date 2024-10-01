@@ -977,7 +977,8 @@
               "global"
             ]
           }
-        ]
+        ],
+        "x-legacy-api": "true"
       }
     },
     "/onboarding/{onboardingId}/consume": {
