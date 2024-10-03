@@ -35,6 +35,7 @@ jobs:
       environment: dev
       tf_environment: dev
       dir: 'infra/container_apps'
+      path_openapi_docs: src/main/resources/swagger/api-docs.json
 
   release_uat:
     uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@main
@@ -45,6 +46,7 @@ jobs:
       environment: uat
       tf_environment: uat
       dir: 'infra/container_apps'
+      path_openapi_docs: src/main/resources/swagger/api-docs.json
 
   release_prod:
     uses: pagopa/selfcare-commons/.github/workflows/call_release_docker.yml@main
@@ -55,6 +57,7 @@ jobs:
       environment: prod
       tf_environment: prod
       dir: 'infra/container_apps'
+      path_openapi_docs: src/main/resources/swagger/api-docs.json
       
   promote_release:
     name: 'Promote prerelase release'
