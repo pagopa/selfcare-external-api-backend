@@ -16,6 +16,7 @@
     "roleMappings":{
       "MANAGER":{
         "multiroleAllowed":true,
+        "phasesAdditionAllowed":null,
         "roles":[
           {
             "code":"code1",
