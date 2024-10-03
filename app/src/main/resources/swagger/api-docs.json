@@ -2249,6 +2249,12 @@
           "multiroleAllowed" : {
             "type" : "boolean"
           },
+          "phasesAdditionAllowed" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "roles" : {
             "type" : "array",
             "items" : {
