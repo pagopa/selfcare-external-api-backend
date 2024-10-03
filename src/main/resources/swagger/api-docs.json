@@ -1,7 +1,7 @@
 {
   "openapi" : "3.0.3",
   "info" : {
-    "title" : "selc-external-api",
+    "title" : "selc-starter-parent",
     "description" : "Self Care External Api Documentation",
     "version" : "0.0.1-SNAPSHOT"
   },
