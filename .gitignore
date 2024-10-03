@@ -41,9 +41,9 @@ build/
 ### VS Code ###
 .vscode/
 
-app/src/main/resources/.DS_Store
-app/src/main/.DS_Store
-app/src/.DS_Store
+src/main/resources/.DS_Store
+src/main/.DS_Store
+src/.DS_Store
 app/.DS_Store
 .DS_Store
 
