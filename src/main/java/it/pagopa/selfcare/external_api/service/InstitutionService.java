@@ -5,6 +5,7 @@ import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.institution.SearchMode;
 import it.pagopa.selfcare.external_api.model.national_registries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
+import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.product.entity.Product;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 public interface InstitutionService {
 
 
-    List<Product> getInstitutionUserProductsV2(String institutionId, String userId);
+    List<ProductResource> getInstitutionUserProductsV2(String institutionId, String userId);
 
     Collection<UserProductResponse> getInstitutionProductUsersV2(String institutionId, String productId, String userId, Set<String> productRoles, String xSelfCareUid);
 

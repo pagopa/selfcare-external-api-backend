@@ -6,6 +6,7 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.CreatePgInstitutionReque
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.external_api.client.*;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.mapper.ProductsMapper;
 import it.pagopa.selfcare.external_api.mapper.RegistryProxyMapper;
 import it.pagopa.selfcare.external_api.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
@@ -13,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.institution.SearchMode;
 import it.pagopa.selfcare.external_api.model.national_registries.LegalVerification;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
+import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.OnboardedProductResponse;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
@@ -52,6 +54,8 @@ class InstitutionServiceImpl implements InstitutionService {
 
     private final UserMapper userMapper;
 
+    private final ProductsMapper productsMapper;
+
 
     private final MsUserApiRestClient msUserApiRestClient;
     private final MsRegistryProxyNationalRegistryRestClient nationalRegistryRestClient;
@@ -64,7 +68,7 @@ class InstitutionServiceImpl implements InstitutionService {
     InstitutionServiceImpl(MsCoreRestClient msCoreRestClient,
                            ProductService productService,
                            @Value("${external_api.allowed-service-types}")String[] serviceType,
-                           UserMapper userMapper, MsUserApiRestClient msUserApiRestClient,
+                           UserMapper userMapper, ProductsMapper productsMapper, MsUserApiRestClient msUserApiRestClient,
                            MsRegistryProxyNationalRegistryRestClient nationalRegistryRestClient,
                            RegistryProxyMapper registryProxyMapper,
                            UserRegistryRestClient userRegistryRestClient, MsCoreInstitutionApiClient institutionApiClient) {
@@ -72,6 +76,7 @@ class InstitutionServiceImpl implements InstitutionService {
         this.productService = productService;
         this.serviceType = Set.of(serviceType);
         this.userMapper = userMapper;
+        this.productsMapper = productsMapper;
         this.msUserApiRestClient = msUserApiRestClient;
         this.nationalRegistryRestClient = nationalRegistryRestClient;
         this.registryProxyMapper = registryProxyMapper;
@@ -112,12 +117,18 @@ class InstitutionServiceImpl implements InstitutionService {
 
 
     @Override
-    public List<Product> getInstitutionUserProductsV2(String institutionId, String userId) {
+    public List<ProductResource> getInstitutionUserProductsV2(String institutionId, String userId) {
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " start");
         Assert.hasText(institutionId, REQUIRED_INSTITUTION_MESSAGE);
 
+        List<ProductResource> productResources = new ArrayList<>();
         List<Product> products = productService.getProducts(true, true);
         if (!products.isEmpty()) {
+
+            InstitutionResponse institutionResponse = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId).getBody();
+            String institutionType = Optional.ofNullable(institutionResponse.getInstitutionType())
+                    .map(InstitutionResponse.InstitutionTypeEnum::getValue)
+                    .orElse(null);
 
             Set<String> productsSet = new HashSet<>();
             ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
@@ -130,13 +141,14 @@ class InstitutionServiceImpl implements InstitutionService {
             log.debug("getInstitutionUserProducts result = {}", products);
             log.trace("getInstitutionUserProducts start");
             List<String> productIds =  productsSet.stream().toList();
-            products = products.stream()
+            productResources = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
+                    .map(product -> productsMapper.toResource(product, institutionType))
                     .toList();
         }
-        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", products);
+        log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", productResources);
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " end");
-        return products;
+        return productResources;
     }
 
     @Override

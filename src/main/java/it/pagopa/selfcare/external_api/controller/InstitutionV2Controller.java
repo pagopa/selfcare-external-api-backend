@@ -42,7 +42,6 @@ public class InstitutionV2Controller {
     private final ContractService contractService;
     private final InstitutionService institutionService;
     private final UserService userService;
-    private final ProductsMapper productsMapper;
     private final InstitutionResourceMapper institutionResourceMapper;
     private final UserInfoResourceMapper userInfoResourceMapper;
 
@@ -100,10 +99,7 @@ public class InstitutionV2Controller {
                                                           @ApiParam("${swagger.external_api.user.model.id}")
                                                           @RequestParam(value = "userId") String userId) {
         log.trace("getInstitutionUserProducts start");
-        List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId)
-                .stream()
-                .map(productsMapper::toResource)
-                .toList();
+        List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         log.debug("getInstitutionUserProducts result = {}", productResources);
         log.trace("getInstitutionUserProducts end");
         return productResources;
