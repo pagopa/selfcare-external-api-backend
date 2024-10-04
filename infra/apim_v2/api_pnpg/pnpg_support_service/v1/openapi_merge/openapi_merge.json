@@ -35,6 +35,12 @@
         "operationSelection": {
           "includeTags": ["support-pnpg"]
         }
+      },
+      {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-ms-party-registry-proxy/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support-pnpg"]
+        }
       }
     ], 
     "output": "../openapi.json"
