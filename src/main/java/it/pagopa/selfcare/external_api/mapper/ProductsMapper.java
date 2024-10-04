@@ -14,8 +14,8 @@ import java.util.Map;
 @Mapper(componentModel = "spring")
 public interface ProductsMapper {
 
-    @Mapping(target = "roleMappings", qualifiedByName = "toRoleMappings")
-    ProductResource toResource(Product model);
+    @Mapping(target = "roleMappings", expression = "java(toRoleMappings(model.getRoleMappings(institutionType)))")
+    ProductResource toResource(Product model, String institutionType);
 
     @Named("toRoleMappings")
     default EnumMap<PartyRole, ProductRoleInfo> toRoleMappings(Map<PartyRole, ProductRoleInfo> roleMappings){

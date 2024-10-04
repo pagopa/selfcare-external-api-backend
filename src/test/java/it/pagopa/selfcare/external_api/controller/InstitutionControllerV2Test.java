@@ -8,6 +8,7 @@ import it.pagopa.selfcare.external_api.mapper.ProductsMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserInfoResourceMapperImpl;
 import it.pagopa.selfcare.external_api.model.document.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
+import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.external_api.service.ContractService;
 import it.pagopa.selfcare.external_api.service.InstitutionService;
@@ -28,7 +29,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
@@ -210,7 +210,7 @@ class InstitutionControllerV2Test extends BaseControllerTest {
     void getInstitutionUserProductsWith2Elements() throws Exception {
         ClassPathResource inputResource = new ClassPathResource("expectations/Product.json");
         byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
-        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {});
+        List<ProductResource> products = objectMapper.readValue(productStream, new TypeReference<>() {});
 
         ClassPathResource outputResource = new ClassPathResource("expectations/ProductResources.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));

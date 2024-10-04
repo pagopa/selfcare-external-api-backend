@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.external_api.client.*;
-import it.pagopa.selfcare.external_api.connector.*;
-import it.pagopa.selfcare.external_api.mapper.RegistryProxyMapper;
+import it.pagopa.selfcare.external_api.mapper.ProductsMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.RegistryProxyMapperImpl;
-import it.pagopa.selfcare.external_api.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
@@ -17,9 +15,8 @@ import it.pagopa.selfcare.external_api.model.national_registries.LegalVerificati
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
-import it.pagopa.selfcare.external_api.model.user.OnboardedProductResponse;
+import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.product.entity.Product;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.LegalVerificationResult;
@@ -28,12 +25,9 @@ import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.StringUtils;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
@@ -49,12 +43,12 @@ import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
 @ContextConfiguration(classes = {InstitutionServiceImpl.class, UserMapperImpl.class,
-        RegistryProxyMapperImpl.class,})
+        RegistryProxyMapperImpl.class, ProductsMapperImpl.class})
 @TestPropertySource(locations = "classpath:config/core-config.properties")
 class InstitutionServiceImplTest extends BaseServiceTestUtils {
 
@@ -85,19 +79,18 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void getInstitutionUserProductsWithProductEmpty() {
+    void getInstitutionUserProducts_WithProductEmpty() {
         String institutionId = "institutionId";
         PartyProduct partyProduct = new PartyProduct();
         partyProduct.setStatus(ProductOnboardingStatus.ACTIVE);
         partyProduct.setRole(PartyRole.MANAGER);
         partyProduct.setId("123");
         String userId = UUID.randomUUID().toString();
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
-        Assertions.assertEquals(0, expectation.size());
+        Assertions.assertEquals(0, institutionService.getInstitutionUserProductsV2(institutionId, userId).size());
     }
 
     @Test
-    void getInstitutionUserProductsWithOneMatch() throws Exception {
+    void getInstitutionUserProducts_WithOneMatch() throws Exception {
         String institutionId = "institutionId";
         ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
         byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
@@ -121,13 +114,13 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         Product product2 = new Product();
         product2.setId("123");
         when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(new InstitutionResponse()) );
 
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
-        Assertions.assertEquals(1, expectation.size());
+        Assertions.assertEquals(1, institutionService.getInstitutionUserProductsV2(institutionId, userId).size());
     }
 
     @Test
-    void getInstitutionUserProductsWithTwoMatch() throws Exception {
+    void getInstitutionUserProducts_WithTwoMatch() throws Exception {
         String institutionId = "institutionId";
         ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
         byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
@@ -151,8 +144,9 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         Product product2 = new Product();
         product.setId("id2");
         when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(new InstitutionResponse()) );
 
-        List<Product> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
+        List<ProductResource> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(2, expectation.size());
     }
 

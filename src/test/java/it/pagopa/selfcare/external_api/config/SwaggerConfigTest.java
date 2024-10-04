@@ -43,9 +43,6 @@ class SwaggerConfigTest {
     private InstitutionService institutionService;
 
     @MockBean
-    private ProductService productService;
-
-    @MockBean
     private InstitutionResourceMapper institutionResourceMapper;
 
     @MockBean
