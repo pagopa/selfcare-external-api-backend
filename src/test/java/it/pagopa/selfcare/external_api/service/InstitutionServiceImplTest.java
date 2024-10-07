@@ -207,7 +207,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         });
         Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
-        when(productService.getProduct(productId)).thenReturn(dummyProduct(productId));
+        when(productService.getProductRaw(productId)).thenReturn(dummyProduct(productId));
 
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
@@ -242,7 +242,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
         when(userRegistryRestClient.getUserByInternalId(any(), any())).thenReturn(user);
-        when(productService.getProduct(productId)).thenReturn(dummyProduct(productId));
+        when(productService.getProductRaw(productId)).thenReturn(dummyProduct(productId));
 
         Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 
