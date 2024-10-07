@@ -65,7 +65,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
     private ProductService productService;
 
 
-    static final String productId = "product1";
+    static final String PRODUCT_ID = "product1";
 
 
     @BeforeEach
@@ -83,10 +83,10 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
 
         ClassPathResource expectationResource = new ClassPathResource("expectations/UserDetailsWrapper.json");
@@ -94,7 +94,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         UserDetailsWrapper expectation = objectMapper.readValue(expectationStream, new TypeReference<>() {
         });
 
-        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, PRODUCT_ID);
         Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(result));
     }
 
@@ -107,12 +107,12 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, PRODUCT_ID);
         Assertions.assertNotNull(result.getProductDetails().getCreatedAt());
     }
 
@@ -124,12 +124,12 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, productId);
+        UserDetailsWrapper result = userService.getUserOnboardedProductsDetailsV2(userId, institutionId, PRODUCT_ID);
         Assertions.assertNull(result.getProductDetails());
     }
 
@@ -143,41 +143,19 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(productId), null, null, List.of(ACTIVE.name()),userId))
+        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        InstitutionResponse institution = getInstitutionResponse(productId, productIdDeleted, institutionId);
+        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId);
         institution.getOnboarding().forEach(onboardedProductResponse -> onboardedProductResponse.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED));
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
 
 
-        List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
+        List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, PRODUCT_ID);
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void getOnboardedInstitutionDetailsActive2() throws Exception {
-        String userId = "123e4567-e89b-12d3-a456-426614174000";
-        String institutionId = "123e4567-e89b-12d3-a456-426614174000";
-        String productIdDeleted = "prod-deleted";
-        ClassPathResource resource = new ClassPathResource("expectations/UserInstitution.json");
-        byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
-        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
-        });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(productId), null, null, List.of(ACTIVE.name()),userId))
-                .thenReturn(ResponseEntity.ok(userInstitutions));
-        InstitutionResponse institution = getInstitutionResponse(productId, productIdDeleted, institutionId);
-        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
-        Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
-
-        List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
-        Assertions.assertNotNull(result);
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals(1, result.size());
     }
 
     @Test
@@ -189,14 +167,14 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(productId), null, null, List.of(ACTIVE.name()),userId))
+        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
-        InstitutionResponse institution = getInstitutionResponse(productId, productIdDeleted, institutionId);
+        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId);
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, productId);
+        List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, PRODUCT_ID);
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals(1, result.size());
@@ -236,7 +214,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(msUserApiRestClient._usersGet(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
         UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
 
@@ -263,7 +241,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(msUserApiRestClient._usersGet(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(productId));
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
         InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000");
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000")).thenReturn(ResponseEntity.ok(institution));
