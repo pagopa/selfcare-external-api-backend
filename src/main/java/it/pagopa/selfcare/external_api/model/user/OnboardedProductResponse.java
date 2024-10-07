@@ -9,6 +9,7 @@ public class OnboardedProductResponse {
   private String productId;
   private String status;
   private String productRole;
+  private String productRoleLabel;
   private String role;
   private LocalDateTime createdAt;
 

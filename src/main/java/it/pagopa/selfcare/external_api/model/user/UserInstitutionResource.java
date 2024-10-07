@@ -35,6 +35,8 @@ public class UserInstitutionResource {
         private String status;
         @ApiModelProperty(value = "${swagger.external_api.tokens.model.productRole}")
         private String productRole;
+        @ApiModelProperty(value = "${swagger.external_api.tokens.model.productRoleLabel}")
+        private String productRoleLabel;
         @ApiModelProperty(value = "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA")
         private String role;
         private LocalDateTime createdAt;
