@@ -17,7 +17,6 @@ import it.pagopa.selfcare.external_api.model.product.PartyProduct;
 import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
 import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.User;
-import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.product.entity.Product;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.LegalVerificationResult;
@@ -46,7 +45,6 @@ import static it.pagopa.selfcare.external_api.TestUtils.dummyProduct;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({SpringExtension.class})
@@ -93,12 +91,8 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void getInstitutionUserProducts_WithOneMatch() throws Exception {
+    void getInstitutionUserProducts_WithOneMatch() {
         String institutionId = "institutionId";
-        ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
-        byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {
-        });
 
         String userId = UUID.randomUUID().toString();
 
@@ -123,12 +117,8 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
-    void getInstitutionUserProducts_WithTwoMatch() throws Exception {
+    void getInstitutionUserProducts_WithTwoMatch() {
         String institutionId = "institutionId";
-        ClassPathResource productResponse = new ClassPathResource("expectations/InstitutionUserProducts.json");
-        byte[] productStream = Files.readAllBytes(productResponse.getFile().toPath());
-        List<Product> products = objectMapper.readValue(productStream, new TypeReference<>() {
-        });
 
         String userId = UUID.randomUUID().toString();
 
@@ -207,7 +197,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         });
         Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
-        when(productService.getProduct(productId)).thenReturn(dummyProduct(productId));
+        when(productService.getProductRaw(productId)).thenReturn(dummyProduct(productId));
 
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
@@ -242,7 +232,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         User user = objectMapper.readValue(userStream, User.class);
         when(userRegistryRestClient.getUserByInternalId(any(), any())).thenReturn(user);
-        when(productService.getProduct(productId)).thenReturn(dummyProduct(productId));
+        when(productService.getProductRaw(productId)).thenReturn(dummyProduct(productId));
 
         Collection<UserProductResponse> result = institutionService.getInstitutionProductUsersV2(institutionId, productId, userId, null, xSelfCareUid);
 

@@ -32,7 +32,7 @@ public abstract class UserMapper {
 
     public abstract User toUserFromUserDetailResponse(UserDetailResponse onboardingData);
 
-    @Mapping(target = "productRoleLabel", expression = "java(toProductRoleLabel(onboardedProduct, getProductService().getProduct(onboardedProduct.getProductId())))")
+    @Mapping(target = "productRoleLabel", expression = "java(toProductRoleLabel(onboardedProduct, getProductService().getProductRaw(onboardedProduct.getProductId())))")
     public abstract it.pagopa.selfcare.external_api.model.user.OnboardedProductResponse
     onboardedProductResponseToOnboardedProductResponse(OnboardedProductResponse onboardedProduct);
 
