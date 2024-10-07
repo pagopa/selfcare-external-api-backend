@@ -14,10 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 
-import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +45,7 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
         OnboardingGet onboardingGet = new OnboardingGet();
         onboardingGet.setProductId("id");
         onboardingGetResponse.setItems(List.of(onboardingGet));
-        when(onboardingControllerApi._v1OnboardingGet(null, null,null,1, "id", 10, OnboardingStatus.COMPLETED.name(), null, null, null))
+        when(onboardingControllerApi._getOnboardingWithFilter(null, null,null,1, "id", 10, OnboardingStatus.COMPLETED.name(), null, null, null))
                 .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, OnboardingStatus.COMPLETED.name());
         Assertions.assertEquals(1, tokens.size());
@@ -57,7 +55,7 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
     void findByProductIdEmptyList(){
         OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
         onboardingGetResponse.setItems(Collections.emptyList());
-        when(onboardingControllerApi._v1OnboardingGet(null, null, null, 1, "id", 10, null, null, null, null))
+        when(onboardingControllerApi._getOnboardingWithFilter(null, null, null, 1, "id", 10, null, null, null, null))
                 .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, null);
         Assertions.assertEquals(0, tokens.size());
