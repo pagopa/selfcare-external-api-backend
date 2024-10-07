@@ -2510,6 +2510,10 @@
             "type" : "string",
             "description" : "The specific role of the user related to the product."
           },
+          "productRoleLabel" : {
+            "type" : "string",
+            "description" : "The specific role label of the user related to the product."
+          },
           "role" : {
             "type" : "string",
             "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA"
