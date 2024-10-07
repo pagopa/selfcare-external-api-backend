@@ -487,7 +487,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Retrieves user given userId and optional ProductId",
+        "summary": "Retrieve user information by userId and optional ProductId",
+        "description": "Retrieves user given userId and optional ProductId",
         "operationId": "getUserInfoUsingGET",
         "parameters": [
           {
@@ -1422,19 +1423,7 @@
             "type": "string"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "productId": {
             "type": "string"
@@ -1593,19 +1582,7 @@
             "type": "boolean"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "istatCode": {
             "type": "string"
@@ -2010,6 +1987,12 @@
           "multiroleAllowed": {
             "type": "boolean"
           },
+          "phasesAdditionAllowed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "roles": {
             "type": "array",
             "items": {
@@ -2360,6 +2343,10 @@
             "type": "string",
             "description": "The specific role of the user related to the product."
           },
+          "productRoleLabel": {
+            "type": "string",
+            "description": "The specific role label of the user related to the product."
+          },
           "role": {
             "type": "string",
             "description": "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA"
@@ -2693,7 +2680,8 @@
             "description": "Institution's share capital value"
           }
         }
-      },"DpoDataResource": {
+      },
+      "DpoDataResource": {
         "title": "DpoDataResource",
         "type": "object",
         "properties": {
