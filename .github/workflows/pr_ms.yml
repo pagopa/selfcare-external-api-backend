@@ -7,11 +7,7 @@ on:
       - main
       - releases/**
     paths:
-      - "app/**"
-      - "connector/**"
-      - "connector-api/**"
-      - "core/**"
-      - "web/**"
+      - "src/**"
       - "pom.xml"
     types:
       - opened

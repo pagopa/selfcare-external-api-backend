@@ -5,11 +5,7 @@ on:
       - main
       - releases/*
     paths:
-      - "app/**"
-      - "connector/**"
-      - "connector-api/**"
-      - "core/**"
-      - "web/**"
+      - "src/**"
     types: [ opened, synchronize, reopened ]
     
 permissions:
