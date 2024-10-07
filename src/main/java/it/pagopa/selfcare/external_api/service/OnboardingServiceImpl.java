@@ -42,7 +42,7 @@ class OnboardingServiceImpl implements OnboardingService {
     public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
         log.trace("oldContractOnboarding start");
         log.debug("oldContractOnboarding = {}", onboardingImportData);
-        onboardingControllerApi._v1OnboardingPaImportPost(onboardingMapper.toOnboardingImportRequest(onboardingImportData));
+        onboardingControllerApi._onboardingPaImport(onboardingMapper.toOnboardingImportRequest(onboardingImportData));
         log.trace("oldContractOnboarding end");
     }
 
@@ -51,11 +51,11 @@ class OnboardingServiceImpl implements OnboardingService {
         log.trace("autoApprovalOnboarding start");
         log.debug("autoApprovalOnboarding = {}", onboardingData);
         if (onboardingData.getInstitutionType() == InstitutionType.PA) {
-            onboardingControllerApi._v1OnboardingPaCompletionPost(onboardingMapper.toOnboardingPaRequest(onboardingData));
+            onboardingControllerApi._onboardingPaCompletion(onboardingMapper.toOnboardingPaRequest(onboardingData));
         } else if (onboardingData.getInstitutionType() == InstitutionType.PSP) {
-            onboardingControllerApi._v1OnboardingPspCompletionPost(onboardingMapper.toOnboardingPspRequest(onboardingData));
+            onboardingControllerApi._onboardingPspCompletion(onboardingMapper.toOnboardingPspRequest(onboardingData));
         } else {
-            onboardingControllerApi._v1OnboardingCompletionPost(onboardingMapper.toOnboardingDefaultRequest(onboardingData));
+            onboardingControllerApi._onboardingCompletion(onboardingMapper.toOnboardingDefaultRequest(onboardingData));
         }
         log.trace("autoApprovalOnboarding end");
     }

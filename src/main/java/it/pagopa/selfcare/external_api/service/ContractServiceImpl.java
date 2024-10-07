@@ -63,7 +63,7 @@ public class ContractServiceImpl implements ContractService {
                 .map(institutionMapper::toEntity)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        List<Token> tokens =  Objects.requireNonNull(tokenControllerApi._v1TokensGet(institutionOnboarding.getTokenId()).getBody()).stream()
+        List<Token> tokens =  Objects.requireNonNull(tokenControllerApi._getToken(institutionOnboarding.getTokenId()).getBody()).stream()
                 .map(tokenMapper::toEntity)
                 .toList();
 

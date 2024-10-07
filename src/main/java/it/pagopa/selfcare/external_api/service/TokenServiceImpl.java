@@ -23,7 +23,7 @@ public class TokenServiceImpl implements TokenService {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
         List<TokenOnboardedUsers> tokenOnboardedUsers = Objects.requireNonNull(
-                        onboardingControllerApi._v1OnboardingGet(null,
+                        onboardingControllerApi._getOnboardingWithFilter(null,
                                         null,
                                         null,
                                         page,
