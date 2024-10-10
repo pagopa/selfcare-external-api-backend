@@ -273,7 +273,8 @@
             "name": "role",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/PartyRole"
+              "description": "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+              "type": "string"
             }
           },
           {
@@ -1193,16 +1194,6 @@
             "type": "string"
           }
         }
-      },
-      "PartyRole": {
-        "enum": [
-          "MANAGER",
-          "DELEGATE",
-          "SUB_DELEGATE",
-          "OPERATOR",
-          "ADMIN_EA"
-        ],
-        "type": "string"
       },
       "OnboardedProductState": {
         "enum": [
