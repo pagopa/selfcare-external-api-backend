@@ -31,7 +31,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
-import static it.pagopa.selfcare.commons.base.utils.InstitutionType.*;
+import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})

@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionLocationDataDto;
 import it.pagopa.selfcare.external_api.model.user.UserDto;
 import lombok.Data;

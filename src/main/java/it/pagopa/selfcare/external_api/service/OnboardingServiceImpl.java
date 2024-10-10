@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.service;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
