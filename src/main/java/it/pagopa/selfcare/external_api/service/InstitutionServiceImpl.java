@@ -126,9 +126,6 @@ class InstitutionServiceImpl implements InstitutionService {
         if (!products.isEmpty()) {
 
             InstitutionResponse institutionResponse = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId).getBody();
-            String institutionType = Optional.ofNullable(institutionResponse.getInstitutionType())
-                    .map(InstitutionResponse.InstitutionTypeEnum::getValue)
-                    .orElse(null);
 
             Set<String> productsSet = new HashSet<>();
             ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
@@ -143,7 +140,7 @@ class InstitutionServiceImpl implements InstitutionService {
             List<String> productIds =  productsSet.stream().toList();
             productResources = products.stream()
                     .filter(product -> productIds.contains(product.getId()))
-                    .map(product -> productsMapper.toResource(product, institutionType))
+                    .map(product -> productsMapper.toResource(product, institutionResponse.getInstitutionType()))
                     .toList();
         }
         log.trace(TAG_LOG_INSTITUTION_USER_PRODUCTS + " result = {}", productResources);

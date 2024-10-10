@@ -1,6 +1,5 @@
 package it.pagopa.selfcare.external_api.mapper;
 
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
@@ -9,6 +8,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -25,7 +25,7 @@ public interface InstitutionMapper {
 
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
-    @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "convertInstitutionType")
+    @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "toInstitutionType")
     @Mapping(target = "billing", source = "onboarding", qualifiedByName = "setBillingData")
     OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
 
@@ -50,12 +50,11 @@ public interface InstitutionMapper {
         return null;
     }
 
-    @Named("convertInstitutionType")
-    static InstitutionType convertInstitutionType(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse.InstitutionTypeEnum institutionTypeEnum) {
-        if(Objects.nonNull(institutionTypeEnum)) {
-            String institutionType = institutionTypeEnum.name();
-            return InstitutionType.valueOf(institutionType);
-        }
+    @Named("toInstitutionType")
+    default InstitutionType toInstitutionType(String institutionType) {
+        try {
+            return Optional.ofNullable(institutionType).map(InstitutionType::valueOf).orElse(null);
+        } catch (IllegalArgumentException ignored) { }
         return null;
     }
 

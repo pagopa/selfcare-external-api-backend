@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.model.user;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import lombok.Data;
 
