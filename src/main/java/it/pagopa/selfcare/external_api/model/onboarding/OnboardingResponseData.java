@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.Attribute;
 import it.pagopa.selfcare.external_api.model.institution.BusinessData;
 import it.pagopa.selfcare.external_api.model.institution.SupportContact;

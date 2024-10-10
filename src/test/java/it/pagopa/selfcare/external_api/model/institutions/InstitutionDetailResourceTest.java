@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.model.institutions;
 
-import it.pagopa.selfcare.commons.base.utils.InstitutionType;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomyResource;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionDetailResource;
 import org.junit.jupiter.api.BeforeEach;
