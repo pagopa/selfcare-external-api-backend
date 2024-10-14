@@ -113,9 +113,9 @@ jobs:
       - name: Merge OpenAPI and PostProcess - Billing Portal
         if: ${{ inputs.billing-portal-api }}
         run: |
-          npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api/billing_portal/v1/openapi_merge/openapi_merge.json
-          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/billing_portal/v1/openapi.json ${{ env.INFRA_APIM_FOLDER }}/api/billing_portal/v1/openapi.${{ inputs.env }}.json
-          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/retain_necessary_schemas_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/billing_portal/v1/openapi.${{ inputs.env }}.json
+          npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api/billing-portal-api/v1/openapi_merge/openapi_merge.json
+          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/billing-portal-api/v1/openapi.json ${{ env.INFRA_APIM_FOLDER }}/api/billing-portal-api/v1/openapi.${{ inputs.env }}.json
+          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/retain_necessary_schemas_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api/billing-portal-api/v1/openapi.${{ inputs.env }}.json
 
       - name: Merge OpenAPI and PostProcess - External API
         if: ${{ inputs.selc-ms-external-api }}
