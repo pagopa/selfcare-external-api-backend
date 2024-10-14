@@ -3,6 +3,10 @@ name: Create OpenAPI merge
 on:
   workflow_dispatch:
     inputs:
+      billing-portal-api:
+        type: boolean
+        description: Enable creation of Billing Portal API
+        default: True
       selc-ms-external-api:
         type: boolean
         description: Enable creation of Selc External API
@@ -52,6 +56,7 @@ jobs:
       selc-support-service: ${{  steps.set-env.outputs.selc-support-service }}
       pnpg-ms-external-api: ${{  steps.set-env.outputs.pnpg-ms-external-api }}
       pnpg-support-service: ${{  steps.set-env.outputs.pnpg-support-service }}
+      billing-portal-api:   ${{  steps.set-env.outputs.billing-portal-api }}
       environ: ${{ steps.set-env.outputs.environ }}
     steps:
       - name: Set Environment Variable
@@ -61,6 +66,7 @@ jobs:
             echo "selc-ms-external-api=${{ github.event.inputs.selc-ms-external-api }}" >> $GITHUB_OUTPUT
             echo "selc-external-api-contract=${{ github.event.inputs.selc-external-api-contract }}" >> $GITHUB_OUTPUT
             echo "selc-ms-internal-api=${{ github.event.inputs.selc-ms-internal-api }}" >> $GITHUB_OUTPUT
+            echo "billing-portal-api=${{ github.event.inputs.billing-portal-api }}" >> $GITHUB_OUTPUT
             echo "selc-support-service=${{ github.event.inputs.selc-support-service }}" >> $GITHUB_OUTPUT
             echo "pnpg-ms-external-api=${{ github.event.inputs.pnpg-ms-external-api }}" >> $GITHUB_OUTPUT
             echo "pnpg-support-service=${{ github.event.inputs.pnpg-support-service }}" >> $GITHUB_OUTPUT
@@ -79,6 +85,7 @@ jobs:
             echo "selc-ms-external-api=false" >> $GITHUB_OUTPUT
             echo "selc-external-api-contract=true" >> $GITHUB_OUTPUT
             echo "selc-ms-internal-api=true" >> $GITHUB_OUTPUT
+            echo "billing-portal-api=true" >> $GITHUB_OUTPUT
             echo "selc-support-service=true" >> $GITHUB_OUTPUT
             echo "pnpg-ms-external-api=true" >> $GITHUB_OUTPUT
             echo "pnpg-support-service=true" >> $GITHUB_OUTPUT
@@ -93,6 +100,7 @@ jobs:
       selc-ms-external-api: ${{ needs.setup.outputs.selc-ms-external-api == 'true' }}
       selc-external-api-contract: ${{ needs.setup.outputs.selc-external-api-contract == 'true' }}
       selc-ms-internal-api: ${{ needs.setup.outputs.selc-ms-internal-api == 'true' }}
+      billing-portal-api: ${{ needs.setup.outputs.billing-portal-api == 'true' }}
       selc-support-service: ${{ needs.setup.outputs.selc-support-service == 'true' }}
       pnpg-ms-external-api: ${{ needs.setup.outputs.pnpg-ms-external-api == 'true' }}
       pnpg-support-service: ${{ needs.setup.outputs.pnpg-support-service == 'true' }}
