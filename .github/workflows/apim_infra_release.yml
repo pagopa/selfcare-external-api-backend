@@ -233,7 +233,7 @@ jobs:
       needs: [setup,release]
       with:
         env: ${{ needs.setup.outputs.environ }}
-        api_folder_path: /api/billing_portal/v1
+        api_folder_path: /api/billing_portal-api/v1
         docs_openapi_path: developer/billing-portal/v1/billing-portal-api.json
         api_title: Billing Portal API v1
         enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
