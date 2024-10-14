@@ -1,6 +1,10 @@
 on:
     workflow_call:
         inputs:
+          billing-portal-api:
+            type: boolean
+            description: Enable creation of Billing Portal API
+            default: True
           selc-ms-external-api:
             type: boolean
             description: Enable creation of Selc External API
