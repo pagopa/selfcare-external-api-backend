@@ -226,5 +226,21 @@ jobs:
       secrets:
         API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_SUPPORT }}
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+
+    update_docs_and_notification_billing_portal:
+      name: "[Billing Portal API] Update Developer Docs and Notify using Slack"
+      uses: ./.github/workflows/call_update_docs_and_notification.yml
+      needs: [setup,release]
+      with:
+        env: ${{ needs.setup.outputs.environ }}
+        api_folder_path: /api/billing_portal/v1
+        docs_openapi_path: developer/billing-portal/v1/billing-portal-api.json
+        api_title: Billing Portal API v1
+        enable_notification: ${{ needs.setup.outputs.notification == 'true' }}
+
+      secrets:
+        API_NOTIFICATION_TRIGGERS_ID: ${{ secrets.API_NOTIFICATION_TRIGGERS_ID_BILLING_PORTAL }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+
       
        
