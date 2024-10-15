@@ -3,7 +3,7 @@
     <base/>
 
       <choose>
-      <when condition="@(((string)context.Variables["productId"]).Contains("prod-fd"))">
+      <when condition="@(((string)context.Product.Id).Contains("prod-fd"))">
         <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized" require-expiration-time="false" require-scheme="Bearer" require-signed-tokens="true">
           <openid-config url="https://login.microsoftonline.com/${TENANT_ID}/.well-known/openid-configuration" />
           <required-claims>
