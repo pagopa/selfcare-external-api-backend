@@ -1,4 +1,4 @@
-env_short = "p"
+env_short        = "p"
 suffix_increment = "-002"
 cae_name         = "cae-002"
 
@@ -101,10 +101,10 @@ app_settings = [
 ]
 
 secrets_names = {
-  "APPLICATIONINSIGHTS_CONNECTION_STRING" = "appinsights-connection-string"
-  "BLOB_STORAGE_CONN_STRING"              = "blob-storage-contract-connection-string"
-  "USERVICE_USER_REGISTRY_API_KEY"        = "user-registry-api-key"
-  "JWT_TOKEN_PUBLIC_KEY"                  = "jwt-public-key"
-  "BLOB_STORAGE_PRODUCT_CONNECTION_STRING"   = "blob-storage-product-connection-string"
+  "APPLICATIONINSIGHTS_CONNECTION_STRING"  = "appinsights-connection-string"
+  "BLOB_STORAGE_CONN_STRING"               = "blob-storage-contract-connection-string"
+  "USERVICE_USER_REGISTRY_API_KEY"         = "user-registry-api-key"
+  "JWT_TOKEN_PUBLIC_KEY"                   = "jwt-public-key"
+  "BLOB_STORAGE_PRODUCT_CONNECTION_STRING" = "blob-storage-product-connection-string"
 
 }

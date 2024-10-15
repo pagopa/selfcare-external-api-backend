@@ -27,10 +27,10 @@ apim_publisher_name = "pagoPA SelfCare PROD"
 apim_sku            = "Premium_1" # TODO
 
 # aks
-private_dns_name            = "selc.internal.selfcare.pagopa.it"
-private_onboarding_dns_name = "selc-p-onboarding-ms-ca.lemonpond-bb0b750e.westeurope.azurecontainerapps.io"
-ca_suffix_dns_private_name  = "lemonpond-bb0b750e.westeurope.azurecontainerapps.io"
-ca_pnpg_suffix_dns_private_name   = "calmmoss-0be48755.westeurope.azurecontainerapps.io"
+private_dns_name                = "selc.internal.selfcare.pagopa.it"
+private_onboarding_dns_name     = "selc-p-onboarding-ms-ca.lemonpond-bb0b750e.westeurope.azurecontainerapps.io"
+ca_suffix_dns_private_name      = "lemonpond-bb0b750e.westeurope.azurecontainerapps.io"
+ca_pnpg_suffix_dns_private_name = "calmmoss-0be48755.westeurope.azurecontainerapps.io"
 
 # app_gateway
 app_gateway_api_certificate_name      = "api-selfcare-pagopa-it"
