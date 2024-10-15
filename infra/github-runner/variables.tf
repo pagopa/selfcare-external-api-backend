@@ -1,6 +1,6 @@
 locals {
   selc_project = "selc-${var.env_short}"
-  repo_name = "selfcare-external-api-backend"
+  repo_name    = "selfcare-external-api-backend"
 }
 
 variable "prefix" {

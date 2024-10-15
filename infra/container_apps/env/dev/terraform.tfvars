@@ -1,6 +1,6 @@
-env_short = "d"
+env_short        = "d"
 suffix_increment = "-002"
-cae_name = "cae-002"
+cae_name         = "cae-002"
 
 tags = {
   CreatedBy   = "Terraform"
@@ -13,7 +13,7 @@ tags = {
 container_app = {
   min_replicas = 0
   max_replicas = 1
-  scale_rules  = [
+  scale_rules = [
     {
       custom = {
         metadata = {

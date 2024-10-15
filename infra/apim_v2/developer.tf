@@ -3,7 +3,7 @@ locals {
   service_name           = module.apim.name
   azure_apim_api_version = "2021-08-01"
   checkout_cdn_name      = "${local.project}-checkout-cdn-endpoint"
-  checkout_cdn_name_pnpg      = "${local.project}-weu-pnpg-checkout-cdn-endpoint"
+  checkout_cdn_name_pnpg = "${local.project}-weu-pnpg-checkout-cdn-endpoint"
 }
 
 resource "null_resource" "upload_developer_index_v2" {

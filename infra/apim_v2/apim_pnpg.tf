@@ -176,25 +176,25 @@ module "apim_pnpg_external_api_ms_v2" {
     {
       operation_id = "getInstitutionProductsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "getInstitutionUsersByProductUsingGET"
       xml_content = templatefile("./api/base_ms_url_product_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "v2getUserInstitution"
       xml_content = templatefile("./api/base_ms_url_product_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     }
   ]
@@ -244,49 +244,49 @@ module "apim_pnpg_support_service_v2" {
     {
       operation_id = "getInstitutionUsersUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
     },
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "verifyLegalByPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
       })
     },
     {
       operation_id = "V2getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2"
       })
     },
     {
       operation_id = "getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "institutionsByLegalTaxIdUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "legalAddressUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     }
   ]

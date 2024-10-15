@@ -395,7 +395,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "v2getUserInstitution"
       xml_content = templatefile("./api/ms_external_api/v2/getUserInstitutionUsingGet_op_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     }
   ]
@@ -481,13 +481,13 @@ module "apim_internal_api_ms_v1" {
       operation_id = "completeOnboardingTokenConsume"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
-        })
+      })
     },
     {
       operation_id = "completeOnboardingUsingPUT"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
-        })
+      })
     },
     {
       operation_id = "updateCreatedAtUsingPUT"
@@ -541,13 +541,13 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "getContractUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -559,57 +559,57 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "V2getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getInstitutionUsersUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getDelegationsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "onboardingInstitutionUsersUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "completeOnboardingTokenConsume"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
         }
       )
     },
     {
       operation_id = "onboardingInstitutionUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
         }
       )
     },
     {
       operation_id = "getTokensFromProductUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v1/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
     },
     {
       operation_id = "updateOnboardiUsingPUT"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL           = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
     },
     {
