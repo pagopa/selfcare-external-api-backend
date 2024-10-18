@@ -786,6 +786,55 @@ module "apim_external_api_contract_public_v1" {
   subscription_required = true
 }
 
+resource "azurerm_api_management_api_version_set" "apim_billing_portal" {
+  name                = "${var.env_short}-billing-portal"
+  resource_group_name = azurerm_resource_group.rg_api.name
+  api_management_name = module.apim.name
+  display_name        = "Billing Portal API Service"
+  versioning_scheme   = "Segment"
+}
+
+module "apim_billing_portal_v1" {
+  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  name                = "${local.project}-billing-portal"
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+  version_set_id      = azurerm_api_management_api_version_set.apim_billing_portal.id
+
+  description  = "This service is the proxy for billing portal services"
+  display_name = "Billing Portal API service"
+  path         = "billing-portal"
+  api_version  = "v1"
+  protocols = [
+    "https"
+  ]
+  
+  service_url = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+
+  content_format = "openapi+json"
+  content_value = templatefile("./api/billing-portal-api/v1/openapi.${var.env}.json", {
+    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
+    basePath = "v1"
+  })
+
+  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+  })
+
+  subscription_required = true
+
+  api_operation_policies = [
+    {
+      operation_id = "updateOnboardingRecipientIdUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+      })
+    }
+  ]
+}
+
 ##############
 ## Products ##
 ##############
