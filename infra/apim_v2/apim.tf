@@ -803,7 +803,7 @@ module "apim_billing_portal_v1" {
 
   description  = "This service is the proxy for billing portal services"
   display_name = "Billing Portal API service"
-  path         = "billing-portal"
+  path         = "external/billing-portal"
   api_version  = "v1"
   protocols = [
     "https"
