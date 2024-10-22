@@ -828,9 +828,15 @@ module "apim_billing_portal_v1" {
   api_operation_policies = [
     {
       operation_id = "updateOnboardingRecipientIdUsingPUT"
-      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+      xml_content = templatefile("./api/base_policy_config.xml.tpl", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
+    },
+    {
+      operation_id = "checkRecipientCodeUsingGET"
+      xml_content = templatefile("./api/base_policy_config.xml.tpl", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboardingbackend-ca.${var.ca_suffix_dns_private_name}/v2/"
+    })
     }
   ]
 }
