@@ -7,7 +7,7 @@
       "inputFile": "./openapi_template.json"
     },
     {
-      "inputFile": "../../../../../../src/main/resources/swagger/api-docs.json",
+      "inputFile": "../../../../../../../docs/pagopa/selfcare-onboarding-backend/openapi.json",
       "operationSelection": {
         "includeTags": [
           "billing-portal"
