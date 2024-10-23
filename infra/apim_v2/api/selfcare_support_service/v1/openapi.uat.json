@@ -2838,7 +2838,7 @@
               "$ref": "#/components/schemas/UserRequest"
             }
           },
-          "codeSDI": {
+          "recipientCode": {
             "type": "string"
           },
           "digitalAddress": {
