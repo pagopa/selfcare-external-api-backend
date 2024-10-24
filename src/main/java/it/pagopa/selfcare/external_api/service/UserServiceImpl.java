@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
         log.trace("geUserInfo start");
         it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto searchUserDto = new it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto(fiscalCode);
-        final User user = userMapper.toUserFromUserDetailResponse(msUserApiRestClient._usersSearchPost(null, searchUserDto).getBody());
+        final User user = userMapper.toUserFromUserDetailResponse(msUserApiRestClient._searchUserByFiscalCode(null, searchUserDto).getBody());
         List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId(), null);
         List<String> userStatusesString = userStatuses == null ? Collections.emptyList()
                 : userStatuses.stream().map(RelationshipState::toString).toList();
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId) {
-        List<UserInstitution> usersInstitutions =  Objects.requireNonNull(msUserApiRestClient._usersGet(
+        List<UserInstitution> usersInstitutions =  Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                         institutionId, null, null, List.of(productId), null
                         , null, null, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
         //fix temporanea per il funzionamento della getUserInfo di support
 
-        List<UserInstitution> usersInstitutions = Objects.requireNonNull(msUserApiRestClient._usersGet(
+        List<UserInstitution> usersInstitutions = Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                         null, null, null,  Objects.isNull(productId) ? null : List.of(productId), null
                         , 350, null, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<OnboardedInstitutionResource> getOnboardedInstitutionsDetailsActive(String userId, String productId) {
 
-        List<UserInstitution> institutionsWithProductActive = Objects.requireNonNull(msUserApiRestClient._usersGet(
+        List<UserInstitution> institutionsWithProductActive = Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                         null, null, null, Objects.isNull(productId) ? null : List.of(productId), null
                         , null, List.of(ACTIVE.name()), userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse)
@@ -218,22 +218,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserInstitution> getUsersInstitutions(String userId, String institutionId, Integer page, Integer size, List<String> productRoles, List<String> products, List<PartyRole> roles, List<String> states){
-        return Objects.requireNonNull(msUserApiRestClient._usersGet(
-                        institutionId, page, productRoles, products, toDtoPartyRole(roles)
-                        , size, states, userId).getBody())
+        return Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
+                        institutionId, page, productRoles, products, Optional.ofNullable(roles).map(rolesList -> rolesList.stream().map(PartyRole::name).toList()).orElse(null),
+                        size, states, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
-    }
-
-    private List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> toDtoPartyRole(List<PartyRole> roles) {
-        List<it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole> partyRoles = new ArrayList<>();
-        if (roles != null) {
-            roles.forEach(partyRole -> {
-                it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole role = it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.valueOf(partyRole.name());
-                partyRoles.add(role);
-            });
-        } else {
-            return Collections.emptyList();
-        }
-        return partyRoles;
     }
 }

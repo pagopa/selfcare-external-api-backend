@@ -128,7 +128,7 @@ class InstitutionServiceImpl implements InstitutionService {
             InstitutionResponse institutionResponse = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId).getBody();
 
             Set<String> productsSet = new HashSet<>();
-            ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
+            ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._retrieveUsers(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
             if (Objects.nonNull(response) && Objects.nonNull(response.getBody()) && !response.getBody().isEmpty()) {
                 //There is only a document for the couple institutionId/userId
                 productsSet = response.getBody().get(0).getProducts().stream()
@@ -154,7 +154,7 @@ class InstitutionServiceImpl implements InstitutionService {
         Assert.hasText(productId, "A Product id is required");
         List<String> productRolesList = CollectionUtils.isEmpty(productRoles) ? null : new ArrayList<>(productRoles);
 
-        List<UserInstitution> usersInstitutions =  Objects.requireNonNull(msUserApiRestClient._usersGet(
+        List<UserInstitution> usersInstitutions =  Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                         institutionId, null, productRolesList, List.of(productId), null
                         , null, List.of(ACTIVE.name()), userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
@@ -170,7 +170,7 @@ class InstitutionServiceImpl implements InstitutionService {
                     userProduct.setRoles(userInstitution.getProducts().stream().map(OnboardedProductResponse::getProductRole).toList());
                     return userProduct;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", userProductResponses);
         log.trace("getInstitutionProductUsers end");

@@ -1,7 +1,7 @@
 {
   "openapi" : "3.0.3",
   "info" : {
-    "title" : "user-ms API",
+    "title" : "User API",
     "version" : "1.0.0"
   },
   "servers" : [ {
@@ -11,17 +11,34 @@
     "url" : "http://0.0.0.0:8080",
     "description" : "Auto generated value"
   } ],
+  "tags" : [ {
+    "name" : "Events"
+  }, {
+    "name" : "Institution"
+  }, {
+    "name" : "User"
+  }, {
+    "name" : "external-pnpg"
+  }, {
+    "name" : "external-v2"
+  }, {
+    "name" : "internal-v1"
+  }, {
+    "name" : "support"
+  }, {
+    "name" : "support-pnpg"
+  } ],
   "paths" : {
-    "/authorize/{institutionId}" : {
+    "/authorize" : {
       "get" : {
         "tags" : [ "User Permission Controller" ],
         "summary" : "Get permission for a user in an institution",
+        "description" : "Determines if the authenticated user possesses a specific permission within the given institution and product context.",
+        "operationId" : "getPermission",
         "parameters" : [ {
           "name" : "institutionId",
-          "in" : "path",
-          "required" : true,
+          "in" : "query",
           "schema" : {
-            "minLength" : 1,
             "type" : "string"
           }
         }, {
@@ -49,11 +66,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -61,10 +78,96 @@
         } ]
       }
     },
-    "/institutions/{institutionId}/products/{productId}/createdAt" : {
+    "/events/sc-users" : {
+      "post" : {
+        "tags" : [ "Events" ],
+        "summary" : "Resend all user events based on institutionId, userId, and fromDate",
+        "description" : "Resends all events for a specific user within a given institution starting from the specified date and time. This endpoint allows administrators to trigger the reprocessing or notification of user-related events that occurred after the provided `fromDate`.",
+        "operationId" : "sendUsersEvents",
+        "parameters" : [ {
+          "name" : "fromDate",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/OffsetDateTime"
+          }
+        }, {
+          "name" : "institutionId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/institutions/{institutionId}" : {
       "put" : {
-        "tags" : [ "Institution Controller" ],
-        "summary" : "The API updates user's onboarded product with createdAt passed in input",
+        "tags" : [ "Institution" ],
+        "summary" : "Update institution's description across all userInstitution records",
+        "description" : "Modifies the description field in all occurrences of `userInstitution` entities associated with a given institutionId. This ensures that the institution's descriptive information is consistently updated across all related user records.",
+        "operationId" : "updateInstitutionDescription",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateDescriptionDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/institutions/{institutionId}/products/{productId}/created-at" : {
+      "put" : {
+        "tags" : [ "Institution" ],
+        "summary" : "Update user's onboarded product creation date",
+        "description" : "Updates the `createdAt` timestamp for a user's onboarded product based on the provided institutionId, productId, and list of userIds. This is useful for tracking when a user was onboarded to a specific product within an institution.",
+        "operationId" : "updateUserProductCreatedAt",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -84,7 +187,7 @@
           "in" : "query",
           "required" : true,
           "schema" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
+            "$ref" : "#/components/schemas/OffsetDateTime"
           }
         }, {
           "name" : "userIds",
@@ -104,11 +207,11 @@
               "application/json" : { }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -118,8 +221,10 @@
     },
     "/institutions/{institutionId}/user-institutions" : {
       "get" : {
-        "tags" : [ "Institution Controller" ],
-        "summary" : "The API retrieves users with optional filters in input as query params",
+        "tags" : [ "Institution" ],
+        "summary" : "Retrieve users with optional filters",
+        "description" : "Fetches a list of users associated with a specific institution, applying optional filters such as userId, roles, states, products, and productRoles. This allows for flexible querying based on various user attributes and statuses.",
+        "operationId" : "retrieveUserInstitutions",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -184,11 +289,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -198,8 +303,10 @@
     },
     "/institutions/{institutionId}/users" : {
       "get" : {
-        "tags" : [ "Institution Controller" ],
-        "summary" : "The API retrieves user's info including details of roles on products",
+        "tags" : [ "support", "support-pnpg", "Institution" ],
+        "summary" : "Retrieve user's information including product role details",
+        "description" : "Fetches detailed information about users associated with a specific institution, including their roles on various products. This endpoint is useful for administrators to obtain comprehensive user-role mappings within an institution.",
+        "operationId" : "getInstitutionUsersUsingGET",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -222,11 +329,45 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           },
           "401" : {
-            "description" : "Not Authorized"
+            "description" : "Not Authorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           }
         },
         "security" : [ {
@@ -236,8 +377,10 @@
     },
     "/users" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "The API retrieves paged users with optional filters in input as query params",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve paged users with optional query filters",
+        "description" : "The API retrieves paged users with optional filters in input as query params",
+        "operationId" : "retrievePaginatedAndFilteredUser",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "query",
@@ -276,7 +419,7 @@
           "schema" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/PartyRole"
+              "type" : "string"
             }
           }
         }, {
@@ -317,11 +460,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -329,8 +472,10 @@
         } ]
       },
       "post" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "The createOrUpdateByFiscalCode function is used to create a new user or update an existing one.",
+        "tags" : [ "User" ],
+        "summary" : "Create or update a user by fiscal code",
+        "description" : "The createOrUpdateByFiscalCode function is used to create a new user or update an existing one.",
+        "operationId" : "createOrUpdateByFiscalCode",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -342,7 +487,7 @@
         },
         "responses" : {
           "200" : {
-            "description" : "OK",
+            "description" : "User created or updated!",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -351,11 +496,14 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
+          "201" : {
+            "description" : "User already has the active role for that product!"
           },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -365,8 +513,10 @@
     },
     "/users/emails" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "The API retrieves Users' emails using institution id and product id",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve users' emails by institution ID and product ID",
+        "description" : "The API retrieves Users' emails using institution id and product id",
+        "operationId" : "getUsersEmailByInstitutionAndProduct",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "query",
@@ -396,11 +546,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -410,8 +560,10 @@
     },
     "/users/ids" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Retrieve all users given their userIds",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve multiple users by their user IDs",
+        "description" : "Retrieve all users given their userIds",
+        "operationId" : "findAllByIds",
         "parameters" : [ {
           "name" : "userIds",
           "in" : "query",
@@ -436,11 +588,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -450,8 +602,10 @@
     },
     "/users/notification" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Retrieve all SC-User for DataLake filtered by optional productId",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve all SC-Users for DataLake with optional product filter",
+        "description" : "Retrieve all SC-User for DataLake filtered by optional productId",
+        "operationId" : "getUsers",
         "parameters" : [ {
           "name" : "page",
           "in" : "query",
@@ -486,11 +640,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -500,8 +654,10 @@
     },
     "/users/search" : {
       "post" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Search user by fiscalCode",
+        "tags" : [ "User" ],
+        "summary" : "Search for a user using fiscal code",
+        "description" : "Search user by fiscalCode",
+        "operationId" : "searchUserByFiscalCode",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "query",
@@ -529,11 +685,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -543,8 +699,10 @@
     },
     "/users/{id}" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Retrieves user given userId and optional ProductId",
+        "tags" : [ "User", "external-v2", "support", "support-pnpg", "external-pnpg" ],
+        "summary" : "Retrieve user information by userId and optional ProductId",
+        "description" : "Retrieves user given userId and optional ProductId",
+        "operationId" : "getUserInfoUsingGET",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -576,11 +734,45 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           },
           "401" : {
-            "description" : "Not Authorized"
+            "description" : "Not Authorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           }
         },
         "security" : [ {
@@ -590,8 +782,10 @@
     },
     "/users/{id}/details" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Retrieves user's information from pdv: name, familyName, email, fiscalCode and workContacts",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve detailed user information from PDV by userId",
+        "description" : "Retrieves user's information from pdv: name, familyName, email, fiscalCode and workContacts",
+        "operationId" : "getUserDetailsById",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -623,11 +817,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -637,8 +831,10 @@
     },
     "/users/{id}/institution/{institutionId}/product/{productId}/status" : {
       "put" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Service to update user product status",
+        "tags" : [ "User" ],
+        "summary" : "Update the status of a user's product",
+        "description" : "Service to update user product status",
+        "operationId" : "updateUserProductStatus",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -661,6 +857,12 @@
             "type" : "string"
           }
         }, {
+          "name" : "productRole",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "name" : "status",
           "in" : "query",
           "required" : true,
@@ -672,11 +874,11 @@
           "204" : {
             "description" : "No Content"
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -686,8 +888,10 @@
     },
     "/users/{id}/status" : {
       "put" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Update user status with optional filter for institution, product, role and productRole",
+        "tags" : [ "User", "internal-v1" ],
+        "summary" : "Update a user's product status with optional filters",
+        "description" : "Update user status with optional filter for institution, product, role and productRole",
+        "operationId" : "updateUserStatusUsingPUT",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -717,7 +921,8 @@
           "name" : "role",
           "in" : "query",
           "schema" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           }
         }, {
           "name" : "status",
@@ -727,17 +932,48 @@
           }
         } ],
         "responses" : {
-          "200" : {
-            "description" : "OK",
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
-              "application/json" : { }
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403" : {
-            "description" : "Not Allowed"
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           },
-          "401" : {
-            "description" : "Not Authorized"
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
           }
         },
         "security" : [ {
@@ -747,8 +983,10 @@
     },
     "/users/{id}/user-registry" : {
       "put" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Service to update user in user-registry and send notification when user data gets updated",
+        "tags" : [ "User" ],
+        "summary" : "Update user registry and send notification upon data update",
+        "description" : "Service to update user in user-registry and send notification when user data gets updated",
+        "operationId" : "updateUserRegistryAndSendNotification",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -779,11 +1017,11 @@
               "application/json" : { }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -793,8 +1031,10 @@
     },
     "/users/{userId}" : {
       "post" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "The createOrUpdateByUserId function is used to update existing user adding userRole.",
+        "tags" : [ "User" ],
+        "summary" : "Update or create a user by userId with a new role",
+        "description" : "The createOrUpdateByUserId function is used to update existing user adding userRole.",
+        "operationId" : "createOrUpdateByUserId",
         "parameters" : [ {
           "name" : "userId",
           "in" : "path",
@@ -814,16 +1054,19 @@
         },
         "responses" : {
           "200" : {
-            "description" : "OK",
+            "description" : "User created or updated!",
             "content" : {
               "application/json" : { }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
+          "201" : {
+            "description" : "User already has the active role for that product!"
           },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -833,8 +1076,10 @@
     },
     "/users/{userId}/institution/{institutionId}" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "The retrieveUsers function is used to retrieve a list of users from the UserInstitution collection and userRegistry.\nAt first it try to retrieve a UserInstitution document associated with a logged user (admin)\nIf this userInstitution object is not null, so user has AdminRole, it try to retriew the userInstitutions filtered by given institutionId, roles, states, products and productRoles\nand optional given personId, otherwise it do the same query using the logged user id instead of personId.\nAfter that it retrieve personal user data, foreach userId retrieved, from userRegistry and return a stream of UserDataResponse objects containing the requested user data.",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve a list of users with optional filters and permissions",
+        "description" : "The retrieveUsers function is used to retrieve a list of users from the UserInstitution collection and userRegistry.\nAt first it try to retrieve a UserInstitution document associated with a logged user (admin)\nIf this userInstitution object is not null, so user has AdminRole, it try to retriew the userInstitutions filtered by given institutionId, roles, states, products and productRoles\nand optional given personId, otherwise it do the same query using the logged user id instead of personId.\nAfter that it retrieve personal user data, foreach userId retrieved, from userRegistry and return a stream of UserDataResponse objects containing the requested user data.",
+        "operationId" : "retrieveUsers",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -906,11 +1151,11 @@
               }
             }
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -920,8 +1165,10 @@
     },
     "/users/{userId}/institutions" : {
       "get" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Retrieves products info and role which the user is enabled",
+        "tags" : [ "User" ],
+        "summary" : "Retrieve product information and user roles",
+        "description" : "Retrieves products info and role which the user is enabled",
+        "operationId" : "getUserProductsInfo",
         "parameters" : [ {
           "name" : "userId",
           "in" : "path",
@@ -956,11 +1203,61 @@
               }
             }
           },
+          "401" : {
+            "description" : "Not Authorized"
+          },
           "403" : {
             "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/{userId}/institutions/{institutionId}" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Retrieve userInstitution data with permitted actions for each product",
+        "description" : "Retrieves userInstitution data with list of actions permitted for each user's product",
+        "operationId" : "getUserInstitutionWithPermission",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInstitutionWithActions"
+                }
+              }
+            }
           },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -970,8 +1267,10 @@
     },
     "/users/{userId}/institutions/{institutionId}/products/{productId}" : {
       "delete" : {
-        "tags" : [ "User Controller" ],
-        "summary" : "Delete logically the association institution and product",
+        "tags" : [ "User" ],
+        "summary" : "Logically delete the association between institution and product",
+        "description" : "Delete logically the association institution and product",
+        "operationId" : "deleteProducts",
         "parameters" : [ {
           "name" : "institutionId",
           "in" : "path",
@@ -998,11 +1297,11 @@
           "204" : {
             "description" : "No Content"
           },
-          "403" : {
-            "description" : "Not Allowed"
-          },
           "401" : {
             "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
         "security" : [ {
@@ -1082,10 +1381,21 @@
         "enum" : [ "ROOT", "DEV", "COLL", "PROD" ],
         "type" : "string"
       },
-      "LocalDateTime" : {
+      "InvalidParam" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "reason" : {
+            "type" : "string"
+          }
+        }
+      },
+      "OffsetDateTime" : {
         "format" : "date-time",
         "type" : "string",
-        "example" : "2022-03-10T12:15:50"
+        "example" : "2022-03-10T12:15:50-04:00"
       },
       "OnboardedProductResponse" : {
         "type" : "object",
@@ -1103,16 +1413,17 @@
             "type" : "string"
           },
           "role" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           },
           "env" : {
             "$ref" : "#/components/schemas/Env"
           },
           "createdAt" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
+            "$ref" : "#/components/schemas/OffsetDateTime"
           },
           "updatedAt" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
+            "$ref" : "#/components/schemas/OffsetDateTime"
           }
         }
       },
@@ -1120,16 +1431,78 @@
         "enum" : [ "ACTIVE", "PENDING", "TOBEVALIDATED", "SUSPENDED", "DELETED", "REJECTED" ],
         "type" : "string"
       },
-      "PartyRole" : {
-        "enum" : [ "MANAGER", "DELEGATE", "SUB_DELEGATE", "OPERATOR" ],
-        "type" : "string"
+      "OnboardedProductWithActions" : {
+        "type" : "object",
+        "properties" : {
+          "productId" : {
+            "type" : "string"
+          },
+          "tokenId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/OnboardedProductState"
+          },
+          "productRole" : {
+            "type" : "string"
+          },
+          "role" : {
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
+          },
+          "env" : {
+            "$ref" : "#/components/schemas/Env"
+          },
+          "createdAt" : {
+            "$ref" : "#/components/schemas/OffsetDateTime"
+          },
+          "updatedAt" : {
+            "$ref" : "#/components/schemas/OffsetDateTime"
+          },
+          "delegationId" : {
+            "type" : "string"
+          },
+          "userProductActions" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
       },
       "PermissionTypeEnum" : {
         "enum" : [ "ADMIN", "ANY" ],
         "type" : "string"
       },
+      "Problem" : {
+        "type" : "object",
+        "properties" : {
+          "detail" : {
+            "type" : "string"
+          },
+          "instance" : {
+            "type" : "string"
+          },
+          "invalidParams" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/InvalidParam"
+            }
+          },
+          "status" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          }
+        }
+      },
       "Product" : {
-        "required" : [ "productId", "role" ],
+        "required" : [ "productId", "role", "productRoles" ],
         "type" : "object",
         "properties" : {
           "productId" : {
@@ -1137,7 +1510,8 @@
             "type" : "string"
           },
           "role" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           },
           "tokenId" : {
             "type" : "string"
@@ -1147,11 +1521,14 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "delegationId" : {
+            "type" : "string"
           }
         }
       },
       "Product1" : {
-        "required" : [ "productId", "role" ],
+        "required" : [ "productId", "role", "productRoles" ],
         "type" : "object",
         "properties" : {
           "productId" : {
@@ -1159,7 +1536,8 @@
             "type" : "string"
           },
           "role" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           },
           "tokenId" : {
             "type" : "string"
@@ -1185,7 +1563,21 @@
           }
         }
       },
+      "UpdateDescriptionDto" : {
+        "required" : [ "institutionDescription" ],
+        "type" : "object",
+        "properties" : {
+          "institutionDescription" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "institutionRootName" : {
+            "type" : "string"
+          }
+        }
+      },
       "UpdateUserRequest" : {
+        "required" : [ "email" ],
         "type" : "object",
         "properties" : {
           "name" : {
@@ -1342,10 +1734,37 @@
             "type" : "string"
           },
           "role" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           },
           "status" : {
             "$ref" : "#/components/schemas/OnboardedProductState"
+          }
+        }
+      },
+      "UserInstitutionWithActions" : {
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "string"
+          },
+          "institutionId" : {
+            "type" : "string"
+          },
+          "institutionDescription" : {
+            "type" : "string"
+          },
+          "institutionRootName" : {
+            "type" : "string"
+          },
+          "products" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OnboardedProductWithActions"
+            }
+          },
+          "userMailUuid" : {
+            "type" : "string"
           }
         }
       },
@@ -1365,10 +1784,10 @@
             "type" : "string"
           },
           "createdAt" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
+            "$ref" : "#/components/schemas/OffsetDateTime"
           },
           "updatedAt" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
+            "$ref" : "#/components/schemas/OffsetDateTime"
           },
           "eventType" : {
             "$ref" : "#/components/schemas/QueueEvent"
@@ -1450,7 +1869,8 @@
             "type" : "string"
           },
           "role" : {
-            "$ref" : "#/components/schemas/PartyRole"
+            "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type" : "string"
           },
           "productRole" : {
             "type" : "string"

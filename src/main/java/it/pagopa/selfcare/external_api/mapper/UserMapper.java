@@ -39,7 +39,7 @@ public abstract class UserMapper {
     @Named("toProductRoleLabel")
     protected String toProductRoleLabel(OnboardedProductResponse onboardedProduct, Product product) {
         ProductRole productRole = null;
-        try { productRole = ProductUtils.getProductRole(onboardedProduct.getProductRole(), PartyRole.valueOf(onboardedProduct.getRole().name()), product); }
+        try { productRole = ProductUtils.getProductRole(onboardedProduct.getProductRole(), PartyRole.valueOf(onboardedProduct.getRole()), product); }
         catch (IllegalArgumentException ignored) {}
 
         return Optional.ofNullable(productRole)
