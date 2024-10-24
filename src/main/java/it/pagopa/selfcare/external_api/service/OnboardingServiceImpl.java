@@ -106,7 +106,7 @@ class OnboardingServiceImpl implements OnboardingService {
     private String addUserRole(String userId, Institution institution, String productId, String role, List<String> productRoles) {
         it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product = it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
                 .productId(productId)
-                .role(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.valueOf(role))
+                .role(role)
                 .productRoles(productRoles)
                 .build();
 
@@ -117,7 +117,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 .institutionRootName(institution.getParentDescription())
                 .build();
 
-        msUserApiRestClient._usersUserIdPost(userId, addUserRoleDto);
+        msUserApiRestClient._createOrUpdateByUserId(userId, addUserRoleDto);
 
         return userId;
     }
@@ -141,7 +141,7 @@ class OnboardingServiceImpl implements OnboardingService {
 
         Product1 product = Product1.builder()
                 .productId(productId)
-                .role(it.pagopa.selfcare.user.generated.openapi.v1.dto.PartyRole.valueOf(role))
+                .role(role)
                 .productRoles(productRoles)
                 .build();
 
@@ -154,7 +154,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 .institutionRootName(institution.getParentDescription())
                 .build();
 
-        String userId = msUserApiRestClient._usersPost(createUserDto).getBody();
+        String userId = msUserApiRestClient._createOrUpdateByFiscalCode(createUserDto).getBody();
         log.info("User created with id: {}", userId);
         return userId;
     }
