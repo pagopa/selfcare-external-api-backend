@@ -7,10 +7,8 @@ import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
-import it.pagopa.selfcare.external_api.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
-import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
@@ -21,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
@@ -32,7 +29,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
@@ -54,6 +53,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     @Spy
     private OnboardingMapperImpl onboardingMapper;
 
+    @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
@@ -105,18 +105,6 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
                 "Institution not found for given value");
     }
 
-    @Test
-    void onboardingUsers_noInstitutionFound2() throws Exception {
-        ClassPathResource inputResource = new ClassPathResource("expectations/OnboardingUsersRequest.json");
-        byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
-        OnboardingUsersRequest onboardingUsersRequest = objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
-        when(institutionApiClient._getInstitutionsUsingGET(onboardingUsersRequest.getInstitutionTaxCode(), onboardingUsersRequest.getInstitutionSubunitCode(), null, null))
-                .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
-        Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
-                "Institution not found for given value");
-    }
-
 
     @Test
     void onboardingUsers_happyPath() throws Exception {
@@ -134,6 +122,6 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
         when(msUserApiRestClient._createOrUpdateByUserId(any(), any())).thenReturn(ResponseEntity.ok().build());
         List<RelationshipInfo> result = onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
-        assert result.size() == 2;
+        assertEquals(result.size(), 2);
     }
 }

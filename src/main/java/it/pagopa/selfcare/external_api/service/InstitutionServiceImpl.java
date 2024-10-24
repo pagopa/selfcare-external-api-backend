@@ -170,7 +170,7 @@ class InstitutionServiceImpl implements InstitutionService {
                     userProduct.setRoles(userInstitution.getProducts().stream().map(OnboardedProductResponse::getProductRole).toList());
                     return userProduct;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         log.debug(LogUtils.CONFIDENTIAL_MARKER, "getInstitutionProductUsers result = {}", userProductResponses);
         log.trace("getInstitutionProductUsers end");
