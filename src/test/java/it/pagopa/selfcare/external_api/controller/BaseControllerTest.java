@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -17,11 +18,16 @@ public class BaseControllerTest {
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new
                 MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setObjectMapper(new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .registerModule(new JavaTimeModule()));
+
         objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.registerModule(new JavaTimeModule());
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(mappingJackson2HttpMessageConverter)
                 .build();

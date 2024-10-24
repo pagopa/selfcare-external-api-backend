@@ -5,9 +5,7 @@
       "legals":[
         {
           "partyId":"userId",
-          "relationshipId":null,
-          "role":"DELEGATE",
-          "env":null
+          "role":"DELEGATE"
         }
       ],
       "status":"status",
@@ -58,9 +56,7 @@
       "legals":[
         {
           "partyId":"userId",
-          "relationshipId":null,
-          "role":"DELEGATE",
-          "env":null
+          "role":"DELEGATE"
         }
       ],
       "status":"status",

@@ -13,7 +13,6 @@ import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
 import it.pagopa.selfcare.external_api.service.ContractService;
 import it.pagopa.selfcare.external_api.service.InstitutionService;
 import it.pagopa.selfcare.external_api.service.UserService;
-import it.pagopa.selfcare.product.entity.Product;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

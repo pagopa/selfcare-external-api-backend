@@ -4,9 +4,7 @@
     "name":"string",
     "surname":"string",
     "email":"email@istituzionale.it",
-    "fiscalCode":"NLLGPJ67L30L783W",
-    "roles":null,
-    "role":null
+    "fiscalCode":"NLLGPJ67L30L783W"
   },
   "onboardedInstitutions":[
     {

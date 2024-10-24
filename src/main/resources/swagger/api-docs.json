@@ -2163,6 +2163,9 @@
           },
           "label" : {
             "type" : "string"
+          },
+          "productLabel" : {
+            "type" : "string"
           }
         }
       },
