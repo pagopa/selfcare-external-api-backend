@@ -1,0 +1,26 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Internal PNPG API service",
+    "description": "This service is the proxy for internal services",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://${host}/${basePath}"
+    }
+  ],
+  "tags": [],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "A bearer token in the format of a JWS and conformed to the specifications included in [RFC8725](https://tools.ietf.org/html/RFC8725)",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
