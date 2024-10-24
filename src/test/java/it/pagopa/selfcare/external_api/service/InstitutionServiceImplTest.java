@@ -103,7 +103,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse2 = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
         onboardedProductResponse2.setProductId("123");
         userDataResponse.setProducts(List.of(onboardedProductResponse, onboardedProductResponse2));
-        when(msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
+        when(msUserApiRestClient._retrieveUsers(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
                 .thenReturn(ResponseEntity.ok(List.of(userDataResponse)));
 
         Product product = new Product();
@@ -129,7 +129,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse onboardedProductResponse2 = new it.pagopa.selfcare.user.generated.openapi.v1.dto.OnboardedProductResponse();
         onboardedProductResponse.setProductId("id2");
         userDataResponse.setProducts(List.of(onboardedProductResponse, onboardedProductResponse2));
-        when(msUserApiRestClient._usersUserIdInstitutionInstitutionIdGet(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
+        when(msUserApiRestClient._retrieveUsers(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
                 .thenReturn(ResponseEntity.ok(List.of(userDataResponse)));
 
         Product product = new Product();
@@ -172,7 +172,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
         userInstitutions.forEach(userInstitutionResponse -> userInstitutionResponse.setProducts(Collections.emptyList()));
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
 
 
@@ -195,7 +195,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         when(productService.getProductRaw(productId)).thenReturn(dummyProduct(productId));
 
@@ -225,7 +225,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(productId), null, null, List.of(ACTIVE.name()), userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
 
         ClassPathResource userResource = new ClassPathResource("expectations/UserV2.json");

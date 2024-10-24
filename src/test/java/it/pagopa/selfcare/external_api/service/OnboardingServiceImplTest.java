@@ -130,8 +130,8 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
         });
         when(institutionApiClient._getInstitutionsUsingGET(onboardingUsersRequest.getInstitutionTaxCode(), onboardingUsersRequest.getInstitutionSubunitCode(), null, null))
                 .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));
-        when(msUserApiRestClient._usersPost(any())).thenReturn(ResponseEntity.ok("userId"));
-        when(msUserApiRestClient._usersUserIdPost(any(), any())).thenReturn(ResponseEntity.ok().build());
+        when(msUserApiRestClient._createOrUpdateByFiscalCode(any())).thenReturn(ResponseEntity.ok("userId"));
+        when(msUserApiRestClient._createOrUpdateByUserId(any(), any())).thenReturn(ResponseEntity.ok().build());
         List<RelationshipInfo> result = onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
         assert result.size() == 2;

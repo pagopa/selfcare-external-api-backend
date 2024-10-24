@@ -83,7 +83,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -107,7 +107,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -124,7 +124,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(institutionId, null, null, List.of(PRODUCT_ID), null, null, null,userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -143,7 +143,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -167,7 +167,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         byte[] resourceStream = Files.readAllBytes(resource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(resourceStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId);
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
@@ -204,14 +204,14 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
-        Mockito.when(msUserApiRestClient._usersSearchPost(any(), any())).thenReturn(ResponseEntity.ok(user));
+        Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
 
         ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitution.json");
         byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
         });
 
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, null, null, 350, null,user.getId()))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -232,13 +232,13 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
         byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
         UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
-        Mockito.when(msUserApiRestClient._usersSearchPost(any(), any())).thenReturn(ResponseEntity.ok(user));
+        Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
 
         ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitution.json");
         byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
         });
-        Mockito.when(msUserApiRestClient._usersGet(null, null, null, null, null, 350, null,user.getId()))
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -291,9 +291,9 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         UserInstitutionResponse response2 = createUserInstitutionResponse("resp2", institutionId);
         List<UserInstitutionResponse> responseList = Arrays.asList(response1, response2);
 
-        // Mock the API client's _usersGet method to return the dummy responses
+        // Mock the API client's _retrievePaginatedAndFilteredUser method to return the dummy responses
         ResponseEntity<List<UserInstitutionResponse>> mockResponseEntity = ResponseEntity.ok(responseList);
-        when(msUserApiRestClient._usersGet(
+        when(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -312,7 +312,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         assertThat(result).hasSize(2);
 
         // Verify interactions with mocks
-        verify(msUserApiRestClient, times(1))._usersGet(
+        verify(msUserApiRestClient, times(1))._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -340,9 +340,9 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         List<PartyRole> roles = Arrays.asList(PartyRole.MANAGER, PartyRole.OPERATOR);
         List<String> states = Arrays.asList("active", "pending");
 
-        // Mock the API client's _usersGet method to return an empty list
+        // Mock the API client's _retrievePaginatedAndFilteredUser method to return an empty list
         ResponseEntity<List<UserInstitutionResponse>> mockResponseEntity = ResponseEntity.ok(Collections.emptyList());
-        when(msUserApiRestClient._usersGet(
+        when(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -361,7 +361,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         assertThat(result).isEmpty();
 
         // Verify interactions with mocks
-        verify(msUserApiRestClient, times(1))._usersGet(
+        verify(msUserApiRestClient, times(1))._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -390,9 +390,9 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         List<PartyRole> roles = Arrays.asList(PartyRole.MANAGER, PartyRole.OPERATOR);
         List<String> states = Arrays.asList("active", "pending");
 
-        // Mock the API client's _usersGet method to return a response with null body
+        // Mock the API client's _retrievePaginatedAndFilteredUser method to return a response with null body
         ResponseEntity<List<UserInstitutionResponse>> mockResponseEntity = ResponseEntity.ok(null);
-        when(msUserApiRestClient._usersGet(
+        when(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -408,7 +408,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                 .isInstanceOf(NullPointerException.class);
 
         // Verify interactions with mocks
-        verify(msUserApiRestClient, times(1))._usersGet(
+        verify(msUserApiRestClient, times(1))._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -437,8 +437,8 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         List<PartyRole> roles = Arrays.asList(PartyRole.MANAGER, PartyRole.OPERATOR);
         List<String> states = Arrays.asList("active", "pending");
 
-        // Mock the API client's _usersGet method to throw a RuntimeException
-        when(msUserApiRestClient._usersGet(
+        // Mock the API client's _retrievePaginatedAndFilteredUser method to throw a RuntimeException
+        when(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
@@ -455,7 +455,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                 .hasMessageContaining("API error");
 
         // Verify interactions with mocks
-        verify(msUserApiRestClient, times(1))._usersGet(
+        verify(msUserApiRestClient, times(1))._retrievePaginatedAndFilteredUser(
                 eq(institutionId),
                 eq(page),
                 eq(productRoles),
