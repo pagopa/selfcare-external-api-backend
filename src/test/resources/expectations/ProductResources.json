@@ -17,11 +17,11 @@
     "roleMappings":{
       "MANAGER":{
         "multiroleAllowed":true,
-        "phasesAdditionAllowed" : null,
         "roles":[
           {
             "code":"code1",
             "label":"label1",
+            "productLabel":"productLabel1",
             "description":"description1"
           },
           {
@@ -52,7 +52,6 @@
     "roleMappings":{
       "MANAGER":{
         "multiroleAllowed":true,
-        "phasesAdditionAllowed" : null,
         "roles":[
           {
             "code":"code1",

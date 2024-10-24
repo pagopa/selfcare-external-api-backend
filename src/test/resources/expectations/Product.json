@@ -22,6 +22,7 @@
           {
             "code": "code1",
             "label": "label1",
+            "productLabel":"productLabel1",
             "description": "description1"
           },
           {
