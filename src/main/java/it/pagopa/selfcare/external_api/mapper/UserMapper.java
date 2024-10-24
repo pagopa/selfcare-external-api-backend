@@ -43,7 +43,11 @@ public abstract class UserMapper {
         catch (IllegalArgumentException ignored) {}
 
         return Optional.ofNullable(productRole)
-                .map(ProductRole::getLabel)
+                //ProductLabel is used when Product Role description is strict different than Selc Role description
+                //for ex. prod-pagopa, this should be removed in the future
+                .map(productRoleItem -> Optional
+                        .ofNullable(productRoleItem.getProductLabel()).
+                        orElse(productRoleItem.getLabel()))
                 .orElse("N.A.");
     }
 }
