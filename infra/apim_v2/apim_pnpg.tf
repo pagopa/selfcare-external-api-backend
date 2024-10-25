@@ -292,6 +292,60 @@ module "apim_pnpg_support_service_v2" {
   ]
 }
 
+resource "azurerm_api_management_api_version_set" "apim_internal_api_for_pnpg" {
+  name                = format("%s-internal-api-pnpg", var.env_short)
+  resource_group_name = local.apim_rg
+  api_management_name = local.apim_name
+  display_name        = "PNPG Internal API"
+  versioning_scheme   = "Segment"
+}
+
+module "apim_pnpg_internal_api" {
+  source              = "git::https://github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  name                = format("%s-internal-api-pnpg", local.project_pnpg)
+  api_management_name = local.apim_name
+  resource_group_name = local.apim_rg
+  version_set_id      = azurerm_api_management_api_version_set.apim_pnpg_support_service.id
+
+  description  = "This service is the proxy for internal services"
+  display_name = "Internal API Service for PNPG"
+  path         = "external/internal/pn-pg"
+  api_version  = "v1"
+  protocols = [
+    "https"
+  ]
+
+  service_url = format("https://selc-%s-pnpg-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_pnpg_suffix_dns_private_name)
+
+  content_format = "openapi+json"
+  content_value = templatefile("./api_pnpg/internal_api_for_pnpg/v1/openapi.${var.env}.json", {
+    host     = local.pnpg_hostname
+    basePath = "v1"
+  })
+
+  xml_content = templatefile("./api_pnpg/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_pnpg_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
+  })
+
+
+  subscription_required = true
+
+  product_ids = [
+    module.apim_pnpg_product_pn_pg.product_id,
+    module.apim_product_pnpg_uat_coll.product_id,
+    module.apim_product_pnpg_uat_svil.product_id,
+    module.apim_product_pnpg_uat.product_id,
+    module.apim_product_pnpg_dev.product_id,
+    module.apim_product_pnpg_uat_cert.product_id,
+    module.apim_product_pnpg_test.product_id,
+    module.apim_product_pnpg_hotfix.product_id
+  ]
+
+  api_operation_policies = []
+}
+
 # PRODUCTS
 
 module "apim_pnpg_product_pn_pg" {
