@@ -2625,6 +2625,18 @@
           },
           "vatNumberGroup": {
             "type": "boolean"
+          },
+          "providerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "string"
           }
         }
       },
@@ -2812,6 +2824,9 @@
             "type": "string"
           },
           "vatNumber": {
+            "type": "string"
+          },
+          "parentDescription": {
             "type": "string"
           },
           "geographicTaxonomies": {
