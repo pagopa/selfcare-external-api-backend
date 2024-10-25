@@ -31,6 +31,10 @@ on:
         type: boolean
         description: Enable creation of PNPG Support Service API
         default: True
+      pnpg-ms-internal-api:
+        type: boolean
+        description: Enable creation of PNPG Internal API
+        default: True
       env:
         type: choice
         description: Environment
@@ -57,6 +61,7 @@ jobs:
       pnpg-ms-external-api: ${{  steps.set-env.outputs.pnpg-ms-external-api }}
       pnpg-support-service: ${{  steps.set-env.outputs.pnpg-support-service }}
       billing-portal-api:   ${{  steps.set-env.outputs.billing-portal-api }}
+      pnpg-ms-internal-api:   ${{  steps.set-env.outputs.pnpg-ms-internal-api }}
       environ: ${{ steps.set-env.outputs.environ }}
     steps:
       - name: Set Environment Variable
@@ -70,6 +75,7 @@ jobs:
             echo "selc-support-service=${{ github.event.inputs.selc-support-service }}" >> $GITHUB_OUTPUT
             echo "pnpg-ms-external-api=${{ github.event.inputs.pnpg-ms-external-api }}" >> $GITHUB_OUTPUT
             echo "pnpg-support-service=${{ github.event.inputs.pnpg-support-service }}" >> $GITHUB_OUTPUT
+            echo "pnpg-ms-internal-api=${{ github.event.inputs.pnpg-ms-internal-api }}" >> $GITHUB_OUTPUT
             echo "environ=${{ inputs.env }}" >> $GITHUB_OUTPUT
           else
             if [ "${{ github.event.schedule }}" == "30 14 * * 1-5" ]; then
@@ -89,6 +95,7 @@ jobs:
             echo "selc-support-service=true" >> $GITHUB_OUTPUT
             echo "pnpg-ms-external-api=true" >> $GITHUB_OUTPUT
             echo "pnpg-support-service=true" >> $GITHUB_OUTPUT
+            echo "pnpg-ms-internal-api=true" >> $GITHUB_OUTPUT
           fi
 
   openapi_merge:
@@ -104,5 +111,6 @@ jobs:
       selc-support-service: ${{ needs.setup.outputs.selc-support-service == 'true' }}
       pnpg-ms-external-api: ${{ needs.setup.outputs.pnpg-ms-external-api == 'true' }}
       pnpg-support-service: ${{ needs.setup.outputs.pnpg-support-service == 'true' }}
+      pnpg-ms-internal-api: ${{ needs.setup.outputs.pnpg-ms-internal-api == 'true' }}
       env: ${{ needs.setup.outputs.environ }}
     
