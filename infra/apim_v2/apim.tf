@@ -397,6 +397,13 @@ module "apim_external_api_ms_v2" {
       xml_content = templatefile("./api/ms_external_api/v2/getUserInstitutionUsingGet_op_policy.xml.tpl", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
+    },
+    {
+      operation_id = "messageAcknowledgmentUsingPOST"
+      xml_content = templatefile("./api/api_key_fn_op_policy.xml.tpl", {
+        BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
+        FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
+      })
     }
   ]
 }
