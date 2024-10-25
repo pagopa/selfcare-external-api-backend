@@ -29,6 +29,10 @@ on:
             type: boolean
             description: Enable creation of PNPG Support Service API
             default: True
+          pnpg-ms-internal-api:
+            type: boolean
+            description: Enable creation of PNPG Internal API
+            default: True
           env:
             type: string
             description: Environment
@@ -158,6 +162,13 @@ jobs:
           npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/pnpg_support_service/v1/openapi_merge/openapi_merge.json
           node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/pnpg_support_service/v1/openapi.json ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/pnpg_support_service/v1/openapi.${{ inputs.env }}.json
           node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/retain_necessary_schemas_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/pnpg_support_service/v1/openapi.${{ inputs.env }}.json
+
+      - name: Merge OpenAPI and PostProcess - PNPG Internal API
+        if: ${{ inputs.pnpg-ms-internal-api }}
+        run: |
+          npx openapi-merge-cli --config ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/internal_api_for_pnpg/v1/openapi_merge/openapi_merge.json
+          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/remove_v_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/internal_api_for_pnpg/v1/openapi.json ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/internal_api_for_pnpg/v1/openapi.${{ inputs.env }}.json
+          node ${{ env.INFRA_APIM_FOLDER }}/openapi_merge/retain_necessary_schemas_and_tags.js  ${{ env.INFRA_APIM_FOLDER }}/api_pnpg/internal_api_for_pnpg/v1/openapi.${{ inputs.env }}.json
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03 #v6.0.5
