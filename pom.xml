@@ -79,11 +79,12 @@
             <artifactId>encoder</artifactId>
             <version>1.2.3</version>
             <scope>compile</scope>
-        </dependency><dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-api</artifactId>
-        <version>0.11.5</version>
-    </dependency>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
@@ -140,7 +141,7 @@
         <dependency>
             <groupId>it.pagopa.selfcare</groupId>
             <artifactId>onboarding-sdk-product</artifactId>
-            <version>0.3.4</version>
+            <version>0.4.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -189,7 +190,9 @@
                                 <modelPackage>${project.groupId}.core.generated.openapi.v1.dto</modelPackage>
                                 <apiPackage>${project.groupId}.core.generated.openapi.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.core.generated.openapi.v1.config</configPackage>
-                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
                                 <dateLibrary>java8-localdatetime</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
@@ -209,7 +212,8 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/docs/openapi/api-selfcare-onboarding-docs.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/docs/openapi/api-selfcare-onboarding-docs.json
+                            </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-cloud</library>
                             <modelNameSuffix/>
@@ -221,7 +225,9 @@
                                 <modelPackage>${project.groupId}.onboarding.generated.openapi.v1.dto</modelPackage>
                                 <apiPackage>${project.groupId}.onboarding.generated.openapi.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.onboarding.generated.openapi.v1.config</configPackage>
-                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
                                 <dateLibrary>java8-localdatetime</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
@@ -253,7 +259,9 @@
                                 <modelPackage>${project.groupId}.user.generated.openapi.v1.dto</modelPackage>
                                 <apiPackage>${project.groupId}.user.generated.openapi.v1.api</apiPackage>
                                 <configPackage>${project.groupId}.user.generated.openapi.v1.config</configPackage>
-                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
                                 <dateLibrary>java8-localdatetime</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
@@ -272,7 +280,8 @@
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/docs/openapi/api-selfcare-registry-proxy-docs.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/docs/openapi/api-selfcare-registry-proxy-docs.json
+                            </inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-cloud</library>
                             <modelNameSuffix/>
@@ -283,8 +292,11 @@
                                 <basePackage>${project.groupId}.registry-proxy.generated.openapi.v1</basePackage>
                                 <modelPackage>${project.groupId}.registry-proxy.generated.openapi.v1.dto</modelPackage>
                                 <apiPackage>${project.groupId}.registry-proxy.generated.openapi.v1.api</apiPackage>
-                                <configPackage>${project.groupId}.registry-proxy.generated.openapi.v1.config</configPackage>
-                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor; @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <configPackage>${project.groupId}.registry-proxy.generated.openapi.v1.config
+                                </configPackage>
+                                <additionalModelTypeAnnotations>@lombok.Builder; @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor
+                                </additionalModelTypeAnnotations>
                                 <dateLibrary>java8-localdatetime</dateLibrary>
                                 <delegatePattern>true</delegatePattern>
                                 <interfaceOnly>true</interfaceOnly>
