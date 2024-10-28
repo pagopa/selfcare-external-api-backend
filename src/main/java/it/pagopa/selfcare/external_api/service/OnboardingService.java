@@ -8,9 +8,12 @@ import java.util.List;
 
 public interface OnboardingService {
 
-    void oldContractOnboardingV2(OnboardingData onboardingData);
+  void oldContractOnboardingV2(OnboardingData onboardingData);
 
-    void autoApprovalOnboardingProductV2(OnboardingData onboardingData);
+  void autoApprovalOnboardingProductV2(OnboardingData onboardingData);
 
-    List<RelationshipInfo> onboardingUsers(OnboardingUsersRequest onboardingUsersRequest, String userName, String surname);
+  void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData);
+
+  List<RelationshipInfo> onboardingUsers(
+      OnboardingUsersRequest onboardingUsersRequest, String userName, String surname);
 }
