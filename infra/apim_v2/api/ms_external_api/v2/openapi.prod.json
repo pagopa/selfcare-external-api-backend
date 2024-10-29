@@ -487,7 +487,8 @@
         "tags": [
           "User"
         ],
-        "summary": "Retrieves user given userId and optional ProductId",
+        "summary": "Retrieve user information by userId and optional ProductId",
+        "description": "Retrieves user given userId and optional ProductId",
         "operationId": "getUserInfoUsingGET",
         "parameters": [
           {
@@ -1385,10 +1386,118 @@
           }
         ]
       }
+    },
+    "/message/{messageId}/status/{status}": {
+      "post": {
+        "tags": [],
+        "summary": "messageAcknowledgment",
+        "description": "Service to acknowledge message consumption by a consumer",
+        "operationId": "messageAcknowledgmentUsingPOST",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "description": "Kafka message unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "description": "Kafka message consumption acknowledgment status",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACK",
+                "NACK"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AckPayloadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "global"
+            ]
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "AckPayloadRequest": {
+        "title": "AckPayloadRequest",
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Acknowledgment request payload message"
+          }
+        }
+      },
       "DelegationResponse": {
         "title": "DelegationResponse",
         "type": "object",
@@ -1422,19 +1531,7 @@
             "type": "string"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "productId": {
             "type": "string"
@@ -1593,19 +1690,7 @@
             "type": "boolean"
           },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GSP",
-              "PA",
-              "PG",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCP"
-            ]
+            "type": "string"
           },
           "istatCode": {
             "type": "string"
@@ -2010,6 +2095,12 @@
           "multiroleAllowed": {
             "type": "boolean"
           },
+          "phasesAdditionAllowed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "roles": {
             "type": "array",
             "items": {
@@ -2029,6 +2120,9 @@
             "type": "string"
           },
           "label": {
+            "type": "string"
+          },
+          "productLabel": {
             "type": "string"
           }
         }
@@ -2359,6 +2453,10 @@
           "productRole": {
             "type": "string",
             "description": "The specific role of the user related to the product."
+          },
+          "productRoleLabel": {
+            "type": "string",
+            "description": "The specific role label of the user related to the product."
           },
           "role": {
             "type": "string",
@@ -2693,7 +2791,8 @@
             "description": "Institution's share capital value"
           }
         }
-      },"DpoDataResource": {
+      },
+      "DpoDataResource": {
         "title": "DpoDataResource",
         "type": "object",
         "properties": {
