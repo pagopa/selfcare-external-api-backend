@@ -2258,11 +2258,23 @@
           "businessRegisterNumber": {
             "type": "string"
           },
+          "contractId": {
+            "type": "string"
+          },
+          "contractType": {
+            "type": "string"
+          },
           "legalRegisterName": {
             "type": "string"
           },
           "legalRegisterNumber": {
             "type": "string"
+          },
+          "providerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "vatNumberGroup": {
             "type": "boolean"
