@@ -347,13 +347,13 @@ module "apim_pnpg_internal_api" {
     {
       operation_id = "createOrUpdateByFiscalCode"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-user-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "onboardingPgCompletion"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-onboarding-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-onboarding-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
     }
   ]
