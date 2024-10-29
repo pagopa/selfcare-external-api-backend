@@ -59,7 +59,7 @@ public interface OnboardingMapper {
 
   @Named("convertDate")
   default LocalDateTime convertDate(OffsetDateTime date) {
-    return date.toLocalDateTime();
+    return date != null ? date.toLocalDateTime() : LocalDateTime.now();
   }
 
   @Named("toInstitutionBase")

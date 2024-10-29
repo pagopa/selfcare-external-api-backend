@@ -66,11 +66,11 @@ class OnboardingServiceImpl implements OnboardingService {
 
   @Override
   public void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData) {
-    log.trace("autoApprovalOnboarding start");
-    log.debug("autoApprovalOnboarding = {}", onboardingData);
+    log.trace("autoApprovalOnboardingImport start");
+    log.debug("autoApprovalOnboardingImport = {}", onboardingData);
     onboardingControllerApi._onboardingPspImport(
         onboardingMapper.toOnboardingImportPspRequest(onboardingData));
-    log.trace("autoApprovalOnboarding end");
+    log.trace("autoApprovalOnboardingImport end");
   }
 
   @Override
