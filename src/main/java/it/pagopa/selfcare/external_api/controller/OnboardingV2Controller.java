@@ -66,9 +66,30 @@ public class OnboardingV2Controller {
   @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.subunit}")
   public void onboarding(@RequestBody @Valid OnboardingProductDto request) {
     log.trace("onboarding start");
-    log.debug("onboarding request = {}", request);
+    log.debug("onboarding request = {}", sanitize(request.toString()));
     onboardingService.autoApprovalOnboardingProductV2(onboardingResourceMapper.toEntity(request));
     log.trace("onboarding end");
+  }
+
+  @Tag(name = "internal-v1")
+  @ApiResponse(
+      responseCode = "403",
+      description = "Forbidden",
+      content = {
+        @Content(
+            mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+            schema = @Schema(implementation = Problem.class))
+      })
+  @PostMapping(value = "/import")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.import}")
+  public void onboardingImport(@RequestBody @Valid OnboardingImportProductDto request) {
+    log.trace("onboardingImport start");
+    String sanitizedRequest = sanitize(request.toString());
+    log.debug("onboardingImport request = {}", sanitizedRequest);
+    onboardingService.autoApprovalOnboardingImportProductV2(
+        onboardingResourceMapper.toEntity(request));
+    log.trace("onboardingImport end");
   }
 
   @ApiResponses(
@@ -90,26 +111,6 @@ public class OnboardingV2Controller {
                   schema = @Schema(implementation = Problem.class))
             })
       })
-  @Tag(name = "internal-v1")
-  @ApiResponse(
-      responseCode = "403",
-      description = "Forbidden",
-      content = {
-        @Content(
-            mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-            schema = @Schema(implementation = Problem.class))
-      })
-  @PostMapping(value = "/import")
-  @ResponseStatus(HttpStatus.CREATED)
-  @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.import}")
-  public void onboardingImport(@RequestBody @Valid OnboardingImportProductDto request) {
-    log.trace("onboardingImport start");
-    log.debug("onboardingImport request = {}", request);
-    onboardingService.autoApprovalOnboardingImportProductV2(
-        onboardingResourceMapper.toEntity(request));
-    log.trace("onboardingImport end");
-  }
-
   @PostMapping(value = "/{externalInstitutionId}")
   @ResponseStatus(HttpStatus.CREATED)
   @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.onboardingOldContract}")
@@ -119,8 +120,11 @@ public class OnboardingV2Controller {
           String externalInstitutionId,
       @RequestBody @Valid OnboardingImportDto request) {
     log.trace("oldContractonboarding start");
+    String sanitizedRequest = sanitize(request.toString());
     log.debug(
-        "oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
+        "oldContractonboarding institutionId = {}, request = {}",
+        externalInstitutionId,
+        sanitizedRequest);
     if (request.getImportContract().getOnboardingDate().compareTo(OffsetDateTime.now()) > 0) {
       throw new ValidationException(
           "Invalid onboarding date: the onboarding date must be prior to the current date.");
@@ -194,5 +198,9 @@ public class OnboardingV2Controller {
             selfCareUser.getUserName(),
             selfCareUser.getSurname());
     return ResponseEntity.ok().body(RelationshipMapper.toRelationshipResultList(response));
+  }
+
+  private String sanitize(String input) {
+    return input.replaceAll("[\\r\\n]", "_");
   }
 }
