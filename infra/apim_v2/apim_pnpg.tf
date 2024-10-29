@@ -305,7 +305,7 @@ module "apim_pnpg_internal_api" {
   name                = format("%s-internal-api-pnpg", local.project_pnpg)
   api_management_name = local.apim_name
   resource_group_name = local.apim_rg
-  version_set_id      = azurerm_api_management_api_version_set.apim_pnpg_support_service.id
+  version_set_id      = azurerm_api_management_api_version_set.apim_internal_api_for_pnpg.id
 
   description  = "This service is the proxy for internal services"
   display_name = "Internal API Service for PNPG"
@@ -343,7 +343,20 @@ module "apim_pnpg_internal_api" {
     module.apim_product_pnpg_hotfix.product_id
   ]
 
-  api_operation_policies = []
+  api_operation_policies = [
+    {
+      operation_id = "createOrUpdateByFiscalCode"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-user-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "onboardingPgCompletion"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-onboarding-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+      })
+    }
+  ]
 }
 
 # PRODUCTS
