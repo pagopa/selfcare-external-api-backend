@@ -66,7 +66,7 @@ public class OnboardingV2Controller {
   @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.subunit}")
   public void onboarding(@RequestBody @Valid OnboardingProductDto request) {
     log.trace("onboarding start");
-    log.debug("onboarding request = {}", sanitize(request.toString()));
+    log.debug("onboarding request = {}", request);
     onboardingService.autoApprovalOnboardingProductV2(onboardingResourceMapper.toEntity(request));
     log.trace("onboarding end");
   }
@@ -85,8 +85,7 @@ public class OnboardingV2Controller {
   @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.import}")
   public void onboardingImport(@RequestBody @Valid OnboardingImportProductDto request) {
     log.trace("onboardingImport start");
-    String sanitizedRequest = sanitize(request.toString());
-    log.debug("onboardingImport request = {}", sanitizedRequest);
+    log.debug("onboardingImport request = {}", request);
     onboardingService.autoApprovalOnboardingImportProductV2(
         onboardingResourceMapper.toEntity(request));
     log.trace("onboardingImport end");
@@ -120,11 +119,8 @@ public class OnboardingV2Controller {
           String externalInstitutionId,
       @RequestBody @Valid OnboardingImportDto request) {
     log.trace("oldContractonboarding start");
-    String sanitizedRequest = sanitize(request.toString());
     log.debug(
-        "oldContractonboarding institutionId = {}, request = {}",
-        externalInstitutionId,
-        sanitizedRequest);
+        "oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
     if (request.getImportContract().getOnboardingDate().compareTo(OffsetDateTime.now()) > 0) {
       throw new ValidationException(
           "Invalid onboarding date: the onboarding date must be prior to the current date.");
@@ -198,9 +194,5 @@ public class OnboardingV2Controller {
             selfCareUser.getUserName(),
             selfCareUser.getSurname());
     return ResponseEntity.ok().body(RelationshipMapper.toRelationshipResultList(response));
-  }
-
-  private String sanitize(String input) {
-    return input.replaceAll("[\\r\\n]", "_");
   }
 }
