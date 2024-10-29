@@ -1387,7 +1387,7 @@
         ]
       }
     },
-    "/api/acknowledgment/{productId}/message/{messageId}/status/{status}": {
+    "/message/{messageId}/status/{status}": {
       "post": {
         "tags": [],
         "summary": "messageAcknowledgment",
