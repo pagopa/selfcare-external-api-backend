@@ -44,8 +44,7 @@ public interface ProductsMapper {
     @Named("toContractTemplatePath")
     default String toContractTemplatePath(Product model, String institutionType){
         if(Objects.isNull(institutionType)) return null;
-        return Optional.ofNullable(model.getInstitutionContractMappings())
-                .map(map -> map.get(institutionType))
+        return Optional.ofNullable(model.getInstitutionContractTemplate(institutionType))
                 .map(ContractTemplate::getContractTemplatePath)
                 .orElse(null);
     }
@@ -53,8 +52,7 @@ public interface ProductsMapper {
     @Named("toContractTemplateVersion")
     default String toContractTemplateVersion(Product model, String institutionType){
         if(Objects.isNull(institutionType)) return null;
-        return Optional.ofNullable(model.getInstitutionContractMappings())
-                .map(map -> map.get(institutionType))
+        return Optional.ofNullable(model.getInstitutionContractTemplate(institutionType))
                 .map(ContractTemplate::getContractTemplateVersion)
                 .orElse(null);
     }
