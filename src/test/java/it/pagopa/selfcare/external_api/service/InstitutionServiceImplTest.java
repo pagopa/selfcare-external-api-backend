@@ -18,6 +18,8 @@ import it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus;
 import it.pagopa.selfcare.external_api.model.product.ProductResource;
 import it.pagopa.selfcare.external_api.model.user.User;
 import it.pagopa.selfcare.external_api.model.user.UserProductResponse;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
+import it.pagopa.selfcare.product.entity.ContractTemplate;
 import it.pagopa.selfcare.product.entity.Product;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.LegalVerificationResult;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDataResponse;
@@ -43,6 +45,7 @@ import java.util.*;
 
 import static it.pagopa.selfcare.external_api.TestUtils.dummyProduct;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -106,14 +109,32 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         when(msUserApiRestClient._retrieveUsers(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name())))
                 .thenReturn(ResponseEntity.ok(List.of(userDataResponse)));
 
-        Product product = new Product();
-        product.setId("456");
-        Product product2 = new Product();
-        product2.setId("123");
+        Product product = dummyProduct("456");
+        Product product2 = dummyProduct("123");
         when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(new InstitutionResponse()) );
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(dummyInstitutionResponse()) );
 
-        Assertions.assertEquals(1, institutionService.getInstitutionUserProductsV2(institutionId, userId).size());
+        List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId);
+        Assertions.assertEquals(1, productResources.size());
+        assertEquals("setContractTemplatePath", productResources.get(0).getContractTemplatePath());
+        assertEquals("setContractTemplateVersion", productResources.get(0).getContractTemplateVersion());
+    }
+
+    InstitutionResponse dummyInstitutionResponse() {
+        InstitutionResponse institutionResponse = new InstitutionResponse();
+        institutionResponse.setInstitutionType(InstitutionType.PA.name());
+        return institutionResponse;
+    }
+
+    Product dummyProduct(String id) {
+        Product product = new Product();
+        product.setId(id);
+
+        ContractTemplate contractTemplate = new ContractTemplate();
+        contractTemplate.setContractTemplatePath("setContractTemplatePath");
+        contractTemplate.setContractTemplateVersion("setContractTemplateVersion");
+        product.setInstitutionContractMappings(Map.of(InstitutionType.PA.name(), contractTemplate));
+        return product;
     }
 
     @Test
