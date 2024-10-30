@@ -55,7 +55,7 @@ public interface ProductsMapper {
         if(Objects.isNull(institutionType)) return null;
         return Optional.ofNullable(model.getInstitutionContractMappings())
                 .map(map -> map.get(institutionType))
-                .map(ContractTemplate::getContractTemplatePath)
+                .map(ContractTemplate::getContractTemplateVersion)
                 .orElse(null);
     }
 }
