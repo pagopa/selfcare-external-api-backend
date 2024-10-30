@@ -35,93 +35,118 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
-    @InjectMocks
-    private OnboardingServiceImpl onboardingService;
+  @InjectMocks private OnboardingServiceImpl onboardingService;
 
-    @Mock
-    private MsOnboardingControllerApi onboardingControllerApi;
+  @Mock private MsOnboardingControllerApi onboardingControllerApi;
 
-    @Mock
-    private MsCoreInstitutionApiClient institutionApiClient;
+  @Mock private MsCoreInstitutionApiClient institutionApiClient;
 
-    @Mock
-    private MsUserApiRestClient msUserApiRestClient;
+  @Mock private MsUserApiRestClient msUserApiRestClient;
 
-    @Spy
-    private UserResourceMapper userResourceMapper;
+  @Spy private UserResourceMapper userResourceMapper;
 
-    @Spy
-    private OnboardingMapperImpl onboardingMapper;
+  @Spy private OnboardingMapperImpl onboardingMapper;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-    }
+  @Override
+  @BeforeEach
+  public void setUp() {
+    super.setUp();
+  }
 
-    @Test
-    void oldContractOnboardingTest(){
-        OnboardingData onboardingData = new OnboardingData();
-        onboardingData.setInstitutionExternalId("externalId");
-        Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
-    }
+  @Test
+  void oldContractOnboardingTest() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
+  }
 
-    @Test
-    void autoApprovalOnboardingProductV2TestPA(){
-        OnboardingData onboardingData = new OnboardingData();
-        onboardingData.setInstitutionExternalId("externalId");
-        onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-        onboardingData.setInstitutionType(PA);
-        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-    }
+  @Test
+  void autoApprovalOnboardingProductV2TestPA() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionType(PA);
+    Assertions.assertDoesNotThrow(
+        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
+  }
 
-    @Test
-    void autoApprovalOnboardingProductV2TestPSP(){
-        OnboardingData onboardingData = new OnboardingData();
-        onboardingData.setInstitutionExternalId("externalId");
-        onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-        onboardingData.setInstitutionType(PSP);
-        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-    }
+  @Test
+  void autoApprovalOnboardingProductV2TestPSP() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionType(PSP);
+    Assertions.assertDoesNotThrow(
+        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
+  }
 
-    @Test
-    void autoApprovalOnboardingProductV2Test(){
-        OnboardingData onboardingData = new OnboardingData();
-        onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-        onboardingData.setInstitutionExternalId("externalId");
-        onboardingData.setInstitutionType(PG);
-        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-    }
+  @Test
+  void autoApprovalOnboardingProductV2Test() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionType(PG);
+    Assertions.assertDoesNotThrow(
+        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
+  }
 
-    @Test
-    void onboardingUsers_noInstitutionFound() throws Exception {
-        ClassPathResource inputResource = new ClassPathResource("expectations/OnboardingUsersRequest.json");
-        byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
-        OnboardingUsersRequest onboardingUsersRequest = objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
-        when(institutionApiClient._getInstitutionsUsingGET(onboardingUsersRequest.getInstitutionTaxCode(), onboardingUsersRequest.getInstitutionSubunitCode(), null, null))
-                .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
-        Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
-                "Institution not found for given value");
-    }
+  @Test
+  void autoApprovalOnboardingImportProductV2Test() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionType(PSP);
+    Assertions.assertDoesNotThrow(
+        () -> onboardingService.autoApprovalOnboardingImportProductV2(onboardingData));
+  }
 
+  @Test
+  void onboardingUsers_noInstitutionFound() throws Exception {
+    ClassPathResource inputResource =
+        new ClassPathResource("expectations/OnboardingUsersRequest.json");
+    byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
+    OnboardingUsersRequest onboardingUsersRequest =
+        objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+    when(institutionApiClient._getInstitutionsUsingGET(
+            onboardingUsersRequest.getInstitutionTaxCode(),
+            onboardingUsersRequest.getInstitutionSubunitCode(),
+            null,
+            null))
+        .thenReturn(
+            ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
+    Assertions.assertThrows(
+        ResourceNotFoundException.class,
+        () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
+        "Institution not found for given value");
+  }
 
-    @Test
-    void onboardingUsers_happyPath() throws Exception {
-        ClassPathResource onboardingUsersRequestInputResource = new ClassPathResource("expectations/OnboardingUsersRequest.json");
-        byte[] onboardingUsersRequestStream = Files.readAllBytes(onboardingUsersRequestInputResource.getFile().toPath());
-        OnboardingUsersRequest onboardingUsersRequest = objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+  @Test
+  void onboardingUsers_happyPath() throws Exception {
+    ClassPathResource onboardingUsersRequestInputResource =
+        new ClassPathResource("expectations/OnboardingUsersRequest.json");
+    byte[] onboardingUsersRequestStream =
+        Files.readAllBytes(onboardingUsersRequestInputResource.getFile().toPath());
+    OnboardingUsersRequest onboardingUsersRequest =
+        objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
 
-        ClassPathResource institutionInputResource = new ClassPathResource("expectations/InstitutionResponse.json");
-        byte[] institutionStream = Files.readAllBytes(institutionInputResource.getFile().toPath());
-        List<InstitutionResponse> institutions = objectMapper.readValue(institutionStream, new TypeReference<>() {
-        });
-        when(institutionApiClient._getInstitutionsUsingGET(onboardingUsersRequest.getInstitutionTaxCode(), onboardingUsersRequest.getInstitutionSubunitCode(), null, null))
-                .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));
-        when(msUserApiRestClient._createOrUpdateByFiscalCode(any())).thenReturn(ResponseEntity.ok("userId"));
-        when(msUserApiRestClient._createOrUpdateByUserId(any(), any())).thenReturn(ResponseEntity.ok().build());
-        List<RelationshipInfo> result = onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
+    ClassPathResource institutionInputResource =
+        new ClassPathResource("expectations/InstitutionResponse.json");
+    byte[] institutionStream = Files.readAllBytes(institutionInputResource.getFile().toPath());
+    List<InstitutionResponse> institutions =
+        objectMapper.readValue(institutionStream, new TypeReference<>() {});
+    when(institutionApiClient._getInstitutionsUsingGET(
+            onboardingUsersRequest.getInstitutionTaxCode(),
+            onboardingUsersRequest.getInstitutionSubunitCode(),
+            null,
+            null))
+        .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));
+    when(msUserApiRestClient._createOrUpdateByFiscalCode(any()))
+        .thenReturn(ResponseEntity.ok("userId"));
+    when(msUserApiRestClient._createOrUpdateByUserId(any(), any()))
+        .thenReturn(ResponseEntity.ok().build());
+    List<RelationshipInfo> result =
+        onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
-        assertEquals(result.size(), 2);
-    }
+    assertEquals(result.size(), 2);
+  }
 }

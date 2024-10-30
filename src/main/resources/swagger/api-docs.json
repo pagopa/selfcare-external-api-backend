@@ -543,6 +543,71 @@
         } ]
       }
     },
+    "/v2/onboarding/import" : {
+      "post" : {
+        "tags" : [ "internal-v1" ],
+        "summary" : "onboardingImport",
+        "description" : "The service allows the onboarding of an institution through import",
+        "operationId" : "onboardingImportUsingPOST",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingImportProductDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
     "/v2/onboarding/users" : {
       "post" : {
         "tags" : [ "Onboarding", "internal-v1", "support" ],
@@ -1838,6 +1903,93 @@
           "importContract" : {
             "description" : "Institution's old contract information",
             "$ref" : "#/components/schemas/ImportContractDto"
+          },
+          "users" : {
+            "type" : "array",
+            "description" : "List of onboarding users",
+            "items" : {
+              "$ref" : "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
+      "OnboardingImportProductDto" : {
+        "title" : "OnboardingImportProductDto",
+        "required" : [ "geographicTaxonomies", "institutionType", "productId" ],
+        "type" : "object",
+        "properties" : {
+          "activatedAt" : {
+            "type" : "string",
+            "description" : "Previous contract sign date for import",
+            "format" : "date-time"
+          },
+          "additionalInformations" : {
+            "description" : "GSP institution's additional informations",
+            "$ref" : "#/components/schemas/AdditionalInformationsDto"
+          },
+          "assistanceContacts" : {
+            "description" : "Institution's assistance contacts",
+            "$ref" : "#/components/schemas/AssistanceContactsDto"
+          },
+          "billingData" : {
+            "description" : "Institution's billing information",
+            "$ref" : "#/components/schemas/BillingDataDto"
+          },
+          "companyInformations" : {
+            "description" : "GPS, SCP, PT optional data",
+            "$ref" : "#/components/schemas/CompanyInformationsDto"
+          },
+          "contractSigned" : {
+            "type" : "string",
+            "description" : "Contract signed file path"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "description" : "List of geographic Taxonomies",
+            "items" : {
+              "$ref" : "#/components/schemas/GeographicTaxonomyDto"
+            }
+          },
+          "institutionLocationData" : {
+            "description" : "Institution's location Data",
+            "$ref" : "#/components/schemas/InstitutionLocationDataDto"
+          },
+          "institutionType" : {
+            "type" : "string",
+            "description" : "Institution's type",
+            "enum" : [ "AS", "CON", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+          },
+          "origin" : {
+            "type" : "string",
+            "description" : "Institution data origin"
+          },
+          "originId" : {
+            "type" : "string",
+            "description" : "Institution's details origin Id"
+          },
+          "pricingPlan" : {
+            "type" : "string",
+            "description" : "Product's pricing plan"
+          },
+          "productId" : {
+            "type" : "string",
+            "description" : "Product's unique identifier"
+          },
+          "pspData" : {
+            "description" : "Payment Service Provider (PSP) specific data",
+            "$ref" : "#/components/schemas/PspDataDto"
+          },
+          "subunitCode" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit Code"
+          },
+          "subunitType" : {
+            "type" : "string",
+            "description" : "Institutions AOO/UO unit type"
+          },
+          "taxCode" : {
+            "type" : "string",
+            "description" : "Institution's taxCode"
           },
           "users" : {
             "type" : "array",
