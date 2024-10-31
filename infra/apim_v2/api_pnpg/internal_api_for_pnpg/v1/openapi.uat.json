@@ -10,10 +10,146 @@
       "url": "https://${host}/${basePath}"
     }
   ],
-  "tags": [],
-  "paths": {},
+  "tags": [
+    {
+      "name": "User",
+      "description": "User V 2 Controller"
+    },
+    {
+      "name": "internal-pnpg"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "User",
+          "internal-pnpg"
+        ],
+        "summary": "Create or update a user by fiscal code",
+        "description": "The createOrUpdateByFiscalCode function is used to create a new user or update an existing one.",
+        "operationId": "createOrUpdateByFiscalCode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created or updated!",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "201": {
+            "description": "User already has the active role for that product!"
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "global"
+            ]
+          }
+        ]
+      }
+    }
+  },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "CreateUserDto": {
+        "required": [
+          "institutionId",
+          "user",
+          "product"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product1"
+          },
+          "institutionDescription": {
+            "type": "string"
+          },
+          "institutionRootName": {
+            "type": "string"
+          },
+          "hasToSendEmail": {
+            "type": "boolean"
+          }
+        }
+      },
+      "User": {
+        "required": [
+          "fiscalCode",
+          "institutionEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "fiscalCode": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "institutionEmail": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "Product1": {
+        "required": [
+          "productId",
+          "role",
+          "productRoles"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "description": "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "productRoles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
