@@ -1680,10 +1680,10 @@
             "$ref": "#/components/schemas/Env"
           },
           "createdAt": {
-            "$ref": "#/components/schemas/LocalDateTime"
+            "$ref": "#/components/schemas/OffsetDateTime"
           },
           "updatedAt": {
-            "$ref": "#/components/schemas/LocalDateTime"
+            "$ref": "#/components/schemas/OffsetDateTime"
           }
         }
       },
@@ -1707,10 +1707,10 @@
         ],
         "type": "string"
       },
-      "LocalDateTime": {
+      "OffsetDateTime": {
         "format": "date-time",
         "type": "string",
-        "example": "2022-03-10T12:15:50"
+        "example": "2022-03-10T12:15:50-04:00"
       },
       "Problem1": {
         "type": "object",
