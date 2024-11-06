@@ -29,7 +29,6 @@ public class ProductResource {
     private Instant contractTemplateUpdatedAt;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateVersion}", required = true)
-    @NotBlank
     private String contractTemplateVersion;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.createdAt}")
