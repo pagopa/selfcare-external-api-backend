@@ -37,7 +37,13 @@
     "contractTemplatePath": "contractTemplatePath",
     "contractTemplateVersion": "1.0.0",
     "contractTemplateUpdatedAt": "2024-04-17T01:00:00Z",
-    "roleManagementURL": "roleManagementUrl"
+    "roleManagementURL": "roleManagementUrl",
+    "institutionContractMappings": {
+      "default": {
+        "contractTemplatePath": "path_template",
+        "contractTemplateVersion": "1.0.0"
+      }
+    }
   },
   {
     "id": "456",
@@ -76,6 +82,12 @@
     "contractTemplateVersion": "1.0.0",
     "contractTemplateUpdatedAt": "2024-04-17T01:00:00Z",
     "createdAt": "2024-04-17T01:00:00Z",
-    "roleManagementURL": "roleManagementUrl"
+    "roleManagementURL": "roleManagementUrl",
+    "institutionContractMappings": {
+      "default": {
+        "contractTemplatePath": "path_template",
+        "contractTemplateVersion": "1.0.0"
+      }
+    }
   }
 ]
