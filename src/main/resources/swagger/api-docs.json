@@ -2241,9 +2241,13 @@
       },
       "ProductResource" : {
         "title" : "ProductResource",
-        "required" : [ "contractTemplatePath", "contractTemplateVersion", "description", "id", "roleMappings", "title", "urlBO" ],
+        "required" : [ "alias", "contractTemplatePath", "contractTemplateVersion", "description", "id", "roleMappings", "title", "urlBO" ],
         "type" : "object",
         "properties" : {
+          "alias" : {
+            "type" : "string",
+            "description" : "Product's alias"
+          },
           "contractTemplatePath" : {
             "type" : "string",
             "description" : "The path of contract"
