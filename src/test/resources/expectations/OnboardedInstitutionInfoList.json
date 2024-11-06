@@ -43,12 +43,6 @@
     "rootParent": {
       "id": "example_parent_id",
       "description": "example_parent_description"
-    },
-    "institutionContractMappings": {
-      "default": {
-        "contractTemplatePath": "path_template",
-        "contractTemplateVersion": "1.0.0"
-      }
     }
   },
   {
@@ -94,12 +88,6 @@
     "rootParent": {
       "id": "example_parent_id",
       "description": "example_parent_description"
-    },
-    "institutionContractMappings": {
-      "default": {
-        "contractTemplatePath": "path_template",
-        "contractTemplateVersion": "1.0.0"
-      }
     }
   }
 ]

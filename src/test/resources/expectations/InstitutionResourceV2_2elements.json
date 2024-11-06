@@ -47,13 +47,7 @@
     "aooParentCode": "example_aoo_parent_code",
     "country": "example_country",
     "county": "example_county",
-    "city": "example_city",
-    "institutionContractMappings": {
-      "default": {
-        "contractTemplatePath": "path_template",
-        "contractTemplateVersion": "1.0.0"
-      }
-    }
+    "city": "example_city"
   },
   {
     "id": "07532a3f-1cf9-4d60-8b15-e2c146b7273b",
@@ -102,12 +96,6 @@
     "aooParentCode": "example_aoo_parent_code",
     "country": "example_country",
     "county": "example_county",
-    "city": "example_city",
-    "institutionContractMappings": {
-      "default": {
-        "contractTemplatePath": "path_template",
-        "contractTemplateVersion": "1.0.0"
-      }
-    }
+    "city": "example_city"
   }
 ]
