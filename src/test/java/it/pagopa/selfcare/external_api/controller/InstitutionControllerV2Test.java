@@ -211,6 +211,12 @@ class InstitutionControllerV2Test extends BaseControllerTest {
         byte[] productStream = Files.readAllBytes(inputResource.getFile().toPath());
         List<ProductResource> products = objectMapper.readValue(productStream, new TypeReference<>() {});
 
+        products.forEach(
+            productResource -> {
+              productResource.setContractTemplatePath("contractTemplatePath");
+              productResource.setContractTemplateVersion("1.0.0");
+            });
+
         ClassPathResource outputResource = new ClassPathResource("expectations/ProductResources.json");
         String expectedResource = StringUtils.deleteWhitespace(new String(Files.readAllBytes(outputResource.getFile().toPath())));
 

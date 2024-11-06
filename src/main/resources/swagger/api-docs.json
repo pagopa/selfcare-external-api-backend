@@ -2248,11 +2248,6 @@
             "type" : "string",
             "description" : "The path of contract"
           },
-          "contractTemplateUpdatedAt" : {
-            "type" : "string",
-            "description" : "Date the contract was postponed",
-            "format" : "date-time"
-          },
           "contractTemplateVersion" : {
             "type" : "string",
             "description" : "Version of the contract"
