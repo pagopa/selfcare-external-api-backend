@@ -19,10 +19,10 @@ public class ProductResource {
     private String alias;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.title}", required = true)
+    @NotBlank
     private String title;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplatePath}", required = true)
-    @NotBlank
     private String contractTemplatePath;
 
     @ApiModelProperty(value = "${swagger.external_api.products.model.contractTemplateUpdatedAt}")

@@ -15,6 +15,7 @@ import java.util.Map;
 public interface ProductsMapper {
 
     @Mapping(target = "roleMappings", expression = "java(toRoleMappings(model.getRoleMappings(institutionType)))")
+    @Mapping(target = "contractTemplatePath", expression = "java(model.getInstitutionContractTemplate(null).getContractTemplatePath())")
     ProductResource toResource(Product model, String institutionType);
 
     @Named("toRoleMappings")
