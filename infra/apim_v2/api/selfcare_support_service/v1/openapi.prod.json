@@ -2637,6 +2637,18 @@
           },
           "vatNumberGroup": {
             "type": "boolean"
+          },
+          "providerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "string"
           }
         }
       },
@@ -2826,6 +2838,9 @@
           "vatNumber": {
             "type": "string"
           },
+          "parentDescription": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
@@ -2850,7 +2865,7 @@
               "$ref": "#/components/schemas/UserRequest"
             }
           },
-          "codeSDI": {
+          "recipientCode": {
             "type": "string"
           },
           "digitalAddress": {

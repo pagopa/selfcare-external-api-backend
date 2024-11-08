@@ -368,8 +368,8 @@
         "tags": [
           "national-registries"
         ],
-        "summary": "Retrieve data from AdE and InfoCamere",
-        "description": "Get the legal address of the business",
+        "summary": "Retrieve legal address data from InfoCamere",
+        "description": "Get the legal address of the business given the taxId",
         "operationId": "legalAddressUsingGET",
         "parameters": [
           {
