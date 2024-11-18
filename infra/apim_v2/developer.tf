@@ -78,6 +78,30 @@ resource "null_resource" "upload_internal_developer_index_v1" {
   }
 }
 
+resource "null_resource" "upload_billing_developer_index_v1" {
+  triggers = {
+    file_sha1 = filesha1("./env/${var.env}/developer/billing-portal/v1/index.html")
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+              az storage blob upload \
+                --container '$web' \
+                --account-name ${replace(replace(local.checkout_cdn_name, "-cdn-endpoint", "-sa"), "-", "")} \
+                --account-key ${data.azurerm_storage_account.checkout.primary_access_key} \
+                --file "./env/${var.env}/developer/billing-portal/v1/index.html" \
+                --overwrite true \
+                --name 'developer/billing-portal/v1/index.html' &&
+              az cdn endpoint purge \
+                --resource-group ${data.azurerm_storage_account.checkout.resource_group_name} \
+                --name ${local.checkout_cdn_name} \
+                --profile-name ${replace(local.checkout_cdn_name, "-cdn-endpoint", "-cdn-profile")}  \
+                --content-paths "/developer/billing-portal/v1/index.html" \
+                --no-wait
+          EOT
+  }
+}
+
 resource "null_resource" "upload_support_pnpg_developer_index_v1" {
   triggers = {
     file_sha1 = filesha1("./env/${var.env}/developer/support-pnpg/v1/index.html")
