@@ -41,4 +41,9 @@ jobs:
         run: |
           gh workflow run release_ms_pnpg.yml \
             --ref ${{ steps.create_branch.outputs.new_branch_name }}
+
+      - name: Trigger release APIM UAT
+        run: |
+          gh workflow run apim_infra_release.yml \
+            --ref ${{ steps.create_branch.outputs.new_branch_name }}
         
