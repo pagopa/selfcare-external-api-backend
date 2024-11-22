@@ -41,34 +41,55 @@ fs.readFile(inputFilePathComplete, 'utf8', (err, data) => {
 
     // Rimuovi v* dal path
     if (openapi.paths && typeof openapi.paths === 'object') {
-        Object.keys(openapi.paths).forEach(path => {
-            if(path.startsWith('/v')) {
-                const pathKeyWithoutVersion = path.substring(3);
-                const pathItem = openapi.paths[path];
+        Object.keys(openapi.paths).forEach(pathKey => {
+            if(pathKey.startsWith('/v')) {
+                const pathKeyWithoutVersion = pathKey.substring(3); // Remove '/vX' (es. '/v1' -> '/endpoint')
+                const pathItem = openapi.paths[pathKey];
                 
-                delete openapi.paths[path];
-                openapi.paths[pathKeyWithoutVersion] = pathItem;
+                delete openapi.paths[pathKey];
+                if (openapi.paths[pathKeyWithoutVersion]) {
+                    console.warn(`Il path ${pathKeyWithoutVersion} esiste già. Saltando la sovrascrittura.`);
+                } else {
+                    openapi.paths[pathKeyWithoutVersion] = pathItem;
+                }
             }
-           
         });
     }
 
+    // Edit securitySchemes: replace bearerAuth or others with apiKeyHeader
+    if (openapi.components && openapi.components.securitySchemes) {
+        if (openapi.components.securitySchemes.bearerAuth) {
+            // Rimuove bearerAuth
+            delete openapi.components.securitySchemes.bearerAuth;
 
-    // Set security bearerAuth
+            // Added apiKeyHeader
+            openapi.components.securitySchemes.apiKeyHeader = {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            };
+        } else {
+            console.warn('bearerAuth non trovato nei securitySchemes.');
+        }
+    } else {
+        console.warn('components.securitySchemes non trovato nel file OpenAPI.');
+    }
+
+    // Aggiorna le security requirements nelle operazioni: sostituisce bearerAuth con apiKeyHeader
     if (openapi.paths && typeof openapi.paths === 'object') {
         Object.keys(openapi.paths).forEach(path => {
             const pathItem = openapi.paths[path];
             ['get', 'post', 'put', 'delete', 'options', 'head', 'patch', 'trace'].forEach(method => {
                 if (pathItem[method] && pathItem[method].security) {
-                    pathItem[method].security.forEach(schema => {
-                        if(schema["SecurityScheme"]) {
-                            delete schema["SecurityScheme"];
-                            schema["bearerAuth"] = ["global"]
-                        }
-                    })
+                    pathItem[method].security = pathItem[method].security.map(securityReq => {
+                        const newSecurityReq = {};
+                        Object.keys(securityReq).forEach(scheme => {
+                            newSecurityReq['apiKeyHeader'] = ["global"];
+                        });
+                        return newSecurityReq;
+                    });
                 }
             });
-           
         });
     }
 
