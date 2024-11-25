@@ -53,7 +53,13 @@ public interface OnboardingMapper {
       target = "contractImported.activatedAt",
       source = "contractImported.activatedAt",
       qualifiedByName = "convertDate")
-  OnboardingImportRequest toOnboardingImportRequest(OnboardingData onboardingData);
+  OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
+
+  default OnboardingImportRequest toOnboardingImportRequest(OnboardingData onboardingData) {
+    OnboardingImportRequest onboardingImportRequest = mapToOnboardingImportRequest(onboardingData);
+    onboardingImportRequest.getInstitution().setOrigin(Origin.IPA);
+    return onboardingImportRequest;
+  }
 
   GeographicTaxonomyDto toGeographicTaxonomyDto(GeographicTaxonomy geographicTaxonomy);
 
