@@ -1,6 +1,10 @@
 oa3_spec: src/main/resources/swagger/api-docs.json
 name: opex_api-external-api
 location: West Europe
+availability_threshold: 0.95 # Default: 99%
+availability_evaluation_frequency: 30 # Default: 10
+availability_evaluation_time_window: 50 # Default: 20
+availability_event_occurrences: 3 # Default: 1
 response_time_threshold: 2 # Default: 1
 response_time_evaluation_frequency: 10 # Default: 10
 response_time_evaluation_time_window: 30 # Default: 20
