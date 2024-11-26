@@ -1,6 +1,10 @@
 oa3_spec: src/main/resources/swagger/api-docs.json
 name: opex_api-external-api
 location: West Europe
+response_time_threshold: 2 # Default: 1
+response_time_evaluation_frequency: 10 # Default: 10
+response_time_evaluation_time_window: 30 # Default: 20
+response_time_event_occurrences: 30 # Default:
 timespan: 30m # Default, a number or a timespan https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/scalar-data-types/timespan
 data_source: /subscriptions/813119d7-0943-46ed-8ebe-cebe24f9106c/resourceGroups/selc-p-vnet-rg/providers/Microsoft.Network/applicationGateways/selc-p-app-gw
 action_groups:
