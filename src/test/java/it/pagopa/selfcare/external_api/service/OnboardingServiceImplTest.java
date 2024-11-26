@@ -148,6 +148,6 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     List<RelationshipInfo> result =
         onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
-    assertEquals(result.size(), 2);
+    assertEquals(2, result.size());
   }
 }

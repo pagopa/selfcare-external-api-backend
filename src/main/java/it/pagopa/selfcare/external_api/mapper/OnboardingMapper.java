@@ -18,7 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OnboardingMapper {
@@ -97,7 +96,7 @@ public interface OnboardingMapper {
                 geotaxes ->
                     geotaxes.stream()
                         .map(this::toGeographicTaxonomyDto)
-                        .collect(Collectors.toList()))
+                        .toList())
             .orElse(null));
     institution.rea(onboardingData.getInstitutionUpdate().getRea());
     institution.shareCapital(onboardingData.getInstitutionUpdate().getShareCapital());
@@ -139,7 +138,7 @@ public interface OnboardingMapper {
                 geotaxes ->
                     geotaxes.stream()
                         .map(this::toGeographicTaxonomyDto)
-                        .collect(Collectors.toList()))
+                        .toList())
             .orElse(null));
     institutionPsp.rea(onboardingData.getInstitutionUpdate().getRea());
     institutionPsp.shareCapital(onboardingData.getInstitutionUpdate().getShareCapital());
