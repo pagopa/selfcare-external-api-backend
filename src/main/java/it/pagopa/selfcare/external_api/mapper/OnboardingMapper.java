@@ -44,6 +44,7 @@ public interface OnboardingMapper {
 
   @Mapping(target = "institution", source = "institutionUpdate")
   @Mapping(target = "institution.institutionType", ignore = true)
+  @Mapping(target = "institution.origin", constant = "IPA")
   @Mapping(
       target = "contractImported.createdAt",
       source = "contractImported.createdAt",
@@ -53,12 +54,6 @@ public interface OnboardingMapper {
       source = "contractImported.activatedAt",
       qualifiedByName = "convertDate")
   OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
-
-  default OnboardingImportRequest toOnboardingImportRequest(OnboardingData onboardingData) {
-    OnboardingImportRequest onboardingImportRequest = mapToOnboardingImportRequest(onboardingData);
-    onboardingImportRequest.getInstitution().setOrigin(Origin.IPA);
-    return onboardingImportRequest;
-  }
 
   GeographicTaxonomyDto toGeographicTaxonomyDto(GeographicTaxonomy geographicTaxonomy);
 
