@@ -63,6 +63,15 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   }
 
   @Test
+  void oldContractOnboardingTestWithOrigin() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setOrigin("ADE");
+    Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
+  }
+
+  @Test
   void autoApprovalOnboardingProductV2TestPA() {
     OnboardingData onboardingData = new OnboardingData();
     onboardingData.setInstitutionExternalId("externalId");
