@@ -40,7 +40,7 @@ public interface OnboardingMapper {
   @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
   OnboardingDefaultRequest toOnboardingDefaultRequest(OnboardingData onboardingData);
 
-  @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionImport")
+  @Mapping(target = "institution", expression = "java(toInstitutionImportRequest(onboardingData, onboardingData.getInstitutionUpdate()))")
   @Mapping(
       target = "contractImported.createdAt",
       source = "contractImported.createdAt",
@@ -51,34 +51,11 @@ public interface OnboardingMapper {
       qualifiedByName = "convertDate")
   OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
 
-  @Named("toInstitutionImport")
-  default InstitutionImportRequest toInstitutionImport(OnboardingData onboardingData) {
-    InstitutionUpdate institutionUpdate = onboardingData.getInstitutionUpdate();
-    if ( institutionUpdate == null ) {
-      return null;
-    }
-
-    InstitutionImportRequest.InstitutionImportRequestBuilder institutionImportRequest = InstitutionImportRequest.builder();
-
-    institutionImportRequest.taxCode( institutionUpdate.getTaxCode() );
-    institutionImportRequest.city( institutionUpdate.getCity() );
-    institutionImportRequest.country( institutionUpdate.getCountry() );
-    institutionImportRequest.county( institutionUpdate.getCounty() );
-    institutionImportRequest.description( institutionUpdate.getDescription() );
-    institutionImportRequest.digitalAddress( institutionUpdate.getDigitalAddress() );
-    institutionImportRequest.address( institutionUpdate.getAddress() );
-    institutionImportRequest.zipCode( institutionUpdate.getZipCode() );
-    institutionImportRequest.rea( institutionUpdate.getRea() );
-    institutionImportRequest.shareCapital( institutionUpdate.getShareCapital() );
-    institutionImportRequest.businessRegisterPlace( institutionUpdate.getBusinessRegisterPlace() );
-    institutionImportRequest.supportEmail( institutionUpdate.getSupportEmail() );
-    institutionImportRequest.supportPhone( institutionUpdate.getSupportPhone() );
-    institutionImportRequest.imported( institutionUpdate.getImported() );
-
-    institutionImportRequest.origin( originIpaIfAbsent(onboardingData) );
-
-    return institutionImportRequest.build();
-  }
+  @Named("toInstitutionImportRequest")
+  @Mapping(target="institutionType", ignore = true)
+  @Mapping(target="taxCode", source="institutionUpdate.taxCode")
+  @Mapping(target = "origin", expression = "java(originIpaIfAbsent(onboardingData))")
+  InstitutionImportRequest toInstitutionImportRequest(OnboardingData onboardingData, InstitutionUpdate institutionUpdate);
 
   default Origin originIpaIfAbsent(OnboardingData onboardingData) {
     if(Objects.isNull(onboardingData.getOrigin())) {
