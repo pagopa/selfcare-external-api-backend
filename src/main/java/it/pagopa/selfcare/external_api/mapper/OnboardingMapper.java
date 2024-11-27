@@ -4,11 +4,9 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.institution.Onboarding;
-import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.GeographicTaxonomyDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -42,9 +40,7 @@ public interface OnboardingMapper {
   @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
   OnboardingDefaultRequest toOnboardingDefaultRequest(OnboardingData onboardingData);
 
-  @Mapping(target = "institution", source = "institutionUpdate")
-  @Mapping(target = "institution.institutionType", ignore = true)
-  @Mapping(target = "institution.origin", constant = "IPA")
+  @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionImport")
   @Mapping(
       target = "contractImported.createdAt",
       source = "contractImported.createdAt",
@@ -54,6 +50,43 @@ public interface OnboardingMapper {
       source = "contractImported.activatedAt",
       qualifiedByName = "convertDate")
   OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
+
+  @Named("toInstitutionImport")
+  default InstitutionImportRequest toInstitutionImport(OnboardingData onboardingData) {
+    InstitutionUpdate institutionUpdate = onboardingData.getInstitutionUpdate();
+    if ( institutionUpdate == null ) {
+      return null;
+    }
+
+    InstitutionImportRequest.InstitutionImportRequestBuilder institutionImportRequest = InstitutionImportRequest.builder();
+
+    institutionImportRequest.taxCode( institutionUpdate.getTaxCode() );
+    institutionImportRequest.city( institutionUpdate.getCity() );
+    institutionImportRequest.country( institutionUpdate.getCountry() );
+    institutionImportRequest.county( institutionUpdate.getCounty() );
+    institutionImportRequest.description( institutionUpdate.getDescription() );
+    institutionImportRequest.digitalAddress( institutionUpdate.getDigitalAddress() );
+    institutionImportRequest.address( institutionUpdate.getAddress() );
+    institutionImportRequest.zipCode( institutionUpdate.getZipCode() );
+    institutionImportRequest.rea( institutionUpdate.getRea() );
+    institutionImportRequest.shareCapital( institutionUpdate.getShareCapital() );
+    institutionImportRequest.businessRegisterPlace( institutionUpdate.getBusinessRegisterPlace() );
+    institutionImportRequest.supportEmail( institutionUpdate.getSupportEmail() );
+    institutionImportRequest.supportPhone( institutionUpdate.getSupportPhone() );
+    institutionImportRequest.imported( institutionUpdate.getImported() );
+
+    institutionImportRequest.origin( originIpaIfAbsent(onboardingData) );
+
+    return institutionImportRequest.build();
+  }
+
+  default Origin originIpaIfAbsent(OnboardingData onboardingData) {
+    if(Objects.isNull(onboardingData.getOrigin())) {
+      return Origin.IPA;
+    }
+
+    return Origin.fromValue(onboardingData.getOrigin());
+  }
 
   GeographicTaxonomyDto toGeographicTaxonomyDto(GeographicTaxonomy geographicTaxonomy);
 
