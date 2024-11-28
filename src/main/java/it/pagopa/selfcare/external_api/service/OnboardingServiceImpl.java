@@ -43,7 +43,7 @@ class OnboardingServiceImpl implements OnboardingService {
     log.trace("oldContractOnboarding start");
     log.debug("oldContractOnboarding = {}", onboardingImportData);
     onboardingControllerApi._onboardingPaImport(
-        onboardingMapper.toOnboardingImportRequest(onboardingImportData));
+        onboardingMapper.mapToOnboardingImportRequest(onboardingImportData));
     log.trace("oldContractOnboarding end");
   }
 

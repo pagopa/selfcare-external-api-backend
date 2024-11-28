@@ -4,11 +4,9 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.institution.Onboarding;
-import it.pagopa.selfcare.external_api.model.onboarding.Billing;
-import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.GeographicTaxonomyDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -18,7 +16,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OnboardingMapper {
@@ -43,8 +40,7 @@ public interface OnboardingMapper {
   @Mapping(target = "institution", source = ".", qualifiedByName = "toInstitutionBase")
   OnboardingDefaultRequest toOnboardingDefaultRequest(OnboardingData onboardingData);
 
-  @Mapping(target = "institution", source = "institutionUpdate")
-  @Mapping(target = "institution.institutionType", ignore = true)
+  @Mapping(target = "institution", expression = "java(toInstitutionImportRequest(onboardingData, onboardingData.getInstitutionUpdate()))")
   @Mapping(
       target = "contractImported.createdAt",
       source = "contractImported.createdAt",
@@ -53,7 +49,21 @@ public interface OnboardingMapper {
       target = "contractImported.activatedAt",
       source = "contractImported.activatedAt",
       qualifiedByName = "convertDate")
-  OnboardingImportRequest toOnboardingImportRequest(OnboardingData onboardingData);
+  OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
+
+  @Named("toInstitutionImportRequest")
+  @Mapping(target="institutionType", ignore = true)
+  @Mapping(target="taxCode", source="institutionUpdate.taxCode")
+  @Mapping(target = "origin", expression = "java(originIpaIfAbsent(onboardingData))")
+  InstitutionImportRequest toInstitutionImportRequest(OnboardingData onboardingData, InstitutionUpdate institutionUpdate);
+
+  default Origin originIpaIfAbsent(OnboardingData onboardingData) {
+    if(Objects.isNull(onboardingData.getOrigin())) {
+      return Origin.IPA;
+    }
+
+    return Origin.fromValue(onboardingData.getOrigin());
+  }
 
   GeographicTaxonomyDto toGeographicTaxonomyDto(GeographicTaxonomy geographicTaxonomy);
 
@@ -91,7 +101,7 @@ public interface OnboardingMapper {
                 geotaxes ->
                     geotaxes.stream()
                         .map(this::toGeographicTaxonomyDto)
-                        .collect(Collectors.toList()))
+                        .toList())
             .orElse(null));
     institution.rea(onboardingData.getInstitutionUpdate().getRea());
     institution.shareCapital(onboardingData.getInstitutionUpdate().getShareCapital());
@@ -133,7 +143,7 @@ public interface OnboardingMapper {
                 geotaxes ->
                     geotaxes.stream()
                         .map(this::toGeographicTaxonomyDto)
-                        .collect(Collectors.toList()))
+                        .toList())
             .orElse(null));
     institutionPsp.rea(onboardingData.getInstitutionUpdate().getRea());
     institutionPsp.shareCapital(onboardingData.getInstitutionUpdate().getShareCapital());

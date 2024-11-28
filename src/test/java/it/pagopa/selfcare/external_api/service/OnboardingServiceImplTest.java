@@ -9,6 +9,7 @@ import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
+import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
@@ -57,6 +58,16 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   void oldContractOnboardingTest() {
     OnboardingData onboardingData = new OnboardingData();
     onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
+  }
+
+  @Test
+  void oldContractOnboardingTestWithOrigin() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setOrigin("ADE");
     Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
   }
 
@@ -64,8 +75,10 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   void autoApprovalOnboardingProductV2TestPA() {
     OnboardingData onboardingData = new OnboardingData();
     onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    InstitutionUpdate institutionUpdate = new InstitutionUpdate();
     onboardingData.setInstitutionType(PA);
+    institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+    onboardingData.setInstitutionUpdate(institutionUpdate);
     Assertions.assertDoesNotThrow(
         () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
   }
@@ -94,7 +107,9 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   void autoApprovalOnboardingImportProductV2Test() {
     OnboardingData onboardingData = new OnboardingData();
     onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+    institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+    onboardingData.setInstitutionUpdate(institutionUpdate);
     onboardingData.setInstitutionType(PSP);
     Assertions.assertDoesNotThrow(
         () -> onboardingService.autoApprovalOnboardingImportProductV2(onboardingData));
@@ -147,6 +162,6 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     List<RelationshipInfo> result =
         onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
-    assertEquals(result.size(), 2);
+    assertEquals(2, result.size());
   }
 }
