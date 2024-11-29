@@ -2461,6 +2461,9 @@
           },
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto"
+          },
+          "gpuData" : {
+            "$ref" : "#/components/schemas/GPUData"
           }
         }
       },
@@ -2942,6 +2945,35 @@
           },
           "contractId": {
             "type": "string"
+          }
+        }
+      },
+      "GPUData" : {
+        "type" : "object",
+        "properties" : {
+          "businessRegisterNumber" : {
+            "type" : "string"
+          },
+          "legalRegisterNumber" : {
+            "type" : "string"
+          },
+          "legalRegisterName" : {
+            "type" : "string"
+          },
+          "manager" : {
+            "type" : "boolean"
+          },
+          "managerAuthorized" : {
+            "type" : "boolean"
+          },
+          "managerEligible" : {
+            "type" : "boolean"
+          },
+          "managerProsecution" : {
+            "type" : "boolean"
+          },
+          "institutionCourtMeasures" : {
+            "type" : "boolean"
           }
         }
       },

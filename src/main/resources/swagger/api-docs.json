@@ -1471,6 +1471,36 @@
           }
         }
       },
+      "GPUData" : {
+        "title" : "GPUData",
+        "type" : "object",
+        "properties" : {
+          "businessRegisterNumber" : {
+            "type" : "string"
+          },
+          "institutionCourtMeasures" : {
+            "type" : "boolean"
+          },
+          "legalRegisterName" : {
+            "type" : "string"
+          },
+          "legalRegisterNumber" : {
+            "type" : "string"
+          },
+          "manager" : {
+            "type" : "boolean"
+          },
+          "managerAuthorized" : {
+            "type" : "boolean"
+          },
+          "managerEligible" : {
+            "type" : "boolean"
+          },
+          "managerProsecution" : {
+            "type" : "boolean"
+          }
+        }
+      },
       "GeographicTaxonomy" : {
         "title" : "GeographicTaxonomy",
         "type" : "object",
@@ -1685,6 +1715,9 @@
             "items" : {
               "$ref" : "#/components/schemas/GeographicTaxonomy"
             }
+          },
+          "gpuData" : {
+            "$ref" : "#/components/schemas/GPUData"
           },
           "imported" : {
             "type" : "boolean"
@@ -1950,6 +1983,10 @@
               "$ref" : "#/components/schemas/GeographicTaxonomyDto"
             }
           },
+          "gpuData" : {
+            "description" : "GPU specific data",
+            "$ref" : "#/components/schemas/GPUData"
+          },
           "institutionLocationData" : {
             "description" : "Institution's location Data",
             "$ref" : "#/components/schemas/InstitutionLocationDataDto"
@@ -2051,6 +2088,10 @@
             "items" : {
               "$ref" : "#/components/schemas/GeographicTaxonomyDto"
             }
+          },
+          "gpuData" : {
+            "description" : "GPU specific data",
+            "$ref" : "#/components/schemas/GPUData"
           },
           "institutionLocationData" : {
             "description" : "Institution's location Data",

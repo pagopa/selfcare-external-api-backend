@@ -1,15 +1,15 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import io.swagger.annotations.ApiModelProperty;
-import it.pagopa.selfcare.onboarding.common.InstitutionType;
+import it.pagopa.selfcare.external_api.model.institution.GPUData;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionLocationDataDto;
 import it.pagopa.selfcare.external_api.model.user.UserDto;
-import lombok.Data;
-
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import lombok.Data;
 
 @Data
 public class OnboardingProductDto {
@@ -42,6 +42,10 @@ public class OnboardingProductDto {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData}")
     @Valid
     private PspDataDto pspData;
+
+    @ApiModelProperty(value = "${swagger.external_api.institutions.model.gpuData}")
+    @Valid
+    private GPUData gpuData;
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.geographicTaxonomies}", required = true)
     @NotNull
