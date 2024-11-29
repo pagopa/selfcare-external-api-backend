@@ -1983,10 +1983,6 @@
               "$ref" : "#/components/schemas/GeographicTaxonomyDto"
             }
           },
-          "gpuData" : {
-            "description" : "GPU specific data",
-            "$ref" : "#/components/schemas/GPUData"
-          },
           "institutionLocationData" : {
             "description" : "Institution's location Data",
             "$ref" : "#/components/schemas/InstitutionLocationDataDto"
