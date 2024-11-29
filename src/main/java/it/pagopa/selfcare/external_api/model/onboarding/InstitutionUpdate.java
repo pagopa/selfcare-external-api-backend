@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import it.pagopa.selfcare.external_api.model.institution.GPUData;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class InstitutionUpdate {
     private String zipCode;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
+    private GPUData gpuData;
     private List<GeographicTaxonomy> geographicTaxonomies;
     private String rea;
     private String shareCapital;

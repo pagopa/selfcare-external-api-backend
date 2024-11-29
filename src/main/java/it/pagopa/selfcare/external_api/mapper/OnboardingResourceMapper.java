@@ -17,6 +17,7 @@ public interface OnboardingResourceMapper {
   @Mapping(source = "billingData.registeredOffice", target = "institutionUpdate.address")
   @Mapping(source = "pspData", target = "institutionUpdate.paymentServiceProvider")
   @Mapping(source = "pspData.dpoData", target = "institutionUpdate.dataProtectionOfficer")
+  @Mapping(source = "gpuData", target = "institutionUpdate.gpuData")
   @Mapping(source = "geographicTaxonomies", target = "institutionUpdate.geographicTaxonomies")
   @Mapping(source = "companyInformations.rea", target = "institutionUpdate.rea")
   @Mapping(source = "companyInformations.shareCapital", target = "institutionUpdate.shareCapital")

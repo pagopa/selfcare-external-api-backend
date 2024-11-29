@@ -34,6 +34,7 @@ public class Institution {
     private List<Attribute> attributes;
     private PaymentServiceProvider paymentServiceProvider;
     private DataProtectionOfficer dataProtectionOfficer;
+    private GPUData gpuData;
     private String rea;
     private String shareCapital;
     private String businessRegisterPlace;
