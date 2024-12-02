@@ -226,6 +226,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1776,6 +1786,9 @@
           "email": {
             "type": "string"
           },
+          "mobilePhone": {
+            "type": "string"
+          },
           "workContacts": {
             "type": "object",
             "additionalProperties": {
@@ -2179,6 +2192,9 @@
               "$ref": "#/components/schemas/GeographicTaxonomy"
             }
           },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData"
+          },
           "imported": {
             "type": "boolean"
           },
@@ -2245,6 +2261,36 @@
           },
           "desc": {
             "type": "string"
+          }
+        }
+      },
+      "GPUData": {
+        "title": "GPUData",
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
           }
         }
       },
@@ -2623,9 +2669,6 @@
       "PaymentServiceProviderRequest1": {
         "type": "object",
         "properties": {
-          "abiCode": {
-            "type": "string"
-          },
           "businessRegisterNumber": {
             "type": "string"
           },
@@ -2633,6 +2676,9 @@
             "type": "string"
           },
           "legalRegisterName": {
+            "type": "string"
+          },
+          "abiCode": {
             "type": "string"
           },
           "vatNumberGroup": {
@@ -2793,6 +2839,9 @@
           },
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData1"
           }
         }
       },
@@ -2987,7 +3036,8 @@
           "AS",
           "REC",
           "CON",
-          "PRV"
+          "PRV",
+          "GPU"
         ],
         "type": "string"
       },
@@ -3001,6 +3051,35 @@
             "type": "string"
           },
           "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GPUData1": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
+          },
+          "institutionCourtMeasures": {
             "type": "boolean"
           }
         }
