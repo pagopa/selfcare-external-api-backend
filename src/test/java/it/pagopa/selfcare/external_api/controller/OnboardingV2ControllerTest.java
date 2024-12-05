@@ -59,23 +59,35 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
     @Test
     public void onboardingOk() throws Exception {
         // Arrange
-        MockMultipartFile file = new MockMultipartFile("file", "test.txt", MediaType.TEXT_PLAIN_VALUE, "Test content".getBytes());
+        MockMultipartFile contract = new MockMultipartFile(
+                "contract", // Nome del parametro del @RequestPart
+                "test.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Test content".getBytes()
+        );
+
+        // Carichiamo il contenuto del file JSON di richiesta
         ClassPathResource outputResource = new ClassPathResource("stubs/onboardingSubunitDto.json");
         String requestContent = new String(Files.readAllBytes(outputResource.getFile().toPath()));
 
-        MockMultipartFile request = new MockMultipartFile("request", "request.json", MediaType.APPLICATION_JSON_VALUE, requestContent.getBytes());
+        MockMultipartFile request = new MockMultipartFile(
+                "request", // Nome del parametro del @RequestPart
+                "request.json",
+                MediaType.APPLICATION_JSON_VALUE,
+                requestContent.getBytes()
+        );
 
         // Act & Assert
         mockMvc.perform(multipart(BASE_URL)
-                        .file(file)
-                        .file(request)
+                        .file(contract) // File associato al parametro "contract"
+                        .file(request) // File associato al parametro "request"
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .with(requestPostProcessor -> {
-                            requestPostProcessor.setMethod("POST");
+                            requestPostProcessor.setMethod("POST"); // Forziamo il metodo POST
                             return requestPostProcessor;
                         }))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").doesNotExist());
+                .andExpect(status().isCreated()) // Verifichiamo che lo status sia 201 (CREATED)
+                .andExpect(jsonPath("$.message").doesNotExist()); // Non ci aspettiamo un campo "message" nella risposta
     }
 
     @Test

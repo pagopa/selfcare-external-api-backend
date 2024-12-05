@@ -56,15 +56,14 @@ class OnboardingServiceImpl implements OnboardingService {
         log.debug("autoApprovalOnboarding = {}", onboardingData);
         ObjectMapper mapper = new ObjectMapper();
         if (onboardingData.getInstitutionType() == InstitutionType.PA) {
-            String onboardingRequestJson = mapper.writeValueAsString(onboardingMapper.toOnboardingPaRequest(onboardingData));
-            log.debug("Serialized Onboarding Request: {}", onboardingRequestJson);
-            onboardingControllerApi._onboardingPaCompletion(contract, onboardingRequestJson);
+            onboardingControllerApi._onboardingPaCompletion(contract,
+                    onboardingMapper.toOnboardingPaRequest(onboardingData));
         } else if (onboardingData.getInstitutionType() == InstitutionType.PSP) {
             onboardingControllerApi._onboardingPspCompletion(contract,
-                    mapper.writeValueAsString(onboardingMapper.toOnboardingPspRequest(onboardingData)));
+                    onboardingMapper.toOnboardingPspRequest(onboardingData));
         } else {
             onboardingControllerApi._onboardingCompletion(contract,
-                    mapper.writeValueAsString(onboardingMapper.toOnboardingDefaultRequest(onboardingData).toString()));
+                    onboardingMapper.toOnboardingDefaultRequest(onboardingData));
         }
         log.trace("autoApprovalOnboarding end");
     }

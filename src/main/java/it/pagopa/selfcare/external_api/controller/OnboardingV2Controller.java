@@ -54,7 +54,6 @@ public class OnboardingV2Controller {
         this.onboardingResourceMapper = onboardingResourceMapper;
     }
 
-
     @Tag(name = "internal-v1")
     @ApiResponse(
             responseCode = "403",

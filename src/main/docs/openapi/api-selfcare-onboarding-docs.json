@@ -581,18 +581,22 @@
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "contract",
-                  "onboardingRequest"
+                  "contract"
                 ],
                 "type": "object",
                 "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingDefaultRequest"
+                  },
                   "contract": {
                     "format": "binary",
                     "type": "string"
-                  },
-                  "onboardingRequest": {
-                    "type": "string"
                   }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
                 }
               }
             }
@@ -795,18 +799,22 @@
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "contract",
-                  "onboardingRequest"
+                  "contract"
                 ],
                 "type": "object",
                 "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingPaRequest"
+                  },
                   "contract": {
                     "format": "binary",
                     "type": "string"
-                  },
-                  "onboardingRequest": {
-                    "type": "string"
                   }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
                 }
               }
             }
@@ -977,18 +985,22 @@
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "contract",
-                  "onboardingRequest"
+                  "contract"
                 ],
                 "type": "object",
                 "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingPspRequest"
+                  },
                   "contract": {
                     "format": "binary",
                     "type": "string"
-                  },
-                  "onboardingRequest": {
-                    "type": "string"
                   }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
                 }
               }
             }
