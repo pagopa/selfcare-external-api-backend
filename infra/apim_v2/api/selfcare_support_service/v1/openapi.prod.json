@@ -226,6 +226,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1776,6 +1786,9 @@
           "email": {
             "type": "string"
           },
+          "mobilePhone": {
+            "type": "string"
+          },
           "workContacts": {
             "type": "object",
             "additionalProperties": {
@@ -2179,6 +2192,9 @@
               "$ref": "#/components/schemas/GeographicTaxonomy"
             }
           },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData"
+          },
           "imported": {
             "type": "boolean"
           },
@@ -2245,6 +2261,36 @@
           },
           "desc": {
             "type": "string"
+          }
+        }
+      },
+      "GPUData": {
+        "title": "GPUData",
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
           }
         }
       },
