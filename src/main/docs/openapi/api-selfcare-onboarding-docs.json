@@ -19,9 +19,6 @@
       "name": "Aggregates Controller"
     },
     {
-      "name": "Notification Controller"
-    },
-    {
       "name": "Onboarding"
     },
     {
@@ -228,48 +225,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VerifyAggregateResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "SecurityScheme": []
-          }
-        ]
-      }
-    },
-    "/v1/notification/resend": {
-      "post": {
-        "tags": [
-          "Notification Controller"
-        ],
-        "summary": "Resend onboarding notifications for onboarding which are retrieved given a set of filters",
-        "description": "Resends notifications for all onboarding records that match the specified filter criteria. This allows administrators to trigger notification processes again for specific onboardings based on parameters such as product ID, tax code, institution ID, and more.",
-        "operationId": "resendOnboardingNotifications",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OnboardingGetFilters"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -623,9 +578,22 @@
         "operationId": "onboardingCompletion",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/OnboardingDefaultRequest"
+                "required": [
+                  "contract",
+                  "onboardingRequest"
+                ],
+                "type": "object",
+                "properties": {
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  },
+                  "onboardingRequest": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -824,9 +792,22 @@
         "operationId": "onboardingPaCompletion",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/OnboardingPaRequest"
+                "required": [
+                  "contract",
+                  "onboardingRequest"
+                ],
+                "type": "object",
+                "properties": {
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  },
+                  "onboardingRequest": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -993,9 +974,22 @@
         "operationId": "onboardingPspCompletion",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/OnboardingPspRequest"
+                "required": [
+                  "contract",
+                  "onboardingRequest"
+                ],
+                "type": "object",
+                "properties": {
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  },
+                  "onboardingRequest": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -1075,6 +1069,48 @@
         "summary": "Onboard users for all institution types, save user data, and trigger async onboarding activities.",
         "description": "Perform onboarding users request, it is used all institution types.Users data will be saved on personal data vault if it doesn't already exist.At the end, function triggers async activities related to onboarding based on institution type.",
         "operationId": "onboardingUsers",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
+      }
+    },
+    "/v1/onboarding/users/aggregator": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Onboard users for aggregators, save user data, and trigger async onboarding activities.",
+        "description": "Perform onboarding users request, it is used for aggregators.Users data will be saved on personal data vault if it doesn't already exist.At the end, function triggers async activities related to onboarding based on institution type.",
+        "operationId": "onboardingUsersAggregator",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1756,6 +1792,58 @@
         ]
       }
     },
+    "/v1/tokens/{onboardingId}/attachment": {
+      "get": {
+        "tags": [
+          "Token Controller"
+        ],
+        "summary": "Retrieve attachment for a given onboarding and filename",
+        "description": "Downloads the attachment file associated with the specified onboarding ID and filename.",
+        "operationId": "getAttachment",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
+      }
+    },
     "/v1/tokens/{onboardingId}/contract": {
       "get": {
         "tags": [
@@ -2063,6 +2151,35 @@
           },
           "pec": {
             "type": "string"
+          }
+        }
+      },
+      "GPUData": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
           }
         }
       },
@@ -2410,7 +2527,8 @@
           "AS",
           "REC",
           "CON",
-          "PRV"
+          "PRV",
+          "GPU"
         ],
         "type": "string"
       },
@@ -2462,8 +2580,8 @@
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto"
           },
-          "gpuData" : {
-            "$ref" : "#/components/schemas/GPUData"
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData"
           }
         }
       },
@@ -2517,43 +2635,6 @@
           },
           "reasonForReject": {
             "type": "string"
-          }
-        }
-      },
-      "OnboardingGetFilters": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "type": "string"
-          },
-          "institutionId": {
-            "type": "string"
-          },
-          "onboardingId": {
-            "type": "string"
-          },
-          "subunitCode": {
-            "type": "string"
-          },
-          "taxCode": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "from": {
-            "type": "string"
-          },
-          "to": {
-            "type": "string"
-          },
-          "page": {
-            "format": "int32",
-            "type": "integer"
-          },
-          "size": {
-            "format": "int32",
-            "type": "integer"
           }
         }
       },
@@ -2645,6 +2726,12 @@
           },
           "contractImported": {
             "$ref": "#/components/schemas/OnboardingImportContract"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingPaRequest"
+          },
+          "forceImport": {
+            "type": "boolean"
           }
         }
       },
@@ -2919,9 +3006,6 @@
       "PaymentServiceProviderRequest": {
         "type": "object",
         "properties": {
-          "abiCode": {
-            "type": "string"
-          },
           "businessRegisterNumber": {
             "type": "string"
           },
@@ -2929,6 +3013,9 @@
             "type": "string"
           },
           "legalRegisterName": {
+            "type": "string"
+          },
+          "abiCode": {
             "type": "string"
           },
           "vatNumberGroup": {
@@ -2945,35 +3032,6 @@
           },
           "contractId": {
             "type": "string"
-          }
-        }
-      },
-      "GPUData" : {
-        "type" : "object",
-        "properties" : {
-          "businessRegisterNumber" : {
-            "type" : "string"
-          },
-          "legalRegisterNumber" : {
-            "type" : "string"
-          },
-          "legalRegisterName" : {
-            "type" : "string"
-          },
-          "manager" : {
-            "type" : "boolean"
-          },
-          "managerAuthorized" : {
-            "type" : "boolean"
-          },
-          "managerEligible" : {
-            "type" : "boolean"
-          },
-          "managerProsecution" : {
-            "type" : "boolean"
-          },
-          "institutionCourtMeasures" : {
-            "type" : "boolean"
           }
         }
       },
@@ -3053,7 +3111,8 @@
         "enum": [
           "INSTITUTION",
           "LEGALS",
-          "USER"
+          "USER",
+          "ATTACHMENT"
         ],
         "type": "string"
       },

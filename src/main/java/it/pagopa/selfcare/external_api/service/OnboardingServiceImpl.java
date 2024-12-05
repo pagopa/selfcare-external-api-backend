@@ -1,5 +1,7 @@
 package it.pagopa.selfcare.external_api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -32,212 +35,214 @@ import java.util.stream.Collectors;
 @Slf4j
 class OnboardingServiceImpl implements OnboardingService {
 
-  private final MsOnboardingControllerApi onboardingControllerApi;
-  private final OnboardingMapper onboardingMapper;
-  private final MsCoreInstitutionApiClient institutionApiClient;
-  private final MsUserApiRestClient msUserApiRestClient;
-  private final UserResourceMapper userResourceMapper;
+    private final MsOnboardingControllerApi onboardingControllerApi;
+    private final OnboardingMapper onboardingMapper;
+    private final MsCoreInstitutionApiClient institutionApiClient;
+    private final MsUserApiRestClient msUserApiRestClient;
+    private final UserResourceMapper userResourceMapper;
 
-  @Override
-  public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
-    log.trace("oldContractOnboarding start");
-    log.debug("oldContractOnboarding = {}", onboardingImportData);
-    onboardingControllerApi._onboardingPaImport(
-        onboardingMapper.mapToOnboardingImportRequest(onboardingImportData));
-    log.trace("oldContractOnboarding end");
-  }
-
-  @Override
-  public void autoApprovalOnboardingProductV2(OnboardingData onboardingData) {
-    log.trace("autoApprovalOnboarding start");
-    log.debug("autoApprovalOnboarding = {}", onboardingData);
-    if (onboardingData.getInstitutionType() == InstitutionType.PA) {
-      onboardingControllerApi._onboardingPaCompletion(
-          onboardingMapper.toOnboardingPaRequest(onboardingData));
-    } else if (onboardingData.getInstitutionType() == InstitutionType.PSP) {
-      onboardingControllerApi._onboardingPspCompletion(
-          onboardingMapper.toOnboardingPspRequest(onboardingData));
-    } else {
-      onboardingControllerApi._onboardingCompletion(
-          onboardingMapper.toOnboardingDefaultRequest(onboardingData));
-    }
-    log.trace("autoApprovalOnboarding end");
-  }
-
-  @Override
-  public void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData) {
-    log.trace("autoApprovalOnboardingImport start");
-    log.debug("autoApprovalOnboardingImport = {}", onboardingData);
-    onboardingControllerApi._onboardingPspImport(
-        onboardingMapper.toOnboardingImportPspRequest(onboardingData));
-    log.trace("autoApprovalOnboardingImport end");
-  }
-
-  @Override
-  public List<RelationshipInfo> onboardingUsers(
-      OnboardingUsersRequest request, String userName, String surname) {
-    Institution institution =
-        Objects.requireNonNull(
-                institutionApiClient
-                    ._getInstitutionsUsingGET(
-                        request.getInstitutionTaxCode(),
-                        request.getInstitutionSubunitCode(),
-                        null,
-                        null)
-                    .getBody())
-            .getInstitutions()
-            .stream()
-            .map(onboardingMapper::toInstitution)
-            .findFirst()
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Institution not found for given value"));
-
-    Map<String, List<UserToOnboard>> usersWithId = new HashMap<>();
-    Map<String, List<UserToOnboard>> usersWithoutId = new HashMap<>();
-
-    for (UserToOnboard user : request.getUsers()) {
-      if (StringUtils.hasText(user.getId())) {
-        usersWithId.computeIfAbsent(user.getId(), k -> new ArrayList<>()).add(user);
-      } else {
-        usersWithoutId.computeIfAbsent(user.getTaxCode(), k -> new ArrayList<>()).add(user);
-      }
+    @Override
+    public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
+        log.trace("oldContractOnboarding start");
+        log.debug("oldContractOnboarding = {}", onboardingImportData);
+        onboardingControllerApi._onboardingPaImport(
+                onboardingMapper.mapToOnboardingImportRequest(onboardingImportData));
+        log.trace("oldContractOnboarding end");
     }
 
-    List<RelationshipInfo> result = new ArrayList<>();
-    result.addAll(processUsersWithId(usersWithId, institution, request.getProductId()));
-    result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId()));
+    @Override
+    public void autoApprovalOnboardingProductV2(OnboardingData onboardingData, MultipartFile contract) throws JsonProcessingException {
+        log.trace("autoApprovalOnboarding start");
+        log.debug("autoApprovalOnboarding = {}", onboardingData);
+        ObjectMapper mapper = new ObjectMapper();
+        if (onboardingData.getInstitutionType() == InstitutionType.PA) {
+            String onboardingRequestJson = mapper.writeValueAsString(onboardingMapper.toOnboardingPaRequest(onboardingData));
+            log.debug("Serialized Onboarding Request: {}", onboardingRequestJson);
+            onboardingControllerApi._onboardingPaCompletion(contract, onboardingRequestJson);
+        } else if (onboardingData.getInstitutionType() == InstitutionType.PSP) {
+            onboardingControllerApi._onboardingPspCompletion(contract,
+                    mapper.writeValueAsString(onboardingMapper.toOnboardingPspRequest(onboardingData)));
+        } else {
+            onboardingControllerApi._onboardingCompletion(contract,
+                    mapper.writeValueAsString(onboardingMapper.toOnboardingDefaultRequest(onboardingData).toString()));
+        }
+        log.trace("autoApprovalOnboarding end");
+    }
 
-    return result;
-  }
+    @Override
+    public void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData) {
+        log.trace("autoApprovalOnboardingImport start");
+        log.debug("autoApprovalOnboardingImport = {}", onboardingData);
+        onboardingControllerApi._onboardingPspImport(
+                onboardingMapper.toOnboardingImportPspRequest(onboardingData));
+        log.trace("autoApprovalOnboardingImport end");
+    }
 
-  private List<RelationshipInfo> processUsersWithId(
-      Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId) {
-    List<RelationshipInfo> result = new ArrayList<>();
+    @Override
+    public List<RelationshipInfo> onboardingUsers(
+            OnboardingUsersRequest request, String userName, String surname) {
+        Institution institution =
+                Objects.requireNonNull(
+                                institutionApiClient
+                                        ._getInstitutionsUsingGET(
+                                                request.getInstitutionTaxCode(),
+                                                request.getInstitutionSubunitCode(),
+                                                null,
+                                                null)
+                                        .getBody())
+                        .getInstitutions()
+                        .stream()
+                        .map(onboardingMapper::toInstitution)
+                        .findFirst()
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException("Institution not found for given value"));
 
-    usersWithId.forEach(
-        (userId, users) -> {
-          Map<PartyRole, List<UserToOnboard>> listOfRole =
-              users.stream().collect(Collectors.groupingBy(UserToOnboard::getRole));
-          listOfRole.forEach(
-              (role, usersByRole) -> {
-                List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
-                users.stream()
-                    .map(
-                        userToOnboard ->
-                            addUserRole(userId, institution, productId, role.name(), productRoles))
-                    .forEach(
-                        id ->
-                            result.addAll(
-                                buildRelationShipInfo(id, institution, productId, usersByRole)));
-              });
-        });
+        Map<String, List<UserToOnboard>> usersWithId = new HashMap<>();
+        Map<String, List<UserToOnboard>> usersWithoutId = new HashMap<>();
 
-    return result;
-  }
+        for (UserToOnboard user : request.getUsers()) {
+            if (StringUtils.hasText(user.getId())) {
+                usersWithId.computeIfAbsent(user.getId(), k -> new ArrayList<>()).add(user);
+            } else {
+                usersWithoutId.computeIfAbsent(user.getTaxCode(), k -> new ArrayList<>()).add(user);
+            }
+        }
 
-  private String addUserRole(
-      String userId,
-      Institution institution,
-      String productId,
-      String role,
-      List<String> productRoles) {
-    it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product =
-        it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
-            .productId(productId)
-            .role(role)
-            .productRoles(productRoles)
-            .build();
+        List<RelationshipInfo> result = new ArrayList<>();
+        result.addAll(processUsersWithId(usersWithId, institution, request.getProductId()));
+        result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId()));
 
-    AddUserRoleDto addUserRoleDto =
-        AddUserRoleDto.builder()
-            .product(product)
-            .institutionId(institution.getId())
-            .institutionDescription(institution.getDescription())
-            .institutionRootName(institution.getParentDescription())
-            .build();
+        return result;
+    }
 
-    msUserApiRestClient._createOrUpdateByUserId(userId, addUserRoleDto);
+    private List<RelationshipInfo> processUsersWithId(
+            Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId) {
+        List<RelationshipInfo> result = new ArrayList<>();
 
-    return userId;
-  }
+        usersWithId.forEach(
+                (userId, users) -> {
+                    Map<PartyRole, List<UserToOnboard>> listOfRole =
+                            users.stream().collect(Collectors.groupingBy(UserToOnboard::getRole));
+                    listOfRole.forEach(
+                            (role, usersByRole) -> {
+                                List<String> productRoles =
+                                        users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                                users.stream()
+                                        .map(
+                                                userToOnboard ->
+                                                        addUserRole(userId, institution, productId, role.name(), productRoles))
+                                        .forEach(
+                                                id ->
+                                                        result.addAll(
+                                                                buildRelationShipInfo(id, institution, productId, usersByRole)));
+                            });
+                });
 
-  private List<RelationshipInfo> processUsersWithoutId(
-      Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId) {
-    List<RelationshipInfo> result = new ArrayList<>();
+        return result;
+    }
 
-    usersWithoutId.forEach(
-        (taxCode, users) -> {
-          Map<PartyRole, List<UserToOnboard>> listOfRole =
-              users.stream().collect(Collectors.groupingBy(UserToOnboard::getRole));
-          listOfRole.forEach(
-              (role, usersByRole) -> {
-                List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
-                String userId =
-                    createUser(
-                        institution,
-                        productId,
-                        role.name(),
-                        productRoles,
-                        usersByRole.get(0),
-                        true);
-                result.addAll(buildRelationShipInfo(userId, institution, productId, usersByRole));
-              });
-        });
+    private String addUserRole(
+            String userId,
+            Institution institution,
+            String productId,
+            String role,
+            List<String> productRoles) {
+        it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product =
+                it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
+                        .productId(productId)
+                        .role(role)
+                        .productRoles(productRoles)
+                        .build();
 
-    return result;
-  }
+        AddUserRoleDto addUserRoleDto =
+                AddUserRoleDto.builder()
+                        .product(product)
+                        .institutionId(institution.getId())
+                        .institutionDescription(institution.getDescription())
+                        .institutionRootName(institution.getParentDescription())
+                        .build();
 
-  private String createUser(
-      Institution institution,
-      String productId,
-      String role,
-      List<String> productRoles,
-      UserToOnboard user,
-      boolean sendMail) {
+        msUserApiRestClient._createOrUpdateByUserId(userId, addUserRoleDto);
 
-    Product1 product =
-        Product1.builder().productId(productId).role(role).productRoles(productRoles).build();
+        return userId;
+    }
 
-    CreateUserDto createUserDto =
-        CreateUserDto.builder()
-            .institutionId(institution.getId())
-            .user(userResourceMapper.toUser(user))
-            .product(product)
-            .hasToSendEmail(sendMail)
-            .institutionDescription(institution.getDescription())
-            .institutionRootName(institution.getParentDescription())
-            .build();
+    private List<RelationshipInfo> processUsersWithoutId(
+            Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId) {
+        List<RelationshipInfo> result = new ArrayList<>();
 
-    String userId = msUserApiRestClient._createOrUpdateByFiscalCode(createUserDto).getBody();
-    log.info("User created with id: {}", userId);
-    return userId;
-  }
+        usersWithoutId.forEach(
+                (taxCode, users) -> {
+                    Map<PartyRole, List<UserToOnboard>> listOfRole =
+                            users.stream().collect(Collectors.groupingBy(UserToOnboard::getRole));
+                    listOfRole.forEach(
+                            (role, usersByRole) -> {
+                                List<String> productRoles =
+                                        users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                                String userId =
+                                        createUser(
+                                                institution,
+                                                productId,
+                                                role.name(),
+                                                productRoles,
+                                                usersByRole.get(0),
+                                                true);
+                                result.addAll(buildRelationShipInfo(userId, institution, productId, usersByRole));
+                            });
+                });
 
-  private List<RelationshipInfo> buildRelationShipInfo(
-      String id, Institution institution, String productId, List<UserToOnboard> usersByRole) {
-    return usersByRole.stream()
-        .map(
-            userToOnboard -> {
-              RelationshipInfo relationshipInfo = new RelationshipInfo();
-              relationshipInfo.setInstitution(institution);
-              relationshipInfo.setOnboardedProduct(buildOnboardedProduct(userToOnboard, productId));
-              relationshipInfo.setUserId(id);
-              return relationshipInfo;
-            })
-        .toList();
-  }
+        return result;
+    }
 
-  private OnboardedProduct buildOnboardedProduct(UserToOnboard userToOnboard, String productId) {
-    OnboardedProduct onboardedProduct = new OnboardedProduct();
-    onboardedProduct.setProductId(productId);
-    onboardedProduct.setRole(userToOnboard.getRole());
-    onboardedProduct.setProductRole(userToOnboard.getProductRole());
-    onboardedProduct.setStatus(RelationshipState.ACTIVE);
-    onboardedProduct.setEnv(userToOnboard.getEnv());
-    onboardedProduct.setCreatedAt(OffsetDateTime.now());
-    onboardedProduct.setUpdatedAt(OffsetDateTime.now());
-    return onboardedProduct;
-  }
+    private String createUser(
+            Institution institution,
+            String productId,
+            String role,
+            List<String> productRoles,
+            UserToOnboard user,
+            boolean sendMail) {
+
+        Product1 product =
+                Product1.builder().productId(productId).role(role).productRoles(productRoles).build();
+
+        CreateUserDto createUserDto =
+                CreateUserDto.builder()
+                        .institutionId(institution.getId())
+                        .user(userResourceMapper.toUser(user))
+                        .product(product)
+                        .hasToSendEmail(sendMail)
+                        .institutionDescription(institution.getDescription())
+                        .institutionRootName(institution.getParentDescription())
+                        .build();
+
+        String userId = msUserApiRestClient._createOrUpdateByFiscalCode(createUserDto).getBody();
+        log.info("User created with id: {}", userId);
+        return userId;
+    }
+
+    private List<RelationshipInfo> buildRelationShipInfo(
+            String id, Institution institution, String productId, List<UserToOnboard> usersByRole) {
+        return usersByRole.stream()
+                .map(
+                        userToOnboard -> {
+                            RelationshipInfo relationshipInfo = new RelationshipInfo();
+                            relationshipInfo.setInstitution(institution);
+                            relationshipInfo.setOnboardedProduct(buildOnboardedProduct(userToOnboard, productId));
+                            relationshipInfo.setUserId(id);
+                            return relationshipInfo;
+                        })
+                .toList();
+    }
+
+    private OnboardedProduct buildOnboardedProduct(UserToOnboard userToOnboard, String productId) {
+        OnboardedProduct onboardedProduct = new OnboardedProduct();
+        onboardedProduct.setProductId(productId);
+        onboardedProduct.setRole(userToOnboard.getRole());
+        onboardedProduct.setProductRole(userToOnboard.getProductRole());
+        onboardedProduct.setStatus(RelationshipState.ACTIVE);
+        onboardedProduct.setEnv(userToOnboard.getEnv());
+        onboardedProduct.setCreatedAt(OffsetDateTime.now());
+        onboardedProduct.setUpdatedAt(OffsetDateTime.now());
+        return onboardedProduct;
+    }
 }
