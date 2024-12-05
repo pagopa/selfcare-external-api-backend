@@ -64,6 +64,11 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+    <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.17.0</version>
+    </dependency>
         <dependency>
             <groupId>it.pagopa.selfcare</groupId>
             <artifactId>selc-commons-base</artifactId>

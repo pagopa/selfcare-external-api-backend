@@ -1,5 +1,7 @@
 package it.pagopa.selfcare.external_api.controller;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -125,7 +127,7 @@ public class OnboardingV2Controller {
             @RequestBody @Valid OnboardingImportDto request) {
         log.trace("oldContractonboarding start");
         log.debug(
-                "oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
+                "oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, sanitizeRequest(request));
         if (request.getImportContract().getOnboardingDate().compareTo(OffsetDateTime.now()) > 0) {
             throw new ValidationException(
                     "Invalid onboarding date: the onboarding date must be prior to the current date.");
@@ -199,5 +201,10 @@ public class OnboardingV2Controller {
                         selfCareUser.getUserName(),
                         selfCareUser.getSurname());
         return ResponseEntity.ok().body(RelationshipMapper.toRelationshipResultList(response));
+    }
+    private String sanitizeRequest(OnboardingImportDto request) {
+        // Implement the sanitization logic here
+        // For simplicity, we will replace new-line characters with spaces
+        return StringUtils.replace(request.toString(), "\n", " ").replace("\r", " ");
     }
 }
