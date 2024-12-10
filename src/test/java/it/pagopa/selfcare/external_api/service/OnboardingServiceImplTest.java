@@ -14,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.util.Collections;
@@ -36,132 +39,173 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
-  @InjectMocks private OnboardingServiceImpl onboardingService;
+    @InjectMocks
+    private OnboardingServiceImpl onboardingService;
 
-  @Mock private MsOnboardingControllerApi onboardingControllerApi;
+    @Mock
+    private MsOnboardingControllerApi onboardingControllerApi;
 
-  @Mock private MsCoreInstitutionApiClient institutionApiClient;
+    @Mock
+    private MsCoreInstitutionApiClient institutionApiClient;
 
-  @Mock private MsUserApiRestClient msUserApiRestClient;
+    @Mock
+    private MsUserApiRestClient msUserApiRestClient;
 
-  @Spy private UserResourceMapper userResourceMapper;
+    @Spy
+    private UserResourceMapper userResourceMapper;
 
-  @Spy private OnboardingMapperImpl onboardingMapper;
+    @Spy
+    private OnboardingMapperImpl onboardingMapper;
 
-  @Override
-  @BeforeEach
-  public void setUp() {
-    super.setUp();
-  }
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+    }
 
-  @Test
-  void oldContractOnboardingTest() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-    Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
-  }
+    @Test
+    void oldContractOnboardingTest() {
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+        Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
+    }
 
-  @Test
-  void oldContractOnboardingTestWithOrigin() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-    onboardingData.setOrigin("ADE");
-    Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
-  }
+    @Test
+    void oldContractOnboardingTestWithOrigin() {
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
+        onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+        onboardingData.setOrigin("ADE");
+        Assertions.assertDoesNotThrow(() -> onboardingService.oldContractOnboardingV2(onboardingData));
+    }
 
-  @Test
-  void autoApprovalOnboardingProductV2TestPA() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionExternalId("externalId");
-    InstitutionUpdate institutionUpdate = new InstitutionUpdate();
-    onboardingData.setInstitutionType(PA);
-    institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
-    onboardingData.setInstitutionUpdate(institutionUpdate);
-    Assertions.assertDoesNotThrow(
-        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-  }
+    @Test
+    void autoApprovalOnboardingProductV2TestPA() {
+        // Setup dei dati di input
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
 
-  @Test
-  void autoApprovalOnboardingProductV2TestPSP() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-    onboardingData.setInstitutionType(PSP);
-    Assertions.assertDoesNotThrow(
-        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-  }
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
 
-  @Test
-  void autoApprovalOnboardingProductV2Test() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
-    onboardingData.setInstitutionExternalId("externalId");
-    onboardingData.setInstitutionType(PG);
-    Assertions.assertDoesNotThrow(
-        () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
-  }
+        onboardingData.setInstitutionType(InstitutionType.PA); // Tipo PA
+        onboardingData.setInstitutionUpdate(institutionUpdate);
 
-  @Test
-  void autoApprovalOnboardingImportProductV2Test() {
-    OnboardingData onboardingData = new OnboardingData();
-    onboardingData.setInstitutionExternalId("externalId");
-    InstitutionUpdate institutionUpdate = new InstitutionUpdate();
-    institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
-    onboardingData.setInstitutionUpdate(institutionUpdate);
-    onboardingData.setInstitutionType(PSP);
-    Assertions.assertDoesNotThrow(
-        () -> onboardingService.autoApprovalOnboardingImportProductV2(onboardingData));
-  }
+        // Mock del file di contratto (MultipartFile)
+        MultipartFile contract = getMultipartFile();
 
-  @Test
-  void onboardingUsers_noInstitutionFound() throws Exception {
-    ClassPathResource inputResource =
-        new ClassPathResource("expectations/OnboardingUsersRequest.json");
-    byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
-    OnboardingUsersRequest onboardingUsersRequest =
-        objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
-    when(institutionApiClient._getInstitutionsUsingGET(
-            onboardingUsersRequest.getInstitutionTaxCode(),
-            onboardingUsersRequest.getInstitutionSubunitCode(),
-            null,
-            null))
-        .thenReturn(
-            ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
-    Assertions.assertThrows(
-        ResourceNotFoundException.class,
-        () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
-        "Institution not found for given value");
-  }
+        // Asserzione
+        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData, contract));
+    }
 
-  @Test
-  void onboardingUsers_happyPath() throws Exception {
-    ClassPathResource onboardingUsersRequestInputResource =
-        new ClassPathResource("expectations/OnboardingUsersRequest.json");
-    byte[] onboardingUsersRequestStream =
-        Files.readAllBytes(onboardingUsersRequestInputResource.getFile().toPath());
-    OnboardingUsersRequest onboardingUsersRequest =
-        objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+    private static MultipartFile getMultipartFile() {
+        return new MockMultipartFile(
+                "contract",
+                "contract.txt",
+                "text/plain",
+                "dummy content".getBytes()
+        );
+    }
 
-    ClassPathResource institutionInputResource =
-        new ClassPathResource("expectations/InstitutionResponse.json");
-    byte[] institutionStream = Files.readAllBytes(institutionInputResource.getFile().toPath());
-    List<InstitutionResponse> institutions =
-        objectMapper.readValue(institutionStream, new TypeReference<>() {});
-    when(institutionApiClient._getInstitutionsUsingGET(
-            onboardingUsersRequest.getInstitutionTaxCode(),
-            onboardingUsersRequest.getInstitutionSubunitCode(),
-            null,
-            null))
-        .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));
-    when(msUserApiRestClient._createOrUpdateByFiscalCode(any()))
-        .thenReturn(ResponseEntity.ok("userId"));
-    when(msUserApiRestClient._createOrUpdateByUserId(any(), any()))
-        .thenReturn(ResponseEntity.ok().build());
-    List<RelationshipInfo> result =
-        onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
+    @Test
+    void autoApprovalOnboardingProductV2TestPSP() {
+        // Setup dei dati di input
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
 
-    assertEquals(2, result.size());
-  }
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+
+        onboardingData.setInstitutionType(InstitutionType.PSP); // Tipo PA
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+
+        // Mock del file di contratto (MultipartFile)
+        MultipartFile contract = getMultipartFile();
+
+        // Asserzione
+        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData, contract));
+    }
+
+    @Test
+    void autoApprovalOnboardingProductV2TestDefault() {
+        // Setup dei dati di input
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
+
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+
+        onboardingData.setInstitutionType(InstitutionType.PRV); // Tipo PA
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+
+        // Mock del file di contratto (MultipartFile)
+        MultipartFile contract = getMultipartFile();
+
+        // Asserzione
+        Assertions.assertDoesNotThrow(() -> onboardingService.autoApprovalOnboardingProductV2(onboardingData, contract));
+    }
+
+    @Test
+    void autoApprovalOnboardingImportProductV2Test() {
+        OnboardingData onboardingData = new OnboardingData();
+        onboardingData.setInstitutionExternalId("externalId");
+        InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+        institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+        onboardingData.setInstitutionUpdate(institutionUpdate);
+        onboardingData.setInstitutionType(PSP);
+        Assertions.assertDoesNotThrow(
+                () -> onboardingService.autoApprovalOnboardingImportProductV2(onboardingData));
+    }
+
+    @Test
+    void onboardingUsers_noInstitutionFound() throws Exception {
+        ClassPathResource inputResource =
+                new ClassPathResource("expectations/OnboardingUsersRequest.json");
+        byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
+        OnboardingUsersRequest onboardingUsersRequest =
+                objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+        when(institutionApiClient._getInstitutionsUsingGET(
+                onboardingUsersRequest.getInstitutionTaxCode(),
+                onboardingUsersRequest.getInstitutionSubunitCode(),
+                null,
+                null))
+                .thenReturn(
+                        ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
+        Assertions.assertThrows(
+                ResourceNotFoundException.class,
+                () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
+                "Institution not found for given value");
+    }
+
+    @Test
+    void onboardingUsers_happyPath() throws Exception {
+        ClassPathResource onboardingUsersRequestInputResource =
+                new ClassPathResource("expectations/OnboardingUsersRequest.json");
+        byte[] onboardingUsersRequestStream =
+                Files.readAllBytes(onboardingUsersRequestInputResource.getFile().toPath());
+        OnboardingUsersRequest onboardingUsersRequest =
+                objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+
+        ClassPathResource institutionInputResource =
+                new ClassPathResource("expectations/InstitutionResponse.json");
+        byte[] institutionStream = Files.readAllBytes(institutionInputResource.getFile().toPath());
+        List<InstitutionResponse> institutions =
+                objectMapper.readValue(institutionStream, new TypeReference<>() {
+                });
+        when(institutionApiClient._getInstitutionsUsingGET(
+                onboardingUsersRequest.getInstitutionTaxCode(),
+                onboardingUsersRequest.getInstitutionSubunitCode(),
+                null,
+                null))
+                .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));
+        when(msUserApiRestClient._createOrUpdateByFiscalCode(any()))
+                .thenReturn(ResponseEntity.ok("userId"));
+        when(msUserApiRestClient._createOrUpdateByUserId(any(), any()))
+                .thenReturn(ResponseEntity.ok().build());
+        List<RelationshipInfo> result =
+                onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
+
+        assertEquals(2, result.size());
+    }
 }
