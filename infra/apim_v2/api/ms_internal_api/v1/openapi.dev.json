@@ -30,6 +30,9 @@
     {
       "name": "infocamere-pdnd",
       "description": "PDND Info Camere Controller"
+    },
+    {
+      "name": "Onboarding Controller"
     }
   ],
   "paths": {
@@ -766,6 +769,189 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingCompletion",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "contract"
+                ],
+                "type": "object",
+                "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingDefaultRequest"
+                  },
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/pa/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete PA onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding/pa but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingPaCompletion",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "contract"
+                ],
+                "type": "object",
+                "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingPaRequest"
+                  },
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/psp/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete PSP onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding/psp but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingPspCompletion",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "contract"
+                ],
+                "type": "object",
+                "properties": {
+                  "onboardingRequest": {
+                    "$ref": "#/components/schemas/OnboardingPspRequest"
+                  },
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "onboardingRequest": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
           }
         },
         "security": [
@@ -2232,6 +2418,282 @@
             "type": "string"
           },
           "taxCode": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingResponse1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "workflowType": {
+            "type": "string"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionResponse1"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserOnboardingResponse"
+            }
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse2"
+          },
+          "status": {
+            "type": "string"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "userRequestUid": {
+            "type": "string"
+          },
+          "isAggregator": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InstitutionResponse1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "institutionType": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "$ref": "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "originId": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "parentDescription": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto1"
+            }
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "paymentServiceProvider": {
+            "$ref": "#/components/schemas/PaymentServiceProviderRequest1"
+          },
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          }
+        }
+      },
+      "InstitutionPaSubunitType": {
+        "enum": [
+          "AOO",
+          "UO",
+          "EC"
+        ],
+        "type": "string"
+      },
+      "Origin": {
+        "enum": [
+          "MOCK",
+          "IPA",
+          "SELC",
+          "ANAC",
+          "UNKNOWN",
+          "ADE",
+          "INFOCAMERE",
+          "IVASS",
+          "PDND_INFOCAMERE"
+        ],
+        "type": "string"
+      },
+      "GeographicTaxonomyDto1": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentServiceProviderRequest1": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
+          },
+          "abiCode": {
+            "type": "string"
+          },
+          "vatNumberGroup": {
+            "type": "boolean"
+          },
+          "providerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "string"
+          }
+        }
+      },
+      "DataProtectionOfficerRequest1": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pec": {
+            "type": "string"
+          }
+        }
+      },
+      "UserOnboardingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PartyRole"
+          },
+          "productRole": {
+            "type": "string"
+          },
+          "userMailUuid": {
+            "type": "string"
+          }
+        }
+      },
+      "PartyRole": {
+        "enum": [
+          "MANAGER",
+          "DELEGATE",
+          "SUB_DELEGATE",
+          "OPERATOR",
+          "ADMIN_EA"
+        ],
+        "type": "string"
+      },
+      "BillingResponse2": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdditionalInformationsDto1": {
+        "type": "object",
+        "properties": {
+          "belongRegulatedMarket": {
+            "type": "boolean"
+          },
+          "regulatedMarketNote": {
+            "type": "string"
+          },
+          "ipa": {
+            "type": "boolean"
+          },
+          "ipaCode": {
+            "type": "string"
+          },
+          "establishedByRegulatoryProvision": {
+            "type": "boolean"
+          },
+          "establishedByRegulatoryProvisionNote": {
+            "type": "string"
+          },
+          "agentOfPublicService": {
+            "type": "boolean"
+          },
+          "agentOfPublicServiceNote": {
+            "type": "string"
+          },
+          "otherNote": {
             "type": "string"
           }
         }
