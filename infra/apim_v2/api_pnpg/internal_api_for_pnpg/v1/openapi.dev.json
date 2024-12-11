@@ -363,6 +363,9 @@
           "legalRegisterName": {
             "type": "string"
           },
+          "longTermPayments": {
+            "type": "boolean"
+          },
           "abiCode": {
             "type": "string"
           },
