@@ -30,6 +30,9 @@
     {
       "name": "infocamere-pdnd",
       "description": "PDND Info Camere Controller"
+    },
+    {
+      "name": "Onboarding Controller"
     }
   ],
   "paths": {
@@ -766,6 +769,138 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingCompletion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingDefaultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/pa/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete PA onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding/pa but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingPaCompletion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingPaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/psp/completion": {
+      "post": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Complete PSP onboarding request and set status to COMPLETED.",
+        "description": "Perform onboarding as /onboarding/psp but completing the onboarding request to COMPLETED phase.",
+        "operationId": "onboardingPspCompletion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingPspRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
           }
         },
         "security": [
@@ -2233,6 +2368,756 @@
           },
           "taxCode": {
             "type": "string"
+          }
+        }
+      },
+      "OnboardingResponse1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "workflowType": {
+            "type": "string"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionResponse1"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserOnboardingResponse"
+            }
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse2"
+          },
+          "status": {
+            "type": "string"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "userRequestUid": {
+            "type": "string"
+          },
+          "isAggregator": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InstitutionResponse1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "institutionType": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "$ref": "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "originId": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "parentDescription": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto1"
+            }
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "paymentServiceProvider": {
+            "$ref": "#/components/schemas/PaymentServiceProviderRequest1"
+          },
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          }
+        }
+      },
+      "InstitutionPaSubunitType": {
+        "enum": [
+          "AOO",
+          "UO",
+          "EC"
+        ],
+        "type": "string"
+      },
+      "Origin": {
+        "enum": [
+          "MOCK",
+          "IPA",
+          "SELC",
+          "ANAC",
+          "UNKNOWN",
+          "ADE",
+          "INFOCAMERE",
+          "IVASS",
+          "PDND_INFOCAMERE"
+        ],
+        "type": "string"
+      },
+      "GeographicTaxonomyDto1": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentServiceProviderRequest1": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
+          },
+          "abiCode": {
+            "type": "string"
+          },
+          "vatNumberGroup": {
+            "type": "boolean"
+          },
+          "providerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "contractId": {
+            "type": "string"
+          }
+        }
+      },
+      "DataProtectionOfficerRequest1": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pec": {
+            "type": "string"
+          }
+        }
+      },
+      "UserOnboardingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PartyRole"
+          },
+          "productRole": {
+            "type": "string"
+          },
+          "userMailUuid": {
+            "type": "string"
+          }
+        }
+      },
+      "PartyRole": {
+        "enum": [
+          "MANAGER",
+          "DELEGATE",
+          "SUB_DELEGATE",
+          "OPERATOR",
+          "ADMIN_EA"
+        ],
+        "type": "string"
+      },
+      "BillingResponse2": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdditionalInformationsDto1": {
+        "type": "object",
+        "properties": {
+          "belongRegulatedMarket": {
+            "type": "boolean"
+          },
+          "regulatedMarketNote": {
+            "type": "string"
+          },
+          "ipa": {
+            "type": "boolean"
+          },
+          "ipaCode": {
+            "type": "string"
+          },
+          "establishedByRegulatoryProvision": {
+            "type": "boolean"
+          },
+          "establishedByRegulatoryProvisionNote": {
+            "type": "string"
+          },
+          "agentOfPublicService": {
+            "type": "boolean"
+          },
+          "agentOfPublicServiceNote": {
+            "type": "string"
+          },
+          "otherNote": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingDefaultRequest": {
+        "required": [
+          "productId",
+          "users",
+          "institution"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionBaseRequest"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingRequest1"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData1"
+          }
+        }
+      },
+      "UserRequest": {
+        "type": "object",
+        "properties": {
+          "taxCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PartyRole"
+          }
+        }
+      },
+      "AggregateInstitutionRequest": {
+        "required": [
+          "taxCode",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "taxCode": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "type": "string"
+          },
+          "vatNumber": {
+            "type": "string"
+          },
+          "parentDescription": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomy1"
+            }
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "originId": {
+            "type": "string"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "taxCodePT": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "syncAsyncMode": {
+            "type": "string"
+          }
+        }
+      },
+      "GeographicTaxonomy1": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          }
+        }
+      },
+      "InstitutionBaseRequest": {
+        "required": [
+          "institutionType",
+          "digitalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionType": {
+            "$ref": "#/components/schemas/InstitutionType"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "$ref": "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "originId": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto1"
+            }
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "imported": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InstitutionType": {
+        "enum": [
+          "PA",
+          "PG",
+          "GSP",
+          "SA",
+          "PT",
+          "SCP",
+          "PSP",
+          "AS",
+          "REC",
+          "CON",
+          "PRV",
+          "GPU"
+        ],
+        "type": "string"
+      },
+      "BillingRequest1": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GPUData1": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OnboardingPaRequest": {
+        "required": [
+          "productId",
+          "users",
+          "institution"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionBaseRequest"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingPaRequest"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          }
+        }
+      },
+      "BillingPaRequest": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingPspRequest": {
+        "required": [
+          "productId",
+          "users",
+          "institution"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionPspRequest"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingRequest1"
+          }
+        }
+      },
+      "InstitutionPspRequest": {
+        "required": [
+          "institutionType",
+          "digitalAddress",
+          "paymentServiceProvider"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionType": {
+            "$ref": "#/components/schemas/InstitutionType"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "$ref": "#/components/schemas/InstitutionPaSubunitType"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/Origin"
+          },
+          "originId": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto1"
+            }
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "imported": {
+            "type": "boolean"
+          },
+          "paymentServiceProvider": {
+            "$ref": "#/components/schemas/PaymentServiceProviderRequest1"
+          },
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
           }
         }
       }
