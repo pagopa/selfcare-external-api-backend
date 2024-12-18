@@ -821,7 +821,7 @@
         "tags": [],
         "summary": "Retrieves the list of files on the azure storage on the given path",
         "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFiles1",
+        "operationId": "getFilesFromPath",
         "parameters": [
           {
             "name": "path",
