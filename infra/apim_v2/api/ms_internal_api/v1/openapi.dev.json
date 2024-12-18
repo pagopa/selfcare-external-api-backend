@@ -906,6 +906,82 @@
         ]
       }
     },
+    "/onboarding/institutionOnboardings": {
+      "get": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Get onboardings by institution taxCode, subunitCode, origin, or originId.",
+        "description": "Returns onboardings record by institution taxCode/subunitCode/origin/originId",
+        "operationId": "onboardingInstitutionUsingGET",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "originId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OnboardingStatus"
+            }
+          },
+          {
+            "name": "subunitCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OnboardingResponse1"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ],
+        "x-legacy-api": "true"
+      }
+    },
     "/onboarding/pa/completion": {
       "post": {
         "tags": [
@@ -2543,6 +2619,9 @@
           },
           "isAggregator": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
           }
         }
       },
@@ -2780,6 +2859,11 @@
             "type": "string"
           }
         }
+      },
+      "LocalDateTime": {
+        "format": "date-time",
+        "type": "string",
+        "example": "2022-03-10T12:15:50"
       },
       "OnboardingDefaultRequest": {
         "required": [
@@ -3070,6 +3154,18 @@
             "type": "boolean"
           }
         }
+      },
+      "OnboardingStatus": {
+        "enum": [
+          "REQUEST",
+          "TOBEVALIDATED",
+          "PENDING",
+          "COMPLETED",
+          "FAILED",
+          "REJECTED",
+          "DELETED"
+        ],
+        "type": "string"
       },
       "OnboardingPaRequest": {
         "required": [
