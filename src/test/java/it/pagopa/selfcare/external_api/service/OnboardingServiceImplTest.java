@@ -126,6 +126,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
             onboardingUsersRequest.getInstitutionTaxCode(),
             onboardingUsersRequest.getInstitutionSubunitCode(),
             null,
+            null,
             null))
         .thenReturn(
             ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
@@ -152,6 +153,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     when(institutionApiClient._getInstitutionsUsingGET(
             onboardingUsersRequest.getInstitutionTaxCode(),
             onboardingUsersRequest.getInstitutionSubunitCode(),
+            null,
             null,
             null))
         .thenReturn(ResponseEntity.ok(new InstitutionsResponse().institutions(institutions)));

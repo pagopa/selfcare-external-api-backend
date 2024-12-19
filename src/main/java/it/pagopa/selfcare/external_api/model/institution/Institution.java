@@ -1,6 +1,5 @@
 package it.pagopa.selfcare.external_api.model.institution;
 
-import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
@@ -19,7 +18,7 @@ public class Institution {
     private String origin;
     private String originId;
     private String description;
-    private InstitutionType institutionType;
+    private String institutionType;
     private String digitalAddress;
     private String address;
     private String zipCode;
