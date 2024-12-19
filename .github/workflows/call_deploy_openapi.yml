@@ -31,7 +31,6 @@ jobs:
   upload_openapi:
     name: 'Upload OpenAPI'
     runs-on: ubuntu-20.04
-    needs: [release]
     if: ${{ inputs.upload_openapi_enabled }}
     environment: ${{ inputs.environment }}-cd
     permissions:
