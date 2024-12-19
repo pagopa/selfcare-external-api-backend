@@ -2550,6 +2550,9 @@
           },
           "isAggregator": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
           }
         }
       },
@@ -2678,6 +2681,9 @@
           "legalRegisterName": {
             "type": "string"
           },
+          "longTermPayments": {
+            "type": "boolean"
+          },
           "abiCode": {
             "type": "string"
           },
@@ -2784,6 +2790,11 @@
             "type": "string"
           }
         }
+      },
+      "LocalDateTime": {
+        "format": "date-time",
+        "type": "string",
+        "example": "2022-03-10T12:15:50"
       },
       "OnboardingStatus": {
         "enum": [
@@ -3066,6 +3077,9 @@
           },
           "legalRegisterName": {
             "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
           },
           "manager": {
             "type": "boolean"
