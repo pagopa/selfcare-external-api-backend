@@ -531,16 +531,22 @@ module "apim_internal_api_ms_v1" {
       })
     },
     {
-      operation_id = "getFiles1"
+      operation_id = "getFilesFromPath"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
     },
     {
-       operation_id = "updateContractSigned"
-       xml_content = templatefile("./api/base_ms_url_policy.xml", {
+      operation_id = "updateContractSigned"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
-       })
+      })
+    },
+    {
+      operation_id = "onboardingInstitutionUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+      })
     }
   ]
 }
