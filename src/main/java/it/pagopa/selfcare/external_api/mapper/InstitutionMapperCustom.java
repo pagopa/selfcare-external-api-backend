@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.mapper;
 import it.pagopa.selfcare.external_api.model.institution.*;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ public class InstitutionMapperCustom {
     public static InstitutionUpdateResponse toInstitutionUpdateResponse(Institution institution) {
         InstitutionUpdateResponse institutionUpdate = new InstitutionUpdateResponse();
         institutionUpdate.setAddress(institution.getAddress());
-        institutionUpdate.setInstitutionType(institution.getInstitutionType());
+        institutionUpdate.setInstitutionType(InstitutionType.valueOf(institution.getInstitutionType()));
         institutionUpdate.setDescription(institution.getDescription());
         institutionUpdate.setDigitalAddress(institution.getDigitalAddress());
         institutionUpdate.setTaxCode(institution.getTaxCode());

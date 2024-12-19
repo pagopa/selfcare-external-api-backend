@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
-import it.pagopa.selfcare.onboarding.common.InstitutionType;
+import it.pagopa.selfcare.external_api.model.institution.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.RootParent;
 import lombok.Data;
 
