@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.service;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
-import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
@@ -15,6 +14,7 @@ import it.pagopa.selfcare.external_api.model.user.OnboardedProduct;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.CreateUserDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.Product1;
@@ -83,7 +83,9 @@ class OnboardingServiceImpl implements OnboardingService {
                         request.getInstitutionTaxCode(),
                         request.getInstitutionSubunitCode(),
                         null,
-                        null)
+                        null,
+                        null
+                    )
                     .getBody())
             .getInstitutions()
             .stream()
@@ -121,7 +123,7 @@ class OnboardingServiceImpl implements OnboardingService {
           listOfRole.forEach(
               (role, usersByRole) -> {
                 List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                    users.stream().map(UserToOnboard::getProductRole).toList();
                 users.stream()
                     .map(
                         userToOnboard ->
@@ -173,7 +175,7 @@ class OnboardingServiceImpl implements OnboardingService {
           listOfRole.forEach(
               (role, usersByRole) -> {
                 List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                    users.stream().map(UserToOnboard::getProductRole).toList();
                 String userId =
                     createUser(
                         institution,

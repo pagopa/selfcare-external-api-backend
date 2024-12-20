@@ -3,10 +3,9 @@ package it.pagopa.selfcare.external_api.mapper;
 import it.pagopa.selfcare.external_api.model.institution.*;
 import it.pagopa.selfcare.external_api.model.onboarding.DataProtectionOfficer;
 import it.pagopa.selfcare.external_api.model.onboarding.PaymentServiceProvider;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class InstitutionMapperCustom {
@@ -14,7 +13,7 @@ public class InstitutionMapperCustom {
     public static InstitutionUpdateResponse toInstitutionUpdateResponse(Institution institution) {
         InstitutionUpdateResponse institutionUpdate = new InstitutionUpdateResponse();
         institutionUpdate.setAddress(institution.getAddress());
-        institutionUpdate.setInstitutionType(institution.getInstitutionType());
+        institutionUpdate.setInstitutionType(InstitutionType.valueOf(institution.getInstitutionType()));
         institutionUpdate.setDescription(institution.getDescription());
         institutionUpdate.setDigitalAddress(institution.getDigitalAddress());
         institutionUpdate.setTaxCode(institution.getTaxCode());
@@ -24,7 +23,7 @@ public class InstitutionMapperCustom {
         if (institution.getGeographicTaxonomies() != null) {
             var geoCodes = institution.getGeographicTaxonomies().stream()
                     .map(GeographicTaxonomy::getCode)
-                    .collect(Collectors.toList());
+                    .toList();
             institutionUpdate.setGeographicTaxonomies(geoCodes);
         }
         institutionUpdate.setRea(institution.getRea());
