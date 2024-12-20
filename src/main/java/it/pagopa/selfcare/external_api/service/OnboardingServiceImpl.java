@@ -123,7 +123,7 @@ class OnboardingServiceImpl implements OnboardingService {
           listOfRole.forEach(
               (role, usersByRole) -> {
                 List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                    users.stream().map(UserToOnboard::getProductRole).toList();
                 users.stream()
                     .map(
                         userToOnboard ->
@@ -175,7 +175,7 @@ class OnboardingServiceImpl implements OnboardingService {
           listOfRole.forEach(
               (role, usersByRole) -> {
                 List<String> productRoles =
-                    users.stream().map(UserToOnboard::getProductRole).collect(Collectors.toList());
+                    users.stream().map(UserToOnboard::getProductRole).toList();
                 String userId =
                     createUser(
                         institution,

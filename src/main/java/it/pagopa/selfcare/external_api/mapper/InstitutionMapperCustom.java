@@ -7,8 +7,6 @@ import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.stream.Collectors;
-
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class InstitutionMapperCustom {
 
@@ -25,7 +23,7 @@ public class InstitutionMapperCustom {
         if (institution.getGeographicTaxonomies() != null) {
             var geoCodes = institution.getGeographicTaxonomies().stream()
                     .map(GeographicTaxonomy::getCode)
-                    .collect(Collectors.toList());
+                    .toList();
             institutionUpdate.setGeographicTaxonomies(geoCodes);
         }
         institutionUpdate.setRea(institution.getRea());
