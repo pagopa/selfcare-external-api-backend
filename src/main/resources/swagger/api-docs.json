@@ -486,9 +486,21 @@
         "operationId" : "onboardingUsingPOST",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OnboardingProductDto"
+                "required" : [ "contract", "request" ],
+                "type" : "object",
+                "properties" : {
+                  "contract" : {
+                    "type" : "string",
+                    "description" : "contract",
+                    "format" : "binary"
+                  },
+                  "request" : {
+                    "description" : "request",
+                    "$ref" : "#/components/schemas/OnboardingProductDto"
+                  }
+                }
               }
             }
           }
