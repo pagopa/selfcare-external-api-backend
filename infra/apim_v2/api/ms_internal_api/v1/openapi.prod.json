@@ -1485,6 +1485,10 @@
               "$ref": "#/components/schemas/GeographicTaxonomyDto"
             }
           },
+          "gpuData": {
+            "description": "GPU specific data",
+            "$ref": "#/components/schemas/GPUData"
+          },
           "institutionLocationData": {
             "description": "Institution's location Data",
             "$ref": "#/components/schemas/InstitutionLocationDataDto"
@@ -1495,6 +1499,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -1677,6 +1682,36 @@
           "desc": {
             "type": "string",
             "description": "Institution's geographic taxonomy extended name"
+          }
+        }
+      },
+      "GPUData": {
+        "title": "GPUData",
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
           }
         }
       },
@@ -1872,6 +1907,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -2031,6 +2067,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
