@@ -1372,6 +1372,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
