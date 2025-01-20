@@ -862,6 +862,48 @@
         ]
       }
     },
+    "/onboarding/aggregation/import": {
+      "post": {
+        "tags": [],
+        "summary": "Asynchronously import aggregated onboarding to COMPLETED status and create token",
+        "description": "Perform a manual onboarding with aggregator, create token and set onboarding status to COMPLETED phase.",
+        "operationId": "onboardingAggregationImport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingAggregationImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/completion": {
       "post": {
         "tags": [
@@ -2871,7 +2913,7 @@
         "type": "string",
         "example": "2022-03-10T12:15:50"
       },
-      "OnboardingDefaultRequest": {
+      "OnboardingAggregationImportRequest": {
         "required": [
           "productId",
           "users",
@@ -2916,6 +2958,9 @@
           },
           "gpuData": {
             "$ref": "#/components/schemas/GPUData1"
+          },
+          "onboardingImportContract": {
+            "$ref": "#/components/schemas/OnboardingImportContract"
           }
         }
       },
@@ -3158,6 +3203,79 @@
           },
           "institutionCourtMeasures": {
             "type": "boolean"
+          }
+        }
+      },
+      "OnboardingImportContract": {
+        "required": [
+          "filePath",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string"
+          },
+          "filePath": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "contractType": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "activatedAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          }
+        }
+      },
+      "OnboardingDefaultRequest": {
+        "required": [
+          "productId",
+          "users",
+          "institution"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionBaseRequest"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingRequest1"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData1"
           }
         }
       },
