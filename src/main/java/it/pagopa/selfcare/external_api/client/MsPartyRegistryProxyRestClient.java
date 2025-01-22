@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.client;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResourceInfo;
 import it.pagopa.selfcare.external_api.model.institution.Origin;
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.api.InstitutionApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @FeignClient(name = "${rest-client.ms-party-registry-proxy.serviceCode}", url = "${rest-client.ms-party-registry-proxy.base-url}")
-public interface MsPartyRegistryProxyRestClient {
+public interface MsPartyRegistryProxyRestClient extends InstitutionApi {
 
     @GetMapping(value = "${rest-client.ms-party-registry-proxy.findInstitution}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
