@@ -24,6 +24,6 @@ public class OnboardingAggregatorImportDto {
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.aggregates}", required = true)
     @NotEmpty
     @Valid
-    private List<TaxCodeDto> aggregateTaxCode;
+    private List<TaxCodeDto> aggregates;
 
 }
