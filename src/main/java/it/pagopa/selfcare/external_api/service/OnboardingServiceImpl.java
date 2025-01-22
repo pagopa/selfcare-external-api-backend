@@ -25,6 +25,7 @@ import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.AggregateInstituti
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionBaseRequest;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.Origin;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.CreateUserDto;
@@ -306,15 +307,17 @@ class OnboardingServiceImpl implements OnboardingService {
     buildContractPathIO(request.getImportContract(), onboardingData.getOnboardingImportContract());
     onboardingData.setIsAggregator(Boolean.TRUE);
     onboardingData.setProductId(ProductId.PROD_IO.getValue());
-    onboardingData
-        .getInstitution()
+    InstitutionBaseRequest institution = onboardingData.getInstitution();
+    institution
         .setInstitutionType(
             it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionType.valueOf(
                 request.getInstitutionType()));
+    institution.setOrigin(Origin.IPA);
+    institution.setImported(Boolean.TRUE);
     return onboardingData;
   }
 
   private void buildContractPathIO(@NotNull @Valid ImportContractDto importContract, @Valid OnboardingImportContract onboardingImportContract) {
-    onboardingImportContract.setFileName("parties/docs/io/" + importContract.getFilePath() + importContract.getFileName());
+    onboardingImportContract.setFilePath("parties/docs/io/" + importContract.getFilePath() + importContract.getFileName());
   }
 }
