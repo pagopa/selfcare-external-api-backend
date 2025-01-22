@@ -543,6 +543,81 @@
         } ]
       }
     },
+    "/v2/onboarding/aggregation/{taxCode}" : {
+      "post" : {
+        "tags" : [ "internal-v1" ],
+        "summary" : "onboardingAggregateImport",
+        "description" : "The service allows the onboarding of an institution through import with aggregates",
+        "operationId" : "onboardingAggregateImportUsingPOST",
+        "parameters" : [ {
+          "name" : "taxCode",
+          "in" : "path",
+          "description" : "taxCode",
+          "required" : true,
+          "style" : "simple",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingAggregatorImportDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
     "/v2/onboarding/import" : {
       "post" : {
         "tags" : [ "internal-v1" ],
@@ -1928,6 +2003,35 @@
           }
         }
       },
+      "OnboardingAggregatorImportDto" : {
+        "title" : "OnboardingAggregatorImportDto",
+        "required" : [ "aggregates", "importContract", "institutionType", "users" ],
+        "type" : "object",
+        "properties" : {
+          "aggregates" : {
+            "type" : "array",
+            "description" : "List of aggregates users",
+            "items" : {
+              "$ref" : "#/components/schemas/TaxCodeDto"
+            }
+          },
+          "importContract" : {
+            "description" : "Institution's old contract information",
+            "$ref" : "#/components/schemas/ImportContractDto"
+          },
+          "institutionType" : {
+            "type" : "string",
+            "description" : "Institution's type"
+          },
+          "users" : {
+            "type" : "array",
+            "description" : "List of onboarding users",
+            "items" : {
+              "$ref" : "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
       "OnboardingImportDto" : {
         "title" : "OnboardingImportDto",
         "required" : [ "importContract", "users" ],
@@ -2536,6 +2640,17 @@
               "type" : "string",
               "enum" : [ "ACTIVE", "DELETED", "PENDING", "REJECTED", "SUSPENDED", "TOBEVALIDATED" ]
             }
+          }
+        }
+      },
+      "TaxCodeDto" : {
+        "title" : "TaxCodeDto",
+        "required" : [ "taxCode" ],
+        "type" : "object",
+        "properties" : {
+          "taxCode" : {
+            "type" : "string",
+            "description" : "Taxcode of user"
           }
         }
       },

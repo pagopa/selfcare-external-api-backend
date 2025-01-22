@@ -1,31 +1,43 @@
 package it.pagopa.selfcare.external_api.service;
 
 import it.pagopa.selfcare.commons.base.security.PartyRole;
+import it.pagopa.selfcare.commons.base.utils.ProductId;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
+import it.pagopa.selfcare.external_api.client.MsPartyRegistryProxyRestClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.ImportContractDto;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.OnboardedProduct;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserToOnboard;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.AggregateInstitutionRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionBaseRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.CreateUserDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.Product1;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +49,7 @@ class OnboardingServiceImpl implements OnboardingService {
   private final MsCoreInstitutionApiClient institutionApiClient;
   private final MsUserApiRestClient msUserApiRestClient;
   private final UserResourceMapper userResourceMapper;
+  private final MsPartyRegistryProxyRestClient msPartyRegistryProxyRestClient;
 
   @Override
   public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
@@ -110,6 +123,14 @@ class OnboardingServiceImpl implements OnboardingService {
     result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId()));
 
     return result;
+  }
+
+  @Override
+  public void aggregationImport(OnboardingAggregationImportRequest onboardingRequest) {
+    log.trace("aggregationImport start");
+    log.debug("aggregationImport = {}", onboardingRequest);
+    onboardingControllerApi._onboardingAggregationImport(onboardingRequest).getBody();
+    log.trace("aggregationImport end");
   }
 
   private List<RelationshipInfo> processUsersWithId(
@@ -241,5 +262,59 @@ class OnboardingServiceImpl implements OnboardingService {
     onboardedProduct.setCreatedAt(OffsetDateTime.now());
     onboardedProduct.setUpdatedAt(OffsetDateTime.now());
     return onboardedProduct;
+  }
+
+  @Override
+  public OnboardingAggregatorImportData onboardingAggregatorImportBuildRequest(
+      OnboardingAggregatorImportDto request, String taxCodeRequest) {
+
+    OnboardingAggregatorImportData onboardingData =
+        onboardingMapper.mapToOnboardingAggregatorImportRequest(request);
+    List<AggregateInstitutionRequest> aggregates = onboardingData.getAggregates();
+
+    request
+        .getAggregates()
+        .forEach(
+            taxCodeDto -> {
+              InstitutionResource response =
+                  msPartyRegistryProxyRestClient
+                      ._findInstitutionUsingGET(taxCodeDto.getTaxCode(), null, null)
+                      .getBody();
+              assert response != null;
+              aggregates.stream()
+                  .filter(
+                      aggregate -> aggregate.getTaxCode().equalsIgnoreCase(response.getTaxCode()))
+                  .forEach(
+                      aggregate -> {
+                        aggregate.setDescription(response.getDescription());
+                        aggregate.setDigitalAddress(response.getDigitalAddress());
+                      });
+            });
+
+    InstitutionResource response =
+        msPartyRegistryProxyRestClient
+            ._findInstitutionUsingGET(taxCodeRequest, null, null)
+            .getBody();
+    assert response != null;
+    onboardingData.setInstitution(
+        InstitutionBaseRequest.builder()
+            .taxCode(taxCodeRequest)
+            .description(response.getDescription())
+            .digitalAddress(response.getDigitalAddress())
+            .build());
+
+    buildContractPathIO(request.getImportContract(), onboardingData.getOnboardingImportContract());
+    onboardingData.setIsAggregator(Boolean.TRUE);
+    onboardingData.setProductId(ProductId.PROD_IO.getValue());
+    onboardingData
+        .getInstitution()
+        .setInstitutionType(
+            it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionType.valueOf(
+                request.getInstitutionType()));
+    return onboardingData;
+  }
+
+  private void buildContractPathIO(@NotNull @Valid ImportContractDto importContract, @Valid OnboardingImportContract onboardingImportContract) {
+    onboardingImportContract.setFileName("parties/docs/io/" + importContract.getFilePath() + importContract.getFileName());
   }
 }
