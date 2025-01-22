@@ -5,15 +5,22 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
+import it.pagopa.selfcare.external_api.client.MsPartyRegistryProxyRestClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
+import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Files;
@@ -47,6 +55,8 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   @Spy private UserResourceMapper userResourceMapper;
 
   @Spy private OnboardingMapperImpl onboardingMapper;
+
+  @Mock private MsPartyRegistryProxyRestClient msPartyRegistryProxyRestClient;
 
   @Override
   @BeforeEach
@@ -165,5 +175,40 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
         onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
     assertEquals(2, result.size());
+  }
+
+  @Test
+  void onboardingAggregateImportTest() throws IOException {
+    // given
+    ClassPathResource onboardingInputRequest =
+        new ClassPathResource("expectations/onboardingAggregateImportDto.json");
+    byte[] onboardingInputRequestStream =
+        Files.readAllBytes(onboardingInputRequest.getFile().toPath());
+    OnboardingAggregatorImportDto onboardingAggregatorImportDto =
+        objectMapper.readValue(onboardingInputRequestStream, OnboardingAggregatorImportDto.class);
+
+    when(msPartyRegistryProxyRestClient._findInstitutionUsingGET("01234567890", null, null))
+        .thenReturn(ResponseEntity.ok(new InstitutionResource()));
+
+    when(msPartyRegistryProxyRestClient._findInstitutionUsingGET("taxCodeRequest", null, null))
+        .thenReturn(ResponseEntity.ok(new InstitutionResource()));
+
+    // then
+    Assertions.assertDoesNotThrow(
+        () ->
+            onboardingService.onboardingAggregatorImportBuildRequest(
+                onboardingAggregatorImportDto, "taxCodeRequest"));
+  }
+
+  @Test
+  void aggregationImportTest() {
+    // given
+    when(onboardingControllerApi._onboardingAggregationImport(
+            new OnboardingAggregationImportRequest()))
+        .thenReturn(ResponseEntity.ok(new OnboardingResponse()));
+
+    // then
+    Assertions.assertDoesNotThrow(
+        () -> onboardingService.aggregationImport(new OnboardingAggregationImportRequest()));
   }
 }
