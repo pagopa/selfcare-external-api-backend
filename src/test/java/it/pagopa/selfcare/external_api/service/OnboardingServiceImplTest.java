@@ -24,6 +24,7 @@ import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
+import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource.OriginEnum;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
@@ -184,11 +185,14 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     OnboardingAggregatorImportDto onboardingAggregatorImportDto =
         objectMapper.readValue(onboardingInputRequestStream, OnboardingAggregatorImportDto.class);
 
+    InstitutionResource institutionResource = new InstitutionResource();
+    institutionResource.setOrigin(OriginEnum.IPA);
+
     when(msPartyRegistryProxyRestClient._findInstitutionUsingGET("01234567890", null, null))
-        .thenReturn(ResponseEntity.ok(new InstitutionResource()));
+        .thenReturn(ResponseEntity.ok(institutionResource));
 
     when(msPartyRegistryProxyRestClient._findInstitutionUsingGET("taxCodeRequest", null, null))
-        .thenReturn(ResponseEntity.ok(new InstitutionResource()));
+        .thenReturn(ResponseEntity.ok(institutionResource));
 
     // then
     Assertions.assertDoesNotThrow(

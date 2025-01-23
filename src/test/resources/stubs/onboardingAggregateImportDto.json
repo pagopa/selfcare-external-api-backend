@@ -1,5 +1,4 @@
 {
-  "institutionType": "string",
   "importContract": {
     "contractType": "string",
     "fileName": "string",

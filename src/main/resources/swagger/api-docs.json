@@ -2005,7 +2005,7 @@
       },
       "OnboardingAggregatorImportDto" : {
         "title" : "OnboardingAggregatorImportDto",
-        "required" : [ "aggregates", "importContract", "institutionType", "users" ],
+        "required" : [ "aggregates", "importContract", "users" ],
         "type" : "object",
         "properties" : {
           "aggregates" : {
@@ -2018,10 +2018,6 @@
           "importContract" : {
             "description" : "Institution's old contract information",
             "$ref" : "#/components/schemas/ImportContractDto"
-          },
-          "institutionType" : {
-            "type" : "string",
-            "description" : "Institution's type"
           },
           "users" : {
             "type" : "array",

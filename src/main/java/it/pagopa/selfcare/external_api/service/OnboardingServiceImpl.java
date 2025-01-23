@@ -24,7 +24,6 @@ import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.AggregateInstitutionRequest;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionBaseRequest;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
-import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.Origin;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
@@ -289,6 +288,8 @@ class OnboardingServiceImpl implements OnboardingService {
                       aggregate -> {
                         aggregate.setDescription(response.getDescription());
                         aggregate.setDigitalAddress(response.getDigitalAddress());
+                        aggregate.origin(Origin.valueOf(response.getOrigin().getValue()));
+                        aggregate.originId(response.getOriginId());
                       });
             });
 
@@ -302,18 +303,17 @@ class OnboardingServiceImpl implements OnboardingService {
             .taxCode(taxCodeRequest)
             .description(response.getDescription())
             .digitalAddress(response.getDigitalAddress())
+            .origin(Origin.valueOf(response.getOrigin().getValue()))
+            .originId(response.getOriginId())
+            .institutionType(
+                it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionType.PA)
+            .imported(Boolean.TRUE)
             .build());
 
     buildContractPathIO(request.getImportContract(), onboardingData.getOnboardingImportContract());
     onboardingData.setIsAggregator(Boolean.TRUE);
     onboardingData.setProductId(ProductId.PROD_IO.getValue());
-    InstitutionBaseRequest institution = onboardingData.getInstitution();
-    institution
-        .setInstitutionType(
-            it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.InstitutionType.valueOf(
-                request.getInstitutionType()));
-    institution.setOrigin(Origin.IPA);
-    institution.setImported(Boolean.TRUE);
+
     return onboardingData;
   }
 

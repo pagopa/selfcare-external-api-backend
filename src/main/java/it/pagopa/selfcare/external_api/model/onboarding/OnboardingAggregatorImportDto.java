@@ -11,24 +11,22 @@ import lombok.Data;
 @Data
 public class OnboardingAggregatorImportDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.institutionType}", required = true)
-    @NotEmpty
-    @Valid
-    private String institutionType;
+  @ApiModelProperty(value = "${swagger.external_api.institutions.model.users}", required = true)
+  @NotEmpty
+  @Valid
+  private List<UserDto> users;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.users}", required = true)
-    @NotEmpty
-    @Valid
-    private List<UserDto> users;
+  @ApiModelProperty(
+      value = "${swagger.external_api.institutions.model.importContract}",
+      required = true)
+  @NotNull
+  @Valid
+  private ImportContractDto importContract;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.importContract}", required = true)
-    @NotNull
-    @Valid
-    private ImportContractDto importContract;
-
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.aggregates}", required = true)
-    @NotEmpty
-    @Valid
-    private List<TaxCodeDto> aggregates;
-
+  @ApiModelProperty(
+      value = "${swagger.external_api.institutions.model.aggregates}",
+      required = true)
+  @NotEmpty
+  @Valid
+  private List<TaxCodeDto> aggregates;
 }
