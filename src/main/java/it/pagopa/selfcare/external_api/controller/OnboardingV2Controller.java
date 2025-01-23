@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -215,7 +216,6 @@ public class OnboardingV2Controller {
       @PathVariable("taxCode") String taxCode,
       @RequestBody @Valid OnboardingAggregatorImportDto request) {
     log.trace("onboardingAggregateImport start");
-    log.debug("onboardingAggregateImport request = {}", request);
 
     OnboardingAggregatorImportData input =
         onboardingService.onboardingAggregatorImportBuildRequest(request, taxCode);

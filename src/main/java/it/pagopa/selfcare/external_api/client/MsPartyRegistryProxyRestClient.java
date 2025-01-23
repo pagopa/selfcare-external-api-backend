@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.client;
 
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.institution.InstitutionResourceInfo;
 import it.pagopa.selfcare.external_api.model.institution.Origin;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.api.InstitutionApi;
 import org.springframework.cloud.openfeign.FeignClient;

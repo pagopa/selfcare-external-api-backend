@@ -1,5 +1,10 @@
 package it.pagopa.selfcare.external_api.service;
 
+import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
@@ -12,7 +17,6 @@ import it.pagopa.selfcare.external_api.mapper.OnboardingMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
 import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionUpdate;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
@@ -21,6 +25,9 @@ import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregat
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,17 +37,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.nio.file.Files;
-import java.util.Collections;
-import java.util.List;
-
-import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
