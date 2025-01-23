@@ -9,7 +9,7 @@ data "azurerm_key_vault_secret" "apim_product_pn_sk" {
 }
 
 data "github_repository" "repo" {
-  full_name = "pagopa/selfcare-onboarding"
+  full_name = "pagopa/selfcare-external-api-backend"
 }
 
 resource "github_repository_environment" "repo_environment" {
