@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - releases/*
+      - feature/SELC-6294
 
   workflow_dispatch:
     inputs:
