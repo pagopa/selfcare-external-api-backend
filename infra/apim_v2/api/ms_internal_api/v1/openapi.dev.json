@@ -1186,6 +1186,49 @@
         ]
       }
     },
+    "/tokens/contract-report": {
+      "get": {
+        "tags": [],
+        "summary": "Check if contract signed is a CADES file",
+        "description": "Check if contract signed is a CADES file even if is not .p7m",
+        "operationId": "reportContractSigned",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractSignedReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/tokens/contract-signed": {
       "put": {
         "tags": [],
@@ -1581,6 +1624,9 @@
               "SUSPENDED",
               "TOBEVALIDATED"
             ]
+          },
+          "tokenId": {
+            "type": "string"
           },
           "updatedAt": {
             "type": "string",
@@ -3354,6 +3400,14 @@
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          }
+        }
+      },
+      "ContractSignedReport": {
+        "type": "object",
+        "properties": {
+          "cades": {
+            "type": "boolean"
           }
         }
       }
