@@ -5,17 +5,17 @@ import it.pagopa.selfcare.external_api.model.institution.GeographicTaxonomy;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.institution.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.*;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.GeographicTaxonomyDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface OnboardingMapper {
@@ -196,4 +196,23 @@ public interface OnboardingMapper {
   }
 
   Billing toBilling(it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse billing);
+
+  @Mapping(
+      target = "onboardingImportContract",
+      expression = "java(toOnboardingImportContract(onboardingAggregatorImportDto))")
+  OnboardingAggregatorImportData mapToOnboardingAggregatorImportRequest(
+      OnboardingAggregatorImportDto onboardingAggregatorImportDto);
+
+  default OnboardingImportContract toOnboardingImportContract(
+      OnboardingAggregatorImportDto onboardingData) {
+    ImportContractDto importContract = onboardingData.getImportContract();
+    OnboardingImportContract onboarding = new OnboardingImportContract();
+    onboarding.setCreatedAt(OffsetDateTime.now());
+    onboarding.setActivatedAt(importContract.getOnboardingDate());
+    onboarding.setFileName(importContract.getFileName());
+    onboarding.setFilePath(importContract.getFilePath());
+    onboarding.setContractType(importContract.getContractType());
+
+    return onboarding;
+  }
 }

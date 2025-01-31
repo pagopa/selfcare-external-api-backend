@@ -1,6 +1,12 @@
 package it.pagopa.selfcare.external_api.mapper;
 
-import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportProductDto;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInstitutionUsersRequest;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingProductDto;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregationImportRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -47,4 +53,21 @@ public interface OnboardingResourceMapper {
   OnboardingData toEntity(OnboardingImportProductDto dto);
 
   OnboardingUsersRequest toOnboardingUsersRequest(OnboardingInstitutionUsersRequest request);
+
+  @Mapping(
+      target = "onboardingImportContract.createdAt",
+      source = "onboardingImportContract.createdAt",
+      qualifiedByName = "convertOffsetDateTimeToLocalDateTime")
+  @Mapping(
+      target = "onboardingImportContract.activatedAt",
+      source = "onboardingImportContract.activatedAt",
+      qualifiedByName = "convertOffsetDateTimeToLocalDateTime")
+  OnboardingAggregationImportRequest toOnboardingAggregationImport(OnboardingAggregatorImportData request);
+
+  @Named("convertOffsetDateTimeToLocalDateTime")
+  default LocalDateTime convertOffsetDateTimeToLocalDateTime(OffsetDateTime date) {
+    return date != null ? date.toLocalDateTime() : LocalDateTime.now();
+  }
+
+
 }

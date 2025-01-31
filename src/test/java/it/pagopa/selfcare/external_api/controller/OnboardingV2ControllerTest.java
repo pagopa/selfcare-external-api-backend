@@ -336,4 +336,24 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
         .andExpect(status().isCreated())
         .andReturn();
   }
+
+
+  @Test
+  void onboardingAggregateImportTest() throws Exception {
+    // given
+    ClassPathResource outputResource = new ClassPathResource("stubs/onboardingAggregateImportDto.json");
+    String request =
+        StringUtils.deleteWhitespace(
+            new String(Files.readAllBytes(outputResource.getFile().toPath())));
+    String taxCode = "taxCode";
+    // when
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post(BASE_URL + "/aggregation/{taxCode}", taxCode)
+                .content(request)
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE))
+        .andExpect(status().isCreated())
+        .andReturn();
+  }
 }
