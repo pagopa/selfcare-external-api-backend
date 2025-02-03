@@ -77,6 +77,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1217,6 +1227,9 @@
           "email": {
             "type": "string"
           },
+          "mobilePhone": {
+            "type": "string"
+          },
           "workContacts": {
             "type": "object",
             "additionalProperties": {
@@ -1359,6 +1372,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
