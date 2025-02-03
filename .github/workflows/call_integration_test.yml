@@ -20,7 +20,7 @@ jobs:
       - name: 'Download postman environment'
         env:
           INTEGRATION_ENVIRONMENT: ${{ secrets.INTEGRATION_ENVIRONMENT }}
-        run: 'echo "$INTEGRATION_ENVIRONMENT" | base64 --decode > Selfcare-Integration.postman_environment.json'
+        run: 'echo "$INTEGRATION_ENVIRONMENT" | base64 --decode > Selfcare-external-Integration.postman_environment.json'
         shell: bash
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
@@ -30,7 +30,7 @@ jobs:
         run: npm install -g newman
       - name: Run newman
         shell: bash
-        run: newman run ./integration-test/newman/Selfcare-external-Integration.postman_collection.json -e ./infra/container_apps/integration-test/Selfcare-Integration.postman_environment.json --reporters cli,json --reporter-json-export ./integration-test/integration-test-result.json
+        run: newman run ./integration-test/newman/Selfcare-external-Integration.postman_collection.json -e ./infra/container_apps/integration-test/Selfcare-external-Integration.postman_environment.json --reporters cli,json --reporter-json-export ./integration-test/integration-test-result.json
       - name: Send newman report
         shell: bash
         run: node ./integration-test/convert.js
