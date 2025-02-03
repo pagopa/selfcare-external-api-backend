@@ -17,14 +17,13 @@ resource "github_repository_environment" "repo_environment" {
   environment = "dev-ci"
 }
 
-
 resource "github_actions_environment_secret" "integration_environment" {
   repository  = data.github_repository.repo.name
   environment = github_repository_environment.repo_environment.environment
   secret_name = "integration_environment"
   plaintext_value = base64encode(templatefile("Selfcare-external-Integration.postman_environment.json",
     {
-      env       = "${local.env_url}"
+      env       = local.env_url
       apimKeyPN = data.azurerm_key_vault_secret.apim_product_pn_sk.value
     }))
 }
