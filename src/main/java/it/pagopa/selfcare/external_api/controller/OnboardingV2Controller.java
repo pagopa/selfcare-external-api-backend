@@ -211,7 +211,7 @@ public class OnboardingV2Controller {
   @ResponseStatus(HttpStatus.CREATED)
   @ApiOperation(
       value = "",
-      notes = "${swagger.onboarding.institutions.api.onboarding.aggregate.import}")
+      notes = "${swagger.onboarding.institutions.api.onboarding.aggregate.import}", nickname = "onboardingAggregateImport")
   public void onboardingAggregateImport(
       @PathVariable("taxCode") String taxCode,
       @RequestBody @Valid OnboardingAggregatorImportDto request) {

@@ -548,7 +548,7 @@
         "tags" : [ "internal-v1" ],
         "summary" : "onboardingAggregateImport",
         "description" : "The service allows the onboarding of an institution through import with aggregates",
-        "operationId" : "onboardingAggregateImportUsingPOST",
+        "operationId" : "onboardingAggregateImport",
         "parameters" : [ {
           "name" : "taxCode",
           "in" : "path",
@@ -2483,6 +2483,9 @@
             "items" : {
               "$ref" : "#/components/schemas/ProductRole"
             }
+          },
+          "skipUserCreation" : {
+            "type" : "boolean"
           }
         }
       },
