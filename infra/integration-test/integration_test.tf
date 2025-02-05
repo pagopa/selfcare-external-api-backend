@@ -13,7 +13,7 @@ data "github_repository" "repo" {
 }
 
 resource "github_repository_environment" "repo_environment" {
-  repository  = data.github_repository.repo.name
+  repository  = data.github_repository.repo.full_name
   environment = "dev-ci"
 }
 
