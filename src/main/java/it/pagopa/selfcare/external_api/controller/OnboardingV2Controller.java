@@ -1,5 +1,9 @@
 package it.pagopa.selfcare.external_api.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +18,8 @@ import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapperCustom;
 import it.pagopa.selfcare.external_api.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.mapper.RelationshipMapper;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportProductDto;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInstitutionUsersRequest;
@@ -21,20 +27,16 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardingProductDto;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipResult;
 import it.pagopa.selfcare.external_api.service.OnboardingService;
+import java.time.OffsetDateTime;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.ValidationException;
-import java.time.OffsetDateTime;
-import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
 @Slf4j
 @RestController
@@ -194,5 +196,33 @@ public class OnboardingV2Controller {
             selfCareUser.getUserName(),
             selfCareUser.getSurname());
     return ResponseEntity.ok().body(RelationshipMapper.toRelationshipResultList(response));
+  }
+
+  @Tag(name = "internal-v1")
+  @ApiResponse(
+      responseCode = "403",
+      description = "Forbidden",
+      content = {
+        @Content(
+            mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+            schema = @Schema(implementation = Problem.class))
+      })
+  @PostMapping(value = "/aggregation/{taxCode}")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ApiOperation(
+      value = "",
+      notes = "${swagger.onboarding.institutions.api.onboarding.aggregate.import}", nickname = "onboardingAggregateImport")
+  public void onboardingAggregateImport(
+      @PathVariable("taxCode") String taxCode,
+      @RequestBody @Valid OnboardingAggregatorImportDto request) {
+    log.trace("onboardingAggregateImport start");
+
+    OnboardingAggregatorImportData input =
+        onboardingService.onboardingAggregatorImportBuildRequest(request, taxCode);
+
+    onboardingService.aggregationImport(
+        onboardingResourceMapper.toOnboardingAggregationImport(input));
+
+    log.trace("onboardingAggregateImport end");
   }
 }
