@@ -1135,6 +1135,9 @@
           "email": {
             "type": "string"
           },
+          "mobilePhone": {
+            "type": "string"
+          },
           "workContacts": {
             "type": "object",
             "additionalProperties": {
@@ -1497,6 +1500,9 @@
             "items": {
               "$ref": "#/components/schemas/ProductRole"
             }
+          },
+          "skipUserCreation": {
+            "type": "boolean"
           }
         }
       },
