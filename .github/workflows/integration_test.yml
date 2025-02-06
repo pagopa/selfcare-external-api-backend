@@ -5,18 +5,25 @@ on:
     branches:
       - main
       - releases/*
+      - feature/fix-workflow
 
   workflow_dispatch:
     inputs:
       env:
         type: choice
         description: Environment
+        required: true
         default: dev
         options:
           - dev
           - uat
 
 jobs:
+  print_env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ENV
+        run: echo "Current ENV ${{ github.event.inputs.env }}"
   test_dev:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[DEV] Integration test"
