@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "0382fdfb-55fd-448a-b2df-92788bc84186",
+		"name": "Selfcare-External-Integration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39018392"
+	},
+	"item": [
+		{
+			"name": "External",
+			"item": [
+				{
+					"name": "getContract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"getContract ok\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyPN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/v2/institutions/{{institutionId}}/contract?productId={{productId}}",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"v2",
+								"institutions",
+								"{{institutionId}}",
+								"contract"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "{{productId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getInstitutionProducts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"getContract ok\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyPN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/v2/institutions/{{institutionId}}/products?userId={{userId}}",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"v2",
+								"institutions",
+								"{{institutionId}}",
+								"products"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getInstitutionUsersByProduct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"getContract ok\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyPN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/v2/institutions/{{institutionId}}/users",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"v2",
+								"institutions",
+								"{{institutionId}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,34 @@
+name: Integration test
+
+on:
+  push:
+    branches:
+      - main
+      - releases/*
+
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Environment
+        default: dev
+        options:
+          - dev
+          - uat
+
+jobs:
+  test_dev:
+    uses: ./.github/workflows/call_integration_test.yml
+    name: "[DEV] Integration test"
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
+    secrets: inherit
+    with:
+      environment: dev
+
+  test_uat:
+    uses: ./.github/workflows/call_integration_test.yml
+    name: "[UAT] Integration test"
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'uat' }}
+    secrets: inherit
+    with:
+      environment: uat
