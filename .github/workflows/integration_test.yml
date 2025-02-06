@@ -19,10 +19,12 @@ on:
 
 jobs:
   print_env:
+    name: "Current Environment"
     runs-on: ubuntu-latest
     steps:
       - name: ENV
         run: echo "Current ENV ${{ github.event.inputs.env }}"
+
   test_dev:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[DEV] Integration test"
