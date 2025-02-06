@@ -28,7 +28,7 @@ jobs:
   test_uat:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[UAT] Integration test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'uat' }}
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) == false && inputs.env == 'uat' }}
     secrets: inherit
     with:
       environment: uat
