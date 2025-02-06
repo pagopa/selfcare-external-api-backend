@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "c06da966-8c14-4595-b489-059e44103c89",
+		"_postman_id": "0382fdfb-55fd-448a-b2df-92788bc84186",
 		"name": "Selfcare-External-Integration",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39018392"
@@ -10,13 +10,13 @@
 			"name": "External",
 			"item": [
 				{
-					"name": "getInstitutions",
+					"name": "getContract",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"getInstitutions ok\", function () {",
+									"pm.test(\"getContract ok\", function () {",
 									"pm.response.to.have.status(200);",
 									"});"
 								],
@@ -47,14 +47,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiBaseUrl}}/external/v2/institutions",
+							"raw": "{{apiBaseUrl}}/external/v2/institutions/{{institutionId}}/contract?productId={{productId}}",
 							"host": [
 								"{{apiBaseUrl}}"
 							],
 							"path": [
 								"external",
 								"v2",
-								"institutions"
+								"institutions",
+								"{{institutionId}}",
+								"contract"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "{{productId}}"
+								}
 							]
 						}
 					},
