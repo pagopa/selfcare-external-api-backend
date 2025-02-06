@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - releases/*
-      - feature/infra-apply
+
     paths:
       - "./infra/integration-test/**"
 
@@ -14,6 +14,7 @@ on:
       env:
         type: choice
         description: Environment
+        default: dev
         options:
           - dev
           - uat
