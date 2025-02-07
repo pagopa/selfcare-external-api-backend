@@ -226,6 +226,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1574,6 +1584,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -1776,6 +1789,9 @@
           "email": {
             "type": "string"
           },
+          "mobilePhone": {
+            "type": "string"
+          },
           "workContacts": {
             "type": "object",
             "additionalProperties": {
@@ -1904,6 +1920,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -2179,6 +2196,9 @@
               "$ref": "#/components/schemas/GeographicTaxonomy"
             }
           },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData"
+          },
           "imported": {
             "type": "boolean"
           },
@@ -2187,6 +2207,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -2245,6 +2266,36 @@
           },
           "desc": {
             "type": "string"
+          }
+        }
+      },
+      "GPUData": {
+        "title": "GPUData",
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "institutionCourtMeasures": {
+            "type": "boolean"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
           }
         }
       },
@@ -2355,6 +2406,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -2504,6 +2556,12 @@
           },
           "isAggregator": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
           }
         }
       },
@@ -2623,9 +2681,6 @@
       "PaymentServiceProviderRequest1": {
         "type": "object",
         "properties": {
-          "abiCode": {
-            "type": "string"
-          },
           "businessRegisterNumber": {
             "type": "string"
           },
@@ -2633,6 +2688,12 @@
             "type": "string"
           },
           "legalRegisterName": {
+            "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
+          },
+          "abiCode": {
             "type": "string"
           },
           "vatNumberGroup": {
@@ -2739,6 +2800,11 @@
           }
         }
       },
+      "LocalDateTime": {
+        "format": "date-time",
+        "type": "string",
+        "example": "2022-03-10T12:15:50"
+      },
       "OnboardingStatus": {
         "enum": [
           "REQUEST",
@@ -2793,6 +2859,9 @@
           },
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData1"
           }
         }
       },
@@ -2987,7 +3056,8 @@
           "AS",
           "REC",
           "CON",
-          "PRV"
+          "PRV",
+          "GPU"
         ],
         "type": "string"
       },
@@ -3001,6 +3071,38 @@
             "type": "string"
           },
           "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GPUData1": {
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "longTermPayments": {
+            "type": "boolean"
+          },
+          "manager": {
+            "type": "boolean"
+          },
+          "managerAuthorized": {
+            "type": "boolean"
+          },
+          "managerEligible": {
+            "type": "boolean"
+          },
+          "managerProsecution": {
+            "type": "boolean"
+          },
+          "institutionCourtMeasures": {
             "type": "boolean"
           }
         }
