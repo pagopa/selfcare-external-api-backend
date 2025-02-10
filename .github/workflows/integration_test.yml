@@ -11,12 +11,20 @@ on:
       env:
         type: choice
         description: Environment
+        required: true
         default: dev
         options:
           - dev
           - uat
 
 jobs:
+  print_env:
+    name: "Current Environment"
+    runs-on: ubuntu-latest
+    steps:
+      - name: ENV
+        run: echo "Current ENV ${{ github.event.inputs.env }}"
+
   test_dev:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[DEV] Integration test"
@@ -28,7 +36,7 @@ jobs:
   test_uat:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[UAT] Integration test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'uat' }}
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) == false && inputs.env == 'uat' }}
     secrets: inherit
     with:
       environment: uat
