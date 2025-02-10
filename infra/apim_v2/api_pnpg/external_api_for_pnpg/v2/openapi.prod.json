@@ -994,6 +994,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -1133,6 +1136,9 @@
             "type": "string"
           },
           "email": {
+            "type": "string"
+          },
+          "mobilePhone": {
             "type": "string"
           },
           "workContacts": {
@@ -1497,6 +1503,9 @@
             "items": {
               "$ref": "#/components/schemas/ProductRole"
             }
+          },
+          "skipUserCreation": {
+            "type": "boolean"
           }
         }
       },

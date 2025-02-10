@@ -620,6 +620,87 @@
         ]
       }
     },
+    "/onboarding/aggregation/{taxCode}": {
+      "post": {
+        "tags": [],
+        "summary": "onboardingAggregateImport",
+        "description": "The service allows the onboarding of an institution through import with aggregates",
+        "operationId": "onboardingAggregateImport",
+        "parameters": [
+          {
+            "name": "taxCode",
+            "in": "path",
+            "description": "taxCode",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingAggregatorImportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/import": {
       "post": {
         "tags": [],
@@ -1625,6 +1706,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -2244,6 +2328,77 @@
           }
         }
       },
+      "OnboardingAggregatorImportDto": {
+        "title": "OnboardingAggregatorImportDto",
+        "required": [
+          "aggregates",
+          "importContract",
+          "users"
+        ],
+        "type": "object",
+        "properties": {
+          "aggregates": {
+            "type": "array",
+            "description": "List of aggregates users",
+            "items": {
+              "$ref": "#/components/schemas/TaxCodeDto"
+            }
+          },
+          "importContract": {
+            "description": "Institution's old contract information",
+            "$ref": "#/components/schemas/ImportContractDto"
+          },
+          "users": {
+            "type": "array",
+            "description": "List of onboarding users",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
+      "TaxCodeDto": {
+        "title": "TaxCodeDto",
+        "required": [
+          "taxCode"
+        ],
+        "type": "object",
+        "properties": {
+          "taxCode": {
+            "type": "string",
+            "description": "Taxcode of user"
+          }
+        }
+      },
+      "ImportContractDto": {
+        "title": "ImportContractDto",
+        "required": [
+          "contractType",
+          "fileName",
+          "filePath",
+          "onboardingDate"
+        ],
+        "type": "object",
+        "properties": {
+          "contractType": {
+            "type": "string",
+            "description": "Institution's old contract version"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Institution's old contract file name"
+          },
+          "filePath": {
+            "type": "string",
+            "description": "Institution's old contract file path"
+          },
+          "onboardingDate": {
+            "type": "string",
+            "description": "Institution's old onboarding date in the format 2007-12-03T10:15:30+01:00 (YYYY-MM-DD-T-HH:mm:ss+UTC)",
+            "format": "date-time"
+          }
+        }
+      },
       "OnboardingImportProductDto": {
         "title": "OnboardingImportProductDto",
         "required": [
@@ -2667,6 +2822,9 @@
             "type": "boolean"
           },
           "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "updatedAt": {
             "$ref": "#/components/schemas/LocalDateTime"
           }
         }
