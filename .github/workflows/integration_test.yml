@@ -22,8 +22,10 @@ jobs:
     name: "Current Environment"
     runs-on: ubuntu-latest
     steps:
-      - name: ENV
-        run: echo "Current ENV ${{ github.event.inputs.env }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Current env
+        run: echo "env ${{ github.event.inputs.env }}"
 
   test_dev:
     uses: ./.github/workflows/call_integration_test.yml
