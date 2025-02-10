@@ -18,17 +18,34 @@ on:
           - uat
 
 jobs:
-  print_env:
+  setup_env:
     name: "Current Environment"
     runs-on: ubuntu-latest
+    outputs:
+      environ: ${{ steps.set-env.outputs.environ }}
     steps:
-      - name: ENV
-        run: echo "Current ENV ${{ github.event.inputs.env }}"
+      - name: Set Environment Variable
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environ=${{ github.event.inputs.env }}" >> $GITHUB_OUTPUT
+          else
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              echo "environ=dev" >> $GITHUB_OUTPUT
+            else
+              echo "environ=uat" >> $GITHUB_OUTPUT
+            fi
+          fi
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Current env
+        run: echo "env ${{ steps.set-env.outputs.environ }}"
 
   test_dev:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[DEV] Integration test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
+    needs: setup_env
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && needs.setup_env.outputs.environ == null) || needs.setup_env.outputs.environ == 'dev' }}
     secrets: inherit
     with:
       environment: dev
@@ -36,7 +53,8 @@ jobs:
   test_uat:
     uses: ./.github/workflows/call_integration_test.yml
     name: "[UAT] Integration test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) == false && inputs.env == 'uat' }}
+    needs: setup_env
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && needs.setup_env.outputs.environ == null) == false && needs.setup_env.outputs.environ == 'uat' }}
     secrets: inherit
     with:
       environment: uat
