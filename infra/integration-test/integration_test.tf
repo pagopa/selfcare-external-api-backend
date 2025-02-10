@@ -14,7 +14,7 @@ data "github_repository" "repo" {
 
 resource "github_repository_environment" "repo_environment" {
   repository  = data.github_repository.repo.name
-  environment = "dev-ci"
+  environment = "${local.env_url}-ci"
 }
 
 resource "github_actions_environment_secret" "integration_environment" {
