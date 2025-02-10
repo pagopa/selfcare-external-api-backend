@@ -22,7 +22,9 @@ jobs:
     name: "Current Environment"
     runs-on: ubuntu-latest
     steps:
-      - name: ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: env
         run: echo "Current ENV ${{ github.event.inputs.env }}"
 
   test_dev:
