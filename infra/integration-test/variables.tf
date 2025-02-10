@@ -66,3 +66,9 @@ variable "key_vault" {
     name                = string
   })
 }
+
+variable "is_pnpg" {
+  type        = bool
+  default     = false
+  description = "(Optional) True if you want to apply changes to PNPG environment"
+}
