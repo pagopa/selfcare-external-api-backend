@@ -18,6 +18,7 @@ on:
         options:
           - dev
           - uat
+        required: true
 
 jobs:
   apply_dev:
