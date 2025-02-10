@@ -12,9 +12,13 @@ data "github_repository" "repo" {
   full_name = "pagopa/selfcare-external-api-backend"
 }
 
+output "current_env" {
+  value = local.env
+}
+
 resource "github_repository_environment" "repo_environment" {
   repository  = data.github_repository.repo.name
-  environment = "${local.env_url}-ci"
+  environment = "${local.env}-ci"
 }
 
 resource "github_actions_environment_secret" "integration_environment" {
