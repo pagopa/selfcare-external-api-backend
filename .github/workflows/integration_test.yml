@@ -20,7 +20,7 @@ on:
 jobs:
   setup_env:
     name: "Current Environment"
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
     outputs:
       environ: ${{ steps.set-env.outputs.environ }}
     steps:
