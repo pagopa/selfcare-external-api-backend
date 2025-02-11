@@ -966,7 +966,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -1040,7 +1040,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OnboardingResponseV1"
+                    "$ref": "#/components/schemas/OnboardingResponse1"
                   }
                 }
               }
@@ -1086,7 +1086,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -1130,7 +1130,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -2782,7 +2782,7 @@
           }
         }
       },
-      "OnboardingResponseV1": {
+      "OnboardingResponse1": {
         "type": "object",
         "properties": {
           "id": {
@@ -2803,7 +2803,7 @@
           "users": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserOnboardingResponseV1"
+              "$ref": "#/components/schemas/UserOnboardingResponse"
             }
           },
           "billing": {
@@ -2991,14 +2991,14 @@
           }
         }
       },
-      "UserOnboardingResponseV1": {
+      "UserOnboardingResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
           "role": {
-            "$ref": "#/components/schemas/PartyRoleV1"
+            "$ref": "#/components/schemas/PartyRole"
           },
           "productRole": {
             "type": "string"
@@ -3008,7 +3008,7 @@
           }
         }
       },
-      "PartyRoleV1": {
+      "PartyRole": {
         "enum": [
           "MANAGER",
           "DELEGATE",
@@ -3136,17 +3136,6 @@
             "$ref": "#/components/schemas/PartyRole"
           }
         }
-      },
-      "PartyRole": {
-        "enum": [
-          "MANAGER",
-          "DELEGATE",
-          "SUB_DELEGATE",
-          "OPERATOR",
-          "ADMIN_EA",
-          "ADMIN_EA_IO"
-        ],
-        "type": "string"
       },
       "AggregateInstitutionRequest": {
         "required": [
