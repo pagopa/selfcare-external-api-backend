@@ -967,6 +967,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -1372,6 +1375,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
