@@ -994,6 +994,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -1500,6 +1503,9 @@
             "items": {
               "$ref": "#/components/schemas/ProductRole"
             }
+          },
+          "skipUserCreation": {
+            "type": "boolean"
           }
         }
       },
