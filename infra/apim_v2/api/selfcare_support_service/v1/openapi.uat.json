@@ -1584,6 +1584,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
