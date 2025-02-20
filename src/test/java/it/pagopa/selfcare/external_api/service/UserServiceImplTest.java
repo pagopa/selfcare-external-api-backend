@@ -262,12 +262,14 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                 objectMapper.writeValueAsString(
                         expectation.getOnboardedInstitutions()
                                 .stream()
-                            .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                                .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
+                                .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
                             .toList()
                 ),
                 objectMapper.writeValueAsString(userInfoWrapper.getOnboardedInstitutions()
                         .stream()
-                    .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                        .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
+                        .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
                     .toList()
                 )
         );
@@ -309,11 +311,13 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                 objectMapper.writeValueAsString(
                         expectation.getOnboardedInstitutions()
                                 .stream()
+                                .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
                                 .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
                                 .toList()
                 ),
                 objectMapper.writeValueAsString(userInfoWrapper.getOnboardedInstitutions()
                         .stream()
+                        .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
                         .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
                         .toList()
                 )
