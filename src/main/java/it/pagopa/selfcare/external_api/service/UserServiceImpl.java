@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import static it.pagopa.selfcare.external_api.model.product.ProductOnboardingStatus.ACTIVE;
 
@@ -105,7 +105,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
         //fix temporanea per il funzionamento della getUserInfo di support
-
         List<UserInstitution> usersInstitutions = Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
                         null, null, null,  Objects.isNull(productId) ? null : List.of(productId), null
                         , 350, null, userId).getBody())
@@ -122,18 +121,12 @@ public class UserServiceImpl implements UserService {
                             .anyMatch(onboardedProductResponse -> onboardedProductResponse.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
                     )
                     .peek(onboardedInstitution -> {
-                        //In case it has, Retrieve min role valid for associations with product-id
-                        Optional<RelationshipState> optCurrentState = userInstitution.getProducts().stream()
+                        Optional<OnboardedProductResponse> optOnboardedProduct = userInstitution.getProducts()
+                                .stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()))
-                                .map(product -> RelationshipState.valueOf(product.getStatus()))
-                                .min(RelationshipState::compareTo);
+                                .max(Comparator.comparing(OnboardedProductResponse::getCreatedAt));
 
-                        //Set role and status for min association with product
-                        Optional<OnboardedProductResponse> optOnboardedProduct = optCurrentState.map(currentstate -> userInstitution.getProducts().stream()
-                                        .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()) &&
-                                                product.getStatus().equals(currentstate.name())))
-                                .orElse(Stream.of())
-                                .findFirst();
+
                         optOnboardedProduct.ifPresent(item -> {
                             onboardedInstitution.getProductInfo().setRole(item.getRole());
                             onboardedInstitution.getProductInfo().setProductRole(item.getProductRole());
@@ -144,7 +137,14 @@ public class UserServiceImpl implements UserService {
                         });
                         onboardedInstitution.setUserMailUuid(userInstitution.getUserMailUuid());
                     })
-                    .toList());
+                    .collect(Collectors.toMap(
+                            inst -> inst.getProductInfo().getId(),
+                            inst -> inst,
+                            (existing, replacement) -> existing.getProductInfo().getCreatedAt()
+                                    .isAfter(replacement.getProductInfo().getCreatedAt()) ? existing : replacement
+                    ))
+                    .values()
+            );
         });
 
         return onboardedInstitutionsInfo;

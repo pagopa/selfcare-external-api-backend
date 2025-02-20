@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
@@ -234,7 +235,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
         Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
 
-        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitution.json");
+        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitutionWithCreatedAt.json");
         byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
         });
@@ -256,7 +257,67 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertNotNull(userInfoWrapper);
         Assertions.assertNotNull(userInfoWrapper.getUser());
         Assertions.assertEquals(2, userInfoWrapper.getOnboardedInstitutions().size());
-        Assertions.assertEquals(objectMapper.writeValueAsString(expectation), objectMapper.writeValueAsString(userInfoWrapper));
+        Assertions.assertEquals(objectMapper.writeValueAsString(expectation.getUser()), objectMapper.writeValueAsString(userInfoWrapper.getUser()));
+        Assertions.assertEquals(
+                objectMapper.writeValueAsString(
+                        expectation.getOnboardedInstitutions()
+                                .stream()
+                            .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                            .toList()
+                ),
+                objectMapper.writeValueAsString(userInfoWrapper.getOnboardedInstitutions()
+                        .stream()
+                    .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                    .toList()
+                )
+        );
+    }
+
+    @Test
+    void getUserInfoV2WithValidOnboardedInstitutions2OnboardingsPerProduct() throws Exception {
+        String taxCode = "MNCCSD01R13A757G";
+
+        ClassPathResource userResource = new ClassPathResource("expectations/User.json");
+        byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
+        UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
+        Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+
+        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitutionWithCreatedAtTwoOnboardingsPerProduct.json");
+        byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
+        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
+        });
+        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
+                .thenReturn(ResponseEntity.ok(userInstitutions));
+        Mockito.when(userMapper.getProductService()).thenReturn(productService);
+        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
+
+        InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000");
+        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000")).thenReturn(ResponseEntity.ok(institution));
+
+        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
+
+        ClassPathResource userInfoWrapperResource = new ClassPathResource("expectations/UserInfoWrapperV2TwoOnboardingsPerProduct.json");
+        byte[] userInfoWrapperStream = Files.readAllBytes(userInfoWrapperResource.getFile().toPath());
+        UserInfoWrapper expectation = objectMapper.readValue(userInfoWrapperStream, UserInfoWrapper.class);
+
+
+        Assertions.assertNotNull(userInfoWrapper);
+        Assertions.assertNotNull(userInfoWrapper.getUser());
+        Assertions.assertEquals(2, userInfoWrapper.getOnboardedInstitutions().size());
+        Assertions.assertEquals(objectMapper.writeValueAsString(expectation.getUser()), objectMapper.writeValueAsString(userInfoWrapper.getUser()));
+        Assertions.assertEquals(
+                objectMapper.writeValueAsString(
+                        expectation.getOnboardedInstitutions()
+                                .stream()
+                                .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                                .toList()
+                ),
+                objectMapper.writeValueAsString(userInfoWrapper.getOnboardedInstitutions()
+                        .stream()
+                        .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
+                        .toList()
+                )
+        );
     }
 
     /**
