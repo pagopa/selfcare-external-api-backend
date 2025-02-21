@@ -45,17 +45,17 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
         OnboardingGet onboardingGet = new OnboardingGet();
         onboardingGet.setProductId("id");
         onboardingGetResponse.setItems(List.of(onboardingGet));
-        when(onboardingControllerApi._getOnboardingWithFilter(null, null,null,1, "id", 10, OnboardingStatus.COMPLETED.name(), null, null, null))
+        when(onboardingControllerApi._getOnboardingWithFilter(null, null, null, 1, "id", null, 10, null, OnboardingStatus.COMPLETED.name(), null, null, null, null))
                 .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, OnboardingStatus.COMPLETED.name());
         Assertions.assertEquals(1, tokens.size());
     }
 
     @Test
-    void findByProductIdEmptyList(){
+    void findByProductIdEmptyList() {
         OnboardingGetResponse onboardingGetResponse = new OnboardingGetResponse();
         onboardingGetResponse.setItems(Collections.emptyList());
-        when(onboardingControllerApi._getOnboardingWithFilter(null, null, null, 1, "id", 10, null, null, null, null))
+        when(onboardingControllerApi._getOnboardingWithFilter(null, null, null, 1, "id", null, 10, null, null, null, null, null, null))
                 .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, null);
         Assertions.assertEquals(0, tokens.size());
