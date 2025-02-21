@@ -1,6 +1,7 @@
 package it.pagopa.selfcare.external_api.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.external_api.TestUtils;
@@ -8,7 +9,6 @@ import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
-import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -151,7 +152,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId);
+        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId, false);
         institution.getOnboarding().forEach(onboardedProductResponse -> onboardedProductResponse.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED));
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
 
@@ -161,8 +162,9 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertTrue(result.isEmpty());
     }
 
-    @Test
-    void getOnboardedInstitutionDetailsActive() throws Exception {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void getOnboardedInstitutionDetailsActive(boolean withBilling) throws Exception {
         String userId = "123e4567-e89b-12d3-a456-426614174000";
         String institutionId = "123e4567-e89b-12d3-a456-426614174000";
         String productIdDeleted = "prod-deleted";
@@ -172,7 +174,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         });
         Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
-        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId);
+        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId, withBilling);
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
@@ -183,7 +185,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertEquals(1, result.size());
     }
 
-    private static InstitutionResponse getInstitutionResponse(String productId, String productIdDeleted, String institutionId) {
+    private static InstitutionResponse getInstitutionResponse(String productId, String productIdDeleted, String institutionId, boolean withBilling) {
         it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse onboardedInstitutionActive = new it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse();
         onboardedInstitutionActive.setStatus(it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse.StatusEnum.ACTIVE);
         onboardedInstitutionActive.setProductId(productId);
@@ -192,9 +194,12 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         onboardedInstitutionDeleted.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED);
         InstitutionResponse institution = new InstitutionResponse();
         institution.setId(institutionId);
-        Billing billing = new Billing();
-        billing.setRecipientCode("recipientCode");
-        billing.setTaxCodeInvoicing("taxCodeInvoicing");
+        if(withBilling) {
+            BillingResponse billing = new BillingResponse();
+            billing.setRecipientCode("recipientCode");
+            billing.setTaxCodeInvoicing("taxCodeInvoicing");
+            onboardedInstitutionActive.setBilling(billing);
+        }
         institution.setOnboarding(List.of(onboardedInstitutionActive, onboardedInstitutionDeleted));
         return institution;
     }
@@ -251,7 +256,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000");
+        InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000", false);
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000")).thenReturn(ResponseEntity.ok(institution));
 
         UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
