@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -226,8 +228,13 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertEquals(user.getEmail().getValue(), userInfoWrapper.getUser().getEmail().getValue());
     }
 
-    @Test
-    void getUserInfoV2WithValidOnboardedInstitutions() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "expectations/UserInstitutionWithCreatedAt.json, expectations/UserInfoWrapperV2.json",
+            "expectations/UserInstitutionWithCreatedAtTwoOnboardingsPerProduct.json, expectations/UserInfoWrapperV2TwoOnboardingsPerProduct.json",
+            "expectations/UserInstitutionWithCreatedAtTwoOnboardingsPerProductInverted.json, expectations/UserInfoWrapperV2TwoOnboardingsPerProduct.json"
+    })
+    void getUserInfoV2WithValidOnboardedInstitutions(String userInstitutionPath, String userInfoWrapperPath) throws Exception {
         String taxCode = "MNCCSD01R13A757G";
 
         ClassPathResource userResource = new ClassPathResource("expectations/User.json");
@@ -235,7 +242,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
         Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
 
-        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitutionWithCreatedAt.json");
+        ClassPathResource userInstitutionResource = new ClassPathResource(userInstitutionPath);
         byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
         List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
         });
@@ -249,7 +256,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
         UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
 
-        ClassPathResource userInfoWrapperResource = new ClassPathResource("expectations/UserInfoWrapperV2.json");
+        ClassPathResource userInfoWrapperResource = new ClassPathResource(userInfoWrapperPath);
         byte[] userInfoWrapperStream = Files.readAllBytes(userInfoWrapperResource.getFile().toPath());
         UserInfoWrapper expectation = objectMapper.readValue(userInfoWrapperStream, UserInfoWrapper.class);
 
@@ -271,55 +278,6 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                         .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
                         .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
                     .toList()
-                )
-        );
-    }
-
-    @Test
-    void getUserInfoV2WithValidOnboardedInstitutions2OnboardingsPerProduct() throws Exception {
-        String taxCode = "MNCCSD01R13A757G";
-
-        ClassPathResource userResource = new ClassPathResource("expectations/User.json");
-        byte[] userStream = Files.readAllBytes(userResource.getFile().toPath());
-        UserDetailResponse user = objectMapper.readValue(userStream, UserDetailResponse.class);
-        Mockito.when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
-
-        ClassPathResource userInstitutionResource = new ClassPathResource("expectations/UserInstitutionWithCreatedAtTwoOnboardingsPerProduct.json");
-        byte[] userInstitutionStream = Files.readAllBytes(userInstitutionResource.getFile().toPath());
-        List<UserInstitutionResponse> userInstitutions = objectMapper.readValue(userInstitutionStream, new TypeReference<>() {
-        });
-        Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
-                .thenReturn(ResponseEntity.ok(userInstitutions));
-        Mockito.when(userMapper.getProductService()).thenReturn(productService);
-        Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
-
-        InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000");
-        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000")).thenReturn(ResponseEntity.ok(institution));
-
-        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
-
-        ClassPathResource userInfoWrapperResource = new ClassPathResource("expectations/UserInfoWrapperV2TwoOnboardingsPerProduct.json");
-        byte[] userInfoWrapperStream = Files.readAllBytes(userInfoWrapperResource.getFile().toPath());
-        UserInfoWrapper expectation = objectMapper.readValue(userInfoWrapperStream, UserInfoWrapper.class);
-
-
-        Assertions.assertNotNull(userInfoWrapper);
-        Assertions.assertNotNull(userInfoWrapper.getUser());
-        Assertions.assertEquals(2, userInfoWrapper.getOnboardedInstitutions().size());
-        Assertions.assertEquals(objectMapper.writeValueAsString(expectation.getUser()), objectMapper.writeValueAsString(userInfoWrapper.getUser()));
-        Assertions.assertEquals(
-                objectMapper.writeValueAsString(
-                        expectation.getOnboardedInstitutions()
-                                .stream()
-                                .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
-                                .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
-                                .toList()
-                ),
-                objectMapper.writeValueAsString(userInfoWrapper.getOnboardedInstitutions()
-                        .stream()
-                        .peek(onboardedInstitution -> onboardedInstitution.getProductInfo().setCreatedAt(null))
-                        .sorted(Comparator.comparing(inst -> inst.getProductInfo().getId()))
-                        .toList()
                 )
         );
     }
