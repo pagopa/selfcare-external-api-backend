@@ -1584,6 +1584,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -2971,6 +2974,8 @@
       "InstitutionBaseRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress"
         ],
         "type": "object",
@@ -2991,6 +2996,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
