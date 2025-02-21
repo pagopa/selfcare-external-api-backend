@@ -9,6 +9,8 @@ import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
+import it.pagopa.selfcare.external_api.model.institution.Institution;
+import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
@@ -24,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -163,8 +164,13 @@ class UserServiceImplTest extends BaseServiceTestUtils {
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    void getOnboardedInstitutionDetailsActive(boolean withBilling) throws Exception {
+    @CsvSource({
+            "true, true",
+            "false, false",
+            "true, false",
+            "false, true"
+    })
+    void getOnboardedInstitutionDetailsActive(boolean withBillingOnboarding, boolean withBillingInstitution) throws Exception {
         String userId = "123e4567-e89b-12d3-a456-426614174000";
         String institutionId = "123e4567-e89b-12d3-a456-426614174000";
         String productIdDeleted = "prod-deleted";
@@ -174,7 +180,16 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         });
         Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, List.of(PRODUCT_ID), null, null, List.of(ACTIVE.name()),userId))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
-        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId, withBilling);
+
+        InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId, withBillingOnboarding);
+        if(withBillingInstitution) {
+            Institution institutionMapped = institutionMapper.toInstitution(institution);
+            Billing billing = new Billing();
+            billing.setVatNumber("123");
+            billing.setRecipientCode("123");
+            institutionMapped.setBilling(billing);
+        Mockito.when(institutionMapper.toInstitution(any())).thenReturn(institutionMapped);
+        }
         Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
