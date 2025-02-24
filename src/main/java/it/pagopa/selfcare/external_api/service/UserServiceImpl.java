@@ -12,6 +12,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionReso
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapper;
 import it.pagopa.selfcare.external_api.model.user.*;
+import it.pagopa.selfcare.external_api.utils.Utils;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -140,8 +141,7 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toMap(
                             inst -> inst.getProductInfo().getId(),
                             inst -> inst,
-                            (existing, replacement) -> existing.getProductInfo().getCreatedAt()
-                                    .isAfter(replacement.getProductInfo().getCreatedAt()) ? existing : replacement
+                            Utils.latestInstitutionByCreationDate()
                     ))
                     .values()
             );
