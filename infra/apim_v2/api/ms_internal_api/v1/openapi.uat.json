@@ -3226,6 +3226,8 @@
       "InstitutionBaseRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress"
         ],
         "type": "object",
@@ -3246,6 +3248,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
@@ -3478,6 +3481,8 @@
       "InstitutionPspRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress",
           "paymentServiceProvider"
         ],
@@ -3499,6 +3504,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
