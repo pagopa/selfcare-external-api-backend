@@ -563,6 +563,55 @@ module "apim_internal_api_ms_v1" {
   ]
 }
 
+resource "azurerm_api_management_api_version_set" "apim_pdnd_infocamere_api_ms" {
+  name = format("%s-pdnd-infocamere-api", var.env_short)
+  resource_group_name = azurerm_resource_group.rg_api.name
+  api_management_name = module.apim.name
+  display_name        = "PDND Infocamere API Service"
+  versioning_scheme   = "Segment"
+}
+
+module "apim_pdnd_infocamere_api_ms_v1" {
+  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  name = format("%s-pdnd-infocamere-api", local.project)
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+  version_set_id      = azurerm_api_management_api_version_set.apim_pdnd_infocamere_api_ms.id
+
+  description  = "This service is the proxy for PDND Infocamere services"
+  display_name = "PDND Infocamere API service"
+  path         = "external/pdnd"
+  api_version  = "v1"
+  protocols = [
+    "https"
+  ]
+
+  service_url = format("https://selc-%s-ext-api-backend-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
+
+  content_format = "openapi+json"
+  content_value = templatefile("./api/pdnd_infocamere_api/v1/openapi.${var.env}.json", {
+    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
+    basePath = "v1"
+  })
+
+  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+  })
+
+  subscription_required = true
+
+  api_operation_policies = [
+    {
+      operation_id = "institutionPdndByTaxCodeUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    }
+  ]
+}
+
 resource "azurerm_api_management_api_version_set" "apim_selfcare_support_service" {
   name = format("%s-selfcare-support-api-service", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
