@@ -3,15 +3,16 @@ package it.pagopa.selfcare.external_api.utils;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import lombok.experimental.UtilityClass;
 
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 
 @UtilityClass
-public class Utils {
+public class UserServiceUtils {
     public static BinaryOperator<OnboardedInstitutionInfo> latestInstitutionByCreationDate() {
         return (existing, replacement) -> {
-            if(existing == null && replacement == null) throw new NullPointerException();
-            if(existing == null) return replacement;
-            if(replacement == null) return existing;
+            if(Objects.isNull(existing) && Objects.isNull(replacement)) throw new NullPointerException();
+            if(Objects.isNull(existing)) return replacement;
+            if(Objects.isNull(replacement)) return existing;
             return existing.getProductInfo().getCreatedAt()
                     .isAfter(replacement.getProductInfo().getCreatedAt()) ? existing : replacement;
         };
