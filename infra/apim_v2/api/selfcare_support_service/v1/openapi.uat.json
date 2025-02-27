@@ -236,6 +236,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "enableSubunits",
+            "in": "query",
+            "description": "enableSubunits",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -1583,6 +1593,9 @@
               "SUSPENDED",
               "TOBEVALIDATED"
             ]
+          },
+          "tokenId": {
+            "type": "string"
           },
           "updatedAt": {
             "type": "string",
@@ -2971,6 +2984,8 @@
       "InstitutionBaseRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress"
         ],
         "type": "object",
@@ -2991,6 +3006,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
