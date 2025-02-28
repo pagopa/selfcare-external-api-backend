@@ -12,10 +12,6 @@
   ],
   "tags": [
     {
-      "name": "institutions",
-      "description": "Institution operations"
-    },
-    {
       "name": "Onboarding"
     },
     {
@@ -23,103 +19,6 @@
     }
   ],
   "paths": {
-    "/institutions/onboarding/recipientCode/verification": {
-      "get": {
-        "tags": [
-          "billing-portal",
-          "institutions"
-        ],
-        "summary": "checkRecipientCode",
-        "description": "The service allows to verify if recipientCode is valid or not",
-        "operationId": "checkRecipientCodeUsingGET",
-        "parameters": [
-          {
-            "name": "originId",
-            "in": "query",
-            "description": "originId",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "recipientCode",
-            "in": "query",
-            "description": "recipientCode",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "ACCEPTED",
-                    "DENIED_NO_ASSOCIATION",
-                    "DENIED_NO_BILLING"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/onboarding/{onboardingId}/recipient-code": {
       "put": {
         "tags": [
@@ -171,71 +70,13 @@
     }
   },
   "components": {
-    "schemas": {
-      "Problem": {
-        "title": "Problem",
-        "required": [
-          "status",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "detail": {
-            "type": "string",
-            "description": "Human-readable description of this specific problem."
-          },
-          "instance": {
-            "type": "string",
-            "description": "A URI that describes where the problem occurred."
-          },
-          "invalidParams": {
-            "type": "array",
-            "description": "A list of invalid parameters details.",
-            "items": {
-              "$ref": "#/components/schemas/InvalidParam"
-            }
-          },
-          "status": {
-            "type": "integer",
-            "description": "The HTTP status code.",
-            "format": "int32",
-            "example": 500
-          },
-          "title": {
-            "type": "string",
-            "description": "Short human-readable summary of the problem."
-          },
-          "type": {
-            "type": "string",
-            "description": "A URL to a page with more details regarding the problem."
-          }
-        },
-        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
-      },
-      "InvalidParam": {
-        "title": "InvalidParam",
-        "required": [
-          "name",
-          "reason"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Invalid parameter name."
-          },
-          "reason": {
-            "type": "string",
-            "description": "Invalid parameter reason."
-          }
-        }
-      }
-    },
+    "schemas": {},
     "securitySchemes": {
-      "apiKeyHeader": {
-        "type": "apiKey",
-        "name": "Ocp-Apim-Subscription-Key",
-        "in": "header"
+      "SecurityScheme": {
+        "type": "http",
+        "description": "Authentication",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
