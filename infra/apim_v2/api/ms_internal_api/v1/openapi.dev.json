@@ -10,6 +10,11 @@
       "url": "https://${host}/${basePath}"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Institution",
@@ -26,10 +31,6 @@
     {
       "name": "Delegation",
       "description": "Delegation Controller"
-    },
-    {
-      "name": "infocamere-pdnd",
-      "description": "PDND Info Camere Controller"
     },
     {
       "name": "Onboarding Controller"
@@ -351,16 +352,12 @@
         "tags": [
           "infocamere-pdnd"
         ],
-        "summary": "Get institution by institution taxCode",
-        "description": "Get the company represented by taxCode of the institution passed as a parameter",
-        "operationId": "institutionPdndByTaxCodeUsingGET",
+        "operationId": "institutionPdndByTaxCode",
         "parameters": [
           {
             "name": "taxCode",
             "in": "path",
-            "description": "Institution fiscal code",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -378,44 +375,16 @@
             }
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
+            "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
+            "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
+            "description": "Internal Server Error"
           }
         },
         "security": [
@@ -966,7 +935,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -1040,7 +1009,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OnboardingResponseV1"
+                    "$ref": "#/components/schemas/OnboardingResponse1"
                   }
                 }
               }
@@ -1086,7 +1055,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -1130,7 +1099,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OnboardingResponseV1"
+                  "$ref": "#/components/schemas/OnboardingResponse1"
                 }
               }
             }
@@ -1833,31 +1802,12 @@
         "type": "string"
       },
       "PDNDBusinessResource": {
-        "title": "PDNDBusinessResource",
         "type": "object",
         "properties": {
-          "address": {
-            "type": "string"
-          },
-          "businessName": {
-            "type": "string"
-          },
-          "businessStatus": {
-            "type": "string"
-          },
           "businessTaxId": {
             "type": "string"
           },
-          "cciaa": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "county": {
-            "type": "string"
-          },
-          "digitalAddress": {
+          "businessName": {
             "type": "string"
           },
           "legalNature": {
@@ -1866,10 +1816,28 @@
           "legalNatureDescription": {
             "type": "string"
           },
-          "nrea": {
+          "cciaa": {
+            "type": "string"
+          },
+          "businessStatus": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
             "type": "string"
           },
           "zipCode": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "nrea": {
             "type": "string"
           }
         }
@@ -2782,7 +2750,7 @@
           }
         }
       },
-      "OnboardingResponseV1": {
+      "OnboardingResponse1": {
         "type": "object",
         "properties": {
           "id": {
@@ -2803,7 +2771,7 @@
           "users": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserOnboardingResponseV1"
+              "$ref": "#/components/schemas/UserOnboardingResponse"
             }
           },
           "billing": {
@@ -2991,14 +2959,14 @@
           }
         }
       },
-      "UserOnboardingResponseV1": {
+      "UserOnboardingResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
           "role": {
-            "$ref": "#/components/schemas/PartyRoleV1"
+            "$ref": "#/components/schemas/PartyRole"
           },
           "productRole": {
             "type": "string"
@@ -3008,7 +2976,7 @@
           }
         }
       },
-      "PartyRoleV1": {
+      "PartyRole": {
         "enum": [
           "MANAGER",
           "DELEGATE",
@@ -3137,16 +3105,6 @@
           }
         }
       },
-      "PartyRole": {
-        "enum": [
-          "MANAGER",
-          "DELEGATE",
-          "SUB_DELEGATE",
-          "OPERATOR",
-          "ADMIN_EA"
-        ],
-        "type": "string"
-      },
       "AggregateInstitutionRequest": {
         "required": [
           "taxCode",
@@ -3236,6 +3194,8 @@
       "InstitutionBaseRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress"
         ],
         "type": "object",
@@ -3256,6 +3216,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
@@ -3488,6 +3449,8 @@
       "InstitutionPspRequest": {
         "required": [
           "institutionType",
+          "origin",
+          "originId",
           "digitalAddress",
           "paymentServiceProvider"
         ],
@@ -3509,6 +3472,7 @@
             "$ref": "#/components/schemas/Origin"
           },
           "originId": {
+            "minLength": 1,
             "type": "string"
           },
           "city": {
