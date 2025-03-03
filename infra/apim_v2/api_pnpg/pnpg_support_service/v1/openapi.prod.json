@@ -87,6 +87,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "enableSubunits",
+            "in": "query",
+            "description": "enableSubunits",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
