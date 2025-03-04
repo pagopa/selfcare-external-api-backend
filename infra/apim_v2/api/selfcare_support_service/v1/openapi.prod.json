@@ -571,7 +571,7 @@
             }
           },
           {
-            "name": "",
+            "name": "productId",
 
             "in": "query",
             "description": "Product's unique identifier",
