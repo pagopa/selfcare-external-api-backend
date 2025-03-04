@@ -28,7 +28,7 @@ resource "github_actions_environment_secret" "integration_environment" {
   plaintext_value = base64encode(templatefile("Selfcare-external-Integration.postman_environment.json",
     {
       env       = local.env_url
-      apimKeyPN = "ciao" #data.azurerm_key_vault_secret.apim_product_pn_sk.value
+      apimKeyPN = data.azurerm_key_vault_secret.apim_product_pn_sk.value
   }))
 }
 
