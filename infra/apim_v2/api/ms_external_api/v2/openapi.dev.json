@@ -174,7 +174,7 @@
         ]
       }
     },
-    "/institutions/": {
+    "/institutions": {
       "get": {
         "tags": [
           "Institution"
@@ -231,6 +231,16 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "enableSubunits",
+            "in": "query",
+            "description": "enableSubunits",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -500,7 +510,7 @@
         ]
       }
     },
-    "/institutions": {
+    "/institutions/": {
       "get": {
         "tags": [
           "institutions"
@@ -1884,6 +1894,9 @@
               "TOBEVALIDATED"
             ]
           },
+          "tokenId": {
+            "type": "string"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -2398,6 +2411,9 @@
             "items": {
               "$ref": "#/components/schemas/ProductRole"
             }
+          },
+          "skipUserCreation": {
+            "type": "boolean"
           }
         }
       },
@@ -2584,6 +2600,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
@@ -2856,6 +2873,7 @@
             "enum": [
               "AS",
               "CON",
+              "GPU",
               "GSP",
               "PA",
               "PG",
