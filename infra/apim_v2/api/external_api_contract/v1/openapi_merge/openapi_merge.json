@@ -11,6 +11,12 @@
           "operationSelection": {
             "includeTags": ["contract"]
           }
+        },
+        {
+          "inputFile": "../../../../../../../docs/pagopa/selfcare-openapi/openapi.json",
+          "operationSelection": {
+            "includeTags": ["conservazione"]
+          }
         }
     ], 
     "output": "../openapi.json"
