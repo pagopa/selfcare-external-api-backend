@@ -123,5 +123,5 @@ if (openApiData.tags) {
 
 // Save the filtered OpenAPI data back to the file
 fs.writeFileSync(openApiFilePath, JSON.stringify(openApiData, null, 2), 'utf8');
-console.log(JSON.stringify(openApiData, null, 2));
+
 console.log('Filtered openapi.json has been saved.');
