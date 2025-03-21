@@ -1120,45 +1120,6 @@
         ]
       }
     },
-    "/onboarding/{onboardingId}": {
-      "delete": {
-        "tags": [],
-        "summary": "Perform delete operation of an onboarding request",
-        "description": "Perform delete operation of an onboarding request receiving onboarding id,then invokes async process to set DELETED as status for institution and user onboardings.",
-        "operationId": "deleteOnboarding",
-        "parameters": [
-          {
-            "name": "onboardingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/onboarding/{onboardingId}/complete": {
       "put": {
         "tags": [],
