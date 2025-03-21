@@ -12,7 +12,9 @@
   ],
   "security": [
     {
-      "bearerAuth": []
+      "apiKeyHeader": [
+        "global"
+      ]
     }
   ],
   "tags": [
