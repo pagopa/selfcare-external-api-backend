@@ -10,6 +10,11 @@
       "url": "https://${host}/${basePath}"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Institution",
