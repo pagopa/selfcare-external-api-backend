@@ -241,7 +241,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
 
 module "apim_external_api_ms_v2" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name                = format("%s-ms-external-api", local.project)
+  name = format("%s-ms-external-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_ms.id
@@ -522,12 +522,6 @@ module "apim_internal_api_ms_v1" {
       operation_id = "onboardingImportUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
-      })
-    },
-    {
-      operation_id = "institutionPdndByTaxCodeUsingGET"
-      xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
