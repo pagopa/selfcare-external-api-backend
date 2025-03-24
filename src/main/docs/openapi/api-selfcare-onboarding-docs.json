@@ -22,6 +22,9 @@
       "name": "Document Controller"
     },
     {
+      "name": "Institution Controller"
+    },
+    {
       "name": "Onboarding"
     },
     {
@@ -309,6 +312,51 @@
                   "type": "array",
                   "items": {
                     "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
+      }
+    },
+    "/v1/institutions": {
+      "post": {
+        "tags": [
+          "Institution Controller"
+        ],
+        "summary": "Retrieve list of institutions given ids in input.",
+        "description": "Retrieve list of institutions given ids in input. If list in input is nullor empty, a bad request exception is thrown",
+        "operationId": "getInstitutions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetInstitutionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstitutionResponse"
                   }
                 }
               }
@@ -1410,6 +1458,43 @@
             "SecurityScheme": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "internal-v1"
+        ],
+        "summary": "Perform delete operation of an onboarding request",
+        "description": "Perform delete operation of an onboarding request receiving onboarding id, then invokes async process to set DELETED as status for institution and user onboardings.",
+        "operationId": "deleteOnboarding",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
       }
     },
     "/v1/onboarding/{onboardingId}/approve": {
@@ -2098,6 +2183,50 @@
           }
         ]
       }
+    },
+    "/v1/tokens/{onboardingId}/contract-signed": {
+      "get": {
+        "tags": [
+          "Token Controller"
+        ],
+        "summary": "Retrieve contract signed for a given onboarding",
+        "description": "Downloads the contract file associated with the specified onboarding ID.",
+        "operationId": "getContractSigned",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "SecurityScheme": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2424,6 +2553,21 @@
           },
           "desc": {
             "type": "string"
+          }
+        }
+      },
+      "GetInstitutionRequest": {
+        "required": [
+          "institutionIds"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
