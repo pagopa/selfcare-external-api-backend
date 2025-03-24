@@ -355,6 +355,12 @@ module "apim_pnpg_internal_api" {
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-onboarding-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
       })
+    },
+    {
+      operation_id = "institutionPdndByTaxCodeUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
