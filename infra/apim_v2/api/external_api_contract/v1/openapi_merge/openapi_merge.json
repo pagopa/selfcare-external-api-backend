@@ -1,23 +1,27 @@
 {
-    "inputs": [
-        {
-          "description": {
-              "append":true
-          },
-          "inputFile": "./openapi_template.json"
-        },
-        {
-          "inputFile": "../../../../../../src/main/resources/swagger/api-docs.json",
-          "operationSelection": {
-            "includeTags": ["contract"]
-          }
-        },
-        {
-          "inputFile": "../../../../../../../docs/pagopa/selfcare-openapi/openapi.json",
-          "operationSelection": {
-            "includeTags": ["conservazione"]
-          }
-        }
-    ], 
-    "output": "../openapi.json"
-  }
+  "inputs": [
+    {
+      "description": {
+        "append": true
+      },
+      "inputFile": "./openapi_template.json"
+    },
+    {
+      "inputFile": "../../../../../../src/main/resources/swagger/api-docs.json",
+      "operationSelection": {
+        "includeTags": [
+          "contract"
+        ]
+      }
+    },
+    {
+      "inputFile": "../../../../../../../docs/pagopa/selfcare-onboarding-functions/openapi.json",
+      "operationSelection": {
+        "includeTags": [
+          "conservazione"
+        ]
+      }
+    }
+  ],
+  "output": "../openapi.json"
+}
