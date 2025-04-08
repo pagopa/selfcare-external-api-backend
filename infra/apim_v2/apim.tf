@@ -902,7 +902,7 @@ module "apim_external_api_contract_public_v1" {
   api_operation_policies = [
 
     {
-      operation_id = "messageAcknowledgmentUsingPOST1"
+      operation_id = "messageAcknowledgmentUsingPOST"
       xml_content = templatefile("./api/api_key_fn_op_policy_message.xml.tpl", {
         BACKEND_BASE_URL       = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
         FN_KEY                 = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
