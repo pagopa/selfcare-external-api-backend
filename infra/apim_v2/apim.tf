@@ -1,19 +1,19 @@
 # APIM subnet
 module "apim_snet" {
   source               = "github.com/pagopa/terraform-azurerm-v3.git//subnet?ref=v8.18.0"
-  name = format("%s-apim-v2-snet", local.project)
-  resource_group_name = format("%s-vnet-rg", local.project)
+  name                 = format("%s-apim-v2-snet", local.project)
+  resource_group_name  = format("%s-vnet-rg", local.project)
   virtual_network_name = data.azurerm_virtual_network.vnet.name
   address_prefixes     = var.cidr_subnet_apim
 
   private_endpoint_network_policies_enabled = true
-  service_endpoints = ["Microsoft.Web"]
+  service_endpoints                         = ["Microsoft.Web"]
 }
 
 resource "azurerm_network_security_group" "nsg_apim" {
-  name = format("%s-apim-v2-nsg", local.project)
+  name                = format("%s-apim-v2-nsg", local.project)
   resource_group_name = format("%s-vnet-rg", local.project)
-  location = var.location
+  location            = var.location
 
   security_rule {
     name                       = "managementapim"
@@ -36,7 +36,7 @@ resource "azurerm_subnet_network_security_group_association" "snet_nsg" {
 }
 
 resource "azurerm_resource_group" "rg_api" {
-  name = format("%s-api-v2-rg", local.project)
+  name     = format("%s-api-v2-rg", local.project)
   location = var.location
 
   tags = var.tags
@@ -44,9 +44,9 @@ resource "azurerm_resource_group" "rg_api" {
 
 locals {
   apim_cert_name_proxy_endpoint = format("%s-proxy-endpoint-cert", local.project)
-  api_domain = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
-  logo_api_domain = format("%s.%s", var.dns_zone_prefix, var.external_domain)
-  apim_base_url = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
+  api_domain                    = format("api.%s.%s", var.dns_zone_prefix, var.external_domain)
+  logo_api_domain               = format("%s.%s", var.dns_zone_prefix, var.external_domain)
+  apim_base_url                 = "${azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name}/external"
 }
 
 resource "azurerm_key_vault_access_policy" "api_management_policy" {
@@ -54,10 +54,10 @@ resource "azurerm_key_vault_access_policy" "api_management_policy" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = module.apim.principal_id
 
-  key_permissions = []
-  secret_permissions = ["Get", "List"]
+  key_permissions         = []
+  secret_permissions      = ["Get", "List"]
   certificate_permissions = ["Get", "List"]
-  storage_permissions = []
+  storage_permissions     = []
 }
 
 resource "azurerm_key_vault_access_policy" "api_management_policy_pnpg" {
@@ -65,10 +65,10 @@ resource "azurerm_key_vault_access_policy" "api_management_policy_pnpg" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = module.apim.principal_id
 
-  key_permissions = []
-  secret_permissions = ["Get", "List"]
+  key_permissions         = []
+  secret_permissions      = ["Get", "List"]
   certificate_permissions = ["Get", "List"]
-  storage_permissions = []
+  storage_permissions     = []
 }
 
 resource "azurerm_api_management_custom_domain" "api_custom_domain" {
@@ -92,7 +92,7 @@ module "apim" {
   source               = "github.com/pagopa/terraform-azurerm-v3.git//api_management?ref=v8.18.0"
   subnet_id            = module.apim_snet.id
   location             = azurerm_resource_group.rg_api.location
-  name = format("%s-apim-v2", local.project)
+  name                 = format("%s-apim-v2", local.project)
   resource_group_name  = azurerm_resource_group.rg_api.name
   publisher_name       = var.apim_publisher_name
   publisher_email      = data.azurerm_key_vault_secret.apim_publisher_email.value
@@ -100,7 +100,7 @@ module "apim" {
   virtual_network_type = "Internal"
 
   redis_connection_string = null
-  redis_cache_id = null
+  redis_cache_id          = null
 
   # This enables the Username and Password Identity Provider
   sign_up_enabled = false
@@ -123,14 +123,14 @@ module "apim" {
 ## monitor ##
 module "monitor" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-monitor", var.env_short)
+  name                = format("%s-monitor", var.env_short)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
 
   description  = "Monitor"
   display_name = "Monitor"
   path         = "external/status"
-  protocols = ["https"]
+  protocols    = ["https"]
 
   service_url = null
 
@@ -146,13 +146,13 @@ module "monitor" {
   api_operation_policies = [
     {
       operation_id = "get"
-      xml_content = file("./api/monitor/mock_policy.xml")
+      xml_content  = file("./api/monitor/mock_policy.xml")
     }
   ]
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_onboarding_auto" {
-  name = format("%s-external-api-onboarding-auto", var.env_short)
+  name                = format("%s-external-api-onboarding-auto", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "SelfCare Onboarding"
@@ -160,7 +160,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_onboarding_
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_onboarding_io" {
-  name = format("%s-external-api-onboarding-io", var.env_short)
+  name                = format("%s-external-api-onboarding-io", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "SelfCare Onboarding PA prod-io"
@@ -169,7 +169,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_onboarding_
 
 module "apim_external_api_onboarding_auto_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-external-api-onboarding-auto", local.project)
+  name                = format("%s-external-api-onboarding-auto", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_onboarding_auto.id
@@ -201,7 +201,7 @@ module "apim_external_api_onboarding_auto_v1" {
 
 module "apim_external_api_onboarding_io_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-external-api-onboarding-io", local.project)
+  name                = format("%s-external-api-onboarding-io", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_onboarding_io.id
@@ -232,7 +232,7 @@ module "apim_external_api_onboarding_io_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
-  name = format("%s-ms-external-api", var.env_short)
+  name                = format("%s-ms-external-api", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "External API Service"
@@ -241,7 +241,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
 
 module "apim_external_api_ms_v2" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-ms-external-api", local.project)
+  name                = format("%s-ms-external-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_ms.id
@@ -419,7 +419,7 @@ module "apim_external_api_ms_v2" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_internal_api_ms" {
-  name = format("%s-ms-internal-api", var.env_short)
+  name                = format("%s-ms-internal-api", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "Internal API Service"
@@ -428,7 +428,7 @@ resource "azurerm_api_management_api_version_set" "apim_internal_api_ms" {
 
 module "apim_internal_api_ms_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-ms-internal-api", local.project)
+  name                = format("%s-ms-internal-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_internal_api_ms.id
@@ -564,7 +564,7 @@ module "apim_internal_api_ms_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_pdnd_infocamere_api_ms" {
-  name = format("%s-pdnd-infocamere-api", var.env_short)
+  name                = format("%s-pdnd-infocamere-api", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "PDND Infocamere API Service"
@@ -573,7 +573,7 @@ resource "azurerm_api_management_api_version_set" "apim_pdnd_infocamere_api_ms" 
 
 module "apim_pdnd_infocamere_api_ms_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-pdnd-infocamere-api", local.project)
+  name                = format("%s-pdnd-infocamere-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_pdnd_infocamere_api_ms.id
@@ -613,7 +613,7 @@ module "apim_pdnd_infocamere_api_ms_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_selfcare_support_service" {
-  name = format("%s-selfcare-support-api-service", var.env_short)
+  name                = format("%s-selfcare-support-api-service", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "SelfCare Support API Service"
@@ -622,7 +622,7 @@ resource "azurerm_api_management_api_version_set" "apim_selfcare_support_service
 
 module "apim_selfcare_support_service_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-selfcare-support-api-service", local.project)
+  name                = format("%s-selfcare-support-api-service", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_selfcare_support_service.id
@@ -704,14 +704,14 @@ module "apim_selfcare_support_service_v1" {
       operation_id = "completeOnboardingTokenConsume"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
-      }
+        }
       )
     },
     {
       operation_id = "onboardingInstitutionUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
-      }
+        }
       )
     },
     {
@@ -744,7 +744,7 @@ module "apim_selfcare_support_service_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_notification_event_api" {
-  name = format("%s-notification-event-api", var.env_short)
+  name                = format("%s-notification-event-api", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "Notification Event API Service"
@@ -753,7 +753,7 @@ resource "azurerm_api_management_api_version_set" "apim_notification_event_api" 
 
 module "apim_notification_event_api_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-notification-event-api", local.project)
+  name                = format("%s-notification-event-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_notification_event_api.id
@@ -810,7 +810,7 @@ module "apim_notification_event_api_v1" {
   ]
 }
 resource "azurerm_api_management_api_version_set" "apim_external_api_contract" {
-  name = format("%s-external-api-contract", var.env_short)
+  name                = format("%s-external-api-contract", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "External API Contract limited by IP source"
@@ -819,7 +819,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_contract" {
 
 module "apim_external_api_contract_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-external-api-contract-service", local.project)
+  name                = format("%s-external-api-contract-service", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_contract.id
@@ -861,7 +861,7 @@ module "apim_external_api_contract_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_contracts_public" {
-  name = format("%s-external-api-contracts-public", var.env_short)
+  name                = format("%s-external-api-contracts-public", var.env_short)
   resource_group_name = azurerm_resource_group.rg_api.name
   api_management_name = module.apim.name
   display_name        = "External API Contracts Public"
@@ -870,7 +870,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_contracts_p
 
 module "apim_external_api_contract_public_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
-  name = format("%s-external-api-contracts-public", local.project)
+  name                = format("%s-external-api-contracts-public", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_contracts_public.id
