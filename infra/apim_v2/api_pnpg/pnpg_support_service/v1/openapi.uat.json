@@ -10,13 +10,6 @@
       "url": "https://${host}/${basePath}"
     }
   ],
-  "security": [
-    {
-      "apiKeyHeader": [
-        "global"
-      ]
-    }
-  ],
   "tags": [
     {
       "name": "Institution",
@@ -804,6 +797,9 @@
           },
           "institutionType": {
             "type": "string"
+          },
+          "isTest": {
+            "type": "boolean"
           },
           "istatCode": {
             "type": "string"

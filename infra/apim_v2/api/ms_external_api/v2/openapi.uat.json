@@ -510,12 +510,111 @@
         ]
       }
     },
-    "/message/{messageId}/status/{status}": {
+    "/api/acknowledgment/{productId}/message/{messageId}/status/{status}": {
       "post": {
-        "tags": [],
+        "tags": [
+          "conservazione"
+        ],
         "summary": "messageAcknowledgment",
         "description": "Service to acknowledge message consumption by a consumer",
         "operationId": "messageAcknowledgmentUsingPOST",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "description": "Kafka message unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "description": "Kafka message consumption acknowledgment status",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACK",
+                "NACK"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AckPayloadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem2"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem2"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/message/{messageId}/status/{status}": {
+      "post": {
+        "tags": [
+          "conservazione"
+        ],
+        "summary": "messageAcknowledgment",
+        "description": "Service to acknowledge message consumption by a consumer",
+        "operationId": "messageAcknowledgmentUsingPOST1",
         "parameters": [
           {
             "name": "messageId",
@@ -1685,6 +1784,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "istatCode": {
             "type": "string"
           },
@@ -2002,6 +2104,46 @@
             "type": "string"
           }
         }
+      },
+      "Problem2": {
+        "title": "Problem",
+        "required": [
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of this specific problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI that descacknoribes where the problem occurred."
+          },
+          "invalidParams": {
+            "type": "array",
+            "description": "A list of invalid parameters details.",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            }
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          }
+        },
+        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       },
       "AckPayloadRequest": {
         "title": "AckPayloadRequest",

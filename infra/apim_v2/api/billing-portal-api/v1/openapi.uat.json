@@ -10,20 +10,71 @@
       "url": "https://${host}/${basePath}"
     }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "tags": [
     {
       "name": "Onboarding"
+    },
+    {
+      "name": "Onboarding Controller"
     },
     {
       "name": "billing-portal"
     }
   ],
   "paths": {
+    "/onboarding/checkRecipientCode": {
+      "get": {
+        "tags": [
+          "billing-portal",
+          "Onboarding Controller"
+        ],
+        "summary": "Validate recipientCode.",
+        "description": "check if recipientCode is valid or not",
+        "operationId": "checkRecipientCode",
+        "parameters": [
+          {
+            "name": "originId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recipientCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipientCodeStatus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ],
+        "x-legacy-api": "true"
+      }
+    },
     "/onboarding/{onboardingId}/recipient-code": {
       "put": {
         "tags": [
@@ -75,7 +126,16 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "RecipientCodeStatus": {
+        "enum": [
+          "DENIED_NO_BILLING",
+          "DENIED_NO_ASSOCIATION",
+          "ACCEPTED"
+        ],
+        "type": "string"
+      }
+    },
     "securitySchemes": {
       "apiKeyHeader": {
         "type": "apiKey",
