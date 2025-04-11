@@ -152,16 +152,6 @@ module "apim_pnpg_external_api_ms_v2" {
 
   api_operation_policies = [
     {
-      operation_id = "getInstitutionsUsingGETDeprecated"
-      xml_content = templatefile("./api_pnpg/external_api_for_pnpg/v2/getInstitutions_op_policy.xml.tpl", {
-        BACKEND_BASE_URL           = "https://selc-${var.env_short}-pnpg-ext-api-backend-ca.${var.ca_pnpg_suffix_dns_private_name}/v2/"
-        API_DOMAIN                 = local.api_pnpg_domain
-        KID                        = data.azurerm_key_vault_secret.jwt_kid_pnpg.value
-        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate_pnpg.thumbprint
-        LOGO_URL                   = "https://${local.logo_api_domain}"
-      })
-    },
-    {
       operation_id = "getUserGroupsUsingGET"
       xml_content = templatefile("./api/jwt_auth_op_policy_user_group.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-group-ca.${var.ca_pnpg_suffix_dns_private_name}/v1/"
