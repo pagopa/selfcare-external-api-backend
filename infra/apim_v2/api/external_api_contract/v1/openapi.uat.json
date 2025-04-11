@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/message/{messageId}/status/{status}": {
+    "/api/acknowledgment/{productId}/message/{messageId}/status/{status}": {
       "post": {
         "tags": [
           "conservazione"
@@ -26,6 +26,16 @@
         "description": "Service to acknowledge message consumption by a consumer",
         "operationId": "messageAcknowledgmentUsingPOST",
         "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "messageId",
             "in": "path",
@@ -69,7 +79,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -79,7 +89,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -89,7 +99,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -199,7 +209,7 @@
   },
   "components": {
     "schemas": {
-      "Problem": {
+      "Problem1": {
         "title": "Problem",
         "required": [
           "status",
@@ -213,7 +223,7 @@
           },
           "instance": {
             "type": "string",
-            "description": "A URI that describes where the problem occurred."
+            "description": "A URI that descacknoribes where the problem occurred."
           },
           "invalidParams": {
             "type": "array",
@@ -269,6 +279,46 @@
             "description": "Acknowledgment request payload message"
           }
         }
+      },
+      "Problem": {
+        "title": "Problem",
+        "required": [
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of this specific problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI that describes where the problem occurred."
+          },
+          "invalidParams": {
+            "type": "array",
+            "description": "A list of invalid parameters details.",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            }
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          }
+        },
+        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       }
     },
     "securitySchemes": {
