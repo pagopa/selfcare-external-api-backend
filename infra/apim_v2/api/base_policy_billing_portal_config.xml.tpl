@@ -5,7 +5,7 @@
             <value>@((string)context.Variables["jwt"])</value>
         </set-header>
         <set-backend-service base-url="${MS_BACKEND_URL}"/>
-        <rewrite-uri template="@("/institutions/onboarding/recipientCode/verification")"/>
+        <rewrite-uri template="/onboarding/checkRecipientCode"/>
     </inbound>
     <backend>
         <base/>
