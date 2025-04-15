@@ -901,6 +901,30 @@ module "apim_external_api_contract_public_v1" {
   ]
 }
 
+resource "azurerm_api_management_api_operation" "check_recipient_code" {
+  operation_id        = "checkRecipientCode"
+  api_name            = module.apim_billing_portal_v1.name
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  display_name = "Check recipient code"
+  method       = "GET"
+  url_template = "/institutions/onboarding/recipientCode/verification"
+  description  = "Check if a recipientCode is valid"
+
+  response {
+    status_code = 200
+  }
+
+  response {
+    status_code = 401
+  }
+
+  response {
+    status_code = 403
+  }
+}
+
 resource "azurerm_api_management_api_version_set" "apim_billing_portal" {
   name                = "${var.env_short}-billing-portal"
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -949,7 +973,7 @@ module "apim_billing_portal_v1" {
     },
     {
       operation_id = "checkRecipientCode"
-      xml_content = templatefile("./api/base_policy_config.xml.tpl", {
+      xml_content = templatefile("./api/base_policy_billing_portal_config.xml.tpl", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
     }
