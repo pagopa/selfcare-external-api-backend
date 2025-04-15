@@ -973,10 +973,6 @@ module "apim_billing_portal_v1" {
     },
     {
       operation_id = "checkRecipientCode"
-      display_name = "Check recipient code"
-      method       = "GET"
-      url_template = "/institutions/onboarding/recipientCode/verification"
-      description  = "Check if a recipientCode is valid"
       xml_content = templatefile("./api/base_policy_billing_portal_config.xml.tpl", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
