@@ -232,6 +232,18 @@ module "apim_pnpg_support_service_v2" {
 
   api_operation_policies = [
     {
+      operation_id = "getInstitutionsUsingGETDeprecated"
+      xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
+        BACKEND_BASE_URL           = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+        LOGO_URL                   = "https://${local.logo_api_domain}"
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        TENANT_ID                  = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER     = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+      })
+    },
+    {
       operation_id = "getInstitutionUsersUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
