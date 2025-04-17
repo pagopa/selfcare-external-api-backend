@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - releases/**
+      - fix/update-doc
     paths:
       - infra/apim_v2/**
       - .github/workflows/apim_infra_plan.yml

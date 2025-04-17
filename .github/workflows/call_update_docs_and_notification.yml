@@ -1,7 +1,4 @@
 on:
-  push:
-    branches:
-      - "fix/update-doc"
   workflow_call:
     inputs:
       env:
@@ -106,7 +103,7 @@ jobs:
             cat ./docs/${{ inputs.docs_openapi_path }}
             echo "Content of local OpenAPI file:"
             cat ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json
-            
+
             optic_output=$(optic diff ./docs/${{ inputs.docs_openapi_path }} ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json)
             echo "$optic_output"
             echo "$optic_output" > optic_diff_output.txt
