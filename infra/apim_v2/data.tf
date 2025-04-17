@@ -23,12 +23,12 @@ data "azurerm_application_insights" "ai" {
 }
 
 data "azurerm_storage_account" "checkout" {
-  name                = replace("${local.project}-checkout-sa", "-", "")
+  name = replace("${local.project}-checkout-sa", "-", "")
   resource_group_name = "${local.project}-checkout-fe-rg"
 }
 
 data "azurerm_storage_account" "checkout_pnpg" {
-  name                = replace("${local.project}-weu-pnpg-checkout-sa", "-", "")
+  name = replace("${local.project}-weu-pnpg-checkout-sa", "-", "")
   resource_group_name = "${local.project}-weu-pnpg-checkout-fe-rg"
 }
 
@@ -71,4 +71,9 @@ data "azurerm_key_vault_certificate" "app_gw_platform" {
 data "azurerm_key_vault_secret" "jwt_kid_pnpg" {
   name         = "jwt-kid"
   key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+}
+
+data "azurerm_key_vault_secret" "web_storage_url" {
+  name         = "web-storage-url"
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
