@@ -369,7 +369,7 @@ module "apim_external_api_ms_v2" {
       xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
         MS_BACKEND_URL          = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
         MS_EXTERNAL_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
-        WEB_STORAGE_URL         = data.azurerm_key_vault_secret.web_storage_url
+        WEB_STORAGE_URL         = data.azurerm_key_vault_secret.web_storage_url.value
       })
     },
     {
