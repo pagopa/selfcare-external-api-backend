@@ -1,4 +1,7 @@
 on:
+  push:
+    branches:
+      - "fix/update-doc"
   workflow_call:
     inputs:
       env:
@@ -99,14 +102,19 @@ jobs:
         id: optic_diff
         shell: bash
         run: |
-          optic_output=$(optic diff ./docs/${{ inputs.docs_openapi_path }} ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json)
-          echo "$optic_output"
-          echo "$optic_output" > optic_diff_output.txt
-          if grep -q "Operations: No operations changed" optic_diff_output.txt; then
-            echo "changes_detected=false" >> $GITHUB_OUTPUT
-          else
-            echo "changes_detected=true" >> $GITHUB_OUTPUT
-          fi
+            echo "Content of downloaded OpenAPI file:"
+            cat ./docs/${{ inputs.docs_openapi_path }}
+            echo "Content of local OpenAPI file:"
+            cat ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json
+            
+            optic_output=$(optic diff ./docs/${{ inputs.docs_openapi_path }} ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json)
+            echo "$optic_output"
+            echo "$optic_output" > optic_diff_output.txt
+            if grep -q "Operations: No operations changed" optic_diff_output.txt; then
+              echo "changes_detected=false" >> $GITHUB_OUTPUT
+            else
+              echo "changes_detected=true" >> $GITHUB_OUTPUT
+            fi
 
       - name: Upload to blob storage
         uses: azure/CLI@965c8d7571d2231a54e321ddd07f7b10317f34d9 # v2
