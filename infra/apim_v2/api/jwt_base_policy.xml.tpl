@@ -14,7 +14,10 @@
                 var uid = context.Request.Headers.GetValueOrDefault("x-selfcare-uid","");
 
                 if(uid == "") {
-                  uid = "m2m";
+                   uid = context.Request.Url.Query.GetValueOrDefault("userIdForAuth","");
+                   if(uid == "") {
+                      uid = "m2m";
+                   }
                 }
 
                 var aud = "${API_DOMAIN}";
