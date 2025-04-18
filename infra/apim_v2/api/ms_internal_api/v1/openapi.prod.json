@@ -1585,6 +1585,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "istatCode": {
             "type": "string"
           },
