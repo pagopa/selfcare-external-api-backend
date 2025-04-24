@@ -455,7 +455,7 @@ module "apim_internal_api_ms_v1" {
     {
       operation_id = "deleteOnboarding"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
