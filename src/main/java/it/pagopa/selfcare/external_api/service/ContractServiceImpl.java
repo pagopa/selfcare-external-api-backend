@@ -13,10 +13,14 @@ import it.pagopa.selfcare.external_api.model.document.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.token.Token;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +31,8 @@ import java.util.Optional;
 public class ContractServiceImpl implements ContractService {
     public static final String TOKEN_FOR_S_AND_S_FOUND_BUT_CONTRACT_SIGNED_REFERENCE_IS_EMPTY = "Token for %s and %s found but contract signed reference is empty!";
     public static final String TOKEN_FOR_S_AND_S_NOT_FOUND = "Token for %s and %s not found!";
+    public static final String CONTRACT_FOR_S_AND_S_NOT_FOUND = "Contract for %s and %s not found!";
+
     private final FileStorageConnector fileStorageConnector;
     private final MsCoreInstitutionApiClient institutionApiClient;
 
@@ -51,29 +57,40 @@ public class ContractServiceImpl implements ContractService {
         log.trace("getContract start");
         log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
 
-        List<OnboardingResponse> onboardings = Objects.requireNonNull(institutionApiClient.
-                        _getOnboardingsInstitutionUsingGET(institutionId, productId)
-                        .getBody())
-                .getOnboardings();
+        List<OnboardingResponse> onboardings = Objects.requireNonNull(institutionApiClient._getOnboardingsInstitutionUsingGET(institutionId, productId).getBody()).getOnboardings();
 
         InstitutionOnboarding institutionOnboarding = Optional.ofNullable(onboardings)
-                .orElse(Collections.emptyList())
-                .stream()
-                .findFirst()
-                .map(institutionMapper::toEntity)
-                .orElseThrow(ResourceNotFoundException::new);
+            .orElse(Collections.emptyList())
+            .stream()
+            .findFirst()
+            .map(institutionMapper::toEntity)
+            .orElseThrow(ResourceNotFoundException::new);
 
         List<Token> tokens =  Objects.requireNonNull(tokenControllerApi._getToken(institutionOnboarding.getTokenId()).getBody()).stream()
-                .map(tokenMapper::toEntity)
-                .toList();
+            .map(tokenMapper::toEntity)
+            .toList();
 
         if(CollectionUtils.isEmpty(tokens))
             throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
         if(!StringUtils.hasText(tokens.get(0).getContractSigned()))
             throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_FOUND_BUT_CONTRACT_SIGNED_REFERENCE_IS_EMPTY, institutionId, productId));
-        ResourceResponse file = fileStorageConnector.getFile(tokens.get(0).getContractSigned());
-        log.debug(LogUtils.CONFIDENTIAL_MARKER, "getContract result = {}", file);
+        ResponseEntity<Resource> contract = tokenControllerApi._getContractSigned(institutionOnboarding.getTokenId());
+
+        ResourceResponse response = new ResourceResponse();
+        try {
+            response.setData(contract.getBody().getInputStream().readAllBytes());
+        } catch (IOException e) {
+            throw new ResourceNotFoundException(String.format(CONTRACT_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
+        }
+
+        File contractSigned = new File(tokens.get(0).getContractSigned());
+        String fileName = contractSigned.getName();
+        response.setFileName(fileName);
+        String type = contract.getHeaders().containsKey("content-type") && !contract.getHeaders().get("content-type").isEmpty() ? contract.getHeaders().get("content-type").get(0) : "";
+        response.setMimetype(type);
+
+        log.debug(LogUtils.CONFIDENTIAL_MARKER, "getContract result = {}", fileName);
         log.trace("getContract end");
-        return file;
+        return response;
     }
 }
