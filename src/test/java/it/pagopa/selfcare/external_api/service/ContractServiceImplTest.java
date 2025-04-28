@@ -20,7 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -28,7 +31,9 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
+import static com.azure.core.http.ContentType.APPLICATION_OCTET_STREAM;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,10 +69,16 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
         ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
         byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
         Token token = objectMapper.readValue(tokenStream, Token.class);
-        ResourceResponse response = TestUtils.mockInstance(new ResourceResponse());
         OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
+
+        Resource resource = new ByteArrayResource("test content".getBytes());
+        ResponseEntity<Resource> responseFile = ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"contractSigned\"")
+          .body(resource);
+
         when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
-        when(storageConnectorMock.getFile(token.getContractSigned())).thenReturn(response);
+        when(tokenControllerApi._getContractSigned(anyString())).thenReturn(responseFile);
 
         it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
         tokenResponse.setContractSigned(token.getContractSigned());
@@ -75,7 +86,34 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
                 .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
         ResourceResponse result = contractService.getContractV2("institutionId", "productId");
-        Assertions.assertEquals(response, result);
+        Assertions.assertEquals("application/octet-stream", result.getMimetype());
+        Assertions.assertEquals("contractSigned", result.getFileName());
+        Assertions.assertEquals(12, result.getData().length);
+    }
+
+    @Test
+    void getContractErrorTest() throws Exception {
+        InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
+        institutionOnboarding.setTokenId("tokenId");
+        ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
+        byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
+        Token token = objectMapper.readValue(tokenStream, Token.class);
+        OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
+
+        ResponseEntity<Resource> responseFile = ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"contractSigned\"")
+          .body(null);
+
+        when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
+        when(tokenControllerApi._getContractSigned(anyString())).thenReturn(responseFile);
+
+        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
+        tokenResponse.setContractSigned(token.getContractSigned());
+        when(tokenControllerApi._getToken(any()))
+          .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+        when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> contractService.getContractV2("institutionId", "productId"));
     }
 
     @Test
