@@ -92,6 +92,31 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     }
 
     @Test
+    void getContractErrorTest() throws Exception {
+        InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
+        institutionOnboarding.setTokenId("tokenId");
+        ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
+        byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
+        Token token = objectMapper.readValue(tokenStream, Token.class);
+        OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
+
+        ResponseEntity<Resource> responseFile = ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"contractSigned\"")
+          .body(null);
+
+        when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
+        when(tokenControllerApi._getContractSigned(anyString())).thenReturn(responseFile);
+
+        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
+        tokenResponse.setContractSigned(token.getContractSigned());
+        when(tokenControllerApi._getToken(any()))
+          .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+        when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> contractService.getContractV2("institutionId", "productId"));
+    }
+
+    @Test
     void getContractV2WhereTokenIsEmpty() {
         InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
         institutionOnboarding.setTokenId(null);

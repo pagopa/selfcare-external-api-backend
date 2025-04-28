@@ -79,7 +79,7 @@ public class ContractServiceImpl implements ContractService {
         ResourceResponse response = new ResourceResponse();
         try {
             response.setData(contract.getBody().getInputStream().readAllBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ResourceNotFoundException(String.format(CONTRACT_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
         }
 
