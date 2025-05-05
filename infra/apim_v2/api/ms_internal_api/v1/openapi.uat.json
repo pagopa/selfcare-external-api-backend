@@ -411,7 +411,7 @@
         ],
         "summary": "Get institution by institution taxCode",
         "description": "Get the company represented by taxCode of the institution passed as a parameter",
-        "operationId": "institutionsPdndByDescriptionUsingGET",
+        "operationId": "institutionPdndByTaxCodeUsingGET",
         "parameters": [
           {
             "name": "taxCode",
@@ -2192,10 +2192,10 @@
           "mail3": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           }
         }
