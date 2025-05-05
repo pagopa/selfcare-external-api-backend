@@ -342,12 +342,76 @@
         ]
       }
     },
+    "/uo/{codiceUniUo}": {
+      "get": {
+        "tags": [
+          "uo-controller"
+        ],
+        "summary": "Retrieve a UO given its code",
+        "description": "Returns a UO",
+        "operationId": "findUoByUnicodeUsingGET",
+        "parameters": [
+          {
+            "name": "codiceUniUo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UOResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/infocamere-pdnd/institution/{taxCode}": {
       "get": {
         "tags": [
           "infocamere-pdnd"
         ],
-        "operationId": "institutionPdndByTaxCode",
+        "summary": "Get institution by institution taxCode",
+        "description": "Get the company represented by taxCode of the institution passed as a parameter",
+        "operationId": "institutionsPdndByDescriptionUsingGET",
         "parameters": [
           {
             "name": "taxCode",
@@ -365,6 +429,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PDNDBusinessResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/aoo/{codiceUniAoo}": {
+      "get": {
+        "tags": [
+          "aoo-controller"
+        ],
+        "summary": "Retrieve an AOO given its code",
+        "description": "Returns an AOO",
+        "operationId": "findAOOByUnicodeUsingGET",
+        "parameters": [
+          {
+            "name": "codiceUniAoo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AOOResource"
                 }
               }
             }
@@ -1585,6 +1711,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "istatCode": {
             "type": "string"
           },
@@ -1835,6 +1964,105 @@
         ],
         "type": "string"
       },
+      "UOResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "codiceIpa": {
+            "type": "string"
+          },
+          "denominazioneEnte": {
+            "type": "string"
+          },
+          "codiceFiscaleEnte": {
+            "type": "string"
+          },
+          "codiceFiscaleSfe": {
+            "type": "string"
+          },
+          "codiceUniUo": {
+            "type": "string"
+          },
+          "codiceUniUoPadre": {
+            "type": "string"
+          },
+          "codiceUniAoo": {
+            "type": "string"
+          },
+          "descrizioneUo": {
+            "type": "string"
+          },
+          "mail1": {
+            "type": "string"
+          },
+          "mail2": {
+            "type": "string"
+          },
+          "mail3": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "static",
+              "IPA",
+              "ANAC",
+              "IVASS",
+              "INFOCAMERE"
+            ]
+          },
+          "dataIstituzione": {
+            "type": "string"
+          },
+          "nomeResponsabile": {
+            "type": "string"
+          },
+          "cognomeResponsabile": {
+            "type": "string"
+          },
+          "mailResponsabile": {
+            "type": "string"
+          },
+          "telefonoResponsabile": {
+            "type": "string"
+          },
+          "codiceComuneISTAT": {
+            "type": "string"
+          },
+          "codiceCatastaleComune": {
+            "type": "string"
+          },
+          "indirizzo": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "fax": {
+            "type": "string"
+          },
+          "tipoMail1": {
+            "type": "string"
+          },
+          "tipoMail2": {
+            "type": "string"
+          },
+          "tipoMail3": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "dataAggiornamento": {
+            "type": "string"
+          },
+          "cap": {
+            "type": "string"
+          }
+        }
+      },
       "PDNDBusinessResource": {
         "type": "object",
         "properties": {
@@ -1872,6 +2100,102 @@
             "type": "string"
           },
           "nrea": {
+            "type": "string"
+          }
+        }
+      },
+      "AOOResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "codiceIpa": {
+            "type": "string"
+          },
+          "denominazioneEnte": {
+            "type": "string"
+          },
+          "codiceFiscaleEnte": {
+            "type": "string"
+          },
+          "codiceUniAoo": {
+            "type": "string"
+          },
+          "denominazioneAoo": {
+            "type": "string"
+          },
+          "dataIstituzione": {
+            "type": "string"
+          },
+          "nomeResponsabile": {
+            "type": "string"
+          },
+          "cognomeResponsabile": {
+            "type": "string"
+          },
+          "mailResponsabile": {
+            "type": "string"
+          },
+          "telefonoResponsabile": {
+            "type": "string"
+          },
+          "codiceComuneISTAT": {
+            "type": "string"
+          },
+          "codiceCatastaleComune": {
+            "type": "string"
+          },
+          "indirizzo": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "fax": {
+            "type": "string"
+          },
+          "protocolloInformatico": {
+            "type": "string"
+          },
+          "dataAggiornamento": {
+            "type": "string"
+          },
+          "codAoo": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "static",
+              "IPA",
+              "ANAC",
+              "IVASS",
+              "INFOCAMERE"
+            ]
+          },
+          "tipoMail1": {
+            "type": "string"
+          },
+          "mail1": {
+            "type": "string"
+          },
+          "tipoMail2": {
+            "type": "string"
+          },
+          "mail2": {
+            "type": "string"
+          },
+          "tipoMail3": {
+            "type": "string"
+          },
+          "mail3": {
+            "type": "string"
+          },
+          "cap": {
+            "type": "string"
+          },
+          "uriprotocolloInformatico": {
             "type": "string"
           }
         }
