@@ -2,13 +2,11 @@ package it.pagopa.selfcare.external_api.mapper;
 
 import it.pagopa.selfcare.commons.base.utils.ProductId;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OnboardingMapperCustom {
@@ -54,7 +52,7 @@ public class OnboardingMapperCustom {
       resource.setInstitutionExternalId(externalId);
       resource.setProductId(ProductId.PROD_IO.getValue());
       resource.setUsers(
-          model.getUsers().stream().map(UserMapperCustom::toUser).collect(Collectors.toList()));
+          model.getUsers().stream().map(UserMapperCustom::toUser).toList());
       resource.setContractImported(fromDto(model.getImportContract()));
       resource.setBilling(new Billing());
       resource.setInstitutionUpdate(new InstitutionUpdate());
@@ -70,7 +68,7 @@ public class OnboardingMapperCustom {
       resource.setInstitutionExternalId(externalId);
       resource.setProductId(ProductId.PROD_IO.getValue());
       resource.setUsers(Objects.nonNull(model.getUsers()) ?
-          model.getUsers().stream().map(UserMapperCustom::toUser).collect(Collectors.toList()) : List.of());
+          model.getUsers().stream().map(UserMapperCustom::toUser).toList() : List.of());
       resource.setContractImported(fromDto(model.getImportContract()));
       resource.setBilling(new Billing());
       resource.setInstitutionUpdate(new InstitutionUpdate());
@@ -86,7 +84,7 @@ public class OnboardingMapperCustom {
     if (model != null) {
       resource = new OnboardingData();
       resource.setUsers(
-          model.getUsers().stream().map(UserMapperCustom::toUser).collect(Collectors.toList()));
+          model.getUsers().stream().map(UserMapperCustom::toUser).toList());
       resource.setInstitutionExternalId(externalId);
       resource.setProductId(productId);
       resource.setOrigin(model.getOrigin());
@@ -114,7 +112,7 @@ public class OnboardingMapperCustom {
       resource.setGeographicTaxonomies(
           dto.getGeographicTaxonomies().stream()
               .map(GeographicTaxonomyMapper::fromDto)
-              .collect(Collectors.toList()));
+              .toList());
       if (dto.getCompanyInformations() != null) {
         resource.setRea(dto.getCompanyInformations().getRea());
         resource.setShareCapital(dto.getCompanyInformations().getShareCapital());
