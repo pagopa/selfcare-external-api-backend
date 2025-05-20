@@ -2005,7 +2005,7 @@
       },
       "OnboardingAggregatorImportDto" : {
         "title" : "OnboardingAggregatorImportDto",
-        "required" : [ "aggregates", "importContract", "users" ],
+        "required" : [ "aggregates", "importContract" ],
         "type" : "object",
         "properties" : {
           "aggregates" : {
@@ -2030,7 +2030,7 @@
       },
       "OnboardingImportDto" : {
         "title" : "OnboardingImportDto",
-        "required" : [ "importContract", "users" ],
+        "required" : [ "importContract" ],
         "type" : "object",
         "properties" : {
           "importContract" : {
