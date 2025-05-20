@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -67,8 +69,8 @@ public class OnboardingMapperCustom {
       resource = new OnboardingData();
       resource.setInstitutionExternalId(externalId);
       resource.setProductId(ProductId.PROD_IO.getValue());
-      resource.setUsers(
-          model.getUsers().stream().map(UserMapperCustom::toUser).collect(Collectors.toList()));
+      resource.setUsers(Objects.nonNull(model.getUsers()) ?
+          model.getUsers().stream().map(UserMapperCustom::toUser).collect(Collectors.toList()) : List.of());
       resource.setContractImported(fromDto(model.getImportContract()));
       resource.setBilling(new Billing());
       resource.setInstitutionUpdate(new InstitutionUpdate());

@@ -13,7 +13,6 @@ import java.util.List;
 public class OnboardingImportDto {
 
     @ApiModelProperty(value = "${swagger.external_api.institutions.model.users}", required = true)
-    @NotEmpty
     @Valid
     private List<UserDto> users;
 

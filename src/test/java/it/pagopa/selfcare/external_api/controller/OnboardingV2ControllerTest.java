@@ -209,6 +209,27 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
   }
 
   @Test
+  void oldContractOnboardingWithNullUsers() throws Exception {
+
+    final String externalInstitutionId = "externalInstitutionId";
+    byte[] onboardingImportDtoFile =
+            Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
+    OnboardingImportDto onboardingImportDto =
+            objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
+    onboardingImportDto.setUsers(null);
+
+    mockMvc
+            .perform(
+                    MockMvcRequestBuilders.post(BASE_URL + "/{institutionId}", externalInstitutionId)
+                            .content(objectMapper.writeValueAsString(onboardingImportDto))
+                            .contentType(APPLICATION_JSON_VALUE)
+                            .accept(APPLICATION_JSON_VALUE))
+            .andExpect(status().isCreated())
+            .andExpect(content().string(emptyString()))
+            .andReturn();
+  }
+
+  @Test
   void onboardingInstitutionUsers() throws Exception {
 
     byte[] onboardingImportDtoFile =
