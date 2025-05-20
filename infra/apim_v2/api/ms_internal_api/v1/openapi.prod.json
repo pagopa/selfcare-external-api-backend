@@ -2192,10 +2192,10 @@
           "mail3": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           }
         }
@@ -2658,8 +2658,7 @@
         "title": "OnboardingAggregatorImportDto",
         "required": [
           "aggregates",
-          "importContract",
-          "users"
+          "importContract"
         ],
         "type": "object",
         "properties": {
