@@ -289,6 +289,86 @@
         ]
       }
     },
+    "/institutions/{id}": {
+      "put": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "update institution data of given institution",
+        "description": "update institution data of given institution",
+        "operationId": "updateInstitutionUsingPUT",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The internal identifier of the institution",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstitutionPut"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/institutions/{institutionId}/users": {
       "get": {
         "tags": [
@@ -1653,6 +1733,51 @@
             "type": "string"
           },
           "id": {
+            "type": "string"
+          }
+        }
+      },
+      "InstitutionPut": {
+        "title": "InstitutionPut",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "geographicTaxonomyCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "onboardings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnboardingPut"
+            }
+          },
+          "parentDescription": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingPut": {
+        "title": "OnboardingPut",
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "vatNumber": {
             "type": "string"
           }
         }
