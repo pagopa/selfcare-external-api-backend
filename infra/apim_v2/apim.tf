@@ -734,6 +734,12 @@ module "apim_selfcare_support_service_v1" {
       })
     },
     {
+      operation_id = "updateInstitutionUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
       operation_id = "sendOnboardigNotificationUsingPOST"
       xml_content = templatefile("./api/api_key_fn_op_policy.xml.tpl", {
         BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"

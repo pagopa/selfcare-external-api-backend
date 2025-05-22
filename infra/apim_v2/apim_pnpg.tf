@@ -268,7 +268,7 @@ module "apim_pnpg_support_service_v2" {
       })
     },
     {
-      operation_id = "institutionsByLegalTaxId"
+      operation_id = "institutionsByLegalTaxIdUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
@@ -277,6 +277,12 @@ module "apim_pnpg_support_service_v2" {
       operation_id = "legalAddress"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-party-reg-proxy-ca.${var.ca_pnpg_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "updateInstitutionUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     }
   ]
