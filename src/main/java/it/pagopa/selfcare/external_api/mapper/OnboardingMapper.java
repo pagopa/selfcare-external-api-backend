@@ -49,7 +49,10 @@ public interface OnboardingMapper {
       target = "contractImported.activatedAt",
       source = "contractImported.activatedAt",
       qualifiedByName = "convertDate")
+  @Mapping(target="sendMailForImport", source="sendCompleteOnboardingEmail")
   OnboardingImportRequest mapToOnboardingImportRequest(OnboardingData onboardingData);
+
+
 
   @Named("toInstitutionImportRequest")
   @Mapping(target="institutionType", ignore = true)

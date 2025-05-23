@@ -75,6 +75,7 @@ class OnboardingMapperTest {
         assertEquals(INSTITUTION_ID, resource.getInstitutionExternalId());
         assertTrue(resource.getInstitutionUpdate().getImported());
         assertEquals(PROD_IO, resource.getProductId());
+        assertEquals(Boolean.TRUE, resource.getSendCompleteOnboardingEmail());
         assertTrue(resource.getInstitutionUpdate().getImported());
         assertNull(resource.getInstitutionType());
         reflectionEqualsByName(users.get(0), resource.getUsers().get(0), "role");
