@@ -74,6 +74,7 @@ public class OnboardingMapperCustom {
       resource.setInstitutionUpdate(new InstitutionUpdate());
       resource.getInstitutionUpdate().setTaxCode(externalId);
       resource.getInstitutionUpdate().setImported(true);
+      resource.setSendCompleteOnboardingEmail(Boolean.TRUE);
     }
     return resource;
   }
