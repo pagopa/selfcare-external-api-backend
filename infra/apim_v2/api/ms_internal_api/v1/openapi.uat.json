@@ -2658,8 +2658,7 @@
         "title": "OnboardingAggregatorImportDto",
         "required": [
           "aggregates",
-          "importContract",
-          "users"
+          "importContract"
         ],
         "type": "object",
         "properties": {
