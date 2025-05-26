@@ -99,7 +99,7 @@ jobs:
         id: optic_diff
         shell: bash
         run: |
-          optic_output=$(optic diff -s 0 ./docs/${{ inputs.docs_openapi_path }} ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json)
+          optic_output=$(optic diff -s info ./docs/${{ inputs.docs_openapi_path }} ${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json)
           echo "$optic_output"
           echo "$optic_output" > optic_diff_output.txt
           if grep -q "Operations: No operations changed" optic_diff_output.txt; then
