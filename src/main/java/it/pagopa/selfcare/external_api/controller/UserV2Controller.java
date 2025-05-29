@@ -34,6 +34,7 @@ public class UserV2Controller {
     @Tag(name = "support")
     @Tag(name = "support-pnpg")
     @Tag(name = "external-v2")
+    @Tag(name = "internal-v1")
     @Tag(name = "User")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

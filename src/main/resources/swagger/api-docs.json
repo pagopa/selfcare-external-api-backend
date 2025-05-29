@@ -1163,7 +1163,7 @@
         } ]
       },
       "post" : {
-        "tags" : [ "User", "external-v2", "support", "support-pnpg" ],
+        "tags" : [ "User", "external-v2", "internal-v1", "support", "support-pnpg" ],
         "summary" : "getUserInfo",
         "description" : "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId" : "V2getUserInfoUsingGET",
