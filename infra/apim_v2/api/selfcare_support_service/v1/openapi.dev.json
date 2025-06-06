@@ -2958,7 +2958,6 @@
       "OnboardingDefaultRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -2968,7 +2967,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -3148,6 +3146,9 @@
             "type": "string"
           },
           "zipCode": {
+            "type": "string"
+          },
+          "istatCode": {
             "type": "string"
           },
           "geographicTaxonomies": {
