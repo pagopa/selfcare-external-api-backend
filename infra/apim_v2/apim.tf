@@ -357,6 +357,14 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
+      operation_id = "getDelegationsUsingGET_2"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+      })
+    },
+    {
       operation_id = "getOnboardingsInstitutionUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
@@ -703,6 +711,12 @@ module "apim_selfcare_support_service_v1" {
     },
     {
       operation_id = "getDelegationsUsingGET"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "getDelegationsUsingGET_2"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
       })
