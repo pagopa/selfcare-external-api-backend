@@ -1433,7 +1433,7 @@
         ]
       }
     },
-    "/v2/delegations": {
+    "/delegations/delegations-with-pagination": {
       "get": {
         "tags": [
           "Delegation"
