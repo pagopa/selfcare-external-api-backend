@@ -1005,6 +1005,144 @@
         ]
       }
     },
+    "/delegations/delegations-with-pagination": {
+      "get": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Retrieve institution's delegations with pagination",
+        "description": "Retrieve institution's delegations with pagination",
+        "operationId": "getDelegationsUsingGET_2",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Description ente",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Institution's tax code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order to show response NONE, ASC, DESC",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC",
+                "NONE"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationWithPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/institutionOnboardings": {
       "get": {
         "tags": [
@@ -2656,6 +2794,43 @@
           }
         }
       },
+      "DelegationWithPaginationResponse": {
+        "title": "DelegationWithPaginationResponse",
+        "type": "object",
+        "properties": {
+          "delegations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DelegationResponse"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "PageInfo": {
+        "title": "PageInfo",
+        "type": "object",
+        "properties": {
+          "pageNo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "OnboardingResponse1": {
         "type": "object",
         "properties": {
@@ -2958,7 +3133,6 @@
       "OnboardingDefaultRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -2968,7 +3142,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
