@@ -1267,7 +1267,9 @@
     },
     "/onboarding/pa/import": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Onboarding Controller"
+        ],
         "summary": "Import PA onboarding with token creation and complete to COMPLETED.",
         "description": "Perform onboarding as /onboarding/pa but create token and completing the onboarding request to COMPLETED phase.",
         "operationId": "onboardingPaImport",
@@ -3612,7 +3614,6 @@
       "OnboardingDefaultRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -3622,7 +3623,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -3804,6 +3804,9 @@
           "zipCode": {
             "type": "string"
           },
+          "istatCode": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
@@ -3908,7 +3911,6 @@
       "OnboardingPaRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -3918,7 +3920,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -3995,6 +3996,9 @@
             "$ref": "#/components/schemas/BillingPaRequest"
           },
           "forceImport": {
+            "type": "boolean"
+          },
+          "sendMailForImport": {
             "type": "boolean"
           }
         }
@@ -4096,7 +4100,6 @@
       "OnboardingPspRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -4106,7 +4109,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -4184,6 +4186,9 @@
             "type": "string"
           },
           "zipCode": {
+            "type": "string"
+          },
+          "istatCode": {
             "type": "string"
           },
           "geographicTaxonomies": {
