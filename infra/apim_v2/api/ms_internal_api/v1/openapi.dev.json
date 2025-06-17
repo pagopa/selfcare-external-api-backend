@@ -3804,6 +3804,9 @@
           "zipCode": {
             "type": "string"
           },
+          "istatCode": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
@@ -4183,6 +4186,9 @@
             "type": "string"
           },
           "zipCode": {
+            "type": "string"
+          },
+          "istatCode": {
             "type": "string"
           },
           "geographicTaxonomies": {
