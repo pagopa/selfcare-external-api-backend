@@ -288,7 +288,8 @@ module "apim_external_api_ms_v2" {
     module.apim_product_io.product_id,
     module.apim_product_io_premium.product_id,
     module.apim_product_fd.product_id,
-    module.apim_product_fd_garantito.product_id
+    module.apim_product_fd_garantito.product_id,
+    module.apim_product_registro_beni.product_id
   ]
 
   api_operation_policies = [
@@ -1400,6 +1401,23 @@ module "apim_product_fd_garantito" {
   approval_required     = false
 
   policy_xml = file("./api_product/prod-fd-garantito/policy.xml")
+}
+
+module "apim_product_registro_beni" {
+  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+
+  product_id   = "prod-registro-beni"
+  display_name = "Registro Beni"
+  description  = "Registro Beni"
+
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  published             = true
+  subscription_required = true
+  approval_required     = false
+
+  policy_xml = file("./api_product/registro-beni/policy.xml")
 }
 
 ##################
