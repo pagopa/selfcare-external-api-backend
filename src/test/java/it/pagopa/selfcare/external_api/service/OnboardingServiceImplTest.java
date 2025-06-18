@@ -124,6 +124,18 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   }
 
   @Test
+  void autoApprovalOnboardingImportProductV2TestForPRV() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionExternalId("externalId");
+    InstitutionUpdate institutionUpdate = new InstitutionUpdate();
+    institutionUpdate.setGeographicTaxonomies(List.of(new GeographicTaxonomy()));
+    onboardingData.setInstitutionUpdate(institutionUpdate);
+    onboardingData.setInstitutionType(PRV);
+    Assertions.assertDoesNotThrow(
+            () -> onboardingService.autoApprovalOnboardingImportProductV2(onboardingData));
+  }
+
+  @Test
   void onboardingUsers_noInstitutionFound() throws Exception {
     ClassPathResource inputResource =
         new ClassPathResource("expectations/OnboardingUsersRequest.json");
