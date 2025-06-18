@@ -1050,10 +1050,6 @@ module "apim_internal_user_api_ms_v1" {
     "https"
   ]
 
-  product_ids = [
-    module.apim_product_internal.product_id,
-  ]
-
   service_url = format("https://selc-%s-user-ms-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
 
   content_format = "openapi+json"
@@ -1463,23 +1459,6 @@ module "apim_product_registro_beni" {
   approval_required     = false
 
   policy_xml = file("./api_product/registro-beni/policy.xml")
-}
-
-module "apim_product_internal" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
-
-  product_id   = "prod-internal"
-  display_name = "Internal API Product"
-  description  = "Internal API Product"
-
-  api_management_name = module.apim.name
-  resource_group_name = azurerm_resource_group.rg_api.name
-
-  published             = true
-  subscription_required = true
-  approval_required     = false
-
-  policy_xml = file("./api_product/prod-internal/policy.xml")
 }
 
 ##################
