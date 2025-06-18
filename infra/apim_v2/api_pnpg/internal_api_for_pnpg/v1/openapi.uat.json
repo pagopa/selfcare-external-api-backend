@@ -128,7 +128,7 @@
             "type": "string"
           },
           "user": {
-            "$ref": "#/components/schemas/User"
+            "$ref": "#/components/schemas/User1"
           },
           "product": {
             "$ref": "#/components/schemas/Product1"
@@ -144,7 +144,7 @@
           }
         }
       },
-      "User": {
+      "User1": {
         "required": [
           "fiscalCode",
           "institutionEmail"
