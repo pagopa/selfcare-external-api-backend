@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import it.pagopa.selfcare.external_api.model.institution.AggregateInsitution;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.RootParent;
 import lombok.Data;
@@ -31,6 +32,8 @@ public class OnboardingData {
     private InstitutionLocation location;
     private OnboardingImportContract contractImported;
     private AdditionalInformations additionalInformations;
+    private Boolean isAggregator;
+    private List<AggregateInsitution> aggregates;
 
     public List<User> getUsers() {
         return Optional.ofNullable(users).orElse(Collections.emptyList());

@@ -112,6 +112,28 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
   }
 
   @Test
+  void autoApprovalOnboardingProductV2TestForAggregatorPSP() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionType(PSP);
+    onboardingData.setIsAggregator(Boolean.TRUE);
+    Assertions.assertDoesNotThrow(
+            () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
+  }
+
+  @Test
+  void autoApprovalOnboardingProductV2TestForAggregator() {
+    OnboardingData onboardingData = new OnboardingData();
+    onboardingData.setInstitutionUpdate(new InstitutionUpdate());
+    onboardingData.setInstitutionExternalId("externalId");
+    onboardingData.setInstitutionType(GPU);
+    onboardingData.setIsAggregator(Boolean.TRUE);
+    Assertions.assertDoesNotThrow(
+            () -> onboardingService.autoApprovalOnboardingProductV2(onboardingData));
+  }
+
+  @Test
   void autoApprovalOnboardingImportProductV2Test() {
     OnboardingData onboardingData = new OnboardingData();
     onboardingData.setInstitutionExternalId("externalId");
