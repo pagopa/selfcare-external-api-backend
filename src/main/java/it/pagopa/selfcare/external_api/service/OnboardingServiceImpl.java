@@ -85,7 +85,7 @@ class OnboardingServiceImpl implements OnboardingService {
         onboardingControllerApi._onboardingPspImport(
                 onboardingMapper.toOnboardingImportPspRequest(onboardingData));
     } else {
-        onboardingControllerApi._onboarding(
+        onboardingControllerApi._onboardingImport(
                 onboardingMapper.toOnboardingDefaultRequest(onboardingData));
     }
     log.trace("autoApprovalOnboardingImport end");
