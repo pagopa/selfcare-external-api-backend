@@ -81,8 +81,13 @@ class OnboardingServiceImpl implements OnboardingService {
   public void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData) {
     log.trace("autoApprovalOnboardingImport start");
     log.debug("autoApprovalOnboardingImport = {}", onboardingData);
-    onboardingControllerApi._onboardingPspImport(
-        onboardingMapper.toOnboardingImportPspRequest(onboardingData));
+    if (InstitutionType.PSP.equals(onboardingData.getInstitutionType())) {
+        onboardingControllerApi._onboardingPspImport(
+                onboardingMapper.toOnboardingImportPspRequest(onboardingData));
+    } else {
+        onboardingControllerApi._onboarding(
+                onboardingMapper.toOnboardingDefaultRequest(onboardingData));
+    }
     log.trace("autoApprovalOnboardingImport end");
   }
 
