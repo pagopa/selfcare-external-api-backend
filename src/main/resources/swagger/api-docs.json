@@ -1350,6 +1350,71 @@
           }
         }
       },
+      "AggregateInstitutionDto" : {
+        "title" : "AggregateInstitutionDto",
+        "required" : [ "description", "taxCode" ],
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "county" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "digitalAddress" : {
+            "type" : "string"
+          },
+          "geographicTaxonomies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/GeographicTaxonomyDto"
+            }
+          },
+          "iban" : {
+            "type" : "string"
+          },
+          "origin" : {
+            "type" : "string",
+            "enum" : [ "ADE", "ANAC", "INFOCAMERE", "IPA", "IVASS", "MOCK", "PDND_INFOCAMERE", "SELC", "UNKNOWN" ]
+          },
+          "originId" : {
+            "type" : "string"
+          },
+          "parentDescription" : {
+            "type" : "string"
+          },
+          "recipientCode" : {
+            "type" : "string"
+          },
+          "subunitCode" : {
+            "type" : "string"
+          },
+          "subunitType" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
+          },
+          "users" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/User"
+            }
+          },
+          "vatNumber" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          }
+        }
+      },
       "AssistanceContactsDto" : {
         "title" : "AssistanceContactsDto",
         "type" : "object",
@@ -2057,7 +2122,7 @@
             "format" : "date-time"
           },
           "additionalInformations" : {
-            "description" : "GSP institution's additional informations",
+            "description" : "GSP institution's additional information",
             "$ref" : "#/components/schemas/AdditionalInformationsDto"
           },
           "assistanceContacts" : {
@@ -2163,8 +2228,15 @@
         "type" : "object",
         "properties" : {
           "additionalInformations" : {
-            "description" : "GSP institution's additional informations",
+            "description" : "GSP institution's additional information",
             "$ref" : "#/components/schemas/AdditionalInformationsDto"
+          },
+          "aggregates" : {
+            "type" : "array",
+            "description" : "List of aggregates users",
+            "items" : {
+              "$ref" : "#/components/schemas/AggregateInstitutionDto"
+            }
           },
           "assistanceContacts" : {
             "description" : "Institution's assistance contacts",
@@ -2197,6 +2269,11 @@
             "type" : "string",
             "description" : "Institution's type",
             "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+          },
+          "isAggregator" : {
+            "type" : "boolean",
+            "description" : "True if institution is an aggregator",
+            "example" : false
           },
           "origin" : {
             "type" : "string",
@@ -2720,6 +2797,34 @@
             "items" : {
               "$ref" : "#/components/schemas/TokenResource"
             }
+          }
+        }
+      },
+      "User" : {
+        "title" : "User",
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "productRole" : {
+            "type" : "string"
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "ADMIN_EA", "DELEGATE", "MANAGER", "OPERATOR", "SUB_DELEGATE" ]
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
           }
         }
       },
