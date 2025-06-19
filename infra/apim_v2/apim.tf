@@ -593,6 +593,7 @@ resource "azurerm_api_management_api_version_set" "apim_pdnd_infocamere_api_ms" 
   versioning_scheme   = "Segment"
 }
 
+
 module "apim_pdnd_infocamere_api_ms_v1" {
   source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
   name = format("%s-pdnd-infocamere-api", local.project)
@@ -1024,6 +1025,46 @@ module "apim_billing_portal_v1" {
       })
     }
   ]
+}
+
+resource "azurerm_api_management_api_version_set" "apim_internal_user_api_ms" {
+  name = format("%s-ms-internal-user-api", var.env_short)
+  resource_group_name = azurerm_resource_group.rg_api.name
+  api_management_name = module.apim.name
+  display_name        = "Internal User API Service"
+  versioning_scheme   = "Segment"
+}
+
+module "apim_internal_user_api_ms_v1" {
+  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  name                = format("%s-ms-internal-user-api", local.project)
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+  version_set_id      = azurerm_api_management_api_version_set.apim_internal_user_api_ms.id
+
+  description  = "This service is the proxy for internal User services"
+  display_name = "Internal User MS API service"
+  path         = "internal/user"
+  protocols = [
+    "https"
+  ]
+
+  service_url = format("https://selc-%s-user-ms-ca.%s", var.env_short, var.ca_suffix_dns_private_name)
+
+  content_format = "openapi+json"
+  content_value = templatefile("./api/internal_user_api/v1/openapi.${var.env}.json", {
+    host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
+    basePath = "internal/user"
+  })
+
+  xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
+    API_DOMAIN                 = local.api_domain
+    KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+    JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+  })
+
+  subscription_required = true
+
 }
 
 ##############
