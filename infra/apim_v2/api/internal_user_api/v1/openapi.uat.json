@@ -73,9 +73,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/events/sc-users" : {
@@ -115,9 +119,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}" : {
@@ -157,9 +165,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/product/{productId}/check-user" : {
@@ -244,9 +256,13 @@
             }
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/products/{productId}/created-at" : {
@@ -301,9 +317,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/products/{productId}/users" : {
@@ -379,9 +399,13 @@
             }
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/products/{productId}/users/count" : {
@@ -441,9 +465,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/user-institutions" : {
@@ -523,9 +551,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions/{institutionId}/users" : {
@@ -597,9 +629,13 @@
             }
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users" : {
@@ -694,9 +730,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       },
       "post" : {
         "tags" : [ "User", "internal-pnpg" ],
@@ -729,9 +769,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/emails" : {
@@ -776,9 +820,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/ids" : {
@@ -818,9 +866,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/notification" : {
@@ -870,9 +922,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/search" : {
@@ -915,9 +971,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{id}" : {
@@ -998,9 +1058,13 @@
             }
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{id}/details" : {
@@ -1047,9 +1111,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{id}/institution/{institutionId}/product/{productId}/status" : {
@@ -1104,9 +1172,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{id}/status" : {
@@ -1199,9 +1271,13 @@
             }
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{id}/user-registry" : {
@@ -1247,9 +1323,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}" : {
@@ -1292,9 +1372,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}/institution/{institutionId}" : {
@@ -1381,9 +1465,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}/institutions" : {
@@ -1433,9 +1521,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}/institutions/{institutionId}" : {
@@ -1483,9 +1575,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}/institutions/{institutionId}/products/{productId}" : {
@@ -1527,9 +1623,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/users/{userId}/onboarding" : {
@@ -1572,9 +1672,13 @@
             "description" : "Not Allowed"
           }
         },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     }
   },

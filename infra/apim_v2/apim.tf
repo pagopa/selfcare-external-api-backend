@@ -1040,22 +1040,21 @@ module "apim_internal_user_api_ms_v1" {
   name                = format("%s-ms-internal-user-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
-  version_set_id      = azurerm_api_management_api_version_set.apim_internal_api_ms.id
+  version_set_id      = azurerm_api_management_api_version_set.apim_internal_user_api_ms.id
 
   description  = "This service is the proxy for internal User services"
   display_name = "Internal User MS API service"
-  path         = "internal/user-ms"
-  api_version  = "v1"
+  path         = "internal/user"
   protocols = [
     "https"
   ]
 
-  service_url = format("https://selc-%s-user-ms-ca.%s/v1/", var.env_short, var.ca_suffix_dns_private_name)
+  service_url = format("https://selc-%s-user-ms-ca.%s", var.env_short, var.ca_suffix_dns_private_name)
 
   content_format = "openapi+json"
   content_value = templatefile("./api/internal_user_api/v1/openapi.${var.env}.json", {
     host     = azurerm_api_management_custom_domain.api_custom_domain.gateway[0].host_name
-    basePath = "v1"
+    basePath = "internal/user"
   })
 
   xml_content = templatefile("./api/jwt_base_policy.xml.tpl", {
@@ -1065,6 +1064,7 @@ module "apim_internal_user_api_ms_v1" {
   })
 
   subscription_required = true
+
 }
 
 ##############
