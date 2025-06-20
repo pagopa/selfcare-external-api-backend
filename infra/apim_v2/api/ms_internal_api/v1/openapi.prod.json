@@ -1267,7 +1267,9 @@
     },
     "/onboarding/pa/import": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Onboarding Controller"
+        ],
         "summary": "Import PA onboarding with token creation and complete to COMPLETED.",
         "description": "Perform onboarding as /onboarding/pa but create token and completing the onboarding request to COMPLETED phase.",
         "operationId": "onboardingPaImport",
@@ -2371,8 +2373,15 @@
         "type": "object",
         "properties": {
           "additionalInformations": {
-            "description": "GSP institution's additional informations",
+            "description": "GSP institution's additional information",
             "$ref": "#/components/schemas/AdditionalInformationsDto"
+          },
+          "aggregates": {
+            "type": "array",
+            "description": "List of aggregates users",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionDto"
+            }
           },
           "assistanceContacts": {
             "description": "Institution's assistance contacts",
@@ -2418,6 +2427,11 @@
               "SA",
               "SCP"
             ]
+          },
+          "isAggregator": {
+            "type": "boolean",
+            "description": "True if institution is an aggregator",
+            "example": false
           },
           "origin": {
             "type": "string",
@@ -2489,6 +2503,136 @@
             "type": "string"
           },
           "regulatedMarketNote": {
+            "type": "string"
+          }
+        }
+      },
+      "AggregateInstitutionDto": {
+        "title": "AggregateInstitutionDto",
+        "required": [
+          "description",
+          "taxCode"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeographicTaxonomyDto"
+            }
+          },
+          "iban": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "ADE",
+              "ANAC",
+              "INFOCAMERE",
+              "IPA",
+              "IVASS",
+              "MOCK",
+              "PDND_INFOCAMERE",
+              "SELC",
+              "UNKNOWN"
+            ]
+          },
+          "originId": {
+            "type": "string"
+          },
+          "parentDescription": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "vatNumber": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          }
+        }
+      },
+      "GeographicTaxonomyDto": {
+        "title": "GeographicTaxonomyDto",
+        "required": [
+          "code",
+          "desc"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Institution's geographic taxonomy ISTAT code"
+          },
+          "desc": {
+            "type": "string",
+            "description": "Institution's geographic taxonomy extended name"
+          }
+        }
+      },
+      "User": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "productRole": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN_EA",
+              "DELEGATE",
+              "MANAGER",
+              "OPERATOR",
+              "SUB_DELEGATE"
+            ]
+          },
+          "surname": {
+            "type": "string"
+          },
+          "taxCode": {
             "type": "string"
           }
         }
@@ -2572,24 +2716,6 @@
           "shareCapital": {
             "type": "string",
             "description": "Institution's share capital value"
-          }
-        }
-      },
-      "GeographicTaxonomyDto": {
-        "title": "GeographicTaxonomyDto",
-        "required": [
-          "code",
-          "desc"
-        ],
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "Institution's geographic taxonomy ISTAT code"
-          },
-          "desc": {
-            "type": "string",
-            "description": "Institution's geographic taxonomy extended name"
           }
         }
       },
@@ -2849,7 +2975,7 @@
             "format": "date-time"
           },
           "additionalInformations": {
-            "description": "GSP institution's additional informations",
+            "description": "GSP institution's additional information",
             "$ref": "#/components/schemas/AdditionalInformationsDto"
           },
           "assistanceContacts": {
@@ -3612,7 +3738,6 @@
       "OnboardingDefaultRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -3622,7 +3747,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -3804,6 +3928,9 @@
           "zipCode": {
             "type": "string"
           },
+          "istatCode": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
@@ -3908,7 +4035,6 @@
       "OnboardingPaRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -3918,7 +4044,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -3995,6 +4120,9 @@
             "$ref": "#/components/schemas/BillingPaRequest"
           },
           "forceImport": {
+            "type": "boolean"
+          },
+          "sendMailForImport": {
             "type": "boolean"
           }
         }
@@ -4096,7 +4224,6 @@
       "OnboardingPspRequest": {
         "required": [
           "productId",
-          "users",
           "institution"
         ],
         "type": "object",
@@ -4106,7 +4233,6 @@
             "type": "string"
           },
           "users": {
-            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/UserRequest"
@@ -4184,6 +4310,9 @@
             "type": "string"
           },
           "zipCode": {
+            "type": "string"
+          },
+          "istatCode": {
             "type": "string"
           },
           "geographicTaxonomies": {
