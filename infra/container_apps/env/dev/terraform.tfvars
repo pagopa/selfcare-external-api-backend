@@ -87,7 +87,7 @@ app_settings = [
   },
   {
     name  = "STORAGE_CONTAINER"
-    value = "selc-d-contracts-blob"
+    value = "sc-d-documents-blob"
   },
   {
     name  = "SELFCARE_USER_URL"
@@ -97,7 +97,7 @@ app_settings = [
 
 secrets_names = {
   "APPLICATIONINSIGHTS_CONNECTION_STRING"  = "appinsights-connection-string"
-  "BLOB_STORAGE_CONN_STRING"               = "blob-storage-contract-connection-string"
+  "BLOB_STORAGE_CONN_STRING"               = "documents-storage-connection-string"
   "USERVICE_USER_REGISTRY_API_KEY"         = "user-registry-api-key"
   "JWT_TOKEN_PUBLIC_KEY"                   = "jwt-public-key"
   "BLOB_STORAGE_PRODUCT_CONNECTION_STRING" = "blob-storage-product-connection-string"
