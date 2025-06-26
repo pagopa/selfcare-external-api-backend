@@ -7,6 +7,7 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse
 import it.pagopa.selfcare.external_api.TestUtils;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
+import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
@@ -39,6 +40,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -305,6 +307,53 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                     .toList()
                 )
         );
+    }
+
+    @Test
+    void getInstitutionDetails() {
+        final InstitutionResponse inst1Response = new InstitutionResponse();
+        inst1Response.setId("inst1");
+        final OnboardedProductResponse inst1Onb1 = new OnboardedProductResponse();
+        inst1Onb1.setProductId("prod-1");
+        inst1Onb1.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        inst1Onb1.setCreatedAt(LocalDateTime.of(2024, 1, 1, 0, 0, 0));
+        final OnboardedProductResponse inst1Onb2 = new OnboardedProductResponse();
+        inst1Onb2.setProductId("prod-2");
+        inst1Onb2.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED);
+        inst1Onb2.setCreatedAt(LocalDateTime.of(2024, 1, 2, 0, 0, 0));
+        inst1Response.setOnboarding(List.of(inst1Onb1, inst1Onb2));
+
+        final InstitutionResponse inst3Response = new InstitutionResponse();
+        inst3Response.setId("inst3");
+        final OnboardedProductResponse inst3Onb1 = new OnboardedProductResponse();
+        inst3Onb1.setProductId("prod-3");
+        inst3Onb1.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        inst3Onb1.setCreatedAt(LocalDateTime.of(2024, 1, 3, 0, 0, 0));
+        inst3Response.setOnboarding(List.of(inst3Onb1));
+
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst1")).thenReturn(ResponseEntity.ok(inst1Response));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst2")).thenThrow(ResourceNotFoundException.class);
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst3")).thenReturn(ResponseEntity.ok(inst3Response));
+
+        List<OnboardedInstitutionInfo> onboardings1 = userService.getInstitutionDetails("inst1");
+        Assertions.assertEquals(2, onboardings1.size());
+        Assertions.assertEquals("inst1", onboardings1.get(0).getId());
+        Assertions.assertEquals("ACTIVE", onboardings1.get(0).getState());
+        Assertions.assertEquals("prod-1", onboardings1.get(0).getProductInfo().getId());
+        Assertions.assertEquals("ACTIVE", onboardings1.get(0).getProductInfo().getStatus());
+        Assertions.assertEquals("SUSPENDED", onboardings1.get(1).getState());
+        Assertions.assertEquals("prod-2", onboardings1.get(1).getProductInfo().getId());
+        Assertions.assertEquals("SUSPENDED", onboardings1.get(1).getProductInfo().getStatus());
+
+        List<OnboardedInstitutionInfo> onboardings2 = userService.getInstitutionDetails("inst2");
+        Assertions.assertEquals(0, onboardings2.size());
+
+        List<OnboardedInstitutionInfo> onboardings3 = userService.getInstitutionDetails("inst3");
+        Assertions.assertEquals(1, onboardings3.size());
+        Assertions.assertEquals("inst3", onboardings3.get(0).getId());
+        Assertions.assertEquals("ACTIVE", onboardings3.get(0).getState());
+        Assertions.assertEquals("prod-3", onboardings3.get(0).getProductInfo().getId());
+        Assertions.assertEquals("ACTIVE", onboardings3.get(0).getProductInfo().getStatus());
     }
 
     @Test

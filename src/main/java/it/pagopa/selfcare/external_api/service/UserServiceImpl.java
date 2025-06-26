@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
         return onboardedInstitutionsInfo;
     }
 
-    private List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
+    List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
         try {
             ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
             if (Objects.nonNull(responseEntity) && Objects.nonNull(responseEntity.getBody()) && Objects.nonNull(responseEntity.getBody().getOnboarding())) {
