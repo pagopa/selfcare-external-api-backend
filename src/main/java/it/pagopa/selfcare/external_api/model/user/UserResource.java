@@ -39,6 +39,9 @@ public class UserResource {
     @ApiModelProperty(value = "${swagger.external_api.user.model.institutionalEmail}")
     private String email;
 
+    @ApiModelProperty(value = "${swagger.external_api.user.model.lastOnboardingUserEmail}")
+    private String lastOnboardingUserEmail;
+
     @ApiModelProperty(value = "${swagger.external_api.user.model.fiscalCode}")
     private String fiscalCode;
 

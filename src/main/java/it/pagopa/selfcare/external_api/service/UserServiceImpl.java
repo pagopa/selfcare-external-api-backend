@@ -59,6 +59,11 @@ public class UserServiceImpl implements UserService {
                         })
                         .toList();
 
+        final String lastOnboardingUserEmail = onboardedInstitutionResponses.stream()
+                .max(Comparator.comparing(o -> o.getProductInfo().getCreatedAt()))
+                .map(OnboardedInstitutionResponse::getUserEmail).orElse(null);
+        user.setLastOnboardingUserEmail(lastOnboardingUserEmail);
+
         UserInfoWrapper infoWrapper = new UserInfoWrapper();
         infoWrapper.setUser(user);
         infoWrapper.setOnboardedInstitutions(onboardedInstitutionResponses);

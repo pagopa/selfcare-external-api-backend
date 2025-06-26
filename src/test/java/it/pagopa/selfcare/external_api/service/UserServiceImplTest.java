@@ -11,15 +11,19 @@ import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import it.pagopa.selfcare.product.service.ProductService;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.CertifiableFieldResponseString;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDetailResponse;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.WorkContactResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,12 +39,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
+import static it.pagopa.selfcare.external_api.model.user.RelationshipState.SUSPENDED;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,6 +54,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest extends BaseServiceTestUtils {
 
+    @Spy
     @InjectMocks
     private UserServiceImpl userService;
     @Spy
@@ -300,6 +305,52 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                     .toList()
                 )
         );
+    }
+
+    @Test
+    void getUserInfoV2WithLastOnboardingUserEmail() {
+        final UserDetailResponse user = new UserDetailResponse();
+        user.setId("userId");
+        final CertifiableFieldResponseString email1 = new CertifiableFieldResponseString();
+        email1.setValue("test1@test.com");
+        final CertifiableFieldResponseString email2 = new CertifiableFieldResponseString();
+        email2.setValue("test2@test.com");
+        final CertifiableFieldResponseString email3 = new CertifiableFieldResponseString();
+        email3.setValue("test3@test.com");
+        final CertifiableFieldResponseString email4 = new CertifiableFieldResponseString();
+        email4.setValue("test4@test.com");
+        user.setWorkContacts(Map.of(
+            "1", new WorkContactResponse().email(email1),
+            "2", new WorkContactResponse().email(email2),
+            "3", new WorkContactResponse().email(email3),
+            "4", new WorkContactResponse().email(email4)
+        ));
+        user.setEmail(email1);
+        when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+
+        final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
+            createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
+            createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
+            createOnboardedInstitutionInfo("info3", "prod-3", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3"),
+            createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4")
+        );
+        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails("userId", null);
+
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of()).getUser().getLastOnboardingUserEmail());
+        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE)).getUser().getLastOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED)).getUser().getLastOnboardingUserEmail());
+    }
+
+    private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String status, OffsetDateTime createdAt, String userMailUuid) {
+        final OnboardedInstitutionInfo info = new OnboardedInstitutionInfo();
+        info.setId(id);
+        final ProductInfo productInfo = new ProductInfo();
+        productInfo.setId(prodId);
+        productInfo.setStatus(status);
+        productInfo.setCreatedAt(createdAt);
+        info.setProductInfo(productInfo);
+        info.setUserMailUuid(userMailUuid);
+        return info;
     }
 
     /**

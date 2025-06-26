@@ -2983,6 +2983,10 @@
             "description" : "User's unique identifier",
             "format" : "uuid"
           },
+          "lastOnboardingUserEmail" : {
+            "type" : "string",
+            "description" : "User's last onboarding used email"
+          },
           "name" : {
             "type" : "string",
             "description" : "User's name"

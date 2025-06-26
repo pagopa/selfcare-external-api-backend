@@ -12,6 +12,7 @@ public class User {
     @FieldNameConstants.Exclude
     private String id;
     private String fiscalCode;
+    private String lastOnboardingUserEmail;
     private CertifiedField<String> name;
     private CertifiedField<String> familyName;
     private CertifiedField<String> email;
