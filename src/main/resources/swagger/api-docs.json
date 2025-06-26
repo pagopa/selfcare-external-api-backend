@@ -2983,9 +2983,9 @@
             "description" : "User's unique identifier",
             "format" : "uuid"
           },
-          "lastOnboardingUserEmail" : {
+          "lastActiveOnboardingUserEmail" : {
             "type" : "string",
-            "description" : "User's last onboarding used email"
+            "description" : "User's last active onboarding used email"
           },
           "name" : {
             "type" : "string",

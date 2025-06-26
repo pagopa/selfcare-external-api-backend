@@ -319,31 +319,36 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         email3.setValue("test3@test.com");
         final CertifiableFieldResponseString email4 = new CertifiableFieldResponseString();
         email4.setValue("test4@test.com");
+        final CertifiableFieldResponseString email5 = new CertifiableFieldResponseString();
+        email4.setValue("test5@test.com");
         user.setWorkContacts(Map.of(
             "1", new WorkContactResponse().email(email1),
             "2", new WorkContactResponse().email(email2),
             "3", new WorkContactResponse().email(email3),
-            "4", new WorkContactResponse().email(email4)
+            "4", new WorkContactResponse().email(email4),
+            "5", new WorkContactResponse().email(email5)
         ));
         user.setEmail(email1);
         when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
 
         final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
-            createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
-            createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
-            createOnboardedInstitutionInfo("info3", "prod-3", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3"),
-            createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4")
+            createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
+            createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
+            createOnboardedInstitutionInfo("info3", "prod-3", "ACTIVE", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3"),
+            createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4"),
+            createOnboardedInstitutionInfo("info5", "prod-5", "SUSPENDED", "ACTIVE", OffsetDateTime.of(2025, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC), "5")
         );
         doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails("userId", null);
 
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of()).getUser().getLastOnboardingUserEmail());
-        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE)).getUser().getLastOnboardingUserEmail());
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED)).getUser().getLastOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of()).getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE)).getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED)).getUser().getLastActiveOnboardingUserEmail());
     }
 
-    private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String status, OffsetDateTime createdAt, String userMailUuid) {
+    private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String state, String status, OffsetDateTime createdAt, String userMailUuid) {
         final OnboardedInstitutionInfo info = new OnboardedInstitutionInfo();
         info.setId(id);
+        info.setState(state);
         final ProductInfo productInfo = new ProductInfo();
         productInfo.setId(prodId);
         productInfo.setStatus(status);
