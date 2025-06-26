@@ -3323,6 +3323,9 @@
           "zipCode": {
             "type": "string"
           },
+          "istatCode": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
