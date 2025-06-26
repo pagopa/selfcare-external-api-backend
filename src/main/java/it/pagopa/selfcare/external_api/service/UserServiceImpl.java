@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.service;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
+import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapper;
 import it.pagopa.selfcare.external_api.mapper.UserMapper;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
@@ -156,6 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
+        try {
             ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
             if (Objects.nonNull(responseEntity) && Objects.nonNull(responseEntity.getBody()) && Objects.nonNull(responseEntity.getBody().getOnboarding())) {
                 return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
@@ -166,7 +168,10 @@ public class UserServiceImpl implements UserService {
                     return onboardedInstitutionInfo;
                 }).toList();
             }
-            return Collections.emptyList();
+        } catch (ResourceNotFoundException ex) {
+            log.warn("Not found institution with id {}", institutionId);
+        }
+        return Collections.emptyList();
     }
 
     @Override
