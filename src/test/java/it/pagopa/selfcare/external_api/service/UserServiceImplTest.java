@@ -7,19 +7,24 @@ import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse
 import it.pagopa.selfcare.external_api.TestUtils;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
 import it.pagopa.selfcare.external_api.client.MsUserApiRestClient;
+import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.UserMapperImpl;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
+import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitutionMapperImpl;
 import it.pagopa.selfcare.external_api.model.user.UserDetailsWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import it.pagopa.selfcare.product.service.ProductService;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.CertifiableFieldResponseString;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDetailResponse;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.WorkContactResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,12 +40,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
+import static it.pagopa.selfcare.external_api.model.user.RelationshipState.SUSPENDED;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,6 +56,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest extends BaseServiceTestUtils {
 
+    @Spy
     @InjectMocks
     private UserServiceImpl userService;
     @Spy
@@ -300,6 +307,104 @@ class UserServiceImplTest extends BaseServiceTestUtils {
                     .toList()
                 )
         );
+    }
+
+    @Test
+    void getInstitutionDetails() {
+        final InstitutionResponse inst1Response = new InstitutionResponse();
+        inst1Response.setId("inst1");
+        final OnboardedProductResponse inst1Onb1 = new OnboardedProductResponse();
+        inst1Onb1.setProductId("prod-1");
+        inst1Onb1.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        inst1Onb1.setCreatedAt(LocalDateTime.of(2024, 1, 1, 0, 0, 0));
+        final OnboardedProductResponse inst1Onb2 = new OnboardedProductResponse();
+        inst1Onb2.setProductId("prod-2");
+        inst1Onb2.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED);
+        inst1Onb2.setCreatedAt(LocalDateTime.of(2024, 1, 2, 0, 0, 0));
+        inst1Response.setOnboarding(List.of(inst1Onb1, inst1Onb2));
+
+        final InstitutionResponse inst3Response = new InstitutionResponse();
+        inst3Response.setId("inst3");
+        final OnboardedProductResponse inst3Onb1 = new OnboardedProductResponse();
+        inst3Onb1.setProductId("prod-3");
+        inst3Onb1.setStatus(OnboardedProductResponse.StatusEnum.ACTIVE);
+        inst3Onb1.setCreatedAt(LocalDateTime.of(2024, 1, 3, 0, 0, 0));
+        inst3Response.setOnboarding(List.of(inst3Onb1));
+
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst1")).thenReturn(ResponseEntity.ok(inst1Response));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst2")).thenThrow(ResourceNotFoundException.class);
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst3")).thenReturn(ResponseEntity.ok(inst3Response));
+
+        List<OnboardedInstitutionInfo> onboardings1 = userService.getInstitutionDetails("inst1");
+        Assertions.assertEquals(2, onboardings1.size());
+        Assertions.assertEquals("inst1", onboardings1.get(0).getId());
+        Assertions.assertEquals("ACTIVE", onboardings1.get(0).getState());
+        Assertions.assertEquals("prod-1", onboardings1.get(0).getProductInfo().getId());
+        Assertions.assertEquals("ACTIVE", onboardings1.get(0).getProductInfo().getStatus());
+        Assertions.assertEquals("SUSPENDED", onboardings1.get(1).getState());
+        Assertions.assertEquals("prod-2", onboardings1.get(1).getProductInfo().getId());
+        Assertions.assertEquals("SUSPENDED", onboardings1.get(1).getProductInfo().getStatus());
+
+        List<OnboardedInstitutionInfo> onboardings2 = userService.getInstitutionDetails("inst2");
+        Assertions.assertEquals(0, onboardings2.size());
+
+        List<OnboardedInstitutionInfo> onboardings3 = userService.getInstitutionDetails("inst3");
+        Assertions.assertEquals(1, onboardings3.size());
+        Assertions.assertEquals("inst3", onboardings3.get(0).getId());
+        Assertions.assertEquals("ACTIVE", onboardings3.get(0).getState());
+        Assertions.assertEquals("prod-3", onboardings3.get(0).getProductInfo().getId());
+        Assertions.assertEquals("ACTIVE", onboardings3.get(0).getProductInfo().getStatus());
+    }
+
+    @Test
+    void getUserInfoV2WithLastOnboardingUserEmail() {
+        final UserDetailResponse user = new UserDetailResponse();
+        user.setId("userId");
+        final CertifiableFieldResponseString email1 = new CertifiableFieldResponseString();
+        email1.setValue("test1@test.com");
+        final CertifiableFieldResponseString email2 = new CertifiableFieldResponseString();
+        email2.setValue("test2@test.com");
+        final CertifiableFieldResponseString email3 = new CertifiableFieldResponseString();
+        email3.setValue("test3@test.com");
+        final CertifiableFieldResponseString email4 = new CertifiableFieldResponseString();
+        email4.setValue("test4@test.com");
+        final CertifiableFieldResponseString email5 = new CertifiableFieldResponseString();
+        email4.setValue("test5@test.com");
+        user.setWorkContacts(Map.of(
+            "1", new WorkContactResponse().email(email1),
+            "2", new WorkContactResponse().email(email2),
+            "3", new WorkContactResponse().email(email3),
+            "4", new WorkContactResponse().email(email4),
+            "5", new WorkContactResponse().email(email5)
+        ));
+        user.setEmail(email1);
+        when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+
+        final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
+            createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
+            createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
+            createOnboardedInstitutionInfo("info3", "prod-3", "ACTIVE", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3"),
+            createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4"),
+            createOnboardedInstitutionInfo("info5", "prod-5", "SUSPENDED", "ACTIVE", OffsetDateTime.of(2025, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC), "5")
+        );
+        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails("userId", null);
+
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of()).getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE)).getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED)).getUser().getLastActiveOnboardingUserEmail());
+    }
+
+    private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String state, String status, OffsetDateTime createdAt, String userMailUuid) {
+        final OnboardedInstitutionInfo info = new OnboardedInstitutionInfo();
+        info.setId(id);
+        info.setState(state);
+        final ProductInfo productInfo = new ProductInfo();
+        productInfo.setId(prodId);
+        productInfo.setStatus(status);
+        productInfo.setCreatedAt(createdAt);
+        info.setProductInfo(productInfo);
+        info.setUserMailUuid(userMailUuid);
+        return info;
     }
 
     /**
