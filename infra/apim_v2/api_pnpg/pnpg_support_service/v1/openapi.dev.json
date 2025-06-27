@@ -1558,6 +1558,10 @@
             "description": "User's unique identifier",
             "format": "uuid"
           },
+          "lastActiveOnboardingUserEmail": {
+            "type": "string",
+            "description": "User's last active onboarding used email"
+          },
           "name": {
             "type": "string",
             "description": "User's name"

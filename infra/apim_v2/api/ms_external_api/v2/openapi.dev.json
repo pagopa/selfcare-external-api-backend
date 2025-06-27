@@ -2115,8 +2115,31 @@
             "type": "string",
             "format": "date-time"
           },
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "AS",
+              "CON",
+              "GPU",
+              "GSP",
+              "PA",
+              "PG",
+              "PRV",
+              "PSP",
+              "PT",
+              "REC",
+              "SA",
+              "SCP"
+            ]
+          },
           "isAggregator": {
             "type": "boolean"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "originId": {
+            "type": "string"
           },
           "productId": {
             "type": "string"
@@ -2222,8 +2245,31 @@
             "type": "string",
             "format": "date-time"
           },
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "AS",
+              "CON",
+              "GPU",
+              "GSP",
+              "PA",
+              "PG",
+              "PRV",
+              "PSP",
+              "PT",
+              "REC",
+              "SA",
+              "SCP"
+            ]
+          },
           "isAggregator": {
             "type": "boolean"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "originId": {
+            "type": "string"
           },
           "pricingPlan": {
             "type": "string"
@@ -2734,6 +2780,10 @@
             "type": "string",
             "description": "User's unique identifier",
             "format": "uuid"
+          },
+          "lastActiveOnboardingUserEmail": {
+            "type": "string",
+            "description": "User's last active onboarding used email"
           },
           "name": {
             "type": "string",
