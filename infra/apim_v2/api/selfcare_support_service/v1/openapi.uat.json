@@ -176,6 +176,72 @@
             ]
           }
         ]
+      },
+      "post": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Create an association between institution id and technical partner",
+        "description": "Create an association between institution id and technical partner",
+        "operationId": "createDelegationUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DelegationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
       }
     },
     "/institutions": {
@@ -1614,6 +1680,38 @@
           }
         }
       },
+      "DelegationRequest": {
+        "title": "DelegationRequest",
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "institutionFromName": {
+            "type": "string"
+          },
+          "institutionFromRootName": {
+            "type": "string"
+          },
+          "institutionToName": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AOO",
+              "EA",
+              "PT"
+            ]
+          }
+        }
+      },
       "InstitutionsResponse": {
         "title": "InstitutionsResponse",
         "type": "object",
@@ -1798,8 +1896,31 @@
             "type": "string",
             "format": "date-time"
           },
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "AS",
+              "CON",
+              "GPU",
+              "GSP",
+              "PA",
+              "PG",
+              "PRV",
+              "PSP",
+              "PT",
+              "REC",
+              "SA",
+              "SCP"
+            ]
+          },
           "isAggregator": {
             "type": "boolean"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "originId": {
+            "type": "string"
           },
           "productId": {
             "type": "string"
