@@ -43,12 +43,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static it.pagopa.selfcare.external_api.TestUtils.dummyProduct;
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class})
 @ContextConfiguration(classes = {InstitutionServiceImpl.class, UserMapperImpl.class,
@@ -112,7 +111,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         Product product = dummyProduct("456");
         Product product2 = dummyProduct("123");
         when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(dummyInstitutionResponse()) );
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, null)).thenReturn(ResponseEntity.ok(dummyInstitutionResponse()) );
 
         List<ProductResource> productResources = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(1, productResources.size());
@@ -158,7 +157,7 @@ class InstitutionServiceImplTest extends BaseServiceTestUtils {
         Product product2 = new Product();
         product.setId("id2");
         when(productService.getProducts(true, true)).thenReturn(List.of(product, product2));
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(new InstitutionResponse()) );
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, null)).thenReturn(ResponseEntity.ok(new InstitutionResponse()) );
 
         List<ProductResource> expectation = institutionService.getInstitutionUserProductsV2(institutionId, userId);
         Assertions.assertEquals(2, expectation.size());

@@ -125,7 +125,7 @@ class InstitutionServiceImpl implements InstitutionService {
         List<Product> products = productService.getProducts(true, true);
         if (!products.isEmpty()) {
 
-            InstitutionResponse institutionResponse = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId).getBody();
+            InstitutionResponse institutionResponse = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, null).getBody();
 
             Set<String> productsSet = new HashSet<>();
             ResponseEntity<List<UserDataResponse>> response = msUserApiRestClient._retrieveUsers(institutionId, userId, userId, null, null, null, List.of(ACTIVE.name()));
@@ -201,7 +201,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
         log.debug("addInstitution request = {}", request);
-        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(request.getDescription(), true, request.getExternalId());
+        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(request.getDescription(), true, request.getExternalId(), null);
         InstitutionResponse institutionResponse = Objects.requireNonNull(institutionApiClient.
                 _createPgInstitutionUsingPOST(createPgInstitutionRequest)
                 .getBody());

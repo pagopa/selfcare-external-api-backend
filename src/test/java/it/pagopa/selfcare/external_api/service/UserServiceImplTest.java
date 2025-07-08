@@ -162,7 +162,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
         InstitutionResponse institution = getInstitutionResponse(PRODUCT_ID, productIdDeleted, institutionId, false);
         institution.getOnboarding().forEach(onboardedProductResponse -> onboardedProductResponse.setStatus(OnboardedProductResponse.StatusEnum.SUSPENDED));
-        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
+        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, PRODUCT_ID)).thenReturn(ResponseEntity.ok(institution));
 
 
         List<OnboardedInstitutionResource> result = userService.getOnboardedInstitutionsDetailsActive(userId, PRODUCT_ID);
@@ -197,7 +197,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
             institutionMapped.setBilling(billing);
         Mockito.when(institutionMapper.toInstitution(any())).thenReturn(institutionMapped);
         }
-        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId)).thenReturn(ResponseEntity.ok(institution));
+        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, PRODUCT_ID)).thenReturn(ResponseEntity.ok(institution));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
@@ -246,7 +246,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
-        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
+        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE), PRODUCT_ID);
 
         Assertions.assertNotNull(userInfoWrapper);
         Assertions.assertNotNull(userInfoWrapper.getUser());
@@ -279,9 +279,9 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
         InstitutionResponse institution = getInstitutionResponse("product1", "product2", "123e4567-e89b-12d3-a456-426614174000", false);
-        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000")).thenReturn(ResponseEntity.ok(institution));
+        Mockito.when(institutionApiClient._retrieveInstitutionByIdUsingGET("123e4567-e89b-12d3-a456-426614174000", PRODUCT_ID)).thenReturn(ResponseEntity.ok(institution));
 
-        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE));
+        UserInfoWrapper userInfoWrapper = userService.getUserInfoV2(taxCode, List.of(ACTIVE), PRODUCT_ID);
 
         ClassPathResource userInfoWrapperResource = new ClassPathResource(userInfoWrapperPath);
         byte[] userInfoWrapperStream = Files.readAllBytes(userInfoWrapperResource.getFile().toPath());
@@ -331,11 +331,11 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         inst3Onb1.setCreatedAt(LocalDateTime.of(2024, 1, 3, 0, 0, 0));
         inst3Response.setOnboarding(List.of(inst3Onb1));
 
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst1")).thenReturn(ResponseEntity.ok(inst1Response));
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst2")).thenThrow(ResourceNotFoundException.class);
-        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst3")).thenReturn(ResponseEntity.ok(inst3Response));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst1", "prod-1")).thenReturn(ResponseEntity.ok(inst1Response));
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst2", "prod-2")).thenThrow(ResourceNotFoundException.class);
+        when(institutionApiClient._retrieveInstitutionByIdUsingGET("inst3", "prod-3")).thenReturn(ResponseEntity.ok(inst3Response));
 
-        List<OnboardedInstitutionInfo> onboardings1 = userService.getInstitutionDetails("inst1");
+        List<OnboardedInstitutionInfo> onboardings1 = userService.getInstitutionDetails("inst1", "prod-1");
         Assertions.assertEquals(2, onboardings1.size());
         Assertions.assertEquals("inst1", onboardings1.get(0).getId());
         Assertions.assertEquals("ACTIVE", onboardings1.get(0).getState());
@@ -345,10 +345,10 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertEquals("prod-2", onboardings1.get(1).getProductInfo().getId());
         Assertions.assertEquals("SUSPENDED", onboardings1.get(1).getProductInfo().getStatus());
 
-        List<OnboardedInstitutionInfo> onboardings2 = userService.getInstitutionDetails("inst2");
+        List<OnboardedInstitutionInfo> onboardings2 = userService.getInstitutionDetails("inst2", "prod-2");
         Assertions.assertEquals(0, onboardings2.size());
 
-        List<OnboardedInstitutionInfo> onboardings3 = userService.getInstitutionDetails("inst3");
+        List<OnboardedInstitutionInfo> onboardings3 = userService.getInstitutionDetails("inst3", "prod-3");
         Assertions.assertEquals(1, onboardings3.size());
         Assertions.assertEquals("inst3", onboardings3.get(0).getId());
         Assertions.assertEquals("ACTIVE", onboardings3.get(0).getState());
@@ -369,7 +369,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         final CertifiableFieldResponseString email4 = new CertifiableFieldResponseString();
         email4.setValue("test4@test.com");
         final CertifiableFieldResponseString email5 = new CertifiableFieldResponseString();
-        email4.setValue("test5@test.com");
+        email5.setValue("test5@test.com");
         user.setWorkContacts(Map.of(
             "1", new WorkContactResponse().email(email1),
             "2", new WorkContactResponse().email(email2),
@@ -387,11 +387,11 @@ class UserServiceImplTest extends BaseServiceTestUtils {
             createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4"),
             createOnboardedInstitutionInfo("info5", "prod-5", "SUSPENDED", "ACTIVE", OffsetDateTime.of(2025, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC), "5")
         );
-        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails("userId", null);
+        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails(eq("userId"), anyString());
 
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of()).getUser().getLastActiveOnboardingUserEmail());
-        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE)).getUser().getLastActiveOnboardingUserEmail());
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED)).getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(), "prod-1").getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE), "prod-2").getUser().getLastActiveOnboardingUserEmail());
+        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED), "prod-3").getUser().getLastActiveOnboardingUserEmail());
     }
 
     private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String state, String status, OffsetDateTime createdAt, String userMailUuid) {

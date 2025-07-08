@@ -39,11 +39,11 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses) {
+    public UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses, String productId) {
         log.trace("geUserInfo start");
         it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto searchUserDto = new it.pagopa.selfcare.user.generated.openapi.v1.dto.SearchUserDto(fiscalCode);
         final User user = userMapper.toUserFromUserDetailResponse(msUserApiRestClient._searchUserByFiscalCode(null, searchUserDto).getBody());
-        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId(), null);
+        List<OnboardedInstitutionInfo> onboardedInstitutions = getOnboardedInstitutionsDetails(user.getId(), productId);
         List<String> userStatusesString = userStatuses == null ? Collections.emptyList()
                 : userStatuses.stream().map(RelationshipState::toString).toList();
 
@@ -114,14 +114,14 @@ public class UserServiceImpl implements UserService {
     public List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId) {
         //fix temporanea per il funzionamento della getUserInfo di support
         List<UserInstitution> usersInstitutions = Objects.requireNonNull(msUserApiRestClient._retrievePaginatedAndFilteredUser(
-                        null, null, null,  Objects.isNull(productId) ? null : List.of(productId), null
-                        , 350, null, userId).getBody())
+                        null, null, null,null, null,
+                        350, null, userId).getBody())
                 .stream().map(userMapper::toUserInstitutionsFromUserInstitutionResponse).toList();
 
         List<OnboardedInstitutionInfo> onboardedInstitutionsInfo = new ArrayList<>();
 
         usersInstitutions.forEach(userInstitution -> {
-            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = getInstitutionDetails(userInstitution.getInstitutionId());
+            List<OnboardedInstitutionInfo> onboardedInstitutionResponse = getInstitutionDetails(userInstitution.getInstitutionId(), productId);
 
             onboardedInstitutionsInfo.addAll(onboardedInstitutionResponse.stream()
                     //Verify if userInstitution has any match with current product
@@ -157,12 +157,12 @@ public class UserServiceImpl implements UserService {
         return onboardedInstitutionsInfo;
     }
 
-    List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId) {
+    List<OnboardedInstitutionInfo> getInstitutionDetails(String institutionId, String productId) {
         try {
-            ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId);
+            ResponseEntity<InstitutionResponse> responseEntity = institutionApiClient._retrieveInstitutionByIdUsingGET(institutionId, productId);
             if (Objects.nonNull(responseEntity) && Objects.nonNull(responseEntity.getBody()) && Objects.nonNull(responseEntity.getBody().getOnboarding())) {
                 return responseEntity.getBody().getOnboarding().stream().map(onboardedProductResponse -> {
-                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody());
+                    OnboardedInstitutionInfo onboardedInstitutionInfo = institutionMapper.toOnboardedInstitution(responseEntity.getBody(), onboardedProductResponse);
                     it.pagopa.selfcare.external_api.model.onboarding.ProductInfo productInfo = institutionMapper.toProductInfo(onboardedProductResponse);
                     onboardedInstitutionInfo.setProductInfo(productInfo);
                     onboardedInstitutionInfo.setState(productInfo.getStatus());
@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
         return institutionsWithProductActive.stream()
                 .map(userInstitution -> {
-                    Institution institution =  institutionMapper.toInstitution(Objects.requireNonNull(institutionApiClient._retrieveInstitutionByIdUsingGET(userInstitution.getInstitutionId()))
+                    Institution institution =  institutionMapper.toInstitution(Objects.requireNonNull(institutionApiClient._retrieveInstitutionByIdUsingGET(userInstitution.getInstitutionId(), productId))
                             .getBody());
                     OnboardedInstitutionResource onboardedInstitutionResource = null;
                     if(Objects.nonNull(institution) && checkInstitutionOnboardingStatus(institution, productId)) {

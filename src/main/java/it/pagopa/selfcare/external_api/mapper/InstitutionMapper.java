@@ -3,7 +3,8 @@ package it.pagopa.selfcare.external_api.mapper;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.BillingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardedProductResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
-import it.pagopa.selfcare.external_api.model.institution.*;
+import it.pagopa.selfcare.external_api.model.institution.Institution;
+import it.pagopa.selfcare.external_api.model.institution.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.Billing;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
@@ -25,9 +26,11 @@ public interface InstitutionMapper {
 
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
-    @Mapping(target = "institutionType", source = "institutionType", qualifiedByName = "toInstitutionType")
-    @Mapping(target = "billing", source = "onboarding", qualifiedByName = "setBillingData")
-    OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse);
+    @Mapping(target = "institutionType", expression = "java(extractInstitutionType(onboardedProductResponse.getInstitutionType()))")
+    @Mapping(target = "originId", source = "onboardedProductResponse.originId")
+    @Mapping(target = "origin", source = "onboardedProductResponse.origin")
+    @Mapping(target = "billing", source = "institutionResponse.onboarding", qualifiedByName = "setBillingData")
+    OnboardedInstitutionInfo toOnboardedInstitution(it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse institutionResponse, OnboardedProductResponse onboardedProductResponse);
 
     @Mapping(target = "id", source = "productId")
     @Mapping(target = "status", expression = "java(onboardedProductResponse.getStatus().name())")
@@ -57,6 +60,20 @@ public interface InstitutionMapper {
         } catch (IllegalArgumentException ignored) { }
         return null;
     }
+
+    default InstitutionType extractInstitutionType(OnboardedProductResponse.InstitutionTypeEnum institutionTypeEnum) {
+        return Optional.ofNullable(institutionTypeEnum)
+                .map(enumVal -> {
+                    try {
+                        return InstitutionType.valueOf(enumVal.name());
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .orElse(null);
+    }
+
+
 
     @Named("toOffsetDateTime")
     default OffsetDateTime map(LocalDateTime localDateTime) {
