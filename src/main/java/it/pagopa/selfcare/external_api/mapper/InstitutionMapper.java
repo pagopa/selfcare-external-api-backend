@@ -26,7 +26,7 @@ public interface InstitutionMapper {
 
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
-    @Mapping(target = "institutionType", expression = "java(extractInstitutionType(onboardedProductResponse.getInstitutionType()))")
+    @Mapping(target = "institutionType", expression = "java(toInstitutionType(onboardedProductResponse.getInstitutionType()))")
     @Mapping(target = "originId", source = "onboardedProductResponse.originId")
     @Mapping(target = "origin", source = "onboardedProductResponse.origin")
     @Mapping(target = "billing", source = "institutionResponse.onboarding", qualifiedByName = "setBillingData")
@@ -54,14 +54,7 @@ public interface InstitutionMapper {
     }
 
     @Named("toInstitutionType")
-    default InstitutionType toInstitutionType(String institutionType) {
-        try {
-            return Optional.ofNullable(institutionType).map(InstitutionType::valueOf).orElse(null);
-        } catch (IllegalArgumentException ignored) { }
-        return null;
-    }
-
-    default InstitutionType extractInstitutionType(OnboardedProductResponse.InstitutionTypeEnum institutionTypeEnum) {
+    default InstitutionType toInstitutionType(OnboardedProductResponse.InstitutionTypeEnum institutionTypeEnum) {
         return Optional.ofNullable(institutionTypeEnum)
                 .map(enumVal -> {
                     try {
