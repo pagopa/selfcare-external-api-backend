@@ -2244,6 +2244,9 @@
           "digitalAddress": {
             "type": "string"
           },
+          "atecoCode": {
+            "type": "string"
+          },
           "nrea": {
             "type": "string"
           }
@@ -2337,10 +2340,10 @@
           "mail3": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           }
         }
