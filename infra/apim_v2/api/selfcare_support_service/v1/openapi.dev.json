@@ -1011,6 +1011,18 @@
         "summary": "getUserInfo",
         "description": "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId": "V2getUserInfoUsingGET",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
