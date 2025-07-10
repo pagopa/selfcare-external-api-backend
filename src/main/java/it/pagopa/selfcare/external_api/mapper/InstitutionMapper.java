@@ -26,7 +26,7 @@ public interface InstitutionMapper {
 
     InstitutionOnboarding toEntity(OnboardingResponse response);
 
-    @Mapping(target = "institutionType", expression = "java(toInstitutionType(onboardedProductResponse.getInstitutionType()))")
+    @Mapping(target = "institutionType", source = "onboardedProductResponse.institutionType", qualifiedByName = "toInstitutionType")
     @Mapping(target = "originId", source = "onboardedProductResponse.originId")
     @Mapping(target = "origin", source = "onboardedProductResponse.origin")
     @Mapping(target = "billing", source = "institutionResponse.onboarding", qualifiedByName = "setBillingData")
