@@ -10,12 +10,7 @@ import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.mapper.OnboardingMapper;
 import it.pagopa.selfcare.external_api.mapper.UserResourceMapper;
 import it.pagopa.selfcare.external_api.model.institution.Institution;
-import it.pagopa.selfcare.external_api.model.onboarding.ImportContractDto;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingAggregatorImportDto;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingData;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportContract;
-import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
+import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.user.OnboardedProduct;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
@@ -29,15 +24,16 @@ import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionRes
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.AddUserRoleDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.CreateUserDto;
 import it.pagopa.selfcare.user.generated.openapi.v1.dto.Product1;
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +105,7 @@ class OnboardingServiceImpl implements OnboardingService {
                     ._getInstitutionsUsingGET(
                         request.getInstitutionTaxCode(),
                         request.getInstitutionSubunitCode(),
+                        null,
                         null,
                         null,
                         null

@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserService {
 
 
-    UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses);
+    UserInfoWrapper getUserInfoV2(String fiscalCode, List<RelationshipState> userStatuses, String productId);
 
     List<OnboardedInstitutionInfo> getOnboardedInstitutionsDetails(String userId, String productId);
 

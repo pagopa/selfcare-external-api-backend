@@ -40,9 +40,10 @@ public class UserV2Controller {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "", notes = "${swagger.external_api.user.api.getUserInfo2}", nickname = "V2getUserInfoUsingGET")
     public UserInfoResource getUserInfo(@ApiParam("${swagger.external_api.user.model.searchUser}")
-                                        @RequestBody @Valid SearchUserDto searchUserDto) {
+                                        @RequestBody @Valid SearchUserDto searchUserDto,
+                                        @RequestParam(value = "productId", required = false) String productId) {
         log.trace("getUserInfo start");
-        UserInfoWrapper userInfo = userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses());
+        UserInfoWrapper userInfo = userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses(), productId);
         UserInfoResource userInfoResource = userInfoResourceMapper.toResource(userInfo);
         log.debug("getUserInfo result = {}", userInfoResource);
         log.trace("getUserInfo end");

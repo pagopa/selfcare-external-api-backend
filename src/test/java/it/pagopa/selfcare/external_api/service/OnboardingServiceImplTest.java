@@ -1,10 +1,5 @@
 package it.pagopa.selfcare.external_api.service;
 
-import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.InstitutionsResponse;
@@ -25,10 +20,6 @@ import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingAggregat
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource;
 import it.pagopa.selfcare.registry_proxy.generated.openapi.v1.dto.InstitutionResource.OriginEnum;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +30,16 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
+
+import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
@@ -169,6 +170,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
             onboardingUsersRequest.getInstitutionSubunitCode(),
             null,
             null,
+            null,
             null))
         .thenReturn(
             ResponseEntity.ok(new InstitutionsResponse().institutions(Collections.emptyList())));
@@ -195,6 +197,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     when(institutionApiClient._getInstitutionsUsingGET(
             onboardingUsersRequest.getInstitutionTaxCode(),
             onboardingUsersRequest.getInstitutionSubunitCode(),
+            null,
             null,
             null,
             null))

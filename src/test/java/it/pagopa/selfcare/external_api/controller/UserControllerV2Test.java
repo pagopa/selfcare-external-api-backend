@@ -60,10 +60,11 @@ class UserControllerV2Test extends BaseControllerTest {
         searchUserDto.setFiscalCode("NLLGPJ67L30L783W");
         searchUserDto.setStatuses(List.of(RelationshipState.ACTIVE));
 
-        when(userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses())).thenReturn(userInfoWrapper);
+        when(userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses(), "productId")).thenReturn(userInfoWrapper);
 
         mockMvc.perform(post(BASE_URL)
                         .content(objectMapper.writeValueAsString(searchUserDto))
+                        .queryParam("productId", "productId")
                         .contentType(APPLICATION_JSON_VALUE)
                         .accept(APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
@@ -80,7 +81,7 @@ class UserControllerV2Test extends BaseControllerTest {
         searchUserDto.setFiscalCode("NLLGPJ67L30L783W");
         searchUserDto.setStatuses(List.of(RelationshipState.ACTIVE));
 
-        when(userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses())).thenReturn(null);
+        when(userService.getUserInfoV2(searchUserDto.getFiscalCode(), searchUserDto.getStatuses(), null)).thenReturn(null);
 
         mockMvc.perform(post(BASE_URL)
                         .content(objectMapper.writeValueAsString(searchUserDto))
