@@ -319,7 +319,7 @@ module "apim_external_api_ms_v2" {
     },
     {
       operation_id = "V2getUserInfoUsingGET"
-      xml_content = templatefile("./api/base_ms_url_external_policy.xml.tpl", {
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
