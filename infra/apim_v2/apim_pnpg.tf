@@ -159,7 +159,7 @@ module "apim_pnpg_external_api_ms_v2" {
     },
     {
       operation_id = "retrieveInstitutionByIdUsingGET"
-      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+      xml_content = templatefile("./api/base_ms_url_product_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-ms-core-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
     },
