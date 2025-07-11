@@ -118,6 +118,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -959,6 +969,18 @@
         "summary": "getUserInfo",
         "description": "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
         "operationId": "V2getUserInfoUsingGET",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2234,6 +2256,12 @@
           "digitalAddress": {
             "type": "string"
           },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "nrea": {
             "type": "string"
           }
@@ -2327,10 +2355,10 @@
           "mail3": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           }
         }
