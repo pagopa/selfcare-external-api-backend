@@ -38,8 +38,7 @@ import java.util.List;
 
 import static it.pagopa.selfcare.onboarding.common.InstitutionType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})
 class OnboardingServiceImplTest extends BaseServiceTestUtils {
@@ -178,6 +177,7 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
         ResourceNotFoundException.class,
         () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
         "Institution not found for given value");
+    verify(institutionApiClient, times(0))._retrieveInstitutionByIdUsingGET(anyString(), anyString());
   }
 
   @Test
@@ -209,7 +209,52 @@ class OnboardingServiceImplTest extends BaseServiceTestUtils {
     List<RelationshipInfo> result =
         onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
 
+    verify(institutionApiClient, times(0))._retrieveInstitutionByIdUsingGET(anyString(), anyString());
     assertEquals(2, result.size());
+  }
+
+  @Test
+  void onboardingUsers_institutionId() throws Exception {
+    ClassPathResource onboardingUsersRequestInputResource =
+            new ClassPathResource("expectations/OnboardingUsersRequestWithId.json");
+    byte[] onboardingUsersRequestStream =
+            Files.readAllBytes(onboardingUsersRequestInputResource.getFile().toPath());
+    OnboardingUsersRequest onboardingUsersRequest =
+            objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+
+    ClassPathResource institutionInputResource =
+            new ClassPathResource("expectations/InstitutionResponse.json");
+    byte[] institutionStream = Files.readAllBytes(institutionInputResource.getFile().toPath());
+    List<InstitutionResponse> institutions =
+            objectMapper.readValue(institutionStream, new TypeReference<>() {});
+    when(institutionApiClient._retrieveInstitutionByIdUsingGET(onboardingUsersRequest.getInstitutionId(), null)).thenReturn(ResponseEntity.ok(institutions.get(0)));
+
+    when(msUserApiRestClient._createOrUpdateByFiscalCode(any()))
+            .thenReturn(ResponseEntity.ok("userId"));
+    when(msUserApiRestClient._createOrUpdateByUserId(any(), any()))
+            .thenReturn(ResponseEntity.ok().build());
+    List<RelationshipInfo> result =
+            onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname");
+
+    verify(institutionApiClient, times(0))._getInstitutionsUsingGET(anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+    assertEquals(2, result.size());
+  }
+
+  @Test
+  void onboardingUsers_institutionIdNotFound() throws Exception {
+    ClassPathResource inputResource =
+            new ClassPathResource("expectations/OnboardingUsersRequestWithId.json");
+    byte[] onboardingUsersRequestStream = Files.readAllBytes(inputResource.getFile().toPath());
+    OnboardingUsersRequest onboardingUsersRequest =
+            objectMapper.readValue(onboardingUsersRequestStream, OnboardingUsersRequest.class);
+    when(institutionApiClient._retrieveInstitutionByIdUsingGET(onboardingUsersRequest.getInstitutionId(), null)).thenReturn(ResponseEntity.notFound().build());
+
+    Assertions.assertThrows(
+            ResourceNotFoundException.class,
+            () -> onboardingService.onboardingUsers(onboardingUsersRequest, "userName", "surname"),
+            "Institution not found for given value");
+
+    verify(institutionApiClient, times(0))._getInstitutionsUsingGET(anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
   }
 
   @Test

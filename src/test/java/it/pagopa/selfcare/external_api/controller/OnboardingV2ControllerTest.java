@@ -24,6 +24,7 @@ import javax.validation.ValidationException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.emptyString;
@@ -297,16 +298,21 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
   }
 
   @Test
-  void onboardingInstitutionUsersWithoutInstitutionTaxCode() throws Exception {
+  void onboardingInstitutionUsersWithoutInstitutionTaxCodeAndId() throws Exception {
 
     byte[] onboardingImportDtoFile =
         Files.readAllBytes(
             Paths.get("src/test/resources", "stubs/OnboardingInstitutionUserRequest.json"));
     OnboardingInstitutionUsersRequest onboardingInstitutionUsersRequest =
         objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
-    onboardingInstitutionUsersRequest.setInstitutionTaxCode(null);
 
+    when(onboardingServiceMock.onboardingUsers(
+            any(OnboardingUsersRequest.class), anyString(), anyString()))
+            .thenReturn(Collections.emptyList());
+
+    SelfCareUser selfCareUser = SelfCareUser.builder("id").name("nome").surname("cognome").build();
     Authentication authentication = mock(Authentication.class);
+    when(authentication.getPrincipal()).thenReturn(selfCareUser);
 
     mockMvc
         .perform(
@@ -315,7 +321,27 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
                 .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
                 .contentType(APPLICATION_JSON_VALUE)
                 .accept(APPLICATION_JSON_VALUE))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isOk());
+
+    onboardingInstitutionUsersRequest.setInstitutionId(null);
+    mockMvc
+            .perform(
+                    MockMvcRequestBuilders.post(BASE_URL + "/users")
+                            .principal(authentication)
+                            .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
+                            .contentType(APPLICATION_JSON_VALUE)
+                            .accept(APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
+
+    onboardingInstitutionUsersRequest.setInstitutionTaxCode(null);
+    mockMvc
+            .perform(
+                    MockMvcRequestBuilders.post(BASE_URL + "/users")
+                            .principal(authentication)
+                            .content(new ObjectMapper().writeValueAsString(onboardingInstitutionUsersRequest))
+                            .contentType(APPLICATION_JSON_VALUE)
+                            .accept(APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
   }
 
   @Test

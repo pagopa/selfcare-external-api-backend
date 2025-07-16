@@ -9,6 +9,7 @@ public class OnboardingUsersRequest {
 
     private String productId;
     private List<UserToOnboard> users;
+    private String institutionId;
     private String institutionTaxCode;
     private String institutionSubunitCode;
     private Boolean sendCreateUserNotificationEmail;
