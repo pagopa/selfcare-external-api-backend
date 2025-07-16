@@ -201,7 +201,7 @@ class InstitutionServiceImpl implements InstitutionService {
     public String addInstitution(CreatePnPgInstitution request) {
         log.trace("addInstitution start");
         log.debug("addInstitution request = {}", request);
-        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(request.getDescription(), true, request.getExternalId(), null);
+        CreatePgInstitutionRequest createPgInstitutionRequest = new CreatePgInstitutionRequest(request.getDescription(), true, null, request.getExternalId());
         InstitutionResponse institutionResponse = Objects.requireNonNull(institutionApiClient.
                 _createPgInstitutionUsingPOST(createPgInstitutionRequest)
                 .getBody());
