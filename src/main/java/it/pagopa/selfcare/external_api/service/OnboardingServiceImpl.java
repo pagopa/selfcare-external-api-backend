@@ -99,24 +99,8 @@ class OnboardingServiceImpl implements OnboardingService {
   @Override
   public List<RelationshipInfo> onboardingUsers(
       OnboardingUsersRequest request, String userName, String surname) {
-    Institution institution =
-        Objects.requireNonNull(
-                institutionApiClient
-                    ._getInstitutionsUsingGET(
-                        request.getInstitutionTaxCode(),
-                        request.getInstitutionSubunitCode(),
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                    .getBody())
-            .getInstitutions()
-            .stream()
-            .map(onboardingMapper::toInstitution)
-            .findFirst()
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Institution not found for given value"));
+    final Institution institution = request.getInstitutionId() != null ?
+            getInstitutionById(request.getInstitutionId()) : getInstitution(request.getInstitutionTaxCode(), request.getInstitutionSubunitCode());
 
     Map<String, List<UserToOnboard>> usersWithId = new HashMap<>();
     Map<String, List<UserToOnboard>> usersWithoutId = new HashMap<>();
@@ -134,6 +118,18 @@ class OnboardingServiceImpl implements OnboardingService {
     result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId()));
 
     return result;
+  }
+
+  private Institution getInstitutionById(String id) {
+    return Optional.ofNullable(institutionApiClient._retrieveInstitutionByIdUsingGET(id, null).getBody())
+            .map(onboardingMapper::toInstitution)
+            .orElseThrow(() -> new ResourceNotFoundException("Institution not found for given value"));
+  }
+
+  private Institution getInstitution(String taxCode, String subunitCode) {
+      return Optional.ofNullable(institutionApiClient._getInstitutionsUsingGET(taxCode, subunitCode, null, null, null, null).getBody())
+              .flatMap(r -> r.getInstitutions().stream().map(onboardingMapper::toInstitution).findFirst())
+              .orElseThrow(() -> new ResourceNotFoundException("Institution not found for given value"));
   }
 
   @Override
