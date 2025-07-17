@@ -2262,6 +2262,12 @@
               "type": "string"
             }
           },
+          "vatCode": {
+            "type": "string"
+          },
+          "legalForm": {
+            "type": "string"
+          },
           "nrea": {
             "type": "string"
           }
@@ -3332,6 +3338,9 @@
         "title": "OnboardingInstitutionUsersRequest",
         "type": "object",
         "properties": {
+          "institutionId": {
+            "type": "string"
+          },
           "institutionSubunitCode": {
             "type": "string"
           },
@@ -3627,6 +3636,12 @@
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -4009,6 +4024,12 @@
           },
           "imported": {
             "type": "boolean"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -4393,6 +4414,12 @@
           },
           "imported": {
             "type": "boolean"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProviderRequest1"

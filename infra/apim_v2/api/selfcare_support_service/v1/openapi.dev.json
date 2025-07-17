@@ -2435,6 +2435,9 @@
         "title": "OnboardingInstitutionUsersRequest",
         "type": "object",
         "properties": {
+          "institutionId": {
+            "type": "string"
+          },
           "institutionSubunitCode": {
             "type": "string"
           },
@@ -3092,6 +3095,12 @@
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -3486,6 +3495,12 @@
           },
           "imported": {
             "type": "boolean"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
