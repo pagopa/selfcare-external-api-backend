@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.external_api.model.user.Person;
 import lombok.Data;
 
@@ -11,18 +12,24 @@ import java.util.Optional;
 @Data
 public class OnboardingInstitutionUsersRequest {
 
+    @Schema(description = "Product to add roles to")
     @NotEmpty(message = "productId is required")
     private String productId;
 
+    @Schema(description = "List of users to add")
     @NotEmpty(message = "at least one user is required")
     private List<Person> users;
 
+    @Schema(description = "The institution ID where users will be added. This takes precedence over the tax code")
     private String institutionId;
 
+    @Schema(description = "Add users to the institution via tax code. Can be used in combination with institutionSubunitCode")
     private String institutionTaxCode;
 
+    @Schema(description = "Add users to the institution via subunit code. Can be used in combination with institutionTaxCode")
     private String institutionSubunitCode;
 
+    @Schema(description = "Send an email notification to the user. By default it's set to true")
     private Boolean sendCreateUserNotificationEmail = Boolean.TRUE;
 
     @AssertTrue(message = "at least one of institutionId or institutionTaxCode must be present")
