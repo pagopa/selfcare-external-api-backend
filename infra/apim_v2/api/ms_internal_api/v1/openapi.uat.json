@@ -3332,6 +3332,9 @@
         "title": "OnboardingInstitutionUsersRequest",
         "type": "object",
         "properties": {
+          "institutionId": {
+            "type": "string"
+          },
           "institutionSubunitCode": {
             "type": "string"
           },
