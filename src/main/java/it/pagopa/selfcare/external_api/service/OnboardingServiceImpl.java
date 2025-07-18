@@ -114,8 +114,8 @@ class OnboardingServiceImpl implements OnboardingService {
     }
 
     List<RelationshipInfo> result = new ArrayList<>();
-    result.addAll(processUsersWithId(usersWithId, institution, request.getProductId()));
-    result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId()));
+    result.addAll(processUsersWithId(usersWithId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail()));
+    result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail()));
 
     return result;
   }
@@ -141,7 +141,7 @@ class OnboardingServiceImpl implements OnboardingService {
   }
 
   private List<RelationshipInfo> processUsersWithId(
-      Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId) {
+      Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId, Boolean hasToSendMail) {
     List<RelationshipInfo> result = new ArrayList<>();
 
     usersWithId.forEach(
@@ -155,7 +155,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 users.stream()
                     .map(
                         userToOnboard ->
-                            addUserRole(userId, institution, productId, role.name(), productRoles))
+                            addUserRole(userId, institution, productId, role.name(), productRoles, userToOnboard.getUserMailUuid(), hasToSendMail))
                     .forEach(
                         id ->
                             result.addAll(
@@ -171,7 +171,9 @@ class OnboardingServiceImpl implements OnboardingService {
       Institution institution,
       String productId,
       String role,
-      List<String> productRoles) {
+      List<String> productRoles,
+      String userMailUuid,
+      Boolean hasToSendMail) {
     it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product =
         it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
             .productId(productId)
@@ -185,6 +187,8 @@ class OnboardingServiceImpl implements OnboardingService {
             .institutionId(institution.getId())
             .institutionDescription(institution.getDescription())
             .institutionRootName(institution.getParentDescription())
+            .userMailUuid(userMailUuid)
+            .hasToSendEmail(hasToSendMail)
             .build();
 
     msUserApiRestClient._createOrUpdateByUserId(userId, addUserRoleDto);
@@ -193,7 +197,7 @@ class OnboardingServiceImpl implements OnboardingService {
   }
 
   private List<RelationshipInfo> processUsersWithoutId(
-      Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId) {
+      Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId, Boolean hasToSendMail) {
     List<RelationshipInfo> result = new ArrayList<>();
 
     usersWithoutId.forEach(
@@ -211,7 +215,7 @@ class OnboardingServiceImpl implements OnboardingService {
                         role.name(),
                         productRoles,
                         usersByRole.get(0),
-                        true);
+                        hasToSendMail);
                 result.addAll(buildRelationShipInfo(userId, institution, productId, usersByRole));
               });
         });
@@ -225,7 +229,7 @@ class OnboardingServiceImpl implements OnboardingService {
       String role,
       List<String> productRoles,
       UserToOnboard user,
-      boolean sendMail) {
+      boolean hasToSendMail) {
 
     Product1 product =
         Product1.builder().productId(productId).role(role).productRoles(productRoles).build();
@@ -235,7 +239,7 @@ class OnboardingServiceImpl implements OnboardingService {
             .institutionId(institution.getId())
             .user(userResourceMapper.toUser(user))
             .product(product)
-            .hasToSendEmail(sendMail)
+            .hasToSendEmail(hasToSendMail)
             .institutionDescription(institution.getDescription())
             .institutionRootName(institution.getParentDescription())
             .build();
