@@ -29,4 +29,5 @@ public class InstitutionUpdate {
     private String supportEmail;
     private String supportPhone;
     private Boolean imported;
+    private List<String> atecoCodes;
 }
