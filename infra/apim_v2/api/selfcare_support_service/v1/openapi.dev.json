@@ -1804,6 +1804,9 @@
           "istatCode": {
             "type": "string"
           },
+          "legalForm": {
+            "type": "string"
+          },
           "logo": {
             "type": "string"
           },
@@ -3490,6 +3493,9 @@
             "type": "string"
           },
           "istatCode": {
+            "type": "string"
+          },
+          "legalForm": {
             "type": "string"
           },
           "geographicTaxonomies": {
