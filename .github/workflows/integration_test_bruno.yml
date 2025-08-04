@@ -1,5 +1,8 @@
 name: Integration test (Bruno)
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
