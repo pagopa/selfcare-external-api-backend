@@ -1,0 +1,30 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+
+jobs:
+  integration-test:
+    environment: ${{ inputs.environment }}-ci
+    name: "Run Bruno collection on ${{ inputs.environment }}"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        name: Checkout
+      - name: "Download Bruno environment"
+        env:
+          INTEGRATION_ENVIRONMENT: ${{ secrets.INTEGRATION_ENVIRONMENT }}
+        run: 'echo "$INTEGRATION_ENVIRONMENT" | base64 --decode > Selfcare-External-Integration-Environment.bru'
+        shell: bash
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        with:
+          node-version: "16.x"
+      - name: Install bruno cli
+        shell: bash
+        run: npm install -g @usebruno/cli
+      - name: Run bruno cli
+        shell: bash
+        working-directory: integration-test/bruno
+        run: bru run . -r --env-file Selfcare-External-Integration-Environment.bru
