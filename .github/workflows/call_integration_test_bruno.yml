@@ -30,4 +30,4 @@ jobs:
       - name: Run bruno cli
         shell: bash
         working-directory: integration-test/bruno
-        run: bru run . -r --env-file Selfcare-External-Integration-Environment.bru
+        run: bru run . -r --env-file ../../Selfcare-External-Integration-Environment.bru
