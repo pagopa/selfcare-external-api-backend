@@ -30,4 +30,11 @@ jobs:
       - name: Run bruno cli
         shell: bash
         working-directory: integration-test/bruno
-        run: bru run . -r --env-file ../../Selfcare-External-Integration-Environment.bru
+        run: bru run . -r --env-file ../../Selfcare-External-Integration-Environment.bru --reporter-json ../integration-test-result.json --reporter-skip-all-headers
+      - name: Send bruno report
+        shell: bash
+        run: node ./integration-test/convert_bruno.js
+      - name: "Send message on Slack"
+        shell: bash
+        run: >
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' -d @integration-test/stats.json
