@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0382fdfb-55fd-448a-b2df-92788bc84186",
+		"_postman_id": "cbf26266-a5bf-41ee-890c-4cbd2f7d6c50",
 		"name": "Selfcare-External-Integration",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39018392"
+		"_exporter_id": "40366451"
 	},
 	"item": [
 		{
@@ -175,6 +175,107 @@
 								"institutions",
 								"{{institutionId}}",
 								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserV2",
+			"item": [
+				{
+					"name": "getUserInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;",
+									"const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;",
+									"const isoDateRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z$/;",
+									"",
+									"pm.test(\"getUserInfo ok\", function() {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    // user",
+									"    pm.expect(jsonData).to.have.property(\"user\");",
+									"    pm.expect(jsonData.user).to.have.property(\"id\").to.match(uuidRegex);",
+									"    pm.expect(jsonData.user).to.have.property(\"name\", \"Anselmo\");",
+									"    pm.expect(jsonData.user).to.have.property(\"surname\", \"Sartori\");",
+									"    pm.expect(jsonData.user).to.have.property(\"lastActiveOnboardingUserEmail\").to.match(emailRegex);",
+									"",
+									"    // onboardedInstitutions",
+									"    pm.expect(jsonData).to.have.property(\"onboardedInstitutions\").that.is.an(\"array\").that.is.not.empty;",
+									"    jsonData.onboardedInstitutions.forEach(inst => {",
+									"        pm.expect(inst).to.have.property(\"id\").to.match(uuidRegex);",
+									"        pm.expect(inst).to.have.property(\"description\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"institutionType\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"digitalAddress\").to.match(emailRegex);",
+									"        pm.expect(inst).to.have.property(\"address\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"state\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"zipCode\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"taxCode\").that.is.a(\"string\");",
+									"        pm.expect(inst).to.have.property(\"productInfo\").that.is.an(\"object\");",
+									"        pm.expect(inst.productInfo).to.have.property(\"id\").that.is.a(\"string\");",
+									"        pm.expect(inst.productInfo).to.have.property(\"role\").that.is.a(\"string\");",
+									"        pm.expect(inst.productInfo).to.have.property(\"productRole\").that.is.a(\"string\");",
+									"        pm.expect(inst.productInfo).to.have.property(\"status\").that.is.a(\"string\");",
+									"        pm.expect(inst.productInfo).to.have.property(\"createdAt\").to.match(isoDateRegex);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyPN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fiscalCode\": \"SRTNLM09T06G635S\",\n    \"statuses\": [\"ACTIVE\", \"SUSPENDED\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/v2/users?productId=prod-io",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "prod-io"
+								}
 							]
 						}
 					},
