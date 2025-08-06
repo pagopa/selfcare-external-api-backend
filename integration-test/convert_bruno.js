@@ -30,7 +30,7 @@ function convert(payload) {
         "fields": [
           {
             "type": "mrkdwn",
-            "text": `*Requests:*\ntotal: ${payload["totalRequests"]} passed: ${payload["passedRequests"]} failed: ${payload["failedRequests"]} skipped: ${payload["skippedRequests"]} error: ${payload["errorRequests"]}`
+            "text": `*Requests:*\ntotal: ${payload["totalRequests"]} passed: ${payload["passedRequests"]} failed: ${payload["failedRequests"]}\nskipped: ${payload["skippedRequests"]} error: ${payload["errorRequests"]}`
           }
         ]
       }
