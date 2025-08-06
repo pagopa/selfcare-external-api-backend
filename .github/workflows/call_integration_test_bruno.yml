@@ -18,8 +18,8 @@ jobs:
         name: Checkout
       - name: "Download Bruno environment"
         env:
-          INTEGRATION_ENVIRONMENT: ${{ secrets.INTEGRATION_ENVIRONMENT }}
-        run: 'echo "$INTEGRATION_ENVIRONMENT" | base64 --decode > Selfcare-External-Integration-Environment.bru'
+          INTEGRATION_ENVIRONMENT_BRUNO: ${{ secrets.INTEGRATION_ENVIRONMENT_BRUNO }}
+        run: 'echo "$INTEGRATION_ENVIRONMENT_BRUNO" | base64 --decode > Selfcare-External-Integration-Environment.bru'
         shell: bash
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
