@@ -1,13 +1,13 @@
 # APIM subnet
 module "apim_snet" {
-  source               = "github.com/pagopa/terraform-azurerm-v3.git//subnet?ref=v8.18.0"
-  name = format("%s-apim-v2-snet", local.project)
-  resource_group_name = format("%s-vnet-rg", local.project)
+  source               = "github.com/pagopa/terraform-azurerm-v4.git//subnet?ref=v7.26.5"
+  name                 = format("%s-apim-v2-snet", local.project)
+  resource_group_name  = format("%s-vnet-rg", local.project)
   virtual_network_name = data.azurerm_virtual_network.vnet.name
   address_prefixes     = var.cidr_subnet_apim
 
-  private_endpoint_network_policies_enabled = true
-  service_endpoints = ["Microsoft.Web"]
+  private_endpoint_network_policies = "Enabled"
+  service_endpoints                 = ["Microsoft.Web"]
 }
 
 resource "azurerm_network_security_group" "nsg_apim" {
@@ -89,7 +89,7 @@ resource "azurerm_api_management_custom_domain" "api_custom_domain" {
 ###########################
 
 module "apim" {
-  source               = "github.com/pagopa/terraform-azurerm-v3.git//api_management?ref=v8.18.0"
+  source               = "github.com/pagopa/terraform-azurerm-v4.git//api_management?ref=v7.26.5"
   subnet_id            = module.apim_snet.id
   location             = azurerm_resource_group.rg_api.location
   name = format("%s-apim-v2", local.project)
@@ -122,7 +122,7 @@ module "apim" {
 
 ## monitor ##
 module "monitor" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-monitor", var.env_short)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -168,7 +168,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_onboarding_
 }
 
 module "apim_external_api_onboarding_auto_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-external-api-onboarding-auto", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -200,7 +200,7 @@ module "apim_external_api_onboarding_auto_v1" {
 }
 
 module "apim_external_api_onboarding_io_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-external-api-onboarding-io", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -240,7 +240,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_ms" {
 }
 
 module "apim_external_api_ms_v2" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-ms-external-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -440,7 +440,7 @@ resource "azurerm_api_management_api_version_set" "apim_internal_api_ms" {
 }
 
 module "apim_internal_api_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-ms-internal-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -611,7 +611,7 @@ resource "azurerm_api_management_api_version_set" "apim_pdnd_infocamere_api_ms" 
 
 
 module "apim_pdnd_infocamere_api_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-pdnd-infocamere-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -660,7 +660,7 @@ resource "azurerm_api_management_api_version_set" "apim_selfcare_support_service
 }
 
 module "apim_selfcare_support_service_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-selfcare-support-api-service", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -809,7 +809,7 @@ resource "azurerm_api_management_api_version_set" "apim_notification_event_api" 
 }
 
 module "apim_notification_event_api_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-notification-event-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -875,7 +875,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_contract" {
 }
 
 module "apim_external_api_contract_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-external-api-contract-service", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -926,7 +926,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_contracts_p
 }
 
 module "apim_external_api_contract_public_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name = format("%s-external-api-contracts-public", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -1003,7 +1003,7 @@ resource "azurerm_api_management_api_version_set" "apim_billing_portal" {
 }
 
 module "apim_billing_portal_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name                = "${local.project}-billing-portal"
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -1058,7 +1058,7 @@ resource "azurerm_api_management_api_version_set" "apim_internal_user_api_ms" {
 }
 
 module "apim_internal_user_api_ms_v1" {
-  source              = "github.com/pagopa/terraform-azurerm-v3.git//api_management_api?ref=v8.18.0"
+  source              = "github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
   name                = format("%s-ms-internal-user-api", local.project)
   api_management_name = module.apim.name
   resource_group_name = azurerm_resource_group.rg_api.name
@@ -1094,7 +1094,7 @@ module "apim_internal_user_api_ms_v1" {
 ##############
 
 module "apim_product_interop" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "interop"
   display_name = "INTEROP"
@@ -1111,7 +1111,7 @@ module "apim_product_interop" {
 }
 
 module "apim_product_interop_coll" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "interop-coll"
   display_name = "INTEROP COLLAUDO"
@@ -1128,7 +1128,7 @@ module "apim_product_interop_coll" {
 }
 
 module "apim_product_interop_atst" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "interop-atst"
   display_name = "INTEROP ATTESTAZIONE"
@@ -1145,7 +1145,7 @@ module "apim_product_interop_atst" {
 }
 
 module "apim_product_pn" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn"
   display_name = "PN"
@@ -1162,7 +1162,7 @@ module "apim_product_pn" {
 }
 
 module "apim_product_pn_svil" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-svil"
   display_name = "PN SVIL"
@@ -1179,7 +1179,7 @@ module "apim_product_pn_svil" {
 }
 
 module "apim_product_pn_dev" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-dev"
   display_name = "PN DEV"
@@ -1196,7 +1196,7 @@ module "apim_product_pn_dev" {
 }
 
 module "apim_product_pn_uat" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-uat"
   display_name = "PN UAT"
@@ -1213,7 +1213,7 @@ module "apim_product_pn_uat" {
 }
 
 module "apim_product_pn_test" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-test"
   display_name = "PN TEST"
@@ -1230,7 +1230,7 @@ module "apim_product_pn_test" {
 }
 
 module "apim_product_pn_coll" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-coll"
   display_name = "PN COLL"
@@ -1247,7 +1247,7 @@ module "apim_product_pn_coll" {
 }
 
 module "apim_product_pn_hotfix" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-hotfix"
   display_name = "PN HOTFIX"
@@ -1264,7 +1264,7 @@ module "apim_product_pn_hotfix" {
 }
 
 module "apim_product_pn_cert" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-cert"
   display_name = "PN CERT"
@@ -1281,7 +1281,7 @@ module "apim_product_pn_cert" {
 }
 
 module "apim_product_pn_prod" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pn-prod"
   display_name = "PN PROD"
@@ -1298,7 +1298,7 @@ module "apim_product_pn_prod" {
 }
 
 module "apim_product_pagopa" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "pagopa"
   display_name = "PAGOPA"
@@ -1315,7 +1315,7 @@ module "apim_product_pagopa" {
 }
 
 module "apim_product_idpay" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "idpay"
   display_name = "IDPAY"
@@ -1332,7 +1332,7 @@ module "apim_product_idpay" {
 }
 
 module "apim_product_io_sign" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "io-sign"
   display_name = "io-sign"
@@ -1349,7 +1349,7 @@ module "apim_product_io_sign" {
 }
 
 module "apim_product_io" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "io"
   display_name = "IO"
@@ -1366,7 +1366,7 @@ module "apim_product_io" {
 }
 
 module "apim_product_io_premium" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "io-premium"
   display_name = "IO Premium"
@@ -1383,7 +1383,7 @@ module "apim_product_io_premium" {
 }
 
 module "apim_product_test_io" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "test-io"
   display_name = "Test IO"
@@ -1400,7 +1400,7 @@ module "apim_product_test_io" {
 }
 
 module "apim_product_test_io_premium" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "test-io-premium"
   display_name = "Test IO Premium"
@@ -1417,7 +1417,7 @@ module "apim_product_test_io_premium" {
 }
 
 module "apim_product_support_io" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "prod-io"
   display_name = "Support IO"
@@ -1434,7 +1434,7 @@ module "apim_product_support_io" {
 }
 
 module "apim_product_fd" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "prod-fd"
   display_name = "Fideiussioni Digitali"
@@ -1450,7 +1450,7 @@ module "apim_product_fd" {
   policy_xml = file("./api_product/prod-fd/policy.xml")
 }
 module "apim_product_fd_garantito" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "prod-fd-garantito"
   display_name = "Fideiussioni Digitali Garantito"
@@ -1467,7 +1467,7 @@ module "apim_product_fd_garantito" {
 }
 
 module "apim_product_registro_beni" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//api_management_product?ref=v8.18.0"
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
 
   product_id   = "prod-registro-beni"
   display_name = "Registro Beni"
