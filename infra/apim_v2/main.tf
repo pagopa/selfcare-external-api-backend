@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "<= 3.107.0"
+      version = "> 4.0.0"
     }
 
     pkcs12 = {
@@ -20,5 +20,4 @@ provider "azurerm" {
       purge_soft_delete_on_destroy = false
     }
   }
-  skip_provider_registration = true
 }
