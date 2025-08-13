@@ -2435,20 +2435,30 @@
         "title": "OnboardingInstitutionUsersRequest",
         "type": "object",
         "properties": {
+          "institutionId": {
+            "type": "string",
+            "description": "The institution ID where users will be added. This takes precedence over the tax code"
+          },
           "institutionSubunitCode": {
-            "type": "string"
+            "type": "string",
+            "description": "Add users to the institution via subunit code. Can be used in combination with institutionTaxCode"
           },
           "institutionTaxCode": {
-            "type": "string"
+            "type": "string",
+            "description": "Add users to the institution via tax code. Can be used in combination with institutionSubunitCode"
           },
           "productId": {
-            "type": "string"
+            "type": "string",
+            "description": "Product to add roles to"
           },
           "sendCreateUserNotificationEmail": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Send an email notification to the user. By default it's set to true",
+            "example": false
           },
           "users": {
             "type": "array",
+            "description": "List of users to add",
             "items": {
               "$ref": "#/components/schemas/Person"
             }
@@ -2460,10 +2470,12 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "The email address of the user to add / create. If id is present, the field is ignored"
           },
           "env": {
             "type": "string",
+            "description": "Environment. The field is currently not used to create users. It's only returned in response",
             "enum": [
               "COLL",
               "DEV",
@@ -2472,16 +2484,20 @@
             ]
           },
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "User ID of a user already in the registry. A role will be added to the institution/product for the user. It takes precedence over taxCode"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the user to add / create. If id is present, the field is ignored"
           },
           "productRole": {
-            "type": "string"
+            "type": "string",
+            "description": "The product role to assign to the user based on the product specifications"
           },
           "role": {
             "type": "string",
+            "description": "The role to assign to the user",
             "enum": [
               "ADMIN_EA",
               "DELEGATE",
@@ -2491,13 +2507,20 @@
             ]
           },
           "roleLabel": {
-            "type": "string"
+            "type": "string",
+            "description": "The product role label based on the product specifications. The field is currently not used to create users"
           },
           "surname": {
-            "type": "string"
+            "type": "string",
+            "description": "The surname of the user to add / create. If id is present, the field is ignored"
           },
           "taxCode": {
-            "type": "string"
+            "type": "string",
+            "description": "The tax code of the user to add / create. If id is present, the field is ignored"
+          },
+          "userMailUuid": {
+            "type": "string",
+            "description": "The email ID of the user already in the registry to be assigned to the institution/product. This field is only used when adding a user by ID"
           }
         }
       },
@@ -3092,6 +3115,12 @@
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -3463,6 +3492,9 @@
           "istatCode": {
             "type": "string"
           },
+          "legalForm": {
+            "type": "string"
+          },
           "geographicTaxonomies": {
             "type": "array",
             "items": {
@@ -3486,6 +3518,12 @@
           },
           "imported": {
             "type": "boolean"
+          },
+          "atecoCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
