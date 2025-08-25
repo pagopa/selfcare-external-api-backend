@@ -19,18 +19,22 @@ headers {
 }
 
 script:post-response {
-  test("getContract ok", function() {
-      // Check http status
-      expect(res.getStatus()).to.equal(200);
+  test("getContract ok", async () => {
+    // Check that the status code is 200
+    expect(res.status).to.equal(200);
   
-  //     const responseBuffer = pm.response.stream;
+    // Get the response body as ArrayBuffer
+    const buffer = await res.arrayBuffer();
   
-      // Check buffer is not empty
-      expect(responseBuffer.length).to.be.greaterThan(0);
+    // Check that the buffer is not empty
+    expect(buffer.byteLength).to.be.greaterThan(0);
   
-      // Read first 5 bytes, convert to ASCII and check if it starts with "%PDF-" (PDF file signature)
-      const firstFiveBytes = responseBuffer.slice(0, 5).toString("ascii");
-      expect(firstFiveBytes).to.eql("%PDF-");
+    // Read the first 5 bytes and convert to ASCII string
+    const firstFiveBytes = new Uint8Array(buffer.slice(0, 5));
+    const firstFiveChars = String.fromCharCode(...firstFiveBytes);
+  
+    // Assert the PDF signature at the start
+    expect(firstFiveChars).to.equal("%PDF-");
   });
   
 }

@@ -75,7 +75,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"getContract ok\", function () {",
+									"pm.test(\"getInstitutionProducts ok\", function () {",
 									"pm.response.to.have.status(200);",
 									"});"
 								],
@@ -134,7 +134,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"getContract ok\", function () {",
+									"pm.test(\"getInstitutionUsersByProduct ok\", function () {",
 									"pm.response.to.have.status(200);",
 									"});"
 								],
