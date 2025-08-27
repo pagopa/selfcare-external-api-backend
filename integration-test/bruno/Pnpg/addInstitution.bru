@@ -1,0 +1,23 @@
+meta {
+  name: addInstitution
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{apiBaseUrl}}/external/data-vault/v1/pn-pg/institutions/add
+  body: json
+  auth: inherit
+}
+
+headers {
+  Ocp-Apim-Subscription-Key: {{apimKeyDataVaultPNPG}}
+}
+
+body:json {
+  {"externalId":"1234"}
+}
+
+settings {
+  encodeUrl: true
+}

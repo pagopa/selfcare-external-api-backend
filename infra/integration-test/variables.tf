@@ -66,3 +66,11 @@ variable "key_vault" {
     name                = string
   })
 }
+
+variable "key_vault_pnpg" {
+  description = "PNPG KeyVault data to get secrets values from"
+  type = object({
+    resource_group_name = string
+    name                = string
+  })
+}
