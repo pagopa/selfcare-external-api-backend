@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "43906caf-929d-4e4d-bc20-4a16e65565cc",
+		"_postman_id": "c0606f28-b637-4193-abd3-0272f4d84ad3",
 		"name": "Selfcare-External-Integration",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26036736"
+		"_exporter_id": "15512275"
 	},
 	"item": [
 		{
@@ -275,6 +275,106 @@
 								{
 									"key": "productId",
 									"value": "prod-io"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;",
+									"const objectIdRegex = /^[0-9a-f]{24}$/;",
+									"const isoDateRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?$/; ",
+									"",
+									"pm.test(\"getUserInstitution ok\", function() {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"",
+									"    jsonData.forEach(userInstitution => {",
+									"        pm.expect(userInstitution).to.have.property(\"id\").to.match(objectIdRegex);",
+									"        pm.expect(userInstitution).to.have.property(\"userId\").to.match(uuidRegex);",
+									"        pm.expect(userInstitution).to.have.property(\"institutionId\").to.match(uuidRegex);",
+									"        pm.expect(userInstitution).to.have.property(\"institutionDescription\").that.is.a(\"string\").and.is.not.empty;",
+									"        pm.expect(userInstitution).to.have.property(\"institutionRootName\").that.is.a(\"string\").and.is.not.empty;         ",
+									"        // Products array validation",
+									"        pm.expect(userInstitution).to.have.property(\"products\").that.is.an(\"array\");",
+									"        ",
+									"        userInstitution.products.forEach(product => {               ",
+									"            pm.expect(product).to.have.property(\"productId\").that.is.a(\"string\").and.is.not.empty;",
+									"            pm.expect(product).to.have.property(\"productRole\").that.is.a(\"string\");",
+									"            pm.expect(product.productRoleLabel).to.be.a(\"string\");",
+									"            pm.expect(product).to.have.property(\"status\").that.is.a(\"string\"); ",
+									"            pm.expect(product).to.have.property(\"role\").that.is.a(\"string\");                     ",
+									"            pm.expect(product.createdAt).to.match(isoDateRegex);                ",
+									"        });",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyPN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/v2/users?institutionId={{institutionId}}&userId={{userId}}&roles=DELEGATE&states=ACTIVE&products=prod-pn&productRoles=admin&page=0&size=100",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"v2",
+								"users"
+							],
+							"query": [
+								{
+									"key": "institutionId",
+									"value": "{{institutionId}}"
+								},
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "roles",
+									"value": "DELEGATE"
+								},
+								{
+									"key": "states",
+									"value": "ACTIVE"
+								},
+								{
+									"key": "products",
+									"value": "prod-pn"
+								},
+								{
+									"key": "productRoles",
+									"value": "admin"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "100"
 								}
 							]
 						}
