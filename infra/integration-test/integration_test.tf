@@ -49,7 +49,8 @@ resource "github_actions_environment_secret" "integration_environment_bruno" {
   secret_name = "integration_environment_bruno${local.pnpg_suffix}"
   plaintext_value = base64encode(templatefile("Selfcare-External-Integration-Environment.bru",
     {
-      env       = local.env_url
-      apimKeyPN = data.azurerm_key_vault_secret.apim_product_pn_sk.value
-  }))
+      env                  = local.env_url
+      apimKeyPN            = data.azurerm_key_vault_secret.apim_product_pn_sk.value
+      apimKeyDataVaultPNPG = data.azurerm_key_vault_secret.apim_product_pnpg_sk.value
+    }))
 }
