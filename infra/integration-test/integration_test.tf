@@ -14,7 +14,7 @@ data "azurerm_key_vault" "key_vault_pnpg" {
 }
 
 data "azurerm_key_vault_secret" "apim_product_pnpg_sk" {
-  name         = "apimKeyDataVaultPNPG"
+  name         = "external-api-key"
   key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
 }
 
