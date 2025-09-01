@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c0606f28-b637-4193-abd3-0272f4d84ad3",
+		"_postman_id": "645caa85-af26-4451-a0a4-cee6dfa27cc8",
 		"name": "Selfcare-External-Integration",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15512275"
+		"_exporter_id": "26036736"
 	},
 	"item": [
 		{
@@ -638,23 +638,68 @@
 					"response": []
 				}
 			]
-		}
-	],
-	"variable": [
-		{
-			"key": "institutionId",
-			"value": "",
-			"type": "default"
 		},
 		{
-			"key": "productId",
-			"value": "",
-			"type": "default"
-		},
-		{
-			"key": "userId",
-			"value": "",
-			"type": "default"
+			"name": "Pnpg",
+			"item": [
+				{
+					"name": "addInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"addInstitution ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Ocp-Apim-Subscription-Key",
+								"value": "{{apimKeyDataVaultPNPG}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"externalId\":\"1234\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/external/data-vault/v1/pn-pg/institutions/add",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"external",
+								"data-vault",
+								"v1",
+								"pn-pg",
+								"institutions",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

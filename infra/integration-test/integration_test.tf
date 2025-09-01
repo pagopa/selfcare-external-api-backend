@@ -8,6 +8,16 @@ data "azurerm_key_vault_secret" "apim_product_pn_sk" {
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
+data "azurerm_key_vault" "key_vault_pnpg" {
+  resource_group_name = var.key_vault_pnpg.resource_group_name
+  name                = var.key_vault_pnpg.name
+}
+
+data "azurerm_key_vault_secret" "apim_product_pnpg_sk" {
+  name         = "external-api-key"
+  key_vault_id = data.azurerm_key_vault.key_vault_pnpg.id
+}
+
 data "github_repository" "repo" {
   full_name = "pagopa/selfcare-external-api-backend"
 }
@@ -27,9 +37,10 @@ resource "github_actions_environment_secret" "integration_environment" {
   secret_name = "integration_environment${local.pnpg_suffix}"
   plaintext_value = base64encode(templatefile("Selfcare-external-Integration.postman_environment.json",
     {
-      env       = local.env_url
-      apimKeyPN = data.azurerm_key_vault_secret.apim_product_pn_sk.value
-  }))
+      env                  = local.env_url
+      apimKeyPN            = data.azurerm_key_vault_secret.apim_product_pn_sk.value
+      apimKeyDataVaultPNPG = data.azurerm_key_vault_secret.apim_product_pnpg_sk.value
+    }))
 }
 
 resource "github_actions_environment_secret" "integration_environment_bruno" {
@@ -38,7 +49,8 @@ resource "github_actions_environment_secret" "integration_environment_bruno" {
   secret_name = "integration_environment_bruno${local.pnpg_suffix}"
   plaintext_value = base64encode(templatefile("Selfcare-External-Integration-Environment.bru",
     {
-      env       = local.env_url
-      apimKeyPN = data.azurerm_key_vault_secret.apim_product_pn_sk.value
-  }))
+      env                  = local.env_url
+      apimKeyPN            = data.azurerm_key_vault_secret.apim_product_pn_sk.value
+      apimKeyDataVaultPNPG = data.azurerm_key_vault_secret.apim_product_pnpg_sk.value
+    }))
 }

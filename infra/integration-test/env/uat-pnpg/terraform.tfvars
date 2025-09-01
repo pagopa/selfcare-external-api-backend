@@ -18,3 +18,8 @@ key_vault = {
   resource_group_name = "selc-u-pnpg-sec-rg"
   name                = "selc-u-pnpg-kv"
 }
+
+key_vault_pnpg = {
+  resource_group_name = "selc-u-pnpg-sec-rg"
+  name                = "selc-u-pnpg-kv"
+}
