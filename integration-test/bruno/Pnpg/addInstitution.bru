@@ -18,6 +18,18 @@ body:json {
   {"externalId":"1234"}
 }
 
+script:post-response {
+  test("addInstitution ok", function () {
+      expect(res.getStatus()).to.equal(200);
+  
+      const jsonData = res.getBody();
+  
+      expect(jsonData).to.have.property("id");
+      expect(jsonData.id).to.be.a("string");
+  });
+  
+}
+
 settings {
   encodeUrl: true
 }
