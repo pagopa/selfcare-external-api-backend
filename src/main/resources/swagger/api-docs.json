@@ -1839,6 +1839,12 @@
           "address" : {
             "type" : "string"
           },
+          "atecoCodes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "businessRegisterPlace" : {
             "type" : "string"
           },
@@ -2767,6 +2773,10 @@
         "title" : "TokenResource",
         "type" : "object",
         "properties" : {
+          "activatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
           "checksum" : {
             "type" : "string"
           },

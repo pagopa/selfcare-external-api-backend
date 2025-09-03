@@ -30,6 +30,7 @@ public class TokenResource {
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
     private OffsetDateTime closedAt;
+    private OffsetDateTime activatedAt;
 
     public TokenResource(String id) {
         this.id = id;
