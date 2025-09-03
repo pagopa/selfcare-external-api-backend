@@ -2814,6 +2814,9 @@
           "createdAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
+          "activatedAt" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
           "updatedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
