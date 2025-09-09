@@ -137,6 +137,7 @@ public class OnboardingV2Controller {
   @ResponseStatus(HttpStatus.OK)
   @Tag(name = "internal-v1")
   @Tag(name = "support")
+  @Tag(name = "support-pnpg")
   @Tag(name = "Onboarding")
   @ApiOperation(
       value = "${swagger.mscore.onboarding.users}",
