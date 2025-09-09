@@ -284,6 +284,7 @@ module "apim_external_api_ms_v2" {
     module.apim_product_pn_test.product_id,
     module.apim_product_pagopa.product_id,
     module.apim_product_idpay.product_id,
+    module.apim_product_idpay_merchant.product_id,
     module.apim_product_io_sign.product_id,
     module.apim_product_io.product_id,
     module.apim_product_io_premium.product_id,
@@ -426,6 +427,14 @@ module "apim_external_api_ms_v2" {
         FN_KEY                 = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
+      })
+    },
+    {
+      operation_id = "getOnboardingProduct"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
     }
   ]
@@ -596,6 +605,12 @@ module "apim_internal_api_ms_v1" {
       operation_id = "V2getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
+      })
+    },
+    {
+      operation_id = "getOnboardingProduct"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
     }
   ]
@@ -1329,6 +1344,23 @@ module "apim_product_idpay" {
   approval_required     = false
 
   policy_xml = file("./api_product/idpay/policy.xml")
+}
+
+module "apim_product_idpay_merchant" {
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
+
+  product_id   = "idpay-merchant"
+  display_name = "IDPAY MERCHANT"
+  description  = "ID Pay Merchant"
+
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  published             = true
+  subscription_required = true
+  approval_required     = false
+
+  policy_xml = file("./api_product/idpay-merchant/policy.xml")
 }
 
 module "apim_product_io_sign" {
