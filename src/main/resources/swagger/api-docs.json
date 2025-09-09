@@ -685,7 +685,7 @@
     },
     "/v2/onboarding/users" : {
       "post" : {
-        "tags" : [ "Onboarding", "internal-v1", "support" ],
+        "tags" : [ "Onboarding", "internal-v1", "support", "support-pnpg" ],
         "summary" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "description" : "The service adds users to the registry if they are not present and associates them with the institution and product contained in the body",
         "operationId" : "onboardingInstitutionUsersUsingPOST",
