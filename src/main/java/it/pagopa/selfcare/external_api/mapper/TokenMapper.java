@@ -27,6 +27,7 @@ public interface TokenMapper {
     @Mapping(target = "expiringDate", source = "expiringDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "updatedAt", source = "updatedAt", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "activatedAt", source = "activatedAt", qualifiedByName = "toOffsetDateTime")
+    @Mapping(target = "institutionUpdate.payment", source = "payment")
     TokenOnboardedUsers toEntity(OnboardingGet response);
 
     @Named("toOffsetDateTime")

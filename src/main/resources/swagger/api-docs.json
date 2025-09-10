@@ -1882,6 +1882,12 @@
             "type" : "string",
             "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
           },
+          "legalForm" : {
+            "type" : "string"
+          },
+          "payment" : {
+            "$ref" : "#/components/schemas/Payment"
+          },
           "paymentServiceProvider" : {
             "$ref" : "#/components/schemas/PaymentServiceProvider"
           },
@@ -2339,6 +2345,18 @@
             "items" : {
               "$ref" : "#/components/schemas/UserDto"
             }
+          }
+        }
+      },
+      "Payment" : {
+        "title" : "Payment",
+        "type" : "object",
+        "properties" : {
+          "holder" : {
+            "type" : "string"
+          },
+          "iban" : {
+            "type" : "string"
           }
         }
       },
