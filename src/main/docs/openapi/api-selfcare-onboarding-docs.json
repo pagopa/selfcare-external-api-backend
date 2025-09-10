@@ -2240,6 +2240,17 @@
           }
         }
       },
+      "PaymentResponse" : {
+        "type" : "object",
+        "properties" : {
+          "iban" : {
+            "type" : "string"
+          },
+          "holder" : {
+            "type" : "string"
+          }
+        }
+      },
       "CheckManagerRequest" : {
         "required" : [ "productId", "userId" ],
         "type" : "object",
@@ -2677,6 +2688,9 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "legalForm" : {
+            "type" : "string"
           }
         }
       },
@@ -2804,6 +2818,9 @@
           },
           "billing" : {
             "$ref" : "#/components/schemas/BillingResponse"
+          },
+          "payment" : {
+            "$ref" : "#/components/schemas/PaymentResponse"
           },
           "signContract" : {
             "type" : "boolean"
