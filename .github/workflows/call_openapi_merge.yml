@@ -91,11 +91,11 @@ jobs:
           path: selfcare-external-api-backend
 
       - name: Download from blob storage
-        uses: azure/CLI@965c8d7571d2231a54e321ddd07f7b10317f34d9 # v2
+        uses: azure/CLI@v2
         with:
           inlineScript: |
             mkdir docs
-            az storage blob download-batch --auth-mode login -d ./docs/ --account-name selc${{ needs.setup.outputs.env_short }}checkoutsa -s selc-openapi --pattern pagopa/**
+            az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ needs.setup.outputs.env_short }}checkoutsa -s selc-openapi --pattern pagopa/**
 
       - name: Install openapi-merge-cli
         run: npm install --location global openapi-merge-cli
