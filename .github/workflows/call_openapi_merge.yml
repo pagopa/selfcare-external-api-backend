@@ -93,6 +93,7 @@ jobs:
       - name: Download from blob storage
         uses: azure/CLI@v2
         with:
+          azcliversion: 2.76.0
           inlineScript: |
             mkdir docs
             az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ needs.setup.outputs.env_short }}checkoutsa -s selc-openapi --pattern pagopa/**
