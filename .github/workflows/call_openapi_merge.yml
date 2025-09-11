@@ -95,7 +95,7 @@ jobs:
         with:
           inlineScript: |
             mkdir docs
-            az storage blob download-batch --auth-mode key -d ./docs/ --account-name selc${{ needs.setup.outputs.env_short }}checkoutsa  -s selc-openapi --pattern pagopa/**
+            az storage blob download-batch --auth-mode login -d ./docs/ --account-name selc${{ needs.setup.outputs.env_short }}checkoutsa -s selc-openapi --pattern pagopa/**
 
       - name: Install openapi-merge-cli
         run: npm install --location global openapi-merge-cli
