@@ -91,7 +91,7 @@ jobs:
           path: selfcare-external-api-backend
 
       - name: Download from blob storage
-        uses: azure/CLI@v2
+        uses: azure/CLI@089eac9d8cc39f5d003e94f8b65efc51076c9cbd # v2
         with:
           azcliversion: 2.76.0
           inlineScript: |
