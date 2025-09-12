@@ -327,6 +327,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "legalForm": {
+            "type": "string"
           }
         }
       },
