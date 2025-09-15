@@ -811,6 +811,12 @@ module "apim_selfcare_support_service_v1" {
         BACKEND_BASE_URL = "https://selc-${var.env_short}-onboarding-fn.azurewebsites.net"
         FN_KEY           = data.azurerm_key_vault_secret.fn-onboarding-primary-key.value
       })
+    },
+    {
+      operation_id = "deleteDelegationUsingDELETE"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
