@@ -244,6 +244,70 @@
         ]
       }
     },
+    "/delegations/{delegationId}": {
+      "delete": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
+        "description": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
+        "operationId": "deleteDelegationUsingDELETE",
+        "parameters": [
+          {
+            "name": "delegationId",
+            "in": "path",
+            "description": "Delegation's unique internal identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/institutions": {
       "get": {
         "tags": [
@@ -2664,6 +2728,12 @@
               "SCP"
             ]
           },
+          "legalForm": {
+            "type": "string"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/Payment"
+          },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProvider"
           },
@@ -2741,6 +2811,18 @@
           },
           "managerProsecution": {
             "type": "boolean"
+          }
+        }
+      },
+      "Payment": {
+        "title": "Payment",
+        "type": "object",
+        "properties": {
+          "holder": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
           }
         }
       },
@@ -3134,6 +3216,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "legalForm": {
+            "type": "string"
           }
         }
       },
@@ -3352,6 +3437,9 @@
           },
           "gpuData": {
             "$ref": "#/components/schemas/GPUData1"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentRequestDto"
           }
         }
       },
@@ -3600,6 +3688,18 @@
           },
           "institutionCourtMeasures": {
             "type": "boolean"
+          }
+        }
+      },
+      "PaymentRequestDto": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "pattern": "^IT\\d{2}[A-Z]\\d{5}\\d{5}[0-9A-Z]{12}$",
+            "type": "string"
+          },
+          "holder": {
+            "type": "string"
           }
         }
       },
