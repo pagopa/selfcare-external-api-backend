@@ -1243,6 +1243,56 @@
         "x-legacy-api": "true"
       }
     },
+    "/onboarding/institutions/{institutionId}": {
+      "get": {
+        "tags": [],
+        "summary": "Get onboarding COMPLETED by institutionId and productId.",
+        "description": "Retrieve an onboarding record given institutionId and productId",
+        "operationId": "getOnboardingProduct",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingGet"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/pa/completion": {
       "post": {
         "tags": [
@@ -3665,6 +3715,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "legalForm": {
+            "type": "string"
           }
         }
       },
@@ -3871,6 +3924,9 @@
           },
           "gpuData": {
             "$ref": "#/components/schemas/GPUData1"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentRequestDto"
           }
         }
       },
@@ -4122,6 +4178,18 @@
           }
         }
       },
+      "PaymentRequestDto": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "pattern": "^IT\\d{2}[A-Z]\\d{5}\\d{5}[0-9A-Z]{12}$",
+            "type": "string"
+          },
+          "holder": {
+            "type": "string"
+          }
+        }
+      },
       "OnboardingStatus": {
         "enum": [
           "REQUEST",
@@ -4133,6 +4201,108 @@
           "DELETED"
         ],
         "type": "string"
+      },
+      "OnboardingGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "workflowType": {
+            "type": "string"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionResponse1"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse1"
+            }
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse2"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentResponse"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "expiringDate": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "activatedAt": {
+            "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "status": {
+            "type": "string"
+          },
+          "userRequestUid": {
+            "type": "string"
+          },
+          "reasonForReject": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UserResponse1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PartyRole"
+          },
+          "productRole": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "type": "string"
+          },
+          "holder": {
+            "type": "string"
+          }
+        }
       },
       "OnboardingPaRequest": {
         "required": [
