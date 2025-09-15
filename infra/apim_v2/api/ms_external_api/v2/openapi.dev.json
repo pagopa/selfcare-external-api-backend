@@ -3274,6 +3274,12 @@
               "SCP"
             ]
           },
+          "legalForm": {
+            "type": "string"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/Payment"
+          },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProvider"
           },
@@ -3351,6 +3357,18 @@
           },
           "managerProsecution": {
             "type": "boolean"
+          }
+        }
+      },
+      "Payment": {
+        "title": "Payment",
+        "type": "object",
+        "properties": {
+          "holder": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
           }
         }
       },
