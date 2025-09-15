@@ -2664,6 +2664,12 @@
               "SCP"
             ]
           },
+          "legalForm": {
+            "type": "string"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/Payment"
+          },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProvider"
           },
@@ -2741,6 +2747,18 @@
           },
           "managerProsecution": {
             "type": "boolean"
+          }
+        }
+      },
+      "Payment": {
+        "title": "Payment",
+        "type": "object",
+        "properties": {
+          "holder": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
           }
         }
       },
@@ -3134,6 +3152,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "legalForm": {
+            "type": "string"
           }
         }
       },
@@ -3352,6 +3373,9 @@
           },
           "gpuData": {
             "$ref": "#/components/schemas/GPUData1"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentRequestDto"
           }
         }
       },
@@ -3600,6 +3624,18 @@
           },
           "institutionCourtMeasures": {
             "type": "boolean"
+          }
+        }
+      },
+      "PaymentRequestDto": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "pattern": "^IT\\d{2}[A-Z]\\d{5}\\d{5}[0-9A-Z]{12}$",
+            "type": "string"
+          },
+          "holder": {
+            "type": "string"
           }
         }
       },
