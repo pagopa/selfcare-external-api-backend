@@ -725,6 +725,18 @@ module "apim_selfcare_support_service_v1" {
       })
     },
     {
+      operation_id = "deleteMemberFromUserGroupUsingDELETE"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
+      })
+    },
+    {
+      operation_id = "deleteMemberFromUserGroupsUsingDELETE"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
+      })
+    },
+    {
       operation_id = "V2getUserInfoUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
