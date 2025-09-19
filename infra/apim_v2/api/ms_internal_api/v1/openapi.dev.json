@@ -2321,6 +2321,18 @@
               "type": "string"
             }
           },
+          "disabledStateInstituion": {
+            "type": "string"
+          },
+          "descriptionStateInstitution": {
+            "type": "string"
+          },
+          "statusCompanyRI": {
+            "type": "string"
+          },
+          "statusCompanyRD": {
+            "type": "string"
+          },
           "nrea": {
             "type": "string"
           }
@@ -3913,6 +3925,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4336,6 +4351,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4523,6 +4541,9 @@
             "type": "string"
           },
           "signContract": {
+            "type": "boolean"
+          },
+          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
