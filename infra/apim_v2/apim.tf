@@ -290,7 +290,8 @@ module "apim_external_api_ms_v2" {
     module.apim_product_io_premium.product_id,
     module.apim_product_fd.product_id,
     module.apim_product_fd_garantito.product_id,
-    module.apim_product_registro_beni.product_id
+    module.apim_product_registro_beni.product_id,
+    module.apim_product_idpay_gi.product_id
   ]
 
   api_operation_policies = [
@@ -1379,6 +1380,23 @@ module "apim_product_idpay_merchant" {
   approval_required     = false
 
   policy_xml = file("./api_product/idpay-merchant/policy.xml")
+}
+
+module "apim_product_idpay_gi" {
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
+
+  product_id   = "idpay-gi"
+  display_name = "IDPAY GI"
+  description  = "ID Pay Gestione iniziative"
+
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  published             = true
+  subscription_required = true
+  approval_required     = false
+
+  policy_xml = file("./api_product/idpay-gi/policy.xml")
 }
 
 module "apim_product_io_sign" {
