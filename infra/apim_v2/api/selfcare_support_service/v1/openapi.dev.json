@@ -3586,6 +3586,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
