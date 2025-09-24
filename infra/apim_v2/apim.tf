@@ -613,6 +613,24 @@ module "apim_internal_api_ms_v1" {
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/v1/"
       })
+    },
+    {
+      operation_id = "getDelegationsUsingGET_2"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/v2/"
+      })
+    },
+    {
+      operation_id = "addMembersToUserGroupWithParentInstitutionIdUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-group-ca.${var.ca_suffix_dns_private_name}/v1/"
+      })
+    },
+    {
+      operation_id = "createUserByUserId"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
