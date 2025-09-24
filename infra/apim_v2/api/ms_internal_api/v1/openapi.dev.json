@@ -352,6 +352,59 @@
         ]
       }
     },
+    "/users/{userId}/onboarding": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Check if the user is manager or Update/create a user by userId with a new role",
+        "description": "Checks if the user is already a manager for the specified product and, if not, creates or updates the user with a new role.",
+        "operationId": "createUserByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUserRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user is already onboarded for the specified product.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "201": {
+            "description": "The user has been created or updated with a new role."
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/uo/{codiceUniUo}": {
       "get": {
         "tags": [
@@ -1023,6 +1076,282 @@
           },
           "500": {
             "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/delegations": {
+      "get": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Retrieve institution's delegations with pagination",
+        "description": "Retrieve institution's delegations with pagination",
+        "operationId": "getDelegationsUsingGET_1",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Description ente",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Institution's tax code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order to show response NONE, ASC, DESC",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC",
+                "NONE"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationWithPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/delegations/delegations-with-pagination": {
+      "get": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Retrieve institution's delegations with pagination",
+        "description": "Retrieve institution's delegations with pagination",
+        "operationId": "getDelegationsUsingGET_2",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Description ente",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Institution's tax code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order to show response NONE, ASC, DESC",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC",
+                "NONE"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationWithPaginationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2174,6 +2503,67 @@
         ],
         "type": "string"
       },
+      "AddUserRoleDto": {
+        "required": [
+          "institutionId",
+          "product"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "institutionDescription": {
+            "type": "string"
+          },
+          "institutionRootName": {
+            "type": "string"
+          },
+          "userMailUuid": {
+            "type": "string"
+          },
+          "hasToSendEmail": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Product": {
+        "required": [
+          "productId",
+          "role",
+          "productRoles"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "description": "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "productRoles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "delegationId": {
+            "type": "string"
+          },
+          "toAddOnAggregates": {
+            "type": "boolean"
+          }
+        }
+      },
       "UOResource": {
         "type": "object",
         "properties": {
@@ -2320,6 +2710,18 @@
             "items": {
               "type": "string"
             }
+          },
+          "disabledStateInstituion": {
+            "type": "string"
+          },
+          "descriptionStateInstitution": {
+            "type": "string"
+          },
+          "statusCompanyRI": {
+            "type": "string"
+          },
+          "statusCompanyRD": {
+            "type": "string"
           },
           "nrea": {
             "type": "string"
@@ -3585,6 +3987,43 @@
           }
         }
       },
+      "DelegationWithPaginationResponse": {
+        "title": "DelegationWithPaginationResponse",
+        "type": "object",
+        "properties": {
+          "delegations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DelegationResponse"
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "PageInfo": {
+        "title": "PageInfo",
+        "type": "object",
+        "properties": {
+          "pageNo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "OnboardingResponse1": {
         "type": "object",
         "properties": {
@@ -3911,6 +4350,9 @@
             "type": "string"
           },
           "signContract": {
+            "type": "boolean"
+          },
+          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
@@ -4336,6 +4778,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4523,6 +4968,9 @@
             "type": "string"
           },
           "signContract": {
+            "type": "boolean"
+          },
+          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
