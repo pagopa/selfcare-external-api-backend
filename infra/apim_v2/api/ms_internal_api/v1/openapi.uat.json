@@ -2321,6 +2321,18 @@
               "type": "string"
             }
           },
+          "disabledStateInstituion": {
+            "type": "string"
+          },
+          "descriptionStateInstitution": {
+            "type": "string"
+          },
+          "statusCompanyRI": {
+            "type": "string"
+          },
+          "statusCompanyRD": {
+            "type": "string"
+          },
           "nrea": {
             "type": "string"
           }
