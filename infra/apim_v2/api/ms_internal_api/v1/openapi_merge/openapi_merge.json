@@ -45,6 +45,14 @@
           "internal-v1"
         ]
       }
+    },
+    {
+      "inputFile": "../../../../../../../docs/pagopa/selfcare-user-group-ms/openapi.json",
+      "operationSelection": {
+        "includeTags": [
+          "internal-v1"
+        ]
+      }
     }
   ],
   "output": "../openapi.json"
