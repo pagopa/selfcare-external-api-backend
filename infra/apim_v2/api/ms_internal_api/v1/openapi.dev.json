@@ -29,6 +29,10 @@
     },
     {
       "name": "Onboarding Controller"
+    },
+    {
+      "name": "UserGroup",
+      "description": "User group endpoint CRUD operations"
     }
   ],
   "paths": {
@@ -1993,6 +1997,67 @@
           },
           "403": {
             "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/user-groups/members": {
+      "put": {
+        "tags": [
+          "UserGroup"
+        ],
+        "summary": "addMembersToUserGroupWithParentInstitutionId",
+        "description": "Service to add a members to a specific UserGroup entity by its institutionId, parentInstitutionId and productId",
+        "operationId": "addMembersToUserGroupWithParentInstitutionIdUsingPUT",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMembersToUserGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5081,6 +5146,39 @@
         "properties": {
           "cades": {
             "type": "boolean"
+          }
+        }
+      },
+      "AddMembersToUserGroupDto": {
+        "title": "AddMembersToUserGroupDto",
+        "required": [
+          "institutionId",
+          "members",
+          "parentInstitutionId",
+          "productId"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionId": {
+            "type": "string",
+            "description": "Users group's institutionId"
+          },
+          "members": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "List of all the members of the group",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "parentInstitutionId": {
+            "type": "string",
+            "description": "Users group's parent institutionId"
+          },
+          "productId": {
+            "type": "string",
+            "description": "Users group's productId"
           }
         }
       }
