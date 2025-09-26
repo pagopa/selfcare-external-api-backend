@@ -13,5 +13,6 @@ public class OnboardingUsersRequest {
     private String institutionTaxCode;
     private String institutionSubunitCode;
     private Boolean sendCreateUserNotificationEmail;
+    private Boolean toAddOnAggregates;
 
 }

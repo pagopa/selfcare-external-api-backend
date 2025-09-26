@@ -114,8 +114,8 @@ class OnboardingServiceImpl implements OnboardingService {
     }
 
     List<RelationshipInfo> result = new ArrayList<>();
-    result.addAll(processUsersWithId(usersWithId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail()));
-    result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail()));
+    result.addAll(processUsersWithId(usersWithId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail(), request.getToAddOnAggregates()));
+    result.addAll(processUsersWithoutId(usersWithoutId, institution, request.getProductId(), request.getSendCreateUserNotificationEmail(), request.getToAddOnAggregates()));
 
     return result;
   }
@@ -141,7 +141,7 @@ class OnboardingServiceImpl implements OnboardingService {
   }
 
   private List<RelationshipInfo> processUsersWithId(
-      Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId, Boolean hasToSendMail) {
+      Map<String, List<UserToOnboard>> usersWithId, Institution institution, String productId, Boolean hasToSendMail, Boolean toAddOnAggregates) {
     List<RelationshipInfo> result = new ArrayList<>();
 
     usersWithId.forEach(
@@ -155,7 +155,7 @@ class OnboardingServiceImpl implements OnboardingService {
                 users.stream()
                     .map(
                         userToOnboard ->
-                            addUserRole(userId, institution, productId, role.name(), productRoles, userToOnboard.getUserMailUuid(), hasToSendMail))
+                            addUserRole(userId, institution, productId, role.name(), productRoles, userToOnboard.getUserMailUuid(), hasToSendMail, toAddOnAggregates))
                     .forEach(
                         id ->
                             result.addAll(
@@ -173,12 +173,14 @@ class OnboardingServiceImpl implements OnboardingService {
       String role,
       List<String> productRoles,
       String userMailUuid,
-      Boolean hasToSendMail) {
+      Boolean hasToSendMail,
+      Boolean toAddOnAggregates) {
     it.pagopa.selfcare.user.generated.openapi.v1.dto.Product product =
         it.pagopa.selfcare.user.generated.openapi.v1.dto.Product.builder()
             .productId(productId)
             .role(role)
             .productRoles(productRoles)
+            .toAddOnAggregates(toAddOnAggregates)
             .build();
 
     AddUserRoleDto addUserRoleDto =
@@ -197,7 +199,7 @@ class OnboardingServiceImpl implements OnboardingService {
   }
 
   private List<RelationshipInfo> processUsersWithoutId(
-      Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId, Boolean hasToSendMail) {
+      Map<String, List<UserToOnboard>> usersWithoutId, Institution institution, String productId, Boolean hasToSendMail, Boolean toAddOnAggregates) {
     List<RelationshipInfo> result = new ArrayList<>();
 
     usersWithoutId.forEach(
@@ -215,7 +217,8 @@ class OnboardingServiceImpl implements OnboardingService {
                         role.name(),
                         productRoles,
                         usersByRole.get(0),
-                        hasToSendMail);
+                        hasToSendMail,
+                        toAddOnAggregates);
                 result.addAll(buildRelationShipInfo(userId, institution, productId, usersByRole));
               });
         });
@@ -229,10 +232,16 @@ class OnboardingServiceImpl implements OnboardingService {
       String role,
       List<String> productRoles,
       UserToOnboard user,
-      boolean hasToSendMail) {
+      boolean hasToSendMail,
+      Boolean toAddOnAggregates
+  ) {
 
-    Product1 product =
-        Product1.builder().productId(productId).role(role).productRoles(productRoles).build();
+    Product1 product = Product1.builder()
+            .productId(productId)
+            .role(role)
+            .productRoles(productRoles)
+            .toAddOnAggregates(toAddOnAggregates)
+            .build();
 
     CreateUserDto createUserDto =
         CreateUserDto.builder()
