@@ -32,6 +32,9 @@ public class OnboardingInstitutionUsersRequest {
     @Schema(description = "Send an email notification to the user. By default it's set to true")
     private Boolean sendCreateUserNotificationEmail = Boolean.TRUE;
 
+    @Schema(description = "Enable automatic management of group assignment")
+    private Boolean toAddOnAggregates;
+
     @AssertTrue(message = "at least one of institutionId or institutionTaxCode must be present")
     public boolean isIdOrTaxcodeNotEmpty() {
         final boolean isIdNotEmpty = Optional.ofNullable(institutionId).map(id -> !id.isEmpty()).orElse(false);

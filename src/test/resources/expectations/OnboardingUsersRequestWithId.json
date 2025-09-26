@@ -26,5 +26,6 @@
   "institutionId": "instId",
   "institutionTaxCode": "instTaxCode",
   "institutionSubunitCode": "instSubunitCode",
-  "sendCreateUserNotificationEmail": true
+  "sendCreateUserNotificationEmail": true,
+  "toAddOnAggregates" : true
 }
