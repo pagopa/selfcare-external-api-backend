@@ -2321,6 +2321,18 @@
               "type": "string"
             }
           },
+          "disabledStateInstituion": {
+            "type": "string"
+          },
+          "descriptionStateInstitution": {
+            "type": "string"
+          },
+          "statusCompanyRI": {
+            "type": "string"
+          },
+          "statusCompanyRD": {
+            "type": "string"
+          },
           "nrea": {
             "type": "string"
           }
@@ -3412,6 +3424,11 @@
             "description": "Send an email notification to the user. By default it's set to true",
             "example": false
           },
+          "toAddOnAggregates": {
+            "type": "boolean",
+            "description": "Enable automatic management of group assignment",
+            "example": false
+          },
           "users": {
             "type": "array",
             "description": "List of users to add",
@@ -3913,6 +3930,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4336,6 +4356,9 @@
           "signContract": {
             "type": "boolean"
           },
+          "soleTrader": {
+            "type": "boolean"
+          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4523,6 +4546,9 @@
             "type": "string"
           },
           "signContract": {
+            "type": "boolean"
+          },
+          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
