@@ -826,7 +826,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "Member's unique identifier",
+            "description": "Member's unique identifier (userId)",
             "required": false,
             "style": "form",
             "schema": {
@@ -1779,6 +1779,11 @@
           "sendCreateUserNotificationEmail": {
             "type": "boolean",
             "description": "Send an email notification to the user. By default it's set to true",
+            "example": false
+          },
+          "toAddOnAggregates": {
+            "type": "boolean",
+            "description": "Enable automatic management of group assignment",
             "example": false
           },
           "users": {

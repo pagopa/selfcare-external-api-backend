@@ -2683,6 +2683,11 @@
             "description": "Send an email notification to the user. By default it's set to true",
             "example": false
           },
+          "toAddOnAggregates": {
+            "type": "boolean",
+            "description": "Enable automatic management of group assignment",
+            "example": false
+          },
           "users": {
             "type": "array",
             "description": "List of users to add",
@@ -3584,6 +3589,9 @@
             "type": "string"
           },
           "signContract": {
+            "type": "boolean"
+          },
+          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
