@@ -194,6 +194,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "toAddOnAggregates": {
+            "type": "boolean"
           }
         }
       },
@@ -528,6 +531,9 @@
           },
           "digitalAddress": {
             "type": "string"
+          },
+          "skipVerifyLegal": {
+            "type": "boolean"
           }
         }
       },
