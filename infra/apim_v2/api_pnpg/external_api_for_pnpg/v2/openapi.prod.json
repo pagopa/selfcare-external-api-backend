@@ -729,7 +729,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "Member's unique identifier",
+            "description": "Member's unique identifier (userId)",
             "required": false,
             "style": "form",
             "schema": {
@@ -1787,6 +1787,10 @@
           "name": {
             "type": "string",
             "description": "Users group's name"
+          },
+          "parentInstitutionId": {
+            "type": "string",
+            "description": "Users group's parent institutionId"
           },
           "productId": {
             "type": "string",
