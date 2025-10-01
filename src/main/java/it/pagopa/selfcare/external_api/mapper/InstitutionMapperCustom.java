@@ -7,13 +7,15 @@ import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class InstitutionMapperCustom {
 
     public static InstitutionUpdateResponse toInstitutionUpdateResponse(Institution institution) {
         InstitutionUpdateResponse institutionUpdate = new InstitutionUpdateResponse();
         institutionUpdate.setAddress(institution.getAddress());
-        institutionUpdate.setInstitutionType(InstitutionType.valueOf(institution.getInstitutionType()));
+        institutionUpdate.setInstitutionType(Optional.ofNullable(institution.getInstitutionType()).map(InstitutionType::valueOf).orElse(null));
         institutionUpdate.setDescription(institution.getDescription());
         institutionUpdate.setDigitalAddress(institution.getDigitalAddress());
         institutionUpdate.setTaxCode(institution.getTaxCode());
