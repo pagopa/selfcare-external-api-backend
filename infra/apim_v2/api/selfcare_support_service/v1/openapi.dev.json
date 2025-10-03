@@ -3809,7 +3809,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
