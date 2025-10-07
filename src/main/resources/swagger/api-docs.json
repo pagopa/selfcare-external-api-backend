@@ -1880,7 +1880,7 @@
           },
           "institutionType" : {
             "type" : "string",
-            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PRV_PF", "PSP", "PT", "REC", "SA", "SCEC", "SCP" ]
           },
           "legalForm" : {
             "type" : "string"
@@ -1941,7 +1941,7 @@
           },
           "institutionType" : {
             "type" : "string",
-            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PRV_PF", "PSP", "PT", "REC", "SA", "SCEC", "SCP" ]
           },
           "paymentServiceProvider" : {
             "$ref" : "#/components/schemas/PspDataResource"
@@ -2039,7 +2039,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PRV_PF", "PSP", "PT", "REC", "SA", "SCEC", "SCP" ]
           },
           "productInfo" : {
             "description" : "Products' info of onboardings",
@@ -2177,7 +2177,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PRV_PF", "PSP", "PT", "REC", "SA", "SCEC", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -2305,7 +2305,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PSP", "PT", "REC", "SA", "SCP" ]
+            "enum" : [ "AS", "CON", "GPU", "GSP", "PA", "PG", "PRV", "PRV_PF", "PSP", "PT", "REC", "SA", "SCEC", "SCP" ]
           },
           "isAggregator" : {
             "type" : "boolean",
