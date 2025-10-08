@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding.mapper;
 
 import it.pagopa.selfcare.external_api.model.institution.Institution;
-import it.pagopa.selfcare.external_api.model.institution.InstitutionType;
 import it.pagopa.selfcare.external_api.model.institution.Onboarding;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionInfo;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResource;
@@ -9,6 +8,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.OnboardedInstitutionResp
 import it.pagopa.selfcare.external_api.model.user.OnboardedProductResponse;
 import it.pagopa.selfcare.external_api.model.user.RelationshipState;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
+import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
