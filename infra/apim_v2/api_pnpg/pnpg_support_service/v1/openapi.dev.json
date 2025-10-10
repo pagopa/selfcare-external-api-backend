@@ -1112,10 +1112,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -1334,6 +1336,9 @@
       "OnboardedProductResponse1": {
         "type": "object",
         "properties": {
+          "roleId": {
+            "type": "string"
+          },
           "productId": {
             "type": "string"
           },
