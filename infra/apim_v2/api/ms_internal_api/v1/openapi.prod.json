@@ -2107,6 +2107,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "productId": {
             "type": "string"
           },
@@ -3002,10 +3005,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3597,10 +3602,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3757,10 +3764,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -4000,10 +4009,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
