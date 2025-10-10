@@ -2107,6 +2107,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "productId": {
             "type": "string"
           },
@@ -2776,7 +2779,7 @@
               "type": "string"
             }
           },
-          "disabledStateInstituion": {
+          "disabledStateInstitution": {
             "type": "string"
           },
           "descriptionStateInstitution": {
@@ -3002,10 +3005,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3597,10 +3602,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3757,10 +3764,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -4000,10 +4009,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -4422,9 +4433,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4640,7 +4648,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
@@ -4848,9 +4858,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -5038,9 +5045,6 @@
             "type": "string"
           },
           "signContract": {
-            "type": "boolean"
-          },
-          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
