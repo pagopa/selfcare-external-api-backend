@@ -2107,6 +2107,9 @@
           "institutionType": {
             "type": "string"
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "productId": {
             "type": "string"
           },
@@ -3002,10 +3005,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3013,6 +3018,10 @@
             "type": "boolean",
             "description": "True if institution is an aggregator",
             "example": false
+          },
+          "istatCode": {
+            "type": "string",
+            "description": "Location code of institution"
           },
           "origin": {
             "type": "string",
@@ -3597,10 +3606,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -3757,10 +3768,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
@@ -4000,10 +4013,12 @@
               "PA",
               "PG",
               "PRV",
+              "PRV_PF",
               "PSP",
               "PT",
               "REC",
               "SA",
+              "SCEC",
               "SCP"
             ]
           },
