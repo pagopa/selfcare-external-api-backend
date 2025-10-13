@@ -2312,6 +2312,10 @@
             "description" : "True if institution is an aggregator",
             "example" : false
           },
+          "istatCode" : {
+            "type" : "string",
+            "description" : "Location code of institution"
+          },
           "origin" : {
             "type" : "string",
             "description" : "Institution data origin"
