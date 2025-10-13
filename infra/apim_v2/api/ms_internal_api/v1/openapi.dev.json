@@ -5222,13 +5222,19 @@
       "AddMembersToUserGroupDto": {
         "title": "AddMembersToUserGroupDto",
         "required": [
+          "description",
           "institutionId",
           "members",
+          "name",
           "parentInstitutionId",
           "productId"
         ],
         "type": "object",
         "properties": {
+          "description": {
+            "type": "string",
+            "description": "Users group's description"
+          },
           "institutionId": {
             "type": "string",
             "description": "Users group's institutionId"
@@ -5241,6 +5247,10 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "name": {
+            "type": "string",
+            "description": "Users group's name"
           },
           "parentInstitutionId": {
             "type": "string",
