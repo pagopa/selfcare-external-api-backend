@@ -113,6 +113,7 @@ public interface OnboardingMapper {
     institution.supportEmail(onboardingData.getInstitutionUpdate().getSupportEmail());
     institution.supportPhone(onboardingData.getInstitutionUpdate().getSupportPhone());
     institution.imported(onboardingData.getInstitutionUpdate().getImported());
+    institution.setIstatCode(onboardingData.getIstatCode());
     return institution;
   }
 
@@ -162,6 +163,7 @@ public interface OnboardingMapper {
     institutionPsp.setDataProtectionOfficer(
         toDataProtectionOfficerRequest(
             onboardingData.getInstitutionUpdate().getDataProtectionOfficer()));
+    institutionPsp.setIstatCode(onboardingData.getIstatCode());
     return institutionPsp;
   }
 
