@@ -2840,7 +2840,7 @@
               "type": "string"
             }
           },
-          "disabledStateInstituion": {
+          "disabledStateInstitution": {
             "type": "string"
           },
           "descriptionStateInstitution": {
