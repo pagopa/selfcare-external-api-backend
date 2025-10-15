@@ -3605,9 +3605,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -3823,7 +3820,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
