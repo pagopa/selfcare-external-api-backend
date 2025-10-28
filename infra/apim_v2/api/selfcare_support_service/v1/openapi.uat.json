@@ -350,7 +350,7 @@
           {
             "name": "originId",
             "in": "query",
-            "description": "originId",
+            "description": "Institution's id in the relative origin open data",
             "required": false,
             "style": "form",
             "schema": {
