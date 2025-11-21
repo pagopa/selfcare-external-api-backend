@@ -10,7 +10,7 @@ module "apim_pnpg" {
 
   published             = false
   subscription_required = false
-  approval_required = false
+  approval_required     = false
   # subscriptions_limit   = 1000
 
   policy_xml = file("./api_pnpg/base_policy.xml")
@@ -24,11 +24,11 @@ locals {
     subscription_required = false
     service_url           = null
   }
-  apim_name     = module.apim.name
-  apim_rg       = azurerm_resource_group.rg_api.name
+  apim_name       = module.apim.name
+  apim_rg         = azurerm_resource_group.rg_api.name
   api_pnpg_domain = format("api-pnpg.%s.%s", var.dns_zone_prefix, var.external_domain)
-  pnpg_hostname = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
-  project_pnpg  = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
+  pnpg_hostname   = var.env == "prod" ? "api-pnpg.selfcare.pagopa.it" : "api-pnpg.${var.env}.selfcare.pagopa.it"
+  project_pnpg    = "${var.prefix}-${var.env_short}-${var.location_short}-pnpg"
 
   cdn_storage_hostname = "${var.prefix}${var.env_short}${var.location_short}${var.domain}checkoutsa"
 }
@@ -37,7 +37,7 @@ locals {
 #########
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_data_vault" {
-  name = format("%s-external-api-data-vault", var.env_short)
+  name                = format("%s-external-api-data-vault", var.env_short)
   resource_group_name = local.apim_rg
   api_management_name = local.apim_name
   display_name        = "Data Vault for PNPG"
@@ -46,7 +46,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_data_vault"
 
 module "apim_pnpg_external_api_data_vault_v1" {
   source              = "git::https://github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
-  name = format("%s-external-api-pnpg", local.project_pnpg)
+  name                = format("%s-external-api-pnpg", local.project_pnpg)
   api_management_name = local.apim_name
   resource_group_name = local.apim_rg
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_data_vault.id
@@ -102,7 +102,7 @@ module "apim_pnpg_external_api_data_vault_v1" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_external_api_v2_for_pnpg" {
-  name = format("%s-ms-external-api-pnpg", var.env_short)
+  name                = format("%s-ms-external-api-pnpg", var.env_short)
   resource_group_name = local.apim_rg
   api_management_name = local.apim_name
   display_name        = "External API Service for PNPG"
@@ -111,7 +111,7 @@ resource "azurerm_api_management_api_version_set" "apim_external_api_v2_for_pnpg
 
 module "apim_pnpg_external_api_ms_v2" {
   source              = "git::https://github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
-  name = format("%s-ms-external-api-pnpg", local.project_pnpg)
+  name                = format("%s-ms-external-api-pnpg", local.project_pnpg)
   api_management_name = local.apim_name
   resource_group_name = local.apim_rg
   version_set_id      = azurerm_api_management_api_version_set.apim_external_api_v2_for_pnpg.id
@@ -186,12 +186,36 @@ module "apim_pnpg_external_api_ms_v2" {
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-pnpg-user-ms-ca.${var.ca_pnpg_suffix_dns_private_name}/"
       })
+    },
+    {
+      operation_id = "createProduct"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "getProductById"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "patchProductById"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
 
 resource "azurerm_api_management_api_version_set" "apim_pnpg_support_service" {
-  name = format("%s-support-service-pnpg", var.env_short)
+  name                = format("%s-support-service-pnpg", var.env_short)
   resource_group_name = local.apim_rg
   api_management_name = local.apim_name
   display_name        = "PNPG Support API Service"
@@ -200,7 +224,7 @@ resource "azurerm_api_management_api_version_set" "apim_pnpg_support_service" {
 
 module "apim_pnpg_support_service_v2" {
   source              = "git::https://github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
-  name = format("%s-support-service-pnpg", local.project_pnpg)
+  name                = format("%s-support-service-pnpg", local.project_pnpg)
   api_management_name = local.apim_name
   resource_group_name = local.apim_rg
   version_set_id      = azurerm_api_management_api_version_set.apim_pnpg_support_service.id
@@ -295,7 +319,7 @@ module "apim_pnpg_support_service_v2" {
 }
 
 resource "azurerm_api_management_api_version_set" "apim_internal_api_for_pnpg" {
-  name = format("%s-internal-api-pnpg", var.env_short)
+  name                = format("%s-internal-api-pnpg", var.env_short)
   resource_group_name = local.apim_rg
   api_management_name = local.apim_name
   display_name        = "PNPG Internal API"
@@ -304,7 +328,7 @@ resource "azurerm_api_management_api_version_set" "apim_internal_api_for_pnpg" {
 
 module "apim_pnpg_internal_api" {
   source              = "git::https://github.com/pagopa/terraform-azurerm-v4.git//api_management_api?ref=v7.26.5"
-  name = format("%s-internal-api-pnpg", local.project_pnpg)
+  name                = format("%s-internal-api-pnpg", local.project_pnpg)
   api_management_name = local.apim_name
   resource_group_name = local.apim_rg
   version_set_id      = azurerm_api_management_api_version_set.apim_internal_api_for_pnpg.id
