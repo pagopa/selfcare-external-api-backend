@@ -22,6 +22,9 @@
     {
       "name": "UserGroup",
       "description": "User group endpoint CRUD operations"
+    },
+    {
+      "name": "Product"
     }
   ],
   "paths": {
@@ -194,7 +197,9 @@
         "summary": "Create or update a product configuration (upsert)",
         "description": "Creates a new product configuration or updates the existing one when a match is found",
         "operationId": "createProduct",
-        "tags": [],
+        "tags": [
+          "Product"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -257,7 +262,9 @@
         "summary": "Partially update a product by ID (JSON Merge Patch)",
         "description": "Applies a JSON Merge Patch document to partially update an existing product identified by its productId.",
         "operationId": "patchProductById",
-        "tags": [],
+        "tags": [
+          "Product"
+        ],
         "parameters": [
           {
             "name": "productId",
@@ -338,7 +345,9 @@
         "summary": "Get product by productId",
         "description": "Retrieve a product by its unique identifier.",
         "operationId": "getProductById",
-        "tags": [],
+        "tags": [
+          "Product"
+        ],
         "parameters": [
           {
             "name": "productId",
@@ -399,7 +408,9 @@
         "summary": "Cancel product by ID",
         "description": "Marks the product as DELETED if it exists.",
         "operationId": "deleteProductById",
-        "tags": [],
+        "tags": [
+          "Product"
+        ],
         "parameters": [
           {
             "name": "productId",
