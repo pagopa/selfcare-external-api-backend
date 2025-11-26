@@ -807,6 +807,12 @@ module "apim_selfcare_support_service_v1" {
       })
     },
     {
+      operation_id = "updateUserRegistryAndSendNotification"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
       operation_id = "getInstitutionUsersUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
         MS_BACKEND_URL = "https://selc-${var.env_short}-user-ms-ca.${var.ca_suffix_dns_private_name}/"
