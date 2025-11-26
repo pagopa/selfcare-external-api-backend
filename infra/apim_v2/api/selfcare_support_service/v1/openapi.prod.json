@@ -350,7 +350,7 @@
           {
             "name": "originId",
             "in": "query",
-            "description": "originId",
+            "description": "Institution's id in the relative origin open data",
             "required": false,
             "style": "form",
             "schema": {
@@ -3309,6 +3309,9 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "referenceOnboardingId": {
+            "type": "string"
           }
         }
       },
@@ -3605,9 +3608,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -3823,7 +3823,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
