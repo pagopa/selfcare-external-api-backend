@@ -2945,10 +2945,10 @@
           "mail3": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           }
         }
@@ -4214,6 +4214,9 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "referenceOnboardingId": {
+            "type": "string"
           }
         }
       },
@@ -4498,9 +4501,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4716,7 +4716,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
@@ -4924,9 +4926,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -5114,9 +5113,6 @@
             "type": "string"
           },
           "signContract": {
-            "type": "boolean"
-          },
-          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
