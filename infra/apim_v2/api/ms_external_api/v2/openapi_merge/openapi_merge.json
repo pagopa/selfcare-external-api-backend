@@ -53,12 +53,6 @@
       "operationSelection": {
         "includeTags": ["external-v2"]
       }
-    },
-    {
-      "inputFile": "../../../../../../../docs/pagopa/selfcare-product-ms/openapi.json",
-      "operationSelection": {
-        "includeTags": ["external-v2"]
-      }
     }
   ],
   "output": "../openapi.json"
