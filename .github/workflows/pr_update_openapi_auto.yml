@@ -1,7 +1,10 @@
 name: Update OpenAPI JSON
 permissions:
-  contents: write
-  pull-requests: write
+  permissions:
+    id-token: write
+    contents: write
+    actions: write
+    pull-requests: write
 
 on:
   workflow_dispatch:
