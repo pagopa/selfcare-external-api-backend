@@ -1,8 +1,25 @@
 <policies>
-    <inbound />
+    <inbound>
+        <set-variable name="subscription-id" value="@(context.Subscription.Id ?? "unknown")" />
+        <trace source="apim-subscription-tracking">
+            <message>@{
+                return $"API Call - Subscription ID: {context.Variables["subscription-id"]}, Path: {context.Request.Path}, Method: {context.Request.Method}, IP: {context.Request.IpAddress}";
+            }</message>
+            <metadata name="subscription-id" value="@((string)context.Variables["subscription-id"])" />
+            <metadata name="api-name" value="@(context.Api.Name)" />
+            <metadata name="operation-name" value="@(context.Operation.Name)" />
+            <metadata name="request-path" value="@(context.Request.Path)" />
+            <metadata name="request-method" value="@(context.Request.Method)" />
+            <metadata name="client-ip" value="@(context.Request.IpAddress)" />
+        </trace>
+    </inbound>
     <backend>
         <forward-request />
     </backend>
-    <outbound />
+    <outbound>
+        <set-header name="X-Subscription-Id" exists-action="override">
+            <value>@((string)context.Variables["subscription-id"])</value>
+        </set-header>
+    </outbound>
     <on-error />
 </policies>
