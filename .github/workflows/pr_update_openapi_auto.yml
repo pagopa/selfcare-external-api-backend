@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '00 09 * * 1-5' # ogni giorno lavorativo alle 09:00
-  pull_request:
 
 jobs:
   update-openapi:
