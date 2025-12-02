@@ -1,0 +1,73 @@
+name: Update OpenAPI JSON
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '00 09 * * 1-5' # ogni giorno lavorativo alle 09:00
+  pull_request:
+
+jobs:
+  update-openapi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@cb79c773a3cfa27f31f25eb3f677781210c9ce3d # v1.6.1
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ vars.ARM_TENANT_ID }}
+          subscription-id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+
+      - name: Download OpenAPI files from Azure
+        run: |
+          mkdir -p src/main/docs/openapi
+
+          az storage blob download \
+            --account-name selcdcheckoutsa \
+            --container-name selc-openapi \
+            --name pagopa/selfcare-user-ms/openapi.json \
+            --file src/main/docs/openapi/selfcare-user-docs.json
+
+          az storage blob download \
+            --account-name selcdcheckoutsa \
+            --container-name selc-openapi \
+            --name pagopa/selfcare-ms-party-registry-proxy/openapi.json \
+            --file src/main/docs/openapi/registry-proxy.json
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add src/main/docs/openapi/*.json
+          if git diff --cached --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        id: commit_push
+        run: |
+          BRANCH="update-openapi-dev-$(date +'%Y%m%d%H%M%S')"
+          git checkout -b "$BRANCH"
+          git commit -m "Update DEV OpenAPI specs"
+          git push --set-upstream origin "$BRANCH"
+          echo "branch_name=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ${{ steps.commit_push.outputs.branch_name }}
+          title: "Update DEV OpenAPI specs"
+          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for DEV."
+          base: main
+          labels: "automation, openapi"
