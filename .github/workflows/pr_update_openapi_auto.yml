@@ -74,18 +74,18 @@ jobs:
         if: steps.check_changes.outputs.changes == 'true'
         id: commit_push
         run: |
-          BRANCH="update-openapi-${{ github.event.inputs.env }}-$(date +'%Y%m%d%H%M%S')"
+          BRANCH="update-openapi-dev-$(date +'%Y%m%d%H%M%S')"
           git checkout -b "$BRANCH"
-          git commit -m "Update ${{ github.event.inputs.env | upper }} OpenAPI specs"
+          git commit -m "Update DEV OpenAPI specs"
           git push --set-upstream origin "$BRANCH"
           echo "branch_name=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         if: steps.check_changes.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03
         with:
           branch: ${{ steps.commit_push.outputs.branch_name }}
-          title: "Update ${{ github.event.inputs.env | upper }} OpenAPI specs"
-          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for ${{ github.event.inputs.env | upper }}."
+          title: "Update DEV OpenAPI specs"
+          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for DEV."
           base: main
           labels: "automation, openapi"
