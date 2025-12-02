@@ -67,7 +67,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check_changes.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03
         with:
           branch: ${{ steps.commit_push.outputs.branch_name }}
           title: "Update DEV OpenAPI specs"
