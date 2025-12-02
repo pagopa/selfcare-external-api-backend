@@ -7,12 +7,18 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      env:
+        description: "Environment to run the workflow on"
+        required: true
+        default: "dev"
   schedule:
     - cron: '00 09 * * 1-5' # ogni giorno lavorativo alle 09:00
 
 jobs:
   update-openapi:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.env }}-cd
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
@@ -20,6 +26,7 @@ jobs:
       ARM_USE_OIDC: true
       ARM_USE_AZUREAD: true
       ARM_STORAGE_USE_AZUREAD: true
+      OPENAPI_DIR: src/main/docs/openapi
 
     steps:
       - name: Checkout repository
@@ -34,19 +41,19 @@ jobs:
 
       - name: Download OpenAPI files from Azure
         run: |
-          mkdir -p src/main/docs/openapi
+          mkdir -p ${{ env.OPENAPI_DIR }}
 
           az storage blob download \
             --account-name selcdcheckoutsa \
             --container-name selc-openapi \
             --name pagopa/selfcare-user-ms/openapi.json \
-            --file src/main/docs/openapi/selfcare-user-docs.json
+            --file ${{ env.OPENAPI_DIR }}/selfcare-user-docs.json
 
           az storage blob download \
             --account-name selcdcheckoutsa \
             --container-name selc-openapi \
             --name pagopa/selfcare-ms-party-registry-proxy/openapi.json \
-            --file src/main/docs/openapi/registry-proxy.json
+            --file ${{ env.OPENAPI_DIR }}/registry-proxy.json
 
       - name: Configure Git
         run: |
@@ -56,7 +63,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          git add src/main/docs/openapi/*.json
+          git add ${{ env.OPENAPI_DIR }}/*.json
           if git diff --cached --quiet; then
             echo "changes=false" >> $GITHUB_OUTPUT
           else
@@ -67,18 +74,18 @@ jobs:
         if: steps.check_changes.outputs.changes == 'true'
         id: commit_push
         run: |
-          BRANCH="update-openapi-dev-$(date +'%Y%m%d%H%M%S')"
+          BRANCH="update-openapi-${{ github.event.inputs.env }}-$(date +'%Y%m%d%H%M%S')"
           git checkout -b "$BRANCH"
-          git commit -m "Update DEV OpenAPI specs"
+          git commit -m "Update ${{ github.event.inputs.env | upper }} OpenAPI specs"
           git push --set-upstream origin "$BRANCH"
           echo "branch_name=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         if: steps.check_changes.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03
+        uses: peter-evans/create-pull-request@v6
         with:
           branch: ${{ steps.commit_push.outputs.branch_name }}
-          title: "Update DEV OpenAPI specs"
-          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for DEV."
+          title: "Update ${{ github.event.inputs.env | upper }} OpenAPI specs"
+          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for ${{ github.event.inputs.env | upper }}."
           base: main
           labels: "automation, openapi"
