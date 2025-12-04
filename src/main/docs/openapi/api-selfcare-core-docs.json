@@ -22,6 +22,9 @@
     "name" : "Delegation",
     "description" : "Delegation Controller"
   }, {
+    "name" : "Events",
+    "description" : "Events Controller"
+  }, {
     "name" : "External",
     "description" : "External Controller"
   }, {
@@ -527,7 +530,7 @@
     },
     "/v2/delegations" : {
       "get" : {
-        "tags" : [ "Delegation", "external-v2", "support" ],
+        "tags" : [ "Delegation", "external-v2", "internal-v1", "support" ],
         "summary" : "Retrieve institution's delegations with pagination",
         "description" : "Retrieve institution's delegations with pagination",
         "operationId" : "getDelegationsUsingGET_1",
@@ -646,7 +649,7 @@
     },
     "/v2/delegations/delegations-with-pagination" : {
       "get" : {
-        "tags" : [ "Delegation", "external-v2", "support" ],
+        "tags" : [ "Delegation", "external-v2", "internal-v1", "support" ],
         "summary" : "Retrieve institution's delegations with pagination",
         "description" : "Retrieve institution's delegations with pagination",
         "operationId" : "getDelegationsUsingGET_2",
@@ -763,6 +766,63 @@
         } ]
       }
     },
+    "/events/delegations" : {
+      "post" : {
+        "tags" : [ "Events" ],
+        "summary" : "Resend delegation events from a start date",
+        "description" : "Resend delegation events from a start date",
+        "operationId" : "sendDelegationEventsUsingPOST",
+        "parameters" : [ {
+          "name" : "fromDate",
+          "in" : "query",
+          "description" : "Start date to filter events (ISO 8601 format)",
+          "required" : true,
+          "style" : "form",
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "global" ]
+        } ]
+      }
+    },
     "/external/institutions" : {
       "get" : {
         "tags" : [ "External" ],
@@ -815,6 +875,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -924,6 +985,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -988,6 +1050,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -1050,6 +1113,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -1091,7 +1155,7 @@
         }, {
           "name" : "originId",
           "in" : "query",
-          "description" : "originId",
+          "description" : "Institution's id in the relative origin open data",
           "required" : false,
           "style" : "form",
           "schema" : {
@@ -1669,6 +1733,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -2522,6 +2587,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -2586,6 +2652,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -2641,6 +2708,7 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "bearerAuth" : [ "global" ]
         } ]
@@ -3188,6 +3256,9 @@
           },
           "institutionType" : {
             "type" : "string"
+          },
+          "isTest" : {
+            "type" : "boolean"
           },
           "productId" : {
             "type" : "string"
