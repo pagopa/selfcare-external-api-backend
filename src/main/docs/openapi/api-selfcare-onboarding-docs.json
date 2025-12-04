@@ -24,6 +24,8 @@
   }, {
     "name" : "billing-portal"
   }, {
+    "name" : "external-v2"
+  }, {
     "name" : "internal-pnpg"
   }, {
     "name" : "internal-v1"
@@ -513,44 +515,6 @@
         } ]
       }
     },
-    "/v1/onboarding/import" : {
-      "post" : {
-        "tags" : [ "Onboarding Controller", "internal-v1" ],
-        "summary" : "Import onboarding (not PA and PSP) with token creation and complete to COMPLETED.",
-        "description" : "Perform onboarding (not PA and PSP) but create token and completing the request to COMPLETED phase.",
-        "operationId" : "onboardingImport",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/OnboardingDefaultRequest"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/OnboardingResponse"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Not Authorized"
-          },
-          "403" : {
-            "description" : "Not Allowed"
-          }
-        },
-        "security" : [ {
-          "SecurityScheme" : [ ]
-        } ]
-      }
-    },
     "/v1/onboarding/aggregation/import" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
@@ -589,17 +553,17 @@
         } ]
       }
     },
-    "/v1/onboarding/aggregation/psp/completion" : {
+    "/v1/onboarding/aggregation/increment" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
-        "summary" : "Asynchronously complete aggregated PSP onboarding to PENDING status.",
-        "description" : "Perform onboarding aggregation as /onboarding to PENDING phase. The operation will be performed async due to the possible amount of time the process could take.",
-        "operationId" : "onboardingAggregationPspCompletion",
+        "summary" : "Perform Increment for aggregates",
+        "description" : "Perform the increment of the aggregates for an aggregator entity that has already completed the initial onboarding.The API initiates the onboarding process for the aggregated entities received as input.",
+        "operationId" : "onboardingAggregationIncrement",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OnboardingPspRequest"
+                "$ref" : "#/components/schemas/OnboardingPaRequest"
               }
             }
           }
@@ -627,17 +591,17 @@
         } ]
       }
     },
-    "/v1/onboarding/aggregation/increment" : {
+    "/v1/onboarding/aggregation/psp/completion" : {
       "post" : {
         "tags" : [ "Onboarding Controller" ],
-        "summary" : "Perform Increment for aggregates",
-        "description" : "Perform the increment of the aggregates for an aggregator entity that has already completed the initial onboarding.The API initiates the onboarding process for the aggregated entities received as input.",
-        "operationId" : "onboardingAggregationIncrement",
+        "summary" : "Asynchronously complete aggregated PSP onboarding to PENDING status.",
+        "description" : "Perform onboarding aggregation as /onboarding to PENDING phase. The operation will be performed async due to the possible amount of time the process could take.",
+        "operationId" : "onboardingAggregationPspCompletion",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OnboardingPaRequest"
+                "$ref" : "#/components/schemas/OnboardingPspRequest"
               }
             }
           }
@@ -784,6 +748,44 @@
         } ]
       }
     },
+    "/v1/onboarding/import" : {
+      "post" : {
+        "tags" : [ "Onboarding Controller", "internal-v1" ],
+        "summary" : "Import onboarding (not PA and PSP) with token creation and complete to COMPLETED.",
+        "description" : "Perform onboarding (not PA and PSP) but create token and completing the request to COMPLETED phase.",
+        "operationId" : "onboardingImport",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OnboardingDefaultRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/v1/onboarding/institutionOnboardings" : {
       "get" : {
         "tags" : [ "support", "internal-v1", "Onboarding" ],
@@ -846,6 +848,49 @@
           "SecurityScheme" : [ ]
         } ],
         "x-legacy-api" : "true"
+      }
+    },
+    "/v1/onboarding/institutions/{institutionId}" : {
+      "get" : {
+        "tags" : [ "external-v2", "internal-v1" ],
+        "summary" : "Get onboarding COMPLETED by institutionId and productId.",
+        "description" : "Retrieve an onboarding record given institutionId and productId",
+        "operationId" : "getOnboardingProduct",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OnboardingGet"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       }
     },
     "/v1/onboarding/pa" : {
@@ -1273,6 +1318,12 @@
         "description" : "Verify if the onboarded product is already onboarded for the institution",
         "operationId" : "verifyOnboardingInfoByFilters",
         "parameters" : [ {
+          "name" : "institutionType",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "name" : "origin",
           "in" : "query",
           "schema" : {
@@ -1714,6 +1765,55 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/OnboardingDefaultRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/v1/onboarding/{onboardingId}/upload-contract-signed" : {
+      "put" : {
+        "tags" : [ "internal-v1" ],
+        "summary" : "Update COMPELTED onboarding uploading signed contract",
+        "description" : "Uploading signed contract given onboardingId, updating related token",
+        "operationId" : "uploadContractSigned",
+        "parameters" : [ {
+          "name" : "onboardingId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "required" : [ "contract" ],
+                "type" : "object",
+                "properties" : {
+                  "contract" : {
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                }
               }
             }
           }
@@ -2240,17 +2340,6 @@
           }
         }
       },
-      "PaymentResponse" : {
-        "type" : "object",
-        "properties" : {
-          "iban" : {
-            "type" : "string"
-          },
-          "holder" : {
-            "type" : "string"
-          }
-        }
-      },
       "CheckManagerRequest" : {
         "required" : [ "productId", "userId" ],
         "type" : "object",
@@ -2428,6 +2517,9 @@
           "istatCode" : {
             "type" : "string"
           },
+          "legalForm" : {
+            "type" : "string"
+          },
           "geographicTaxonomies" : {
             "type" : "array",
             "items" : {
@@ -2451,6 +2543,12 @@
           },
           "imported" : {
             "type" : "boolean"
+          },
+          "atecoCodes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -2573,6 +2671,9 @@
           "istatCode" : {
             "type" : "string"
           },
+          "legalForm" : {
+            "type" : "string"
+          },
           "geographicTaxonomies" : {
             "type" : "array",
             "items" : {
@@ -2596,6 +2697,12 @@
           },
           "imported" : {
             "type" : "boolean"
+          },
+          "atecoCodes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           },
           "paymentServiceProvider" : {
             "$ref" : "#/components/schemas/PaymentServiceProviderRequest"
@@ -2695,7 +2802,7 @@
         }
       },
       "InstitutionType" : {
-        "enum" : [ "PA", "PG", "GSP", "SA", "PT", "SCP", "PSP", "AS", "REC", "CON", "PRV", "GPU" ],
+        "enum" : [ "PA", "PG", "GSP", "SA", "PT", "SCP", "PSP", "AS", "REC", "CON", "PRV", "PRV_PF", "GPU", "SCEC" ],
         "type" : "string"
       },
       "LocalDateTime" : {
@@ -2744,6 +2851,9 @@
           "gpuData" : {
             "$ref" : "#/components/schemas/GPUData"
           },
+          "payment" : {
+            "$ref" : "#/components/schemas/PaymentRequestDto"
+          },
           "onboardingImportContract" : {
             "$ref" : "#/components/schemas/OnboardingImportContract"
           }
@@ -2789,6 +2899,9 @@
           },
           "gpuData" : {
             "$ref" : "#/components/schemas/GPUData"
+          },
+          "payment" : {
+            "$ref" : "#/components/schemas/PaymentRequestDto"
           }
         }
       },
@@ -2831,13 +2944,13 @@
           "createdAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
-          "activatedAt" : {
-            "$ref" : "#/components/schemas/LocalDateTime"
-          },
           "updatedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
           "expiringDate" : {
+            "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "activatedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
           },
           "status" : {
@@ -3013,6 +3126,9 @@
           },
           "digitalAddress" : {
             "type" : "string"
+          },
+          "skipVerifyLegal" : {
+            "type" : "boolean"
           }
         }
       },
@@ -3097,6 +3213,9 @@
           },
           "updatedAt" : {
             "$ref" : "#/components/schemas/LocalDateTime"
+          },
+          "referenceOnboardingId" : {
+            "type" : "string"
           }
         }
       },
@@ -3161,6 +3280,9 @@
             "items" : {
               "$ref" : "#/components/schemas/UserRequest"
             }
+          },
+          "toAddOnAggregates" : {
+            "type" : "boolean"
           }
         }
       },
@@ -3171,6 +3293,29 @@
       "PartyRole" : {
         "enum" : [ "MANAGER", "DELEGATE", "SUB_DELEGATE", "OPERATOR", "ADMIN_EA" ],
         "type" : "string"
+      },
+      "PaymentRequestDto" : {
+        "type" : "object",
+        "properties" : {
+          "iban" : {
+            "pattern" : "^IT\\d{2}[A-Z]\\d{5}\\d{5}[0-9A-Z]{12}$",
+            "type" : "string"
+          },
+          "holder" : {
+            "type" : "string"
+          }
+        }
+      },
+      "PaymentResponse" : {
+        "type" : "object",
+        "properties" : {
+          "iban" : {
+            "type" : "string"
+          },
+          "holder" : {
+            "type" : "string"
+          }
+        }
       },
       "PaymentServiceProviderRequest" : {
         "type" : "object",
