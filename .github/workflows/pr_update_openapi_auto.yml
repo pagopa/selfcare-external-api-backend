@@ -7,6 +7,15 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      include_user:
+        type: boolean
+        description: "Include selfcare-user OpenAPI"
+        default: true
+      include_registry_proxy:
+        type: boolean
+        description: "Include selfcare-registry-proxy OpenAPI"
+        default: true
 
 jobs:
   update-openapi:
@@ -37,17 +46,23 @@ jobs:
         run: |
           mkdir -p ${{ env.OPENAPI_DIR }}
 
-          az storage blob download \
-            --account-name selcdcheckoutsa \
-            --container-name selc-openapi \
-            --name pagopa/selfcare-user-ms/openapi.json \
-            --file ${{ env.OPENAPI_DIR }}/api-selfcare-user-docs.json
+          if [ "${{ github.event.inputs.include_user }}" = "true" ]; then
+            echo "Downloading selfcare-user OpenAPI..."
+            az storage blob download \
+              --account-name selcdcheckoutsa \
+              --container-name selc-openapi \
+              --name pagopa/selfcare-user-ms/openapi.json \
+              --file ${{ env.OPENAPI_DIR }}/api-selfcare-user-docs.json
+          fi
 
-          az storage blob download \
-            --account-name selcdcheckoutsa \
-            --container-name selc-openapi \
-            --name pagopa/selfcare-ms-party-registry-proxy/openapi.json \
-            --file ${{ env.OPENAPI_DIR }}/api-selfcare-registry-proxy-docs.json
+          if [ "${{ github.event.inputs.include_registry_proxy }}" = "true" ]; then
+            echo "Downloading registry-proxy OpenAPI..."
+            az storage blob download \
+              --account-name selcdcheckoutsa \
+              --container-name selc-openapi \
+              --name pagopa/selfcare-ms-party-registry-proxy/openapi.json \
+              --file ${{ env.OPENAPI_DIR }}/api-selfcare-registry-proxy-docs.json
+          fi
 
       - name: Configure Git
         run: |
@@ -63,7 +78,11 @@ jobs:
         with:
           title: "Update OpenAPI specs"
           commit-message: "Update OpenAPI specs"
-          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs."
+          body: |
+            This PR updates the OpenAPI specs:
+
+            - selfcare-user: ${{ github.event.inputs.include_user }}
+            - registry-proxy: ${{ github.event.inputs.include_registry_proxy }}
           branch: ${{ steps.branch.outputs.name }}
           base: main
           labels: "automation, openapi"
