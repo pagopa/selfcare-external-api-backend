@@ -12,6 +12,14 @@ on:
         type: boolean
         description: "Include selfcare-user OpenAPI"
         default: true
+      include_institution:
+        type: boolean
+        description: "Include selfcare-institution OpenAPI"
+        default: true
+      include_onboarding:
+        type: boolean
+        description: "Include selfcare-onboaridng OpenAPI"
+        default: true
       include_registry_proxy:
         type: boolean
         description: "Include selfcare-registry-proxy OpenAPI"
@@ -54,6 +62,24 @@ jobs:
               --name pagopa/selfcare-user-ms/openapi.json \
               --file ${{ env.OPENAPI_DIR }}/api-selfcare-user-docs.json
           fi
+          
+          if [ "${{ github.event.inputs.include_institution }}" = "true" ]; then
+            echo "Downloading selfcare-institution OpenAPI..."
+            az storage blob download \
+              --account-name selcdcheckoutsa \
+              --container-name selc-openapi \
+              --name pagopa/selfcare-institution-ms/openapi.json \
+              --file ${{ env.OPENAPI_DIR }}/api-selfcare-core-docs.json
+          fi
+          
+          if [ "${{ github.event.inputs.include_onboarding }}" = "true" ]; then
+            echo "Downloading selfcare-onboarding OpenAPI..."
+            az storage blob download \
+              --account-name selcdcheckoutsa \
+              --container-name selc-openapi \
+              --name pagopa/selfcare-onboarding-ms/openapi.json \
+              --file ${{ env.OPENAPI_DIR }}/api-selfcare-onboarding-docs.json
+          fi
 
           if [ "${{ github.event.inputs.include_registry_proxy }}" = "true" ]; then
             echo "Downloading registry-proxy OpenAPI..."
@@ -82,6 +108,8 @@ jobs:
             This PR updates the OpenAPI specs:
 
             - selfcare-user: ${{ github.event.inputs.include_user }}
+            - selfcare-institution: ${{ github.event.inputs.include_institution }}
+            - selfcare-onboarding: ${{ github.event.inputs.include_onboarding }}
             - registry-proxy: ${{ github.event.inputs.include_registry_proxy }}
           branch: ${{ steps.branch.outputs.name }}
           base: main
