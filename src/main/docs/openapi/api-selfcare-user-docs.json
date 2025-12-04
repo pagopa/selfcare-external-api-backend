@@ -22,6 +22,8 @@
   }, {
     "name" : "external-v2"
   }, {
+    "name" : "internal-pnpg"
+  }, {
     "name" : "internal-v1"
   }, {
     "name" : "support"
@@ -162,6 +164,93 @@
         } ]
       }
     },
+    "/institutions/{institutionId}/product/{productId}/check-user" : {
+      "post" : {
+        "tags" : [ "Institution" ],
+        "summary" : "Verify if a user is already onboarded on an institution and product given its fiscal code",
+        "description" : "Verify if a user is already onboarded on an institution and product given its fiscal code",
+        "operationId" : "checkUserUsingPOST",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SearchUserDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
     "/institutions/{institutionId}/products/{productId}/created-at" : {
       "put" : {
         "tags" : [ "Institution" ],
@@ -205,6 +294,146 @@
             "description" : "OK",
             "content" : {
               "application/json" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/institutions/{institutionId}/products/{productId}/users" : {
+      "delete" : {
+        "tags" : [ "Institution" ],
+        "summary" : "Logically delete all the users associated with a product of an institution",
+        "description" : "Set the status of all the users associated with a product of an institution to DELETED",
+        "operationId" : "deleteUserInstitutionProductUsers",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DeletedUserCountResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/institutions/{institutionId}/products/{productId}/users/count" : {
+      "get" : {
+        "tags" : [ "Institution" ],
+        "summary" : "Get the number of users for a certain product of an institution with a certain role and status",
+        "description" : "Count the number of users associated with a specific product of an institution, with an optional filter by roles and status. If no filter is specified count users with any role in status ACTIVE",
+        "operationId" : "getUsersCount",
+        "parameters" : [ {
+          "name" : "institutionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "roles",
+          "in" : "query",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UsersCountResponse"
+                }
+              }
             }
           },
           "401" : {
@@ -472,7 +701,7 @@
         } ]
       },
       "post" : {
-        "tags" : [ "User" ],
+        "tags" : [ "User", "internal-pnpg" ],
         "summary" : "Create or update a user by fiscal code",
         "description" : "The createOrUpdateByFiscalCode function is used to create a new user or update an existing one.",
         "operationId" : "createOrUpdateByFiscalCode",
@@ -489,11 +718,7 @@
           "200" : {
             "description" : "User created or updated!",
             "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
+              "application/json" : { }
             }
           },
           "201" : {
@@ -983,7 +1208,7 @@
     },
     "/users/{id}/user-registry" : {
       "put" : {
-        "tags" : [ "User" ],
+        "tags" : [ "User", "support", "support-pnpg" ],
         "summary" : "Update user registry and send notification upon data update",
         "description" : "Service to update user in user-registry and send notification when user data gets updated",
         "operationId" : "updateUserRegistryAndSendNotification",
@@ -1308,6 +1533,139 @@
           "SecurityScheme" : [ ]
         } ]
       }
+    },
+    "/users/{userId}/onboarding" : {
+      "post" : {
+        "tags" : [ "internal-v1", "User" ],
+        "summary" : "Check if the user is manager or Update/create a user by userId with a new role",
+        "description" : "Checks if the user is already a manager for the specified product and, if not, creates or updates the user with a new role.",
+        "operationId" : "createUserByUserId",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddUserRoleDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "The user is already onboarded for the specified product.",
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "201" : {
+            "description" : "The user has been created or updated with a new role."
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/{userId}/send-mail-otp" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "Send an email with OTP",
+        "description" : "The sendEmailOtp function is used to send email containing a One Time Password for account verification",
+        "operationId" : "sendEmailOtp",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SendEmailOtpDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Email send accepted!"
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/users/{userId}/send-mail-request" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "Sends an email notification to a user when the institution receives an onboarding request.",
+        "description" : "Sends an email notification to a user when the institution receives an onboarding request.",
+        "operationId" : "sendMailRequest",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SendMailDto"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
     }
   },
   "components" : {
@@ -1377,6 +1735,21 @@
           }
         }
       },
+      "DeletedUserCountResponse" : {
+        "type" : "object",
+        "properties" : {
+          "institutionId" : {
+            "type" : "string"
+          },
+          "productId" : {
+            "type" : "string"
+          },
+          "deletedUserCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }
+      },
       "Env" : {
         "enum" : [ "ROOT", "DEV", "COLL", "PROD" ],
         "type" : "string"
@@ -1400,6 +1773,9 @@
       "OnboardedProductResponse" : {
         "type" : "object",
         "properties" : {
+          "roleId" : {
+            "type" : "string"
+          },
           "productId" : {
             "type" : "string"
           },
@@ -1434,6 +1810,9 @@
       "OnboardedProductWithActions" : {
         "type" : "object",
         "properties" : {
+          "roleId" : {
+            "type" : "string"
+          },
           "productId" : {
             "type" : "string"
           },
@@ -1469,6 +1848,10 @@
             }
           }
         }
+      },
+      "PartyRole" : {
+        "enum" : [ "MANAGER", "DELEGATE", "SUB_DELEGATE", "OPERATOR", "ADMIN_EA" ],
+        "type" : "string"
       },
       "PermissionTypeEnum" : {
         "enum" : [ "ADMIN", "ANY" ],
@@ -1525,8 +1908,8 @@
           "delegationId" : {
             "type" : "string"
           },
-          "toAddOnAggregates": {
-            "type": "boolean"
+          "toAddOnAggregates" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1551,8 +1934,8 @@
               "type" : "string"
             }
           },
-          "toAddOnAggregates": {
-            "type": "boolean"
+          "toAddOnAggregates" : {
+            "type" : "boolean"
           }
         }
       },
@@ -1565,6 +1948,44 @@
         "type" : "object",
         "properties" : {
           "fiscalCode" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SendEmailOtpDto" : {
+        "required" : [ "otp", "institutionalEmail" ],
+        "type" : "object",
+        "properties" : {
+          "otp" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "institutionalEmail" : {
+            "minLength" : 1,
+            "type" : "string"
+          }
+        }
+      },
+      "SendMailDto" : {
+        "required" : [ "userMailUuid", "institutionName", "productId", "role", "userRequestUid" ],
+        "type" : "object",
+        "properties" : {
+          "userMailUuid" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "institutionName" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "productId" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "role" : {
+            "$ref" : "#/components/schemas/PartyRole"
+          },
+          "userRequestUid" : {
             "type" : "string"
           }
         }
@@ -1583,7 +2004,6 @@
         }
       },
       "UpdateUserRequest" : {
-        "required" : [ "email" ],
         "type" : "object",
         "properties" : {
           "name" : {
@@ -1593,6 +2013,10 @@
             "type" : "string"
           },
           "email" : {
+            "type" : "string"
+          },
+          "mobilePhone" : {
+            "pattern" : "^\\+?[0-9]{7,15}$",
             "type" : "string"
           }
         }
@@ -1674,6 +2098,9 @@
             "$ref" : "#/components/schemas/CertifiableFieldResponseString"
           },
           "email" : {
+            "$ref" : "#/components/schemas/CertifiableFieldResponseString"
+          },
+          "mobilePhone" : {
             "$ref" : "#/components/schemas/CertifiableFieldResponseString"
           },
           "workContacts" : {
@@ -1851,6 +2278,9 @@
           "email" : {
             "type" : "string"
           },
+          "mobilePhone" : {
+            "type" : "string"
+          },
           "workContacts" : {
             "type" : "object",
             "additionalProperties" : {
@@ -1874,6 +2304,9 @@
           "email" : {
             "type" : "string"
           },
+          "mobilePhone" : {
+            "type" : "string"
+          },
           "role" : {
             "description" : "Available values: MANAGER, DELEGATE, SUB_DELEGATE, OPERATOR, ADMIN_EA",
             "type" : "string"
@@ -1881,8 +2314,41 @@
           "productRole" : {
             "type" : "string"
           },
+          "roles" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
           "relationshipStatus" : {
             "$ref" : "#/components/schemas/OnboardedProductState"
+          }
+        }
+      },
+      "UsersCountResponse" : {
+        "type" : "object",
+        "properties" : {
+          "institutionId" : {
+            "type" : "string"
+          },
+          "productId" : {
+            "type" : "string"
+          },
+          "roles" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PartyRole"
+            }
+          },
+          "status" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OnboardedProductState"
+            }
+          },
+          "count" : {
+            "format" : "int64",
+            "type" : "integer"
           }
         }
       },
