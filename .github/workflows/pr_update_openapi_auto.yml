@@ -97,7 +97,7 @@ jobs:
 
       - name: Generate dynamic branch name
         id: branch
-        run: echo "name=update-openapi-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+        run: echo "name=docs/openapi-update-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03
@@ -110,7 +110,7 @@ jobs:
             - selfcare-user: ${{ github.event.inputs.include_user }}
             - selfcare-institution: ${{ github.event.inputs.include_institution }}
             - selfcare-onboarding: ${{ github.event.inputs.include_onboarding }}
-            - registry-proxy: ${{ github.event.inputs.include_registry_proxy }}
+            - selfcare-registry-proxy: ${{ github.event.inputs.include_registry_proxy }}
           branch: ${{ steps.branch.outputs.name }}
           base: main
           labels: "automation, openapi"
