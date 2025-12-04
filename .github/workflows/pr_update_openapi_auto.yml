@@ -48,13 +48,13 @@ jobs:
             --account-name selcdcheckoutsa \
             --container-name selc-openapi \
             --name pagopa/selfcare-user-ms/openapi.json \
-            --file ${{ env.OPENAPI_DIR }}/selfcare-user-docs.json
+            --file ${{ env.OPENAPI_DIR }}/api-selfcare-user-docs.json
 
           az storage blob download \
             --account-name selcdcheckoutsa \
             --container-name selc-openapi \
             --name pagopa/selfcare-ms-party-registry-proxy/openapi.json \
-            --file ${{ env.OPENAPI_DIR }}/registry-proxy.json
+            --file ${{ env.OPENAPI_DIR }}/api-selfcare-registry-proxy-docs.json
 
       - name: Configure Git
         run: |
