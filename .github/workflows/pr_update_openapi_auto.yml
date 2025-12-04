@@ -7,18 +7,11 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      env:
-        description: "Environment to run the workflow on"
-        required: true
-        default: "dev"
-  schedule:
-    - cron: '00 09 * * 1-5' # ogni giorno lavorativo alle 09:00
 
 jobs:
   update-openapi:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.env }}-cd
+    environment: dev-cd
 
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -63,14 +56,14 @@ jobs:
 
       - name: Generate dynamic branch name
         id: branch
-        run: echo "name=update-openapi-${{ github.event.inputs.env }}-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+        run: echo "name=update-openapi-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@d53f4d71fdd876f4f4b170d05ce7f1a7dd2bef03
         with:
-          title: "Update ${{ github.event.inputs.env }} OpenAPI specs"
-          commit-message: "Update ${{ github.event.inputs.env }} OpenAPI specs"
-          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs for ${{ github.event.inputs.env }}."
+          title: "Update OpenAPI specs"
+          commit-message: "Update OpenAPI specs"
+          body: "This PR updates the selfcare-user and registry-proxy OpenAPI specs."
           branch: ${{ steps.branch.outputs.name }}
           base: main
           labels: "automation, openapi"
