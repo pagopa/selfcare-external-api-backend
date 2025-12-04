@@ -8,6 +8,7 @@ on:
       - releases/**
     paths:
       - "src/**"
+      - "src/main/docs/openapi/**"
       - "pom.xml"
     types:
       - opened
