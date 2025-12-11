@@ -1128,7 +1128,7 @@
       "post": {
         "summary": "Upload a new contract template version",
         "description": "Upload an html file as a new contract template version to be used in product configuration",
-        "operationId": "upload",
+        "operationId": "uploadContractTemplate",
         "tags": [
           "ContractTemplate"
         ],
@@ -1201,7 +1201,7 @@
       "get": {
         "summary": "List contract templates available",
         "description": "List and filter all the contract templates available",
-        "operationId": "list",
+        "operationId": "listContractTemplates",
         "tags": [
           "ContractTemplate"
         ],
@@ -1275,7 +1275,7 @@
       "get": {
         "summary": "Download a contract template version",
         "description": "Download the html file of a specific contract template version",
-        "operationId": "download",
+        "operationId": "downloadContractTemplate",
         "tags": [
           "ContractTemplate"
         ],
