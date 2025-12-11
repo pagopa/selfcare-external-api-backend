@@ -470,6 +470,30 @@ module "apim_external_api_ms_v2" {
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
         MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
+    },
+    {
+      operation_id = "uploadContractTemplate"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "downloadContractTemplate"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "listContractTemplates"
+      xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
+        TENANT_ID              = data.azurerm_client_config.current.tenant_id
+        EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
