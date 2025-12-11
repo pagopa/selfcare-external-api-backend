@@ -1913,6 +1913,63 @@
         ]
       }
     },
+    "/onboarding/{onboardingId}/upload-contract-signed": {
+      "put": {
+        "tags": [],
+        "summary": "Update COMPELTED onboarding uploading signed contract",
+        "description": "Uploading signed contract given onboardingId, updating related token",
+        "operationId": "uploadContractSigned",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "contract"
+                ],
+                "type": "object",
+                "properties": {
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/tokens/contract-report": {
       "get": {
         "tags": [],
@@ -2945,10 +3002,10 @@
           "mail3": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           }
         }
@@ -4214,6 +4271,9 @@
           },
           "updatedAt": {
             "$ref": "#/components/schemas/LocalDateTime"
+          },
+          "referenceOnboardingId": {
+            "type": "string"
           }
         }
       },
@@ -4498,9 +4558,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -4716,7 +4773,9 @@
           "REC",
           "CON",
           "PRV",
-          "GPU"
+          "PRV_PF",
+          "GPU",
+          "SCEC"
         ],
         "type": "string"
       },
@@ -4924,9 +4983,6 @@
           "signContract": {
             "type": "boolean"
           },
-          "soleTrader": {
-            "type": "boolean"
-          },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
@@ -5114,9 +5170,6 @@
             "type": "string"
           },
           "signContract": {
-            "type": "boolean"
-          },
-          "soleTrader": {
             "type": "boolean"
           },
           "institution": {
