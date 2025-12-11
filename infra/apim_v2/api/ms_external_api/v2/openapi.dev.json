@@ -32,6 +32,9 @@
       "description": "User group endpoint CRUD operations"
     },
     {
+      "name": "ContractTemplate"
+    },
+    {
       "name": "Product"
     }
   ],
@@ -1107,6 +1110,239 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/contract-template": {
+      "post": {
+        "summary": "Upload a new contract template version",
+        "description": "Upload an html file as a new contract template version to be used in product configuration",
+        "operationId": "upload",
+        "tags": [
+          "ContractTemplate"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractTemplateUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractTemplateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "summary": "List contract templates available",
+        "description": "List and filter all the contract templates available",
+        "operationId": "list",
+        "tags": [
+          "ContractTemplate"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/contract-template/{contractTemplateId}": {
+      "get": {
+        "summary": "Download a contract template version",
+        "description": "Download the html file of a specific contract template version",
+        "operationId": "download",
+        "tags": [
+          "ContractTemplate"
+        ],
+        "parameters": [
+          {
+            "name": "contractTemplateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "HTML"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -3487,27 +3723,40 @@
           }
         }
       },
-      "ProductBaseResponse": {
+      "ContractTemplateResponse": {
         "type": "object",
         "properties": {
-          "id": {
+          "contractTemplateId": {
+            "type": "string"
+          },
+          "contractTemplatePath": {
+            "type": "string"
+          },
+          "contractTemplateVersion": {
             "type": "string"
           },
           "productId": {
             "type": "string"
           },
-          "status": {
-            "$ref": "#/components/schemas/ProductStatus"
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/Instant"
+          },
+          "createdBy": {
+            "type": "string"
           }
         }
       },
-      "ProductStatus": {
+      "Instant": {
         "type": "string",
-        "enum": [
-          "TESTING",
-          "ACTIVE",
-          "DELETED",
-          "SUSPEND"
+        "format": "date-time",
+        "examples": [
+          "2022-03-10T16:15:50Z"
         ]
       },
       "Problem4": {
@@ -3530,6 +3779,61 @@
             "type": "string"
           }
         }
+      },
+      "ContractTemplateUploadRequest": {
+        "type": "object",
+        "required": [
+          "productId",
+          "file",
+          "name",
+          "version"
+        ],
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9 ]+$"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductBaseResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ProductStatus"
+          }
+        }
+      },
+      "ProductStatus": {
+        "type": "string",
+        "enum": [
+          "TESTING",
+          "ACTIVE",
+          "DELETED",
+          "SUSPEND"
+        ]
       },
       "ProductPatchRequest": {
         "type": "object",
@@ -3574,7 +3878,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -3586,7 +3890,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {
@@ -3684,7 +3988,7 @@
           }
         }
       },
-      "ContractTemplate": {
+      "ContractTemplateConfig": {
         "type": "object",
         "properties": {
           "contractId": {
@@ -3814,7 +4118,7 @@
           "PDND_INFOCAMERE"
         ]
       },
-      "EmailTemplate": {
+      "EmailTemplateConfig": {
         "type": "object",
         "properties": {
           "type": {
@@ -3906,7 +4210,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -3918,7 +4222,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {
@@ -3952,13 +4256,6 @@
             "type": "string"
           }
         }
-      },
-      "Instant": {
-        "type": "string",
-        "format": "date-time",
-        "examples": [
-          "2022-03-10T16:15:50Z"
-        ]
       },
       "ProductCreateRequest": {
         "type": "object",
@@ -4003,7 +4300,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -4015,7 +4312,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {

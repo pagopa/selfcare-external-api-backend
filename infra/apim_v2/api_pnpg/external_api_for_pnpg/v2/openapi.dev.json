@@ -1691,7 +1691,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -1703,7 +1703,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {
@@ -1801,7 +1801,7 @@
           }
         }
       },
-      "ContractTemplate": {
+      "ContractTemplateConfig": {
         "type": "object",
         "properties": {
           "contractId": {
@@ -1931,7 +1931,7 @@
           "PDND_INFOCAMERE"
         ]
       },
-      "EmailTemplate": {
+      "EmailTemplateConfig": {
         "type": "object",
         "properties": {
           "type": {
@@ -2023,7 +2023,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -2035,7 +2035,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {
@@ -2120,7 +2120,7 @@
           "contracts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractTemplate"
+              "$ref": "#/components/schemas/ContractTemplateConfig"
             }
           },
           "institutionOrigins": {
@@ -2132,7 +2132,7 @@
           "emailTemplates": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTemplate"
+              "$ref": "#/components/schemas/EmailTemplateConfig"
             }
           },
           "backOfficeEnvironmentConfigurations": {
