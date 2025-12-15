@@ -37,6 +37,12 @@
         }
       },
       {
+        "inputFile": "../../../../../../../docs/pagopa/selfcare-ms-party-registry-proxy/openapi.json",
+        "operationSelection": {
+          "includeTags": ["support"]
+        }
+      },
+      {
         "inputFile": "../../../../../../../docs/pagopa/selfcare-onboarding-functions/openapi.json",
         "operationSelection": {
           "includeTags": ["support"]
