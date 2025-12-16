@@ -494,6 +494,24 @@ module "apim_external_api_ms_v2" {
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
         MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
+    },
+    {
+      operation_id = "createWebhook"
+      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "updateWebhookbyProductId"
+      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "getWebhookbyProductId"
+      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
