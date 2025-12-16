@@ -1734,10 +1734,11 @@
       "post": {
         "summary": "Create a new webhook",
         "description": "Create a new webhook configuration",
+        "operationId": "createWebhook",
         "tags": [],
         "parameters": [
           {
-            "name": "productId",
+            "name": "requesterProductId",
             "required": true,
             "in": "query",
             "schema": {
@@ -1772,6 +1773,7 @@
       "put": {
         "summary": "Update webhook",
         "description": "Update an existing webhook configuration",
+        "operationId": "updateWebhookbyProductId",
         "tags": [],
         "parameters": [
           {
@@ -1783,7 +1785,7 @@
             }
           },
           {
-            "name": "productId",
+            "name": "requesterProductId",
             "required": true,
             "in": "query",
             "schema": {
@@ -1816,6 +1818,7 @@
       "get": {
         "summary": "Get webhook by ID",
         "description": "Retrieve a specific webhook configuration",
+        "operationId": "getWebhookbyProductId",
         "tags": [],
         "parameters": [
           {
@@ -1827,7 +1830,7 @@
             }
           },
           {
-            "name": "productId",
+            "name": "requesterProductId",
             "required": true,
             "in": "query",
             "schema": {
