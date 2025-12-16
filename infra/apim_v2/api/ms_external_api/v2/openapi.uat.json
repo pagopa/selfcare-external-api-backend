@@ -1730,6 +1730,121 @@
         ]
       }
     },
+    "/webhooks": {
+      "post": {
+        "summary": "Create a new webhook",
+        "description": "Create a new webhook configuration",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/webhooks/{productId}": {
+      "put": {
+        "summary": "Update webhook",
+        "description": "Update an existing webhook configuration",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get webhook by ID",
+        "description": "Retrieve a specific webhook configuration",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
     "/institutions/{institutionId}/contract": {
       "get": {
         "tags": [
@@ -4331,6 +4446,52 @@
             "items": {
               "$ref": "#/components/schemas/OriginEntry"
             }
+          }
+        }
+      },
+      "WebhookRequest": {
+        "type": "object",
+        "required": [
+          "url",
+          "httpMethod"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "httpMethod": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "retryPolicy": {
+            "$ref": "#/components/schemas/RetryPolicyRequest"
+          }
+        }
+      },
+      "RetryPolicyRequest": {
+        "type": "object",
+        "properties": {
+          "maxAttempts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "initialDelayMs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxDelayMs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "backoffMultiplier": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
