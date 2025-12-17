@@ -1132,11 +1132,62 @@
         "tags": [
           "ContractTemplate"
         ],
+        "parameters": [
+          {
+            "name": "createdBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9 ]+$"
+            },
+            "required": true
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ContractTemplateUploadRequest"
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           },
@@ -1232,7 +1283,11 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/octet-stream": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractTemplateResponseList"
+                }
+              }
             }
           },
           "400": {
@@ -1308,7 +1363,12 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/octet-stream": {}
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           },
           "400": {
@@ -3867,6 +3927,9 @@
           },
           "createdBy": {
             "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/ContractTemplateFileType"
           }
         }
       },
@@ -3875,6 +3938,13 @@
         "format": "date-time",
         "examples": [
           "2022-03-10T16:15:50Z"
+        ]
+      },
+      "ContractTemplateFileType": {
+        "type": "string",
+        "enum": [
+          "HTML",
+          "PDF"
         ]
       },
       "Problem4": {
@@ -3898,35 +3968,14 @@
           }
         }
       },
-      "ContractTemplateUploadRequest": {
+      "ContractTemplateResponseList": {
         "type": "object",
-        "required": [
-          "productId",
-          "file",
-          "name",
-          "version"
-        ],
         "properties": {
-          "productId": {
-            "type": "string"
-          },
-          "file": {
-            "type": "string",
-            "format": "binary"
-          },
-          "name": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9 ]+$"
-          },
-          "version": {
-            "type": "string",
-            "pattern": "^\\d+\\.\\d+\\.\\d+$"
-          },
-          "description": {
-            "type": "string"
-          },
-          "createdBy": {
-            "type": "string"
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractTemplateResponse"
+            }
           }
         }
       },
