@@ -36,6 +36,10 @@
     },
     {
       "name": "Product"
+    },
+    {
+      "name": "Webhook",
+      "description": "API for webhook configuration management"
     }
   ],
   "paths": {
@@ -1795,7 +1799,9 @@
         "summary": "Create a new webhook",
         "description": "Create a new webhook configuration",
         "operationId": "createWebhook",
-        "tags": [],
+        "tags": [
+          "Webhook"
+        ],
         "parameters": [
           {
             "name": "requesterProductId",
@@ -1834,7 +1840,9 @@
         "summary": "Update webhook",
         "description": "Update an existing webhook configuration",
         "operationId": "updateWebhookbyProductId",
-        "tags": [],
+        "tags": [
+          "Webhook"
+        ],
         "parameters": [
           {
             "name": "productId",
@@ -1879,7 +1887,9 @@
         "summary": "Get webhook by ID",
         "description": "Retrieve a specific webhook configuration",
         "operationId": "getWebhookbyProductId",
-        "tags": [],
+        "tags": [
+          "Webhook"
+        ],
         "parameters": [
           {
             "name": "productId",
