@@ -1456,6 +1456,48 @@
         ]
       }
     },
+    "/onboarding/aggregation/increment": {
+      "post": {
+        "tags": [],
+        "summary": "Perform Increment for aggregates",
+        "description": "Perform the increment of the aggregates for an aggregator entity that has already completed the initial onboarding.The API initiates the onboarding process for the aggregated entities received as input.",
+        "operationId": "onboardingAggregationIncrement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingPaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingResponse1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/completion": {
       "post": {
         "tags": [
@@ -4526,7 +4568,7 @@
         "type": "string",
         "example": "2022-03-10T12:15:50"
       },
-      "OnboardingDefaultRequest": {
+      "OnboardingPaRequest": {
         "required": [
           "productId",
           "institution"
@@ -4562,16 +4604,10 @@
             "$ref": "#/components/schemas/InstitutionBaseRequest"
           },
           "billing": {
-            "$ref": "#/components/schemas/BillingRequest1"
+            "$ref": "#/components/schemas/BillingPaRequest"
           },
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto1"
-          },
-          "gpuData": {
-            "$ref": "#/components/schemas/GPUData1"
-          },
-          "payment": {
-            "$ref": "#/components/schemas/PaymentRequestDto"
           }
         }
       },
@@ -4779,6 +4815,72 @@
         ],
         "type": "string"
       },
+      "BillingPaRequest": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingDefaultRequest": {
+        "required": [
+          "productId",
+          "institution"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregateInstitutionRequest"
+            }
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "signContract": {
+            "type": "boolean"
+          },
+          "institution": {
+            "$ref": "#/components/schemas/InstitutionBaseRequest"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingRequest1"
+          },
+          "additionalInformations": {
+            "$ref": "#/components/schemas/AdditionalInformationsDto1"
+          },
+          "gpuData": {
+            "$ref": "#/components/schemas/GPUData1"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentRequestDto"
+          }
+        }
+      },
       "BillingRequest1": {
         "type": "object",
         "properties": {
@@ -4947,66 +5049,6 @@
             "type": "string"
           },
           "holder": {
-            "type": "string"
-          }
-        }
-      },
-      "OnboardingPaRequest": {
-        "required": [
-          "productId",
-          "institution"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRequest"
-            }
-          },
-          "aggregates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AggregateInstitutionRequest"
-            }
-          },
-          "isAggregator": {
-            "type": "boolean"
-          },
-          "pricingPlan": {
-            "type": "string"
-          },
-          "signContract": {
-            "type": "boolean"
-          },
-          "institution": {
-            "$ref": "#/components/schemas/InstitutionBaseRequest"
-          },
-          "billing": {
-            "$ref": "#/components/schemas/BillingPaRequest"
-          },
-          "additionalInformations": {
-            "$ref": "#/components/schemas/AdditionalInformationsDto1"
-          }
-        }
-      },
-      "BillingPaRequest": {
-        "type": "object",
-        "properties": {
-          "vatNumber": {
-            "type": "string"
-          },
-          "recipientCode": {
-            "type": "string"
-          },
-          "publicServices": {
-            "type": "boolean"
-          },
-          "taxCodeInvoicing": {
             "type": "string"
           }
         }
