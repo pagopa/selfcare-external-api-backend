@@ -1802,16 +1802,6 @@
         "tags": [
           "Webhook"
         ],
-        "parameters": [
-          {
-            "name": "requesterProductId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1851,14 +1841,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "requesterProductId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "requestBody": {
@@ -1895,14 +1877,6 @@
             "name": "productId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "requesterProductId",
-            "required": true,
-            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -4515,10 +4489,15 @@
         "type": "object",
         "required": [
           "url",
+          "productId",
           "httpMethod"
         ],
         "properties": {
           "url": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "productId": {
             "type": "string",
             "pattern": "\\S"
           },
