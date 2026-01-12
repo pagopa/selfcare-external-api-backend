@@ -6,16 +6,15 @@
         <value>@((string)context.Variables["jwt"])</value>
     </set-header>
 
-    <rewrite-uri template="@{
-        // string path = context.Request.Url.Path;
-        // string basePart = path.Substring(0, path.LastIndexOf("/"));
-        string productId = (string)context.Variables["productId"];
-        return $"/webhooks/{productId}";
+    <set-variable name="requestpath" value="@{
+        string path = context.Operation.UrlTemplate;
+        return path.Substring(0, path.LastIndexOf("/"));
     }" />
-    <trace source="WEBHOOK" severity="information">
-        <message>WEBHOOK GET</message>
-        <metadata name="Path" value="@((string)context.Request.Url.Path)" />
-    </trace>
+    <rewrite-uri template="@{
+        string basePath = (string)context.Variables["requestpath"];
+        string productId = (string)context.Variables["productId"];
+        return $"{basePath}/{productId}";
+    }" />
 
     <set-backend-service base-url="${MS_BACKEND_URL}"/>
 </inbound>

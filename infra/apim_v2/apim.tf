@@ -497,19 +497,19 @@ module "apim_external_api_ms_v2" {
     },
     {
       operation_id = "createWebhook"
-      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+      xml_content = templatefile("./api/base_ms_url_external_policy_post.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "updateWebhookbyProductId"
-      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+      xml_content = templatefile("./api/base_ms_url_external_policy_put.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getWebhookbyProductId"
-      xml_content = templatefile("./api/base_ms_url_external_webhook_policy.xml.tpl", {
+      xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     }
