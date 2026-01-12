@@ -6,9 +6,11 @@
         <value>@((string)context.Variables["jwt"])</value>
     </set-header>
 
-    <set-query-parameter name="requesterProductId" exists-action="override">
-        <value>@((string)context.Variables["productId"])</value>
-    </set-query-parameter>
+    <set-body template="none">@{
+        var body = context.Request.Body.As<JObject>(preserveContent: true);
+        body["productId"] = (string)context.Variables["productId"];
+        return body.ToString();
+    }</set-body>
 
     <set-backend-service base-url="${MS_BACKEND_URL}"/>
 </inbound>
