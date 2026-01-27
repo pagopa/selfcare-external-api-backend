@@ -16,7 +16,7 @@ container_app = {
     {
       custom = {
         metadata = {
-          "concurrentRequests" = "50"
+          concurrentRequests = "50"
         }
         type = "http"
       }
