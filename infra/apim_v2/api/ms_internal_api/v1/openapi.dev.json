@@ -3289,6 +3289,9 @@
           "iban": {
             "type": "string"
           },
+          "istatCode": {
+            "type": "string"
+          },
           "origin": {
             "type": "string",
             "enum": [
