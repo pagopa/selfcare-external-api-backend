@@ -1389,6 +1389,9 @@
           "iban" : {
             "type" : "string"
           },
+          "istatCode" : {
+            "type" : "string"
+          },
           "origin" : {
             "type" : "string",
             "enum" : [ "ADE", "ANAC", "INFOCAMERE", "IPA", "IVASS", "MOCK", "PDND_INFOCAMERE", "SELC", "UNKNOWN" ]
