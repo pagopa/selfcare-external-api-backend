@@ -1715,6 +1715,12 @@
             "items": {
               "$ref": "#/components/schemas/BackOfficeEnvironmentConfiguration"
             }
+          },
+          "testEnvProductIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1768,6 +1774,9 @@
           "role": {
             "type": "string"
           },
+          "institutionType": {
+            "$ref": "#/components/schemas/InstitutionType1"
+          },
           "multiroleAllowed": {
             "type": "boolean"
           },
@@ -1787,6 +1796,26 @@
             }
           }
         }
+      },
+      "InstitutionType1": {
+        "type": "string",
+        "enum": [
+          "PA",
+          "PG",
+          "GSP",
+          "SA",
+          "PT",
+          "SCP",
+          "PSP",
+          "AS",
+          "REC",
+          "CON",
+          "PRV",
+          "PRV_PF",
+          "GPU",
+          "SCEC",
+          "DEFAULT"
+        ]
       },
       "BackOfficeRole": {
         "type": "object",
@@ -1860,26 +1889,6 @@
           "INSTITUTION_AGGREGATOR",
           "USER",
           "USER_AGGREGATOR"
-        ]
-      },
-      "InstitutionType1": {
-        "type": "string",
-        "enum": [
-          "PA",
-          "PG",
-          "GSP",
-          "SA",
-          "PT",
-          "SCP",
-          "PSP",
-          "AS",
-          "REC",
-          "CON",
-          "PRV",
-          "PRV_PF",
-          "GPU",
-          "SCEC",
-          "DEFAULT"
         ]
       },
       "ContractType": {
@@ -2058,6 +2067,12 @@
             "items": {
               "$ref": "#/components/schemas/BackOfficeEnvironmentConfiguration"
             }
+          },
+          "testEnvProductIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2123,6 +2138,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BackOfficeEnvironmentConfiguration"
+            }
+          },
+          "testEnvProductIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "id": {
