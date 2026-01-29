@@ -1736,6 +1736,16 @@
                 "SUSPENDED"
               ]
             }
+          },
+          {
+            "name": "parentInstitutionId",
+            "in": "query",
+            "description": "Users group's parent institutionId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3910,6 +3920,9 @@
             "items": {
               "$ref": "#/components/schemas/UserRequest"
             }
+          },
+          "istatCode": {
+            "type": "string"
           },
           "recipientCode": {
             "type": "string"
