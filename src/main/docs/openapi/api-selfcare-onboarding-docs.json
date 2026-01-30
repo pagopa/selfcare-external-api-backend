@@ -2210,6 +2210,51 @@
           "SecurityScheme" : [ ]
         } ]
       }
+    },
+    "/v1/tokens/{onboardingId}/template-attachment" : {
+      "get" : {
+        "tags" : [ "Token Controller" ],
+        "summary" : "Retrieve template attachment for a given onboarding and filename",
+        "description" : "Downloads the template attachment file associated with the specified onboarding ID and filename.",
+        "operationId" : "getTemplateAttachment",
+        "parameters" : [ {
+          "name" : "onboardingId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
     }
   },
   "components" : {
@@ -2936,6 +2981,9 @@
           "signContract" : {
             "type" : "boolean"
           },
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterDto"
+          },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionBaseRequest"
           },
@@ -2984,6 +3032,9 @@
           },
           "signContract" : {
             "type" : "boolean"
+          },
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterDto"
           },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionBaseRequest"
@@ -3053,8 +3104,8 @@
           "status" : {
             "type" : "string"
           },
-          "userRequestUid" : {
-            "type" : "string"
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterResponse"
           },
           "reasonForReject" : {
             "type" : "string"
@@ -3183,6 +3234,9 @@
           "signContract" : {
             "type" : "boolean"
           },
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterDto"
+          },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionBaseRequest"
           },
@@ -3258,6 +3312,9 @@
           "signContract" : {
             "type" : "boolean"
           },
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterDto"
+          },
           "institution" : {
             "$ref" : "#/components/schemas/InstitutionPspRequest"
           },
@@ -3299,9 +3356,6 @@
           "additionalInformations" : {
             "$ref" : "#/components/schemas/AdditionalInformationsDto"
           },
-          "userRequestUid" : {
-            "type" : "string"
-          },
           "isAggregator" : {
             "type" : "boolean"
           },
@@ -3313,6 +3367,9 @@
           },
           "referenceOnboardingId" : {
             "type" : "string"
+          },
+          "userRequester" : {
+            "$ref" : "#/components/schemas/UserRequesterResponse"
           }
         }
       },
@@ -3558,6 +3615,31 @@
           },
           "role" : {
             "$ref" : "#/components/schemas/PartyRole"
+          }
+        }
+      },
+      "UserRequesterDto" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserRequesterResponse" : {
+        "type" : "object",
+        "properties" : {
+          "userMailUuid" : {
+            "type" : "string"
+          },
+          "userRequestUid" : {
+            "type" : "string"
           }
         }
       },
