@@ -1736,6 +1736,16 @@
                 "SUSPENDED"
               ]
             }
+          },
+          {
+            "name": "parentInstitutionId",
+            "in": "query",
+            "description": "Users group's parent institutionId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2413,6 +2423,9 @@
           "address": {
             "type": "string"
           },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
           "description": {
             "type": "string"
           },
@@ -2432,6 +2445,12 @@
             }
           },
           "parentDescription": {
+            "type": "string"
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
             "type": "string"
           },
           "zipCode": {
@@ -3910,6 +3929,9 @@
             "items": {
               "$ref": "#/components/schemas/UserRequest"
             }
+          },
+          "istatCode": {
+            "type": "string"
           },
           "recipientCode": {
             "type": "string"
