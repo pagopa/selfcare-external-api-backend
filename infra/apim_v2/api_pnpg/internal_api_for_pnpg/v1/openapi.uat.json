@@ -233,9 +233,6 @@
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto1"
           },
-          "userRequestUid": {
-            "type": "string"
-          },
           "isAggregator": {
             "type": "boolean"
           },
@@ -247,6 +244,9 @@
           },
           "referenceOnboardingId": {
             "type": "string"
+          },
+          "userRequester": {
+            "$ref": "#/components/schemas/UserRequesterResponse"
           }
         }
       },
@@ -498,6 +498,17 @@
         "format": "date-time",
         "type": "string",
         "example": "2022-03-10T12:15:50"
+      },
+      "UserRequesterResponse": {
+        "type": "object",
+        "properties": {
+          "userMailUuid": {
+            "type": "string"
+          },
+          "userRequestUid": {
+            "type": "string"
+          }
+        }
       },
       "OnboardingPgRequest": {
         "required": [
