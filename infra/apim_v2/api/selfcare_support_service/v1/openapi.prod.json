@@ -3534,9 +3534,6 @@
           "additionalInformations": {
             "$ref": "#/components/schemas/AdditionalInformationsDto1"
           },
-          "userRequestUid": {
-            "type": "string"
-          },
           "isAggregator": {
             "type": "boolean"
           },
@@ -3548,6 +3545,9 @@
           },
           "referenceOnboardingId": {
             "type": "string"
+          },
+          "userRequester": {
+            "$ref": "#/components/schemas/UserRequesterResponse"
           }
         }
       },
@@ -3800,6 +3800,17 @@
         "type": "string",
         "example": "2022-03-10T12:15:50"
       },
+      "UserRequesterResponse": {
+        "type": "object",
+        "properties": {
+          "userMailUuid": {
+            "type": "string"
+          },
+          "userRequestUid": {
+            "type": "string"
+          }
+        }
+      },
       "OnboardingStatus": {
         "enum": [
           "REQUEST",
@@ -3843,6 +3854,9 @@
           },
           "signContract": {
             "type": "boolean"
+          },
+          "userRequester": {
+            "$ref": "#/components/schemas/UserRequesterDto"
           },
           "institution": {
             "$ref": "#/components/schemas/InstitutionBaseRequest"
@@ -3957,6 +3971,20 @@
             "type": "string"
           },
           "desc": {
+            "type": "string"
+          }
+        }
+      },
+      "UserRequesterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "email": {
             "type": "string"
           }
         }
