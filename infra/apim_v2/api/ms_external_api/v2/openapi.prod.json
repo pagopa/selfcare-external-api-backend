@@ -5156,8 +5156,8 @@
           "status": {
             "type": "string"
           },
-          "userRequestUid": {
-            "type": "string"
+          "userRequester": {
+            "$ref": "#/components/schemas/UserRequesterResponse"
           },
           "reasonForReject": {
             "type": "string"
@@ -5438,6 +5438,17 @@
         "format": "date-time",
         "type": "string",
         "example": "2022-03-10T12:15:50"
+      },
+      "UserRequesterResponse": {
+        "type": "object",
+        "properties": {
+          "userMailUuid": {
+            "type": "string"
+          },
+          "userRequestUid": {
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {
