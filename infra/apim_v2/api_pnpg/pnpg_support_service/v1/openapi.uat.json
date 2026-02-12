@@ -29,6 +29,86 @@
     }
   ],
   "paths": {
+    "/institutions/{id}": {
+      "put": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "update institution data of given institution",
+        "description": "update institution data of given institution",
+        "operationId": "updateInstitutionUsingPUT",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The internal identifier of the institution",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstitutionPut"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/institutions": {
       "get": {
         "tags": [
@@ -115,7 +195,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -125,87 +205,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/institutions/{id}": {
-      "put": {
-        "tags": [
-          "Institution"
-        ],
-        "summary": "update institution data of given institution",
-        "description": "update institution data of given institution",
-        "operationId": "updateInstitutionUsingPUT",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The internal identifier of the institution",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InstitutionPut"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InstitutionResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -257,7 +257,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -267,7 +267,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -277,7 +277,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -287,7 +287,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -350,7 +350,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -360,7 +360,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -370,7 +370,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -380,7 +380,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -982,63 +982,55 @@
   },
   "components": {
     "schemas": {
-      "InstitutionsResponse": {
-        "title": "InstitutionsResponse",
-        "type": "object",
-        "properties": {
-          "institutions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InstitutionResponse"
-            }
-          }
-        }
-      },
       "InstitutionResponse": {
         "title": "InstitutionResponse",
+        "required": [
+          "id",
+          "origin",
+          "originId"
+        ],
         "type": "object",
         "properties": {
-          "address": {
+          "id": {
             "type": "string"
           },
-          "aooParentCode": {
+          "externalId": {
             "type": "string"
           },
-          "attributes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AttributesResponse"
-            }
-          },
-          "businessRegisterPlace": {
+          "origin": {
             "type": "string"
           },
-          "city": {
+          "originId": {
             "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "county": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataProtectionOfficer": {
-            "$ref": "#/components/schemas/DataProtectionOfficerResponse"
-          },
-          "delegation": {
-            "type": "boolean"
           },
           "description": {
+            "type": "string"
+          },
+          "institutionType": {
             "type": "string"
           },
           "digitalAddress": {
             "type": "string"
           },
-          "externalId": {
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "istatCode": {
             "type": "string"
           },
           "geographicTaxonomies": {
@@ -1047,26 +1039,11 @@
               "$ref": "#/components/schemas/GeoTaxonomies"
             }
           },
-          "id": {
-            "type": "string"
-          },
-          "imported": {
-            "type": "boolean"
-          },
-          "institutionType": {
-            "type": "string"
-          },
-          "isTest": {
-            "type": "boolean"
-          },
-          "istatCode": {
-            "type": "string"
-          },
-          "legalForm": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributesResponse"
+            }
           },
           "onboarding": {
             "type": "array",
@@ -1074,28 +1051,22 @@
               "$ref": "#/components/schemas/OnboardedProductResponse"
             }
           },
-          "origin": {
-            "type": "string"
-          },
-          "originId": {
-            "type": "string"
-          },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProviderResponse"
           },
-          "rea": {
-            "type": "string"
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DataProtectionOfficerResponse"
           },
           "rootParent": {
             "$ref": "#/components/schemas/RootParentResponse"
           },
+          "rea": {
+            "type": "string"
+          },
           "shareCapital": {
             "type": "string"
           },
-          "subunitCode": {
-            "type": "string"
-          },
-          "subunitType": {
+          "businessRegisterPlace": {
             "type": "string"
           },
           "supportEmail": {
@@ -1104,14 +1075,48 @@
           "supportPhone": {
             "type": "string"
           },
-          "taxCode": {
+          "imported": {
+            "type": "boolean"
+          },
+          "subunitCode": {
             "type": "string"
+          },
+          "subunitType": {
+            "type": "string"
+          },
+          "aooParentCode": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
           },
-          "zipCode": {
+          "delegation": {
+            "type": "boolean"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "isTest": {
+            "type": "boolean"
+          },
+          "legalForm": {
+            "type": "string"
+          }
+        }
+      },
+      "GeoTaxonomies": {
+        "title": "GeoTaxonomies",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "desc": {
             "type": "string"
           }
         }
@@ -1120,14 +1125,115 @@
         "title": "AttributesResponse",
         "type": "object",
         "properties": {
+          "origin": {
+            "type": "string"
+          },
           "code": {
             "type": "string"
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "OnboardedProductResponse": {
+        "title": "OnboardedProductResponse",
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "PENDING",
+              "TOBEVALIDATED",
+              "SUSPENDED",
+              "DELETED",
+              "REJECTED"
+            ]
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse1"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "PA",
+              "PG",
+              "GSP",
+              "SA",
+              "PT",
+              "SCP",
+              "PSP",
+              "AS",
+              "REC",
+              "CON",
+              "PRV",
+              "PRV_PF",
+              "GPU",
+              "SCEC"
+            ]
           },
           "origin": {
             "type": "string"
+          },
+          "originId": {
+            "type": "string"
+          }
+        }
+      },
+      "BillingResponse1": {
+        "title": "BillingResponse",
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PaymentServiceProviderResponse": {
+        "title": "PaymentServiceProviderResponse",
+        "type": "object",
+        "properties": {
+          "abiCode": {
+            "type": "string"
+          },
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "vatNumberGroup": {
+            "type": "boolean"
           }
         }
       },
@@ -1146,119 +1252,6 @@
           }
         }
       },
-      "GeoTaxonomies": {
-        "title": "GeoTaxonomies",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "desc": {
-            "type": "string"
-          }
-        }
-      },
-      "OnboardedProductResponse": {
-        "title": "OnboardedProductResponse",
-        "type": "object",
-        "properties": {
-          "billing": {
-            "$ref": "#/components/schemas/BillingResponse1"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GPU",
-              "GSP",
-              "PA",
-              "PG",
-              "PRV",
-              "PRV_PF",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCEC",
-              "SCP"
-            ]
-          },
-          "isAggregator": {
-            "type": "boolean"
-          },
-          "origin": {
-            "type": "string"
-          },
-          "originId": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "ACTIVE",
-              "DELETED",
-              "PENDING",
-              "REJECTED",
-              "SUSPENDED",
-              "TOBEVALIDATED"
-            ]
-          },
-          "tokenId": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BillingResponse1": {
-        "title": "BillingResponse",
-        "type": "object",
-        "properties": {
-          "publicServices": {
-            "type": "boolean"
-          },
-          "recipientCode": {
-            "type": "string"
-          },
-          "taxCodeInvoicing": {
-            "type": "string"
-          },
-          "vatNumber": {
-            "type": "string"
-          }
-        }
-      },
-      "PaymentServiceProviderResponse": {
-        "title": "PaymentServiceProviderResponse",
-        "type": "object",
-        "properties": {
-          "abiCode": {
-            "type": "string"
-          },
-          "businessRegisterNumber": {
-            "type": "string"
-          },
-          "legalRegisterName": {
-            "type": "string"
-          },
-          "legalRegisterNumber": {
-            "type": "string"
-          },
-          "vatNumberGroup": {
-            "type": "boolean"
-          }
-        }
-      },
       "RootParentResponse": {
         "title": "RootParentResponse",
         "type": "object",
@@ -1271,7 +1264,7 @@
           }
         }
       },
-      "Problem": {
+      "Problem1": {
         "title": "Problem",
         "required": [
           "status",
@@ -1279,6 +1272,22 @@
         ],
         "type": "object",
         "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "status": {
+            "maximum": 599,
+            "minimum": 100,
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
           "detail": {
             "type": "string",
             "description": "Human-readable description of this specific problem."
@@ -1293,20 +1302,6 @@
             "items": {
               "$ref": "#/components/schemas/InvalidParam"
             }
-          },
-          "status": {
-            "type": "integer",
-            "description": "The HTTP status code.",
-            "format": "int32",
-            "example": 500
-          },
-          "title": {
-            "type": "string",
-            "description": "Short human-readable summary of the problem."
-          },
-          "type": {
-            "type": "string",
-            "description": "A URL to a page with more details regarding the problem."
           }
         },
         "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
@@ -1333,31 +1328,25 @@
         "title": "InstitutionPut",
         "type": "object",
         "properties": {
-          "address": {
-            "type": "string"
-          },
-          "businessRegisterPlace": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "digitalAddress": {
-            "type": "string"
-          },
           "geographicTaxonomyCodes": {
             "type": "array",
             "items": {
               "type": "string"
             }
           },
-          "onboardings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OnboardingPut"
-            }
+          "digitalAddress": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           },
           "parentDescription": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
             "type": "string"
           },
           "rea": {
@@ -1366,13 +1355,23 @@
           "shareCapital": {
             "type": "string"
           },
-          "zipCode": {
+          "businessRegisterPlace": {
             "type": "string"
+          },
+          "onboardings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnboardingPut"
+            }
           }
         }
       },
       "OnboardingPut": {
         "title": "OnboardingPut",
+        "required": [
+          "productId",
+          "vatNumber"
+        ],
         "type": "object",
         "properties": {
           "productId": {
@@ -1380,6 +1379,18 @@
           },
           "vatNumber": {
             "type": "string"
+          }
+        }
+      },
+      "InstitutionsResponse": {
+        "title": "InstitutionsResponse",
+        "type": "object",
+        "properties": {
+          "institutions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstitutionResponse"
+            }
           }
         }
       },
@@ -1467,7 +1478,7 @@
         "type": "string",
         "example": "2022-03-10T12:15:50-04:00"
       },
-      "Problem1": {
+      "Problem2": {
         "type": "object",
         "properties": {
           "detail": {
@@ -1629,6 +1640,46 @@
             "type": "boolean"
           }
         }
+      },
+      "Problem": {
+        "title": "Problem",
+        "required": [
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of this specific problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI that describes where the problem occurred."
+          },
+          "invalidParams": {
+            "type": "array",
+            "description": "A list of invalid parameters details.",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            }
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          }
+        },
+        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       },
       "VerifyRequestDto": {
         "title": "VerifyRequestDto",
