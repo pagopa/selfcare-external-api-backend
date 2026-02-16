@@ -235,7 +235,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -251,7 +251,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -306,7 +306,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -316,7 +316,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -382,7 +382,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -398,7 +398,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -408,7 +408,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -461,7 +461,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -471,7 +471,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -518,7 +518,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -534,7 +534,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -544,7 +544,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem4"
                 }
               }
             }
@@ -1049,6 +1049,53 @@
             }
           },
           {
+            "name": "productId",
+            "in": "query",
+            "description": "Users group's productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "Member's unique identifier (userId)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "If filter on status is present, it must be used with at least one of the other filters",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "SUSPENDED",
+                "DELETED"
+              ]
+            }
+          },
+          {
+            "name": "parentInstitutionId",
+            "in": "query",
+            "description": "Users group's parent institutionId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "description": "The page number to access (0 indexed, defaults to 0)",
@@ -1085,53 +1132,6 @@
                 "type": "string"
               }
             }
-          },
-          {
-            "name": "productId",
-            "in": "query",
-            "description": "Users group's productId",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "in": "query",
-            "description": "Member's unique identifier (userId)",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "description": "If filter on status is present, it must be used with at least one of the other filters",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "ACTIVE",
-                "DELETED",
-                "SUSPENDED"
-              ]
-            }
-          },
-          {
-            "name": "parentInstitutionId",
-            "in": "query",
-            "description": "Users group's parent institutionId",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -1150,7 +1150,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem3"
                 }
               }
             }
@@ -1160,7 +1160,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem3"
                 }
               }
             }
@@ -1170,7 +1170,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem3"
                 }
               }
             }
@@ -1180,7 +1180,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem3"
                 }
               }
             }
@@ -1638,7 +1638,7 @@
           "SUSPEND"
         ]
       },
-      "Problem3": {
+      "Problem4": {
         "type": "object",
         "properties": {
           "detail": {
@@ -2715,16 +2715,6 @@
               "$ref": "#/components/schemas/UserGroupResource"
             }
           },
-          "number": {
-            "type": "integer",
-            "description": "The number of the current page",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "description": "The size of the page",
-            "format": "int32"
-          },
           "totalElements": {
             "type": "integer",
             "description": "The total amount of elements",
@@ -2733,6 +2723,16 @@
           "totalPages": {
             "type": "integer",
             "description": "The number of total pages",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "description": "The number of the current page",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "description": "The size of the page",
             "format": "int32"
           }
         }
@@ -2749,19 +2749,6 @@
         ],
         "type": "object",
         "properties": {
-          "createdAt": {
-            "type": "string",
-            "description": "Date on which the group was created",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "User by which the group was created"
-          },
-          "description": {
-            "type": "string",
-            "description": "Users group's description"
-          },
           "id": {
             "type": "string",
             "description": "Users group's unique identifier"
@@ -2769,27 +2756,6 @@
           "institutionId": {
             "type": "string",
             "description": "Users group's institutionId"
-          },
-          "members": {
-            "type": "array",
-            "description": "List of all the members of the group",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          "modifiedAt": {
-            "type": "string",
-            "description": "Date on which the group was modified",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "description": "User by which the group was modified"
-          },
-          "name": {
-            "type": "string",
-            "description": "Users group's name"
           },
           "parentInstitutionId": {
             "type": "string",
@@ -2799,16 +2765,93 @@
             "type": "string",
             "description": "Users group's productId"
           },
+          "name": {
+            "type": "string",
+            "description": "Users group's name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Users group's description"
+          },
           "status": {
             "type": "string",
             "description": "Users group's status",
             "enum": [
               "ACTIVE",
-              "DELETED",
-              "SUSPENDED"
+              "SUSPENDED",
+              "DELETED"
             ]
+          },
+          "members": {
+            "type": "array",
+            "description": "List of all the members of the group",
+            "items": {
+              "type": "string",
+              "description": "List of all the members of the group",
+              "format": "uuid"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date on which the group was created",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "User by which the group was created"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "Date on which the group was modified",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "User by which the group was modified"
           }
         }
+      },
+      "Problem3": {
+        "title": "Problem",
+        "required": [
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "status": {
+            "maximum": 599,
+            "minimum": 100,
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of this specific problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI that describes where the problem occurred."
+          },
+          "invalidParams": {
+            "type": "array",
+            "description": "A list of invalid parameters details.",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            }
+          }
+        },
+        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       }
     },
     "securitySchemes": {
