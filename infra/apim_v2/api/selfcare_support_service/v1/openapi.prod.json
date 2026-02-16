@@ -37,226 +37,19 @@
     }
   ],
   "paths": {
-    "/delegations": {
-      "get": {
+    "/institutions/{id}": {
+      "put": {
         "tags": [
-          "Delegation"
+          "Institution"
         ],
-        "summary": "Retrieve institution's delegations",
-        "description": "Retrieve institution's delegations",
-        "operationId": "getDelegationsUsingGET",
+        "summary": "update institution data of given institution",
+        "description": "update institution data of given institution",
+        "operationId": "updateInstitutionUsingPUT",
         "parameters": [
           {
-            "name": "institutionId",
-            "in": "query",
-            "description": "The internal identifier of the institution",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "brokerId",
-            "in": "query",
-            "description": "The internal identifier of the institution",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "productId",
-            "in": "query",
-            "description": "Product's unique identifier",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "description": "Description ente",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "taxCode",
-            "in": "query",
-            "description": "Institution's tax code",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "description": "Order to show response NONE, ASC, DESC",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "ASC",
-                "DESC",
-                "NONE"
-              ]
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "page",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "size",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DelegationResponse"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Delegation"
-        ],
-        "summary": "Create an association between institution id and technical partner",
-        "description": "Create an association between institution id and technical partner",
-        "operationId": "createDelegationUsingPOST",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DelegationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DelegationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/delegations/{delegationId}": {
-      "delete": {
-        "tags": [
-          "Delegation"
-        ],
-        "summary": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
-        "description": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
-        "operationId": "deleteDelegationUsingDELETE",
-        "parameters": [
-          {
-            "name": "delegationId",
+            "name": "id",
             "in": "path",
-            "description": "Delegation's unique internal identifier",
+            "description": "The internal identifier of the institution",
             "required": true,
             "style": "simple",
             "schema": {
@@ -264,16 +57,42 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstitutionPut"
+              }
+            }
+          }
+        },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -283,17 +102,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -394,7 +203,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -404,7 +213,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -419,42 +228,113 @@
         ]
       }
     },
-    "/institutions/{id}": {
-      "put": {
+    "/delegations": {
+      "get": {
         "tags": [
-          "Institution"
+          "Delegation"
         ],
-        "summary": "update institution data of given institution",
-        "description": "update institution data of given institution",
-        "operationId": "updateInstitutionUsingPUT",
+        "summary": "Retrieve institution's delegations",
+        "description": "Retrieve institution's delegations",
+        "operationId": "getDelegationsUsingGET",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "institutionId",
+            "in": "query",
             "description": "The internal identifier of the institution",
-            "required": true,
-            "style": "simple",
+            "required": false,
+            "style": "form",
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InstitutionPut"
-              }
+          },
+          {
+            "name": "brokerId",
+            "in": "query",
+            "description": "The internal identifier of the institution",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Description ente",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Institution's tax code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Order to show response NONE, ASC, DESC",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "ASC",
+                "DESC"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "size",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InstitutionResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DelegationResponse"
+                  }
                 }
               }
             }
@@ -464,17 +344,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -484,7 +354,137 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Create an association between institution id and technical partner",
+        "description": "Create an association between institution id and technical partner",
+        "operationId": "createDelegationUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DelegationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/delegations/{delegationId}": {
+      "delete": {
+        "tags": [
+          "Delegation"
+        ],
+        "summary": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
+        "description": "Delete an association between institution id and technical partner setting its status to DELETED and setting delegation to false on institution if it has no more delegations",
+        "operationId": "deleteDelegationUsingDELETE",
+        "parameters": [
+          {
+            "name": "delegationId",
+            "in": "path",
+            "description": "Delegation's unique internal identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -536,7 +536,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -546,7 +546,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -556,7 +556,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -566,7 +566,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -629,7 +629,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -639,7 +639,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -649,7 +649,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -659,7 +659,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem2"
                 }
               }
             }
@@ -1380,10 +1380,11 @@
             "style": "form",
             "schema": {
               "type": "string",
+              "default": "NONE",
               "enum": [
+                "NONE",
                 "ASC",
-                "DESC",
-                "NONE"
+                "DESC"
               ]
             }
           },
@@ -1394,8 +1395,10 @@
             "required": false,
             "style": "form",
             "schema": {
+              "minimum": 0,
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 0
             }
           },
           {
@@ -1405,8 +1408,10 @@
             "required": false,
             "style": "form",
             "schema": {
+              "minimum": 1,
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 10000
             }
           }
         ],
@@ -1426,7 +1431,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -1436,7 +1441,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -1972,72 +1977,289 @@
   },
   "components": {
     "schemas": {
-      "DelegationResponse": {
-        "title": "DelegationResponse",
+      "InstitutionResponse": {
+        "title": "InstitutionResponse",
+        "required": [
+          "id",
+          "origin",
+          "originId"
+        ],
         "type": "object",
         "properties": {
-          "brokerId": {
+          "id": {
             "type": "string"
           },
-          "brokerName": {
+          "externalId": {
             "type": "string"
           },
-          "brokerTaxCode": {
+          "origin": {
             "type": "string"
           },
-          "brokerType": {
+          "originId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "institutionType": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "istatCode": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeoTaxonomies"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributesResponse"
+            }
+          },
+          "onboarding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnboardedProductResponse"
+            }
+          },
+          "paymentServiceProvider": {
+            "$ref": "#/components/schemas/PaymentServiceProviderResponse"
+          },
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DataProtectionOfficerResponse"
+          },
+          "rootParent": {
+            "$ref": "#/components/schemas/RootParentResponse"
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          },
+          "imported": {
+            "type": "boolean"
+          },
+          "subunitCode": {
+            "type": "string"
+          },
+          "subunitType": {
+            "type": "string"
+          },
+          "aooParentCode": {
             "type": "string"
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "id": {
-            "type": "string"
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           },
-          "institutionId": {
-            "type": "string"
+          "delegation": {
+            "type": "boolean"
           },
-          "institutionName": {
-            "type": "string"
-          },
-          "institutionRootName": {
-            "type": "string"
-          },
-          "institutionType": {
+          "logo": {
             "type": "string"
           },
           "isTest": {
             "type": "boolean"
           },
+          "legalForm": {
+            "type": "string"
+          }
+        }
+      },
+      "GeoTaxonomies": {
+        "title": "GeoTaxonomies",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "desc": {
+            "type": "string"
+          }
+        }
+      },
+      "AttributesResponse": {
+        "title": "AttributesResponse",
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardedProductResponse": {
+        "title": "OnboardedProductResponse",
+        "type": "object",
+        "properties": {
           "productId": {
+            "type": "string"
+          },
+          "tokenId": {
             "type": "string"
           },
           "status": {
             "type": "string",
             "enum": [
               "ACTIVE",
-              "DELETED"
+              "PENDING",
+              "TOBEVALIDATED",
+              "SUSPENDED",
+              "DELETED",
+              "REJECTED"
             ]
           },
-          "taxCode": {
-            "type": "string"
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse1"
           },
-          "type": {
+          "createdAt": {
             "type": "string",
-            "enum": [
-              "AOO",
-              "EA",
-              "PT"
-            ]
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isAggregator": {
+            "type": "boolean"
+          },
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "PA",
+              "PG",
+              "GSP",
+              "SA",
+              "PT",
+              "SCP",
+              "PSP",
+              "AS",
+              "REC",
+              "CON",
+              "PRV",
+              "PRV_PF",
+              "GPU",
+              "SCEC"
+            ]
+          },
+          "origin": {
+            "type": "string"
+          },
+          "originId": {
+            "type": "string"
           }
         }
       },
-      "Problem": {
+      "BillingResponse1": {
+        "title": "BillingResponse",
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "taxCodeInvoicing": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PaymentServiceProviderResponse": {
+        "title": "PaymentServiceProviderResponse",
+        "type": "object",
+        "properties": {
+          "abiCode": {
+            "type": "string"
+          },
+          "businessRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterNumber": {
+            "type": "string"
+          },
+          "legalRegisterName": {
+            "type": "string"
+          },
+          "vatNumberGroup": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DataProtectionOfficerResponse": {
+        "title": "DataProtectionOfficerResponse",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pec": {
+            "type": "string"
+          }
+        }
+      },
+      "RootParentResponse": {
+        "title": "RootParentResponse",
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "Problem1": {
         "title": "Problem",
         "required": [
           "status",
@@ -2045,6 +2267,22 @@
         ],
         "type": "object",
         "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "status": {
+            "maximum": 599,
+            "minimum": 100,
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
           "detail": {
             "type": "string",
             "description": "Human-readable description of this specific problem."
@@ -2059,20 +2297,6 @@
             "items": {
               "$ref": "#/components/schemas/InvalidParam"
             }
-          },
-          "status": {
-            "type": "integer",
-            "description": "The HTTP status code.",
-            "format": "int32",
-            "example": 500
-          },
-          "title": {
-            "type": "string",
-            "description": "Short human-readable summary of the problem."
-          },
-          "type": {
-            "type": "string",
-            "description": "A URL to a page with more details regarding the problem."
           }
         },
         "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
@@ -2095,35 +2319,61 @@
           }
         }
       },
-      "DelegationRequest": {
-        "title": "DelegationRequest",
+      "InstitutionPut": {
+        "title": "InstitutionPut",
         "type": "object",
         "properties": {
-          "from": {
+          "geographicTaxonomyCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "digitalAddress": {
             "type": "string"
           },
-          "institutionFromName": {
+          "description": {
             "type": "string"
           },
-          "institutionFromRootName": {
+          "parentDescription": {
             "type": "string"
           },
-          "institutionToName": {
+          "address": {
             "type": "string"
           },
+          "zipCode": {
+            "type": "string"
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "onboardings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnboardingPut"
+            }
+          }
+        }
+      },
+      "OnboardingPut": {
+        "title": "OnboardingPut",
+        "required": [
+          "productId",
+          "vatNumber"
+        ],
+        "type": "object",
+        "properties": {
           "productId": {
             "type": "string"
           },
-          "to": {
+          "vatNumber": {
             "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AOO",
-              "EA",
-              "PT"
-            ]
           }
         }
       },
@@ -2139,333 +2389,115 @@
           }
         }
       },
-      "InstitutionResponse": {
-        "title": "InstitutionResponse",
+      "DelegationResponse": {
+        "title": "DelegationResponse",
+        "required": [
+          "brokerId",
+          "id",
+          "institutionId",
+          "institutionName",
+          "productId",
+          "type"
+        ],
         "type": "object",
         "properties": {
-          "address": {
-            "type": "string"
-          },
-          "aooParentCode": {
-            "type": "string"
-          },
-          "attributes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AttributesResponse"
-            }
-          },
-          "businessRegisterPlace": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "county": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataProtectionOfficer": {
-            "$ref": "#/components/schemas/DataProtectionOfficerResponse"
-          },
-          "delegation": {
-            "type": "boolean"
-          },
-          "description": {
-            "type": "string"
-          },
-          "digitalAddress": {
-            "type": "string"
-          },
-          "externalId": {
-            "type": "string"
-          },
-          "geographicTaxonomies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GeoTaxonomies"
-            }
-          },
           "id": {
             "type": "string"
           },
-          "imported": {
-            "type": "boolean"
-          },
-          "institutionType": {
+          "institutionId": {
             "type": "string"
           },
-          "isTest": {
-            "type": "boolean"
-          },
-          "istatCode": {
+          "institutionName": {
             "type": "string"
           },
-          "legalForm": {
+          "institutionRootName": {
             "type": "string"
           },
-          "logo": {
-            "type": "string"
+          "type": {
+            "type": "string",
+            "enum": [
+              "PT",
+              "AOO",
+              "EA"
+            ]
           },
-          "onboarding": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OnboardedProductResponse"
-            }
-          },
-          "origin": {
-            "type": "string"
-          },
-          "originId": {
-            "type": "string"
-          },
-          "paymentServiceProvider": {
-            "$ref": "#/components/schemas/PaymentServiceProviderResponse"
-          },
-          "rea": {
-            "type": "string"
-          },
-          "rootParent": {
-            "$ref": "#/components/schemas/RootParentResponse"
-          },
-          "shareCapital": {
-            "type": "string"
-          },
-          "subunitCode": {
-            "type": "string"
-          },
-          "subunitType": {
-            "type": "string"
-          },
-          "supportEmail": {
-            "type": "string"
-          },
-          "supportPhone": {
+          "productId": {
             "type": "string"
           },
           "taxCode": {
             "type": "string"
           },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "zipCode": {
-            "type": "string"
-          }
-        }
-      },
-      "AttributesResponse": {
-        "title": "AttributesResponse",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "origin": {
-            "type": "string"
-          }
-        }
-      },
-      "DataProtectionOfficerResponse": {
-        "title": "DataProtectionOfficerResponse",
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "pec": {
-            "type": "string"
-          }
-        }
-      },
-      "GeoTaxonomies": {
-        "title": "GeoTaxonomies",
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "desc": {
-            "type": "string"
-          }
-        }
-      },
-      "OnboardedProductResponse": {
-        "title": "OnboardedProductResponse",
-        "type": "object",
-        "properties": {
-          "billing": {
-            "$ref": "#/components/schemas/BillingResponse1"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
           "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GPU",
-              "GSP",
-              "PA",
-              "PG",
-              "PRV",
-              "PRV_PF",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCEC",
-              "SCP"
-            ]
-          },
-          "isAggregator": {
-            "type": "boolean"
-          },
-          "origin": {
             "type": "string"
           },
-          "originId": {
+          "brokerId": {
             "type": "string"
           },
-          "productId": {
+          "brokerTaxCode": {
+            "type": "string"
+          },
+          "brokerType": {
+            "type": "string"
+          },
+          "brokerName": {
             "type": "string"
           },
           "status": {
             "type": "string",
             "enum": [
               "ACTIVE",
-              "DELETED",
-              "PENDING",
-              "REJECTED",
-              "SUSPENDED",
-              "TOBEVALIDATED"
+              "DELETED"
             ]
           },
-          "tokenId": {
-            "type": "string"
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
-          }
-        }
-      },
-      "BillingResponse1": {
-        "title": "BillingResponse",
-        "type": "object",
-        "properties": {
-          "publicServices": {
-            "type": "boolean"
           },
-          "recipientCode": {
-            "type": "string"
-          },
-          "taxCodeInvoicing": {
-            "type": "string"
-          },
-          "vatNumber": {
-            "type": "string"
-          }
-        }
-      },
-      "PaymentServiceProviderResponse": {
-        "title": "PaymentServiceProviderResponse",
-        "type": "object",
-        "properties": {
-          "abiCode": {
-            "type": "string"
-          },
-          "businessRegisterNumber": {
-            "type": "string"
-          },
-          "legalRegisterName": {
-            "type": "string"
-          },
-          "legalRegisterNumber": {
-            "type": "string"
-          },
-          "vatNumberGroup": {
+          "isTest": {
             "type": "boolean"
           }
         }
       },
-      "RootParentResponse": {
-        "title": "RootParentResponse",
+      "DelegationRequest": {
+        "title": "DelegationRequest",
+        "required": [
+          "from",
+          "institutionFromName",
+          "institutionToName",
+          "productId",
+          "to",
+          "type"
+        ],
         "type": "object",
         "properties": {
-          "description": {
+          "from": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
-          }
-        }
-      },
-      "InstitutionPut": {
-        "title": "InstitutionPut",
-        "type": "object",
-        "properties": {
-          "address": {
+          "to": {
             "type": "string"
           },
-          "businessRegisterPlace": {
+          "institutionFromName": {
             "type": "string"
           },
-          "description": {
+          "institutionToName": {
             "type": "string"
           },
-          "digitalAddress": {
-            "type": "string"
-          },
-          "geographicTaxonomyCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "onboardings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OnboardingPut"
-            }
-          },
-          "parentDescription": {
-            "type": "string"
-          },
-          "rea": {
-            "type": "string"
-          },
-          "shareCapital": {
-            "type": "string"
-          },
-          "zipCode": {
-            "type": "string"
-          }
-        }
-      },
-      "OnboardingPut": {
-        "title": "OnboardingPut",
-        "type": "object",
-        "properties": {
           "productId": {
             "type": "string"
           },
-          "vatNumber": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PT",
+              "AOO",
+              "EA"
+            ]
+          },
+          "institutionFromRootName": {
             "type": "string"
           }
         }
@@ -2554,7 +2586,7 @@
         "type": "string",
         "example": "2022-03-10T12:15:50-04:00"
       },
-      "Problem1": {
+      "Problem2": {
         "type": "object",
         "properties": {
           "detail": {
@@ -2692,6 +2724,46 @@
             "type": "string"
           }
         }
+      },
+      "Problem": {
+        "title": "Problem",
+        "required": [
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Human-readable description of this specific problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI that describes where the problem occurred."
+          },
+          "invalidParams": {
+            "type": "array",
+            "description": "A list of invalid parameters details.",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            }
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code.",
+            "format": "int32",
+            "example": 500
+          },
+          "title": {
+            "type": "string",
+            "description": "Short human-readable summary of the problem."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URL to a page with more details regarding the problem."
+          }
+        },
+        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       },
       "RelationshipResult": {
         "title": "RelationshipResult",
@@ -3483,11 +3555,11 @@
         "title": "PageInfo",
         "type": "object",
         "properties": {
-          "pageNo": {
+          "pageSize": {
             "type": "integer",
             "format": "int64"
           },
-          "pageSize": {
+          "pageNo": {
             "type": "integer",
             "format": "int64"
           },
