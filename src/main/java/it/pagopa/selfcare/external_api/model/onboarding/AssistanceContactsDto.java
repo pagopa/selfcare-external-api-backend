@@ -3,7 +3,7 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 @Data
 public class AssistanceContactsDto {

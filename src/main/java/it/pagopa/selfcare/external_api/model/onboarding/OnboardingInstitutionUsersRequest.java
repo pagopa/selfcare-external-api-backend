@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.external_api.model.user.Person;
 import lombok.Data;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Optional;
 

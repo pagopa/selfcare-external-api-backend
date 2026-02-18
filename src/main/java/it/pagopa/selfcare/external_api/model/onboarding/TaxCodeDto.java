@@ -2,8 +2,8 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 
 
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data

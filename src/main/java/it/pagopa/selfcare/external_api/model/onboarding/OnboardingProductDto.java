@@ -6,9 +6,9 @@ import it.pagopa.selfcare.external_api.model.institution.InstitutionLocationData
 import it.pagopa.selfcare.external_api.model.user.UserDto;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data

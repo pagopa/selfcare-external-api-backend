@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import java.time.Instant;
 import java.util.EnumMap;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data

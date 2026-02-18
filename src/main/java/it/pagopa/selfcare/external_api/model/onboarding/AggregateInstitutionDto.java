@@ -3,7 +3,7 @@ package it.pagopa.selfcare.external_api.model.onboarding;
 import it.pagopa.selfcare.onboarding.common.Origin;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
