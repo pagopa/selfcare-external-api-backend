@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.pagopa.selfcare</groupId>
         <artifactId>selc-starter-parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.3.2-SNAPSHOT</version>
         <!-- lookup parent from repository -->
     </parent>
 
@@ -15,7 +15,7 @@
     <name>selc-external-api</name>
     <description>Microservice to manage Self Care External API</description>
     <properties>
-        <selc-commons.version>2.5.10</selc-commons.version>
+        <selc-commons.version>2.9.3</selc-commons.version>
         <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
         <commons-sdk-version>0.14.0</commons-sdk-version>
     </properties>
@@ -105,10 +105,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>it.pagopa.selfcare</groupId>
@@ -203,6 +199,7 @@
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
                                 <java8>true</java8>
+                                <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -238,6 +235,7 @@
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
                                 <java8>true</java8>
+                                <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -271,6 +269,7 @@
                                 <openApiNullable>false</openApiNullable>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
+                                <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -306,6 +305,7 @@
                                 <openApiNullable>false</openApiNullable>
                                 <skipDefaultInterface>false</skipDefaultInterface>
                                 <useTags>true</useTags>
+                                <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
