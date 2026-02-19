@@ -17,6 +17,10 @@ spring:
     baggage:
       remote-fields: X-Client-Ip
       correlation-fields: X-Client-Ip
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
 
 info:
   build:

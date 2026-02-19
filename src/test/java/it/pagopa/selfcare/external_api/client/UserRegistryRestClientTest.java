@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,12 +35,13 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = {
                 "logging.level.it.pagopa.selfcare.external_api.connector.rest=DEBUG",
                 "spring.application.name=selc-external-api-connector-rest",
-                "feign.okhttp.enabled=true"
+                "spring.cloud.openfeign.okhttp.enabled=true"
         }
 )
 @ContextConfiguration(
         initializers = UserRegistryRestClientTest.RandomPortInitializer.class,
         classes = {UserRegistryRestClientTestConfig.class, FeignErrorDecoder.class})
+@EnableFeignClients(clients = UserRegistryRestClient.class)
 class UserRegistryRestClientTest extends BaseFeignRestClientTest {
 
     @Order(1)
