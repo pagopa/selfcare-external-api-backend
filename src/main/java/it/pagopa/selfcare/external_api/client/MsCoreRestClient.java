@@ -1,5 +1,6 @@
 package it.pagopa.selfcare.external_api.client;
 
+import it.pagopa.selfcare.external_api.client.config.MsCoreRestClientConfig;
 import it.pagopa.selfcare.external_api.model.institution.*;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionSeed;
 import it.pagopa.selfcare.external_api.model.onboarding.OnboardingImportInstitutionRequest;
@@ -18,7 +19,7 @@ import java.util.EnumSet;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
 
-@FeignClient(name = "${rest-client.ms-core.serviceCode}", url = "${rest-client.ms-core.base-url}")
+@FeignClient(name = "${rest-client.ms-core.serviceCode}", url = "${rest-client.ms-core.base-url}", configuration = MsCoreRestClientConfig.class)
 public interface MsCoreRestClient {
     @PostMapping(value = "${rest-client.ms-core.createPnPgInstitution.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
