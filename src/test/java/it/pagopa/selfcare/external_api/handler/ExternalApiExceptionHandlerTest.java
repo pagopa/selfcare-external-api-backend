@@ -1,8 +1,8 @@
 package it.pagopa.selfcare.external_api.handler;
 
-import it.pagopa.selfcare.commons.web.model.Problem;
 import it.pagopa.selfcare.external_api.exception.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,7 @@ class ExternalApiExceptionHandlerTest {
         when(exceptionMock.getMessage())
                 .thenReturn(DETAIL_MESSAGE);
         //when
-        ResponseEntity<Problem> responseEntity = handler.handleInvalidRequestException(exceptionMock);
+        ResponseEntity<ProblemDetail> responseEntity = handler.handleInvalidRequestException(exceptionMock);
         //then
         assertNotNull(responseEntity);
         assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
@@ -43,7 +43,7 @@ class ExternalApiExceptionHandlerTest {
         when(exceptionMock.getMessage())
                 .thenReturn(DETAIL_MESSAGE);
         //when
-        ResponseEntity<Problem> responseEntity = handler.handleNotFoundException(exceptionMock);
+        ResponseEntity<ProblemDetail> responseEntity = handler.handleNotFoundException(exceptionMock);
         //then
         assertNotNull(responseEntity);
         assertEquals(NOT_FOUND, responseEntity.getStatusCode());
@@ -59,7 +59,7 @@ class ExternalApiExceptionHandlerTest {
         when(mockException.getMessage())
                 .thenReturn(DETAIL_MESSAGE);
         // when
-        ResponseEntity<Problem> responseEntity = handler.handleUpdateNotAllowedException(mockException);
+        ResponseEntity<ProblemDetail> responseEntity = handler.handleUpdateNotAllowedException(mockException);
         // then
         assertNotNull(responseEntity);
         assertEquals(CONFLICT, responseEntity.getStatusCode());
@@ -75,7 +75,7 @@ class ExternalApiExceptionHandlerTest {
         when(mockException.getMessage())
                 .thenReturn(DETAIL_MESSAGE);
         // when
-        ResponseEntity<Problem> responseEntity = handler.handleOnboardingNotAllowedException(mockException);
+        ResponseEntity<ProblemDetail> responseEntity = handler.handleOnboardingNotAllowedException(mockException);
         // then
         assertNotNull(responseEntity);
         assertEquals(FORBIDDEN, responseEntity.getStatusCode());
@@ -91,7 +91,7 @@ class ExternalApiExceptionHandlerTest {
         when(mockException.getMessage())
                 .thenReturn(DETAIL_MESSAGE);
         // when
-        ResponseEntity<Problem> responseEntity = handler.handleInstitutionAlreadyOnboardedException(mockException);
+        ResponseEntity<ProblemDetail> responseEntity = handler.handleInstitutionAlreadyOnboardedException(mockException);
         // then
         assertNotNull(responseEntity);
         assertEquals(CONFLICT, responseEntity.getStatusCode());
