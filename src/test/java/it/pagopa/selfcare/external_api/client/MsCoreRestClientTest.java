@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.commons.httpclient.HttpClientConfiguration;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         })
 @ContextConfiguration(
         initializers = MsCoreRestClientTest.RandomPortInitializer.class,
-        classes = {MsCoreRestClientTestConfig.class, HttpClientConfiguration.class})
+        classes = {MsCoreRestClientTestConfig.class})
 class MsCoreRestClientTest extends BaseFeignRestClientTest {
     @Order(1)
     @RegisterExtension

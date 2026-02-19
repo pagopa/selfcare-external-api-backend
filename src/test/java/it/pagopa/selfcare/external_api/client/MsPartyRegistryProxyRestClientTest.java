@@ -6,14 +6,12 @@ import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.client.config.MsPartyRegistryProxyRestClientTestConfig;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
-import it.pagopa.selfcare.external_api.model.institution.InstitutionResourceInfo;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.commons.httpclient.HttpClientConfiguration;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         })
 @ContextConfiguration(
         initializers = MsPartyRegistryProxyRestClientTest.RandomPortInitializer.class,
-        classes = {MsPartyRegistryProxyRestClientTestConfig.class, HttpClientConfiguration.class})
+        classes = {MsPartyRegistryProxyRestClientTestConfig.class})
 class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
 
         @Order(1)
