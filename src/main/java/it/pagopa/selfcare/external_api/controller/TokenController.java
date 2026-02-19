@@ -1,8 +1,7 @@
 package it.pagopa.selfcare.external_api.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.pagopa.selfcare.external_api.mapper.TokenResourceMapper;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
@@ -22,7 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/tokens", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "Token")
+@Tag(name = "Token")
 public class TokenController {
 
     private final TokenService tokenService;
@@ -49,16 +48,16 @@ public class TokenController {
     @Tag(name = "Token")
     @Tag(name = "support")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "${swagger.external_api.api.tokens.findFromProduct}", notes = "${swagger.external_api.api.tokens.findFromProduct}", nickname = "getTokensFromProductUsingGET")
+    @Operation(summary = "${swagger.external_api.api.tokens.findFromProduct}", description = "${swagger.external_api.api.tokens.findFromProduct}", operationId = "#getTokensFromProductUsingGET")
     @GetMapping(value = "/products/{productId}")
-    public ResponseEntity<TokensResource> getTokensFromProductUsingGET(@ApiParam("${swagger.external_api.api.tokens.productId}")
-                                                          @PathVariable(value = "productId") String productId,
-                                                          @ApiParam("${swagger.external_api.page.number}")
-                                                          @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                          @ApiParam("${swagger.external_api.page.size}")
-                                                          @RequestParam(name = "size", defaultValue = "100") Integer size,
-                                                          @ApiParam("${swagger.external_api.api.tokens.status}")
-                                                          @RequestParam(name = "status", required = false) String status) {
+    public ResponseEntity<TokensResource> getTokensFromProductUsingGET(@Parameter(description = "${swagger.external_api.api.tokens.productId}")
+                                                                       @PathVariable(value = "productId") String productId,
+                                                                       @Parameter(description = "${swagger.external_api.page.number}")
+                                                                       @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                       @Parameter(description = "${swagger.external_api.page.size}")
+                                                                       @RequestParam(name = "size", defaultValue = "100") Integer size,
+                                                                       @Parameter(description = "${swagger.external_api.api.tokens.status}")
+                                                                       @RequestParam(name = "status", required = false) String status) {
         log.trace("findFromProduct start");
         log.debug("findFromProduct productId = {}", Encode.forJava(productId));
         List<TokenOnboardedUsers> tokens = tokenService.findByProductId(Encode.forJava(productId), page, size, status);

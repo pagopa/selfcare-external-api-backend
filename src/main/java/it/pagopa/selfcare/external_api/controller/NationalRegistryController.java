@@ -1,8 +1,6 @@
 package it.pagopa.selfcare.external_api.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,17 +12,16 @@ import it.pagopa.selfcare.external_api.model.national_registries.LegalVerificati
 import it.pagopa.selfcare.external_api.model.national_registries.LegalVerificationResource;
 import it.pagopa.selfcare.external_api.model.national_registries.VerifyRequestDto;
 import it.pagopa.selfcare.external_api.service.InstitutionService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.owasp.encoder.Encode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
 @Slf4j
 @RestController
-@Api(tags = "Proxy")
+@Tag(name = "Proxy")
 @RequestMapping(value = "/v2/national-registries", produces = MediaType.APPLICATION_JSON_VALUE)
 public class NationalRegistryController {
     private final InstitutionService institutionService;
@@ -39,9 +36,9 @@ public class NationalRegistryController {
     @ResponseStatus(HttpStatus.OK)
     @Tag(name = "NationalRegistry")
     @Tag(name = "support-pnpg")
-    @ApiOperation(value = "", notes = "${swagger.external-api.national-registries.api.verifyLegal}", nickname = "verifyLegalByPOST")
+    @Operation(summary = "verifyLegal", description = "${swagger.external-api.national-registries.api.verifyLegal}", operationId = "#verifyLegalByPOST")
         @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = LegalVerificationResource.class)), mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LegalVerificationResource.class), mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = Problem.class), mediaType = "application/problem+json")),

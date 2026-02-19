@@ -1,8 +1,7 @@
 package it.pagopa.selfcare.external_api.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +17,8 @@ import it.pagopa.selfcare.external_api.model.onboarding.*;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipResult;
 import it.pagopa.selfcare.external_api.service.OnboardingService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping(value = "/v2/onboarding", produces = APPLICATION_JSON_VALUE)
-@Api(tags = "Onboarding")
+@Tag(name = "Onboarding")
 public class OnboardingV2Controller {
 
   private final OnboardingService onboardingService;
@@ -60,7 +59,7 @@ public class OnboardingV2Controller {
       })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.subunit}")
+  @Operation(summary = "onboarding", description = "${swagger.onboarding.institutions.api.onboarding.subunit}")
   public void onboarding(@RequestBody @Valid OnboardingProductDto request) {
     log.trace("onboarding start");
     log.debug("onboarding request = {}", request);
@@ -79,7 +78,7 @@ public class OnboardingV2Controller {
       })
   @PostMapping(value = "/import")
   @ResponseStatus(HttpStatus.CREATED)
-  @ApiOperation(value = "", notes = "${swagger.onboarding.institutions.api.onboarding.import}")
+  @Operation(summary = "onboardingImport", description = "${swagger.onboarding.institutions.api.onboarding.import}")
   public void onboardingImport(@RequestBody @Valid OnboardingImportProductDto request) {
     log.trace("onboardingImport start");
     log.debug("onboardingImport request = {}", request);
@@ -109,11 +108,11 @@ public class OnboardingV2Controller {
       })
   @PostMapping(value = "/{externalInstitutionId}")
   @ResponseStatus(HttpStatus.CREATED)
-  @ApiOperation(value = "", notes = "${swagger.external_api.onboarding.api.onboardingOldContract}")
+  @Operation(summary = "oldContractOnboarding", description = "${swagger.external_api.onboarding.api.onboardingOldContract}")
   public void oldContractOnboarding(
-      @ApiParam("${swagger.external_api.institutions.model.externalId}")
-          @PathVariable("externalInstitutionId")
-          String externalInstitutionId,
+      @Parameter(description = "${swagger.external_api.institutions.model.externalId}")
+      @PathVariable("externalInstitutionId")
+      String externalInstitutionId,
       @RequestBody @Valid OnboardingImportDto request) {
     log.trace("oldContractonboarding start");
     log.debug(
@@ -139,9 +138,9 @@ public class OnboardingV2Controller {
   @Tag(name = "support")
   @Tag(name = "support-pnpg")
   @Tag(name = "Onboarding")
-  @ApiOperation(
-      value = "${swagger.mscore.onboarding.users}",
-      notes = "${swagger.mscore.onboarding.users}")
+  @Operation(
+      summary = "${swagger.mscore.onboarding.users}",
+      description = "${swagger.mscore.onboarding.users}")
   @ApiResponses(
       value = {
         @ApiResponse(
@@ -205,9 +204,9 @@ public class OnboardingV2Controller {
       })
   @PostMapping(value = "/aggregation/{taxCode}")
   @ResponseStatus(HttpStatus.CREATED)
-  @ApiOperation(
-      value = "",
-      notes = "${swagger.onboarding.institutions.api.onboarding.aggregate.import}", nickname = "onboardingAggregateImport")
+  @Operation(
+      summary = "onboardingAggregateImport",
+      description = "${swagger.onboarding.institutions.api.onboarding.aggregate.import}", operationId = "#onboardingAggregateImport")
   public void onboardingAggregateImport(
       @PathVariable("taxCode") String taxCode,
       @RequestBody @Valid OnboardingAggregatorImportDto request) {
