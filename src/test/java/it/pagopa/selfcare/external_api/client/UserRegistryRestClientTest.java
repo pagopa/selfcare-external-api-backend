@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.client.config.UserRegistryRestClientTestConfig;
+import it.pagopa.selfcare.external_api.client.decoder.FeignErrorDecoder;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.user.MutableUserFieldsDto;
 import it.pagopa.selfcare.external_api.model.user.SaveUserDto;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 )
 @ContextConfiguration(
         initializers = UserRegistryRestClientTest.RandomPortInitializer.class,
-        classes = {UserRegistryRestClientTestConfig.class})
+        classes = {UserRegistryRestClientTestConfig.class, FeignErrorDecoder.class})
 class UserRegistryRestClientTest extends BaseFeignRestClientTest {
 
     @Order(1)

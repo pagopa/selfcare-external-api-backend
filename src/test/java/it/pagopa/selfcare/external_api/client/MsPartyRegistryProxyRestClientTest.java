@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.client.config.MsPartyRegistryProxyRestClientTestConfig;
+import it.pagopa.selfcare.external_api.client.decoder.FeignErrorDecoder;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionResource;
 import lombok.SneakyThrows;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         })
 @ContextConfiguration(
         initializers = MsPartyRegistryProxyRestClientTest.RandomPortInitializer.class,
-        classes = {MsPartyRegistryProxyRestClientTestConfig.class})
+        classes = {MsPartyRegistryProxyRestClientTestConfig.class, FeignErrorDecoder.class})
 class MsPartyRegistryProxyRestClientTest extends BaseFeignRestClientTest {
 
         @Order(1)

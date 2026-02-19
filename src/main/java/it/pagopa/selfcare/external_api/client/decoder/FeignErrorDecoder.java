@@ -6,9 +6,11 @@ import feign.codec.ErrorDecoder;
 import it.pagopa.selfcare.external_api.exception.InstitutionDoesNotExistException;
 import it.pagopa.selfcare.external_api.exception.InvalidRequestException;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class FeignErrorDecoder extends ErrorDecoder.Default {
 
     @Override
