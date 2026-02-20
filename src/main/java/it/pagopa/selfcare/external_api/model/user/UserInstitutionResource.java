@@ -14,7 +14,7 @@ public class UserInstitutionResource {
     @Schema(description = "${swagger.external_api.userInstitution.model.id}")
     private String id;
 
-    @Schema(description = "${swagger.external_api.user.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.id}")
     private String userId;
     @Schema(description = "${swagger.external_api.institutions.model.id}")
     private String institutionId;

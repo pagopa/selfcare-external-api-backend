@@ -10,18 +10,18 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class DpoDataDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.address}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.address}")
     @JsonProperty(required = true)
     @NotBlank
     private String address;
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.pec}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.pec}")
     @JsonProperty(required = true)
     @NotBlank
     @Email
     private String pec;
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.email}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.email}")
     @JsonProperty(required = true)
     @NotBlank
     @Email

@@ -15,17 +15,17 @@ import java.util.List;
 @Data
 public class OnboardingDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.users}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.users}")
     @NotEmpty
     @Valid
     private List<UserDto> users;
 
-    @Schema(description = "${swagger.external_api.institutions.model.billingData}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.billingData}")
     @NotNull
     @Valid
     private BillingDataDto billingData;
 
-    @Schema(description = "${swagger.external_api.institutions.model.institutionType}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.institutionType}")
     @NotNull
     private InstitutionType institutionType;
 
@@ -39,7 +39,7 @@ public class OnboardingDto {
     @Valid
     private PspDataDto pspData;
 
-    @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomy}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomy}")
     @NotNull
     @Valid
     private List<GeographicTaxonomyDto> geographicTaxonomies;

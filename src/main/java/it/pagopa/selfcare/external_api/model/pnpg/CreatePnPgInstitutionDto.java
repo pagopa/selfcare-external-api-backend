@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class CreatePnPgInstitutionDto {
-    @Schema(description = "${swagger.external_api.institutions.model.externalId}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.externalId}")
     @JsonProperty(required = true)
     @NotBlank
     private String externalId;

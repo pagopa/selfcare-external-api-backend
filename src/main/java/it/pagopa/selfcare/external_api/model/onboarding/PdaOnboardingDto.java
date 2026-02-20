@@ -14,28 +14,28 @@ import java.util.List;
 @Data
 public class PdaOnboardingDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.users}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.users}")
     @NotEmpty
     @Valid
     private List<UserDto> users;
 
-    @Schema(description = "${swagger.external_api.institutions.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.name}")
     @JsonProperty(required = true)
     @NotBlank
     private String businessName;
 
-    @Schema(description = "${swagger.external_api.institutions.model.taxCode}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.taxCode}")
     @JsonProperty(required = true)
     @NotBlank
     private String taxCode;
 
-    @Schema(description = "${swagger.external_api.product.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.product.model.id}")
     @NotNull
     private String productId;
 
-    @Schema(description = "${swagger.external_api.institutions.model.vatNumber}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.vatNumber}")
     private String vatNumber;
 
-    @Schema(description = "${swagger.external_api.institutions.model.recipientCode}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.recipientCode}")
     private String recipientCode;
 }

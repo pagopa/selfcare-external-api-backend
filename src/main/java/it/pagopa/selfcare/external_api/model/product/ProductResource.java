@@ -11,33 +11,33 @@ import java.util.EnumMap;
 
 @Data
 public class ProductResource {
-  @Schema(description = "${swagger.external_api.products.model.id}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.id}")
   @NotBlank
   private String id;
 
-  @Schema(description = "${swagger.external_api.products.model.title}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.title}")
   @NotBlank
   private String title;
 
-  @Schema(description = "${swagger.external_api.products.model.contractTemplatePath}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.contractTemplatePath}")
   @NotBlank
   private String contractTemplatePath;
 
-  @Schema(description = "${swagger.external_api.products.model.contractTemplateVersion}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.contractTemplateVersion}")
   @NotBlank
   private String contractTemplateVersion;
 
   @Schema(description = "${swagger.external_api.products.model.createdAt}")
   private Instant createdAt;
 
-  @Schema(description = "${swagger.external_api.products.model.description}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.description}")
   @NotBlank
   private String description;
 
   @Schema(description = "${swagger.external_api.products.model.urlPublic}")
   private String urlPublic;
 
-  @Schema(description = "${swagger.external_api.products.model.urlBO}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.urlBO}")
   @NotBlank
   private String urlBO;
 
@@ -56,7 +56,7 @@ public class ProductResource {
   @Schema(description = "${swagger.external_api.products.model.parentId}")
   private String parentId;
 
-  @Schema(description = "${swagger.external_api.products.model.roleMappings}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.roleMappings}")
   @NotEmpty
   private EnumMap<PartyRole, it.pagopa.selfcare.product.entity.ProductRoleInfo> roleMappings;
 

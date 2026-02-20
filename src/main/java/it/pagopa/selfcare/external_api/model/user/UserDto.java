@@ -12,27 +12,27 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class UserDto {
 
-    @Schema(description = "${swagger.external_api.user.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.name}")
     @JsonProperty(required = true)
     @NotBlank
     private String name;
 
-    @Schema(description = "${swagger.external_api.user.model.surname}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.surname}")
     @JsonProperty(required = true)
     @NotBlank
     private String surname;
 
-    @Schema(description = "${swagger.external_api.user.model.fiscalCode}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.fiscalCode}")
     @JsonProperty(required = true)
     @NotBlank
     private String taxCode;
 
-    @Schema(description = "${swagger.external_api.user.model.role}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.role}")
     @JsonProperty(required = true)
     @NotNull
     private PartyRole role;
 
-    @Schema(description = "${swagger.external_api.user.model.email}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.email}")
     @JsonProperty(required = true)
     @NotNull
     @Email

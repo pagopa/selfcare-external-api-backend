@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class SearchUserDto {
 
-    @Schema(description = "${swagger.external_api.user.model.fiscalCode}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.fiscalCode}")
     @JsonProperty(required = true)
     @NotBlank
     private String fiscalCode;

@@ -24,15 +24,15 @@ import java.util.UUID;
 @Data
 public class UserResource {
 
-    @Schema(description = "${swagger.external_api.user.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.id}")
     @NotNull
     private UUID id;
 
-    @Schema(description = "${swagger.external_api.user.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.name}")
     @NotBlank
     private String name;
 
-    @Schema(description = "${swagger.external_api.user.model.surname}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.surname}")
     @NotBlank
     private String surname;
 

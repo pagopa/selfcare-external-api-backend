@@ -11,19 +11,19 @@ import java.time.OffsetDateTime;
 @Data
 public class ImportContractDto {
 
-    @Schema(description = "${swagger.external_api.importContract.model.fileName}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.fileName}")
     @NotBlank
     private String fileName;
 
-    @Schema(description = "${swagger.external_api.importContract.model.filePath}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.filePath}")
     @NotBlank
     private String filePath;
 
-    @Schema(description = "${swagger.external_api.importContract.model.contractType}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.contractType}")
     @NotBlank
     private String contractType;
 
-    @Schema(description = "${swagger.external_api.institutions.model.onboardingDate}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.onboardingDate}")
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime onboardingDate;

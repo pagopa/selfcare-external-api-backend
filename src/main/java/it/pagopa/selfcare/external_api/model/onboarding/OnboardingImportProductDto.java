@@ -24,7 +24,7 @@ public class OnboardingImportProductDto {
   @Schema(description = "${swagger.external_api.institutions.model.locationData}")
   private InstitutionLocationDataDto institutionLocationData;
 
-  @Schema(description = "${swagger.external_api.institutions.model.institutionType}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.institutionType}")
   @NotNull
   private InstitutionType institutionType;
 
@@ -41,7 +41,7 @@ public class OnboardingImportProductDto {
   @Valid
   private PspDataDto pspData;
 
-  @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomies}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomies}")
   @NotNull
   @Valid
   private List<GeographicTaxonomyDto> geographicTaxonomies;
@@ -54,7 +54,7 @@ public class OnboardingImportProductDto {
   @Valid
   private AssistanceContactsDto assistanceContacts;
 
-  @Schema(description = "${swagger.external_api.product.model.id}", required = true)
+  @Schema(description = "${swagger.external_api.product.model.id}")
   @NotNull
   private String productId;
 

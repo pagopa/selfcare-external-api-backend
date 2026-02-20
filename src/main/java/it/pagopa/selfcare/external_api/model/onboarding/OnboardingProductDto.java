@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class OnboardingProductDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.users}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.users}")
     @NotEmpty
     @Valid
     private List<UserDto> users;
@@ -26,7 +26,7 @@ public class OnboardingProductDto {
     @Schema(description = "${swagger.external_api.institutions.model.locationData}")
     private InstitutionLocationDataDto institutionLocationData;
 
-    @Schema(description = "${swagger.external_api.institutions.model.institutionType}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.institutionType}")
     @NotNull
     private InstitutionType institutionType;
 
@@ -47,7 +47,7 @@ public class OnboardingProductDto {
     @Valid
     private GPUData gpuData;
 
-    @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomies}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.geographicTaxonomies}")
     @NotNull
     @Valid
     private List<GeographicTaxonomyDto> geographicTaxonomies;
@@ -60,7 +60,7 @@ public class OnboardingProductDto {
     @Valid
     private AssistanceContactsDto assistanceContacts;
 
-    @Schema(description = "${swagger.external_api.product.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.product.model.id}")
     @NotNull
     private String productId;
 

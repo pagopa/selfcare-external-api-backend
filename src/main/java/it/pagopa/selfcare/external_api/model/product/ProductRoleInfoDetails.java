@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ProductRoleInfoDetails {
 
-    @Schema(description = "${swagger.external_api.product-role-info.model.multiroleAllowed}", required = true)
+    @Schema(description = "${swagger.external_api.product-role-info.model.multiroleAllowed}")
     @JsonProperty(required = true)
     @NotNull
     private Boolean multiroleAllowed;
 
-    @Schema(description = "${swagger.external_api.product-role-info.model.roles}", required = true)
+    @Schema(description = "${swagger.external_api.product-role-info.model.roles}")
     @JsonProperty(required = true)
     @NotEmpty
     @Valid

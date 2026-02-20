@@ -9,17 +9,17 @@ import jakarta.validation.constraints.NotBlank;
 @Data
 public class BillingDataDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.name}")
     @JsonProperty(required = true)
     @NotBlank
     private String businessName;
 
-    @Schema(description = "${swagger.external_api.institutions.model.address}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.address}")
     @JsonProperty(required = true)
     @NotBlank
     private String registeredOffice;
 
-    @Schema(description = "${swagger.external_api.institutions.model.digitalAddress}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.digitalAddress}")
     @JsonProperty(required = true)
     @NotBlank
     private String digitalAddress;

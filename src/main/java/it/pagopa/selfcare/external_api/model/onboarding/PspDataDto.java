@@ -12,27 +12,27 @@ import java.util.List;
 @Data
 public class PspDataDto {
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.businessRegisterNumber}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.businessRegisterNumber}")
   @JsonProperty(required = true)
   @NotBlank
   private String businessRegisterNumber;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.legalRegisterName}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.legalRegisterName}")
   @JsonProperty(required = true)
   @NotBlank
   private String legalRegisterName;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.legalRegisterNumber}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.legalRegisterNumber}")
   @JsonProperty(required = true)
   @NotBlank
   private String legalRegisterNumber;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.abiCode}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.abiCode}")
   @JsonProperty(required = true)
   @NotBlank
   private String abiCode;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}")
   @JsonProperty(required = true)
   @NotNull
   private Boolean vatNumberGroup;
@@ -46,7 +46,7 @@ public class PspDataDto {
   @Schema(description = "${swagger.external_api.institutions.model.pspData.providerNames}")
   private List<String> providerNames;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData}", required = true)
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData}")
   @NotNull
   @Valid
   private DpoDataDto dpoData;

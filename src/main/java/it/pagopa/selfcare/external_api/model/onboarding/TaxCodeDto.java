@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class TaxCodeDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.aggregates.taxCode}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.aggregates.taxCode}")
     @NotEmpty
     @Valid
     String taxCode;

@@ -13,17 +13,17 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class ProductRole {
 
-    @Schema(description = "${swagger.external_api.product-role.model.code}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.code}")
     @JsonProperty(required = true)
     @NotBlank
     private String code;
 
-    @Schema(description = "${swagger.external_api.product-role.model.label}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.label}")
     @JsonProperty(required = true)
     @NotBlank
     private String label;
 
-    @Schema(description = "${swagger.external_api.product-role.model.description}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.description}")
     @JsonProperty(required = true)
     @NotBlank
     private String description;

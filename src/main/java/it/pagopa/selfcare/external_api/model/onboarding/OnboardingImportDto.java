@@ -15,7 +15,7 @@ public class OnboardingImportDto {
     @Valid
     private List<UserDto> users;
 
-    @Schema(description = "${swagger.external_api.institutions.model.importContract}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.importContract}")
     @NotNull
     @Valid
     private ImportContractDto importContract;

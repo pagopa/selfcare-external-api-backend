@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class InstitutionResource {
 
-    @Schema(description = "${swagger.external_api.institutions.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.id}")
     @NotNull
     private UUID id;
 
@@ -22,7 +22,7 @@ public class InstitutionResource {
     @Schema(description = "${swagger.external_api.institutions.model.externalId}")
     private String externalId;
 
-    @Schema(description = "${swagger.external_api.institutions.model.originId}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.originId}")
     @NotBlank
     private String originId;
 
@@ -47,7 +47,7 @@ public class InstitutionResource {
     @Schema(description = "${swagger.external_api.institutions.model.taxCodeInvoicing}")
     private String taxCodeInvoicing;
 
-    @Schema(description = "${swagger.external_api.institutions.model.origin}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.origin}")
     @NotBlank
     private String origin;
 
