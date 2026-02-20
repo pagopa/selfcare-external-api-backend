@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.model.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,17 +13,17 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class ProductRole {
 
-    @ApiModelProperty(value = "${swagger.external_api.product-role.model.code}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.code}", required = true)
     @JsonProperty(required = true)
     @NotBlank
     private String code;
 
-    @ApiModelProperty(value = "${swagger.external_api.product-role.model.label}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.label}", required = true)
     @JsonProperty(required = true)
     @NotBlank
     private String label;
 
-    @ApiModelProperty(value = "${swagger.external_api.product-role.model.description}", required = true)
+    @Schema(description = "${swagger.external_api.product-role.model.description}", required = true)
     @JsonProperty(required = true)
     @NotBlank
     private String description;

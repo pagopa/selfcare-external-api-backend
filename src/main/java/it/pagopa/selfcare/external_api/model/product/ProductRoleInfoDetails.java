@@ -1,7 +1,7 @@
 package it.pagopa.selfcare.external_api.model.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ProductRoleInfoDetails {
 
-    @ApiModelProperty(value = "${swagger.external_api.product-role-info.model.multiroleAllowed}", required = true)
+    @Schema(description = "${swagger.external_api.product-role-info.model.multiroleAllowed}", required = true)
     @JsonProperty(required = true)
     @NotNull
     private Boolean multiroleAllowed;
 
-    @ApiModelProperty(value = "${swagger.external_api.product-role-info.model.roles}", required = true)
+    @Schema(description = "${swagger.external_api.product-role-info.model.roles}", required = true)
     @JsonProperty(required = true)
     @NotEmpty
     @Valid

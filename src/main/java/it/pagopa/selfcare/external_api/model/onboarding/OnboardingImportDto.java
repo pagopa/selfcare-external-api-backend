@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.external_api.model.user.UserDto;
 import lombok.Data;
 
@@ -11,11 +11,11 @@ import java.util.List;
 @Data
 public class OnboardingImportDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.users}")
+    @Schema(description = "${swagger.external_api.institutions.model.users}")
     @Valid
     private List<UserDto> users;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.importContract}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.importContract}", required = true)
     @NotNull
     @Valid
     private ImportContractDto importContract;

@@ -12,7 +12,7 @@
 
 package it.pagopa.selfcare.external_api.model.user;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.commons.base.security.PartyRole;
 import lombok.Data;
 
@@ -24,31 +24,31 @@ import java.util.UUID;
 @Data
 public class UserResource {
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.id}", required = true)
     @NotNull
     private UUID id;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.name}", required = true)
     @NotBlank
     private String name;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.surname}", required = true)
+    @Schema(description = "${swagger.external_api.user.model.surname}", required = true)
     @NotBlank
     private String surname;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.institutionalEmail}")
+    @Schema(description = "${swagger.external_api.user.model.institutionalEmail}")
     private String email;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.lastActiveOnboardingUserEmail}")
+    @Schema(description = "${swagger.external_api.user.model.lastActiveOnboardingUserEmail}")
     private String lastActiveOnboardingUserEmail;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.fiscalCode}")
+    @Schema(description = "${swagger.external_api.user.model.fiscalCode}")
     private String fiscalCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.productRoles}")
+    @Schema(description = "${swagger.external_api.user.model.productRoles}")
     private List<String> roles;
 
-    @ApiModelProperty(value = "${swagger.external_api.user.model.role}")
+    @Schema(description = "${swagger.external_api.user.model.role}")
     private PartyRole role;
 
 }

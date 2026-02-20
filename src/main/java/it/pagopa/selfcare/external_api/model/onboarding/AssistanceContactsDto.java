@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import jakarta.validation.constraints.Email;
@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Email;
 @Data
 public class AssistanceContactsDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.assistance.supportEmail}")
+    @Schema(description = "${swagger.external_api.institutions.model.assistance.supportEmail}")
     @Email
     private String supportEmail;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.assistance.supportPhone}")
+    @Schema(description = "${swagger.external_api.institutions.model.assistance.supportPhone}")
     private String supportPhone;
 
 }
