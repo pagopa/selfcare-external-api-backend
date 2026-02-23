@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.external_api.mapper.*;
 import it.pagopa.selfcare.external_api.service.*;
+import it.pagopa.selfcare.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ class SwaggerConfigTest {
 
     @MockBean
     private TokenService tokenService;
+
+    @MockBean
+    private ProductService productService;
 
     @Autowired
     WebApplicationContext context;
