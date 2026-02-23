@@ -16,6 +16,7 @@ import it.pagopa.selfcare.external_api.service.InstitutionService;
 import it.pagopa.selfcare.external_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class InstitutionV2Controller {
                                               @Parameter(description = "${swagger.external_api.products.model.id}")
                                               @RequestParam(value = "productId", required = false) String productId){
         log.trace("getContract start");
-        log.debug("getContract institutionId = {}, productId = {}", institutionId, productId);
+        log.debug("getContract institutionId = {}, productId = {}", Encode.forJava(institutionId), Encode.forJava(productId));
         ResourceResponse contract = contractService.getContractV2(institutionId, productId);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, APPLICATION_OCTET_STREAM_VALUE);

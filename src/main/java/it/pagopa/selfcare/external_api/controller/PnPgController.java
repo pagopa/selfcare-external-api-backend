@@ -9,6 +9,7 @@ import it.pagopa.selfcare.external_api.model.pnpg.PnPgInstitutionIdResource;
 import it.pagopa.selfcare.external_api.service.InstitutionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.owasp.encoder.Encode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class PnPgController {
                                  @Valid
                                  CreatePnPgInstitutionDto createPnPgInstitutionDto) {
         log.trace("addInstitution start");
-        log.debug("addInstitution searchInstitutionDto = {}", createPnPgInstitutionDto);
+        log.debug("addInstitution searchInstitutionDto = {}", Encode.forJava(createPnPgInstitutionDto.toString()));
         String institutionId = institutionService.addInstitution(PnPgMapper.fromDto(createPnPgInstitutionDto));
         PnPgInstitutionIdResource id = new PnPgInstitutionIdResource(institutionId);
         log.debug("addInstitution result = {}", id);
