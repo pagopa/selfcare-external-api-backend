@@ -32,7 +32,7 @@ public class PspDataDto {
   @NotBlank
   private String abiCode;
 
-  @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}")
+  @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}", example = "false")
   @JsonProperty(required = true)
   @NotNull
   private Boolean vatNumberGroup;

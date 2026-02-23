@@ -39,7 +39,7 @@ public class BillingDataDto {
     @Schema(description = "${swagger.external_api.institutions.model.recipientCode}")
     private String recipientCode;
 
-    @Schema(description = "${swagger.external_api.institutions.model.publicServices}")
+    @Schema(description = "${swagger.external_api.institutions.model.publicServices}", example = "false")
     private Boolean publicServices;
 
 }

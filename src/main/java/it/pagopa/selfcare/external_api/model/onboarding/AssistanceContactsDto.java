@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Email;
 @Data
 public class AssistanceContactsDto {
 
-    @Schema(description = "${swagger.external_api.institutions.model.assistance.supportEmail}")
+    @Schema(description = "${swagger.external_api.institutions.model.assistance.supportEmail}", format = "email", example = "email@example.com")
     @Email
     private String supportEmail;
 

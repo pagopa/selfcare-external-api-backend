@@ -5,11 +5,12 @@ import it.pagopa.selfcare.external_api.model.institution.GPUData;
 import it.pagopa.selfcare.external_api.model.institution.InstitutionLocationDataDto;
 import it.pagopa.selfcare.external_api.model.user.UserDto;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
-import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class OnboardingProductDto {
@@ -76,7 +77,7 @@ public class OnboardingProductDto {
     @Schema(description = "${swagger.external_api.institutions.model.additionalInformations}")
     private AdditionalInformationsDto additionalInformations;
 
-    @Schema(description = "${swagger.external_api.institutions.model.isAggregator}")
+    @Schema(description = "${swagger.external_api.institutions.model.isAggregator}", example = "false")
     private Boolean isAggregator;
 
     @Schema(description = "${swagger.external_api.institutions.model.istatCode}")

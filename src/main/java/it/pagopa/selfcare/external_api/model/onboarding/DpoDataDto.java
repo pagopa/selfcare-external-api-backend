@@ -15,13 +15,13 @@ public class DpoDataDto {
     @NotBlank
     private String address;
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.pec}")
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.pec}", format = "email", example = "email@example.com")
     @JsonProperty(required = true)
     @NotBlank
     @Email
     private String pec;
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.email}")
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.email}", format = "email", example = "email@example.com")
     @JsonProperty(required = true)
     @NotBlank
     @Email

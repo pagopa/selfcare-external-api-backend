@@ -32,7 +32,7 @@ public class UserDto {
     @NotNull
     private PartyRole role;
 
-    @Schema(description = "${swagger.external_api.user.model.email}")
+    @Schema(description = "${swagger.external_api.user.model.email}", format = "email", example = "email@example.com")
     @JsonProperty(required = true)
     @NotNull
     @Email

@@ -1,12 +1,11 @@
 package it.pagopa.selfcare.external_api.model.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-;
 
 @Data
 public class UserInstitutionResource {
@@ -15,6 +14,7 @@ public class UserInstitutionResource {
     private String id;
 
     @Schema(description = "${swagger.external_api.user.model.id}")
+    @NotNull
     private String userId;
     @Schema(description = "${swagger.external_api.institutions.model.id}")
     private String institutionId;

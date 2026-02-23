@@ -18,7 +18,7 @@ public class PspDataResource {
     @Schema(description = "${swagger.external_api.institutions.model.pspData.abiCode}")
     private String abiCode;
 
-    @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}")
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.vatNumberGroup}", example = "false")
     private Boolean vatNumberGroup;
 
 }
