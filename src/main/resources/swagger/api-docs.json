@@ -423,6 +423,29 @@
           }
         },
         "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RelationshipResult"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
           "404" : {
             "description" : "Not Found",
             "content" : {
@@ -445,29 +468,6 @@
           },
           "400" : {
             "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/RelationshipResult"
-                  }
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Forbidden",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -648,12 +648,12 @@
           }
         },
         "responses" : {
-          "200" : {
-            "description" : "OK",
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
-              "application/json" : {
+              "application/problem+json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LegalVerificationResource"
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
@@ -688,12 +688,12 @@
               }
             }
           },
-          "403" : {
-            "description" : "Forbidden",
+          "200" : {
+            "description" : "OK",
             "content" : {
-              "application/problem+json" : {
+              "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+                  "$ref" : "#/components/schemas/LegalVerificationResource"
                 }
               }
             }
@@ -963,7 +963,7 @@
           "name" : "productId",
           "in" : "query",
           "description" : "Product's unique identifier",
-          "required" : false,
+          "required" : true,
           "style" : "form",
           "schema" : {
             "type" : "string"
