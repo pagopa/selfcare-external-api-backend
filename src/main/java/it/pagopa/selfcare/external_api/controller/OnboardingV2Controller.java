@@ -1,7 +1,6 @@
 package it.pagopa.selfcare.external_api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.commons.web.model.Problem;
-import it.pagopa.selfcare.external_api.mapper.OnboardingMapperCustom;
 import it.pagopa.selfcare.external_api.mapper.OnboardingResourceMapper;
 import it.pagopa.selfcare.external_api.mapper.RelationshipMapper;
 import it.pagopa.selfcare.external_api.model.onboarding.*;
@@ -18,7 +16,6 @@ import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.model.user.RelationshipResult;
 import it.pagopa.selfcare.external_api.service.OnboardingService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -85,45 +81,6 @@ public class OnboardingV2Controller {
     onboardingService.autoApprovalOnboardingImportProductV2(
         onboardingResourceMapper.toEntity(request));
     log.trace("onboardingImport end");
-  }
-
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "409",
-            description = "Conflict",
-            content = {
-              @Content(
-                  mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-                  schema = @Schema(implementation = Problem.class))
-            }),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Forbidden",
-            content = {
-              @Content(
-                  mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-                  schema = @Schema(implementation = Problem.class))
-            })
-      })
-  @PostMapping(value = "/{externalInstitutionId}")
-  @ResponseStatus(HttpStatus.CREATED)
-  @Operation(summary = "oldContractOnboarding", description = "${swagger.external_api.onboarding.api.onboardingOldContract}")
-  public void oldContractOnboarding(
-      @Parameter(description = "${swagger.external_api.institutions.model.externalId}")
-      @PathVariable("externalInstitutionId")
-      String externalInstitutionId,
-      @RequestBody @Valid OnboardingImportDto request) {
-    log.trace("oldContractonboarding start");
-    log.debug(
-        "oldContractonboarding institutionId = {}, request = {}", externalInstitutionId, request);
-    if (request.getImportContract().getOnboardingDate().compareTo(OffsetDateTime.now()) > 0) {
-      throw new ValidationException(
-          "Invalid onboarding date: the onboarding date must be prior to the current date.");
-    }
-    onboardingService.oldContractOnboardingV2(
-        OnboardingMapperCustom.toOnboardingData(externalInstitutionId, request));
-    log.trace("oldContractonboarding end");
   }
 
   /**

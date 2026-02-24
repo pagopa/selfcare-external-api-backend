@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface OnboardingService {
 
-  void oldContractOnboardingV2(OnboardingData onboardingData);
-
   void autoApprovalOnboardingProductV2(OnboardingData onboardingData);
 
   void autoApprovalOnboardingImportProductV2(OnboardingData onboardingData);

@@ -322,91 +322,6 @@
         } ]
       }
     },
-    "/v2/onboarding/{externalInstitutionId}" : {
-      "post" : {
-        "tags" : [ "Onboarding" ],
-        "summary" : "oldContractOnboarding",
-        "description" : "The service allows the import of old institutions' contracts",
-        "operationId" : "oldContractOnboardingUsingPOST",
-        "parameters" : [ {
-          "name" : "externalInstitutionId",
-          "in" : "path",
-          "description" : "Institution's unique external identifier",
-          "required" : true,
-          "style" : "simple",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/OnboardingImportDto"
-              }
-            }
-          }
-        },
-        "responses" : {
-          "409" : {
-            "description" : "Conflict",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "201" : {
-            "description" : "Created"
-          },
-          "400" : {
-            "description" : "Bad Request",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ "global" ]
-        } ]
-      }
-    },
     "/v2/onboarding/users" : {
       "post" : {
         "tags" : [ "internal-v1", "support-pnpg", "support", "Onboarding" ],
@@ -423,19 +338,6 @@
           }
         },
         "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/RelationshipResult"
-                  }
-                }
-              }
-            }
-          },
           "403" : {
             "description" : "Forbidden",
             "content" : {
@@ -446,8 +348,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -466,8 +368,21 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RelationshipResult"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -648,28 +563,18 @@
           }
         },
         "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LegalVerificationResource"
+                }
+              }
+            }
+          },
           "403" : {
             "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Not Found",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -688,12 +593,22 @@
               }
             }
           },
-          "200" : {
-            "description" : "OK",
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
-              "application/json" : {
+              "application/problem+json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LegalVerificationResource"
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
@@ -2008,48 +1923,6 @@
         },
         "description" : "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       },
-      "ImportContractDto" : {
-        "title" : "ImportContractDto",
-        "required" : [ "contractType", "fileName", "filePath", "onboardingDate" ],
-        "type" : "object",
-        "properties" : {
-          "fileName" : {
-            "type" : "string",
-            "description" : "Institution's old contract file name"
-          },
-          "filePath" : {
-            "type" : "string",
-            "description" : "Institution's old contract file path"
-          },
-          "contractType" : {
-            "type" : "string",
-            "description" : "Institution's old contract version"
-          },
-          "onboardingDate" : {
-            "type" : "string",
-            "description" : "Institution's old onboarding date in the format 2007-12-03T10:15:30+01:00 (YYYY-MM-DD-T-HH:mm:ss+UTC)",
-            "format" : "date-time"
-          }
-        },
-        "description" : "Institution's old contract information"
-      },
-      "OnboardingImportDto" : {
-        "title" : "OnboardingImportDto",
-        "required" : [ "importContract" ],
-        "type" : "object",
-        "properties" : {
-          "users" : {
-            "type" : "array",
-            "description" : "List of onboarding users",
-            "items" : {
-              "$ref" : "#/components/schemas/UserDto"
-            }
-          },
-          "importContract" : {
-            "$ref" : "#/components/schemas/ImportContractDto"
-          }
-        }
-      },
       "OnboardingInstitutionUsersRequest" : {
         "title" : "OnboardingInstitutionUsersRequest",
         "required" : [ "productId", "users" ],
@@ -2380,6 +2253,31 @@
             "format" : "date-time"
           }
         }
+      },
+      "ImportContractDto" : {
+        "title" : "ImportContractDto",
+        "required" : [ "contractType", "fileName", "filePath", "onboardingDate" ],
+        "type" : "object",
+        "properties" : {
+          "fileName" : {
+            "type" : "string",
+            "description" : "Institution's old contract file name"
+          },
+          "filePath" : {
+            "type" : "string",
+            "description" : "Institution's old contract file path"
+          },
+          "contractType" : {
+            "type" : "string",
+            "description" : "Institution's old contract version"
+          },
+          "onboardingDate" : {
+            "type" : "string",
+            "description" : "Institution's old onboarding date in the format 2007-12-03T10:15:30+01:00 (YYYY-MM-DD-T-HH:mm:ss+UTC)",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Institution's old contract information"
       },
       "OnboardingAggregatorImportDto" : {
         "title" : "OnboardingAggregatorImportDto",
