@@ -944,7 +944,7 @@ module "apim_selfcare_support_service_v1" {
     },
     {
       operation_id = "retrieveInstitutionOnSearchEngine"
-      xml_content = templatefile("./api/ms_external_api/v2/jwt_base_policy_iss_pagopa.xml.tpl", {
+      xml_content = templatefile("./api/jwt_base_policy_iss_pagopa.xml.tpl", {
         API_DOMAIN                 = local.api_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
         JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
