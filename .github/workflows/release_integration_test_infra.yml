@@ -2,16 +2,13 @@ name: Terraform action for integration test
 
 on:
   push:
-    branches:
-      - main
-      - releases/*
-
+    branches: [main, releases/*]
     paths:
-      - "./infra/resources/_modules/integration-test/**"
-      - "./infra/resources/dev/integration-test/**"
-      - "./infra/resources/uat/integration-test/**"
-      - "./infra/resources/dev-pnpg/integration-test/**"
-      - "./infra/resources/uat-pnpg/integration-test/**"
+      - "infra/resources/_modules/integration-test/**"
+      - "infra/resources/dev/integration-test/**"
+      - "infra/resources/uat/integration-test/**"
+      - "infra/resources/dev-pnpg/integration-test/**"
+      - "infra/resources/uat-pnpg/integration-test/**"
 
   workflow_dispatch:
     inputs:
@@ -19,15 +16,12 @@ on:
         type: choice
         description: Environment
         default: dev
-        options:
-          - dev
-          - uat
+        options: [dev, uat]
         required: true
 
 jobs:
   setup:
-    name: Setup Environment
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     outputs:
       environ: ${{ steps.set-env.outputs.environ }}
     steps:
@@ -43,29 +37,24 @@ jobs:
               echo "environ=uat" >> $GITHUB_OUTPUT
             fi
           fi
+
   apply_dev:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
     name: "[Dev] Release to Infra Integration Test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
-    environment: ${{ needs.setup.outputs.environ }}-ci
     needs: setup
+    secrets: inherit
+    if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
     with:
       environment: dev
-      base_path: "infra/resources/"
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
-      ARM_USE_OIDC: true
-      ARM_USE_AZUREAD: true
-      ARM_STORAGE_USE_AZUREAD: true
       override_github_environment: ${{ needs.setup.outputs.environ }}
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
     name: "[UAT] Release to Infra Integration Test"
-    if: ${{ (startsWith(github.ref_name, 'releases/') == true && inputs.env == null) || inputs.env == 'uat' }}
+    needs: setup
     secrets: inherit
+    if: ${{ (startsWith(github.ref_name, 'releases/') == true && inputs.env == null) || inputs.env == 'uat' }}
     with:
       environment: uat
-      base_path: "infra/resources/"
+      base_path: "infra/resources/uat/integration-test"
+      override_github_environment: ${{ needs.setup.outputs.environ }}
