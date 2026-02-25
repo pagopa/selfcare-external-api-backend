@@ -32,5 +32,3 @@ provider "azurerm" {
 provider "github" {
   owner = "pagopa"
 }
-
-# module invocation moved to commons.tf
