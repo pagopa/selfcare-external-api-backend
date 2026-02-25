@@ -46,7 +46,7 @@ jobs:
     if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
     with:
       environment: dev
-      base_path: "infra/resources/"
+      base_path: "infra/resources"
       override_github_environment: ${{ needs.setup.outputs.environ }}
 
   apply_uat:
@@ -57,5 +57,5 @@ jobs:
     if: ${{ (startsWith(github.ref_name, 'releases/') == true && inputs.env == null) || inputs.env == 'uat' }}
     with:
       environment: uat
-      base_path: "infra/resources/"
+      base_path: "infra/resources"
       override_github_environment: ${{ needs.setup.outputs.environ }}
