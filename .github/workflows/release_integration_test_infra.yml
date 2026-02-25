@@ -7,7 +7,11 @@ on:
       - releases/*
 
     paths:
-      - "./infra/integration-test/**"
+      - "./infra/_modules/integration-test/**"
+      - "./infra/env/dev/integration-test/**"
+      - "./infra/env/uat/integration-test/**"
+      - "./infra/env/dev-pnpg/integration-test/**"
+      - "./infra/env/uat-pnpg/integration-test/**"
 
   workflow_dispatch:
     inputs:
@@ -28,7 +32,7 @@ jobs:
     secrets: inherit
     with:
       environment: dev
-      dir: ./infra/integration-test
+      dir: "./infra/env/dev/integration-test/**"
 
   apply_uat:
     uses: ./.github/workflows/call_release_infra.yml
@@ -37,4 +41,4 @@ jobs:
     secrets: inherit
     with:
       environment: uat
-      dir: ./infra/integration-test
+      dir: "./infra/env/dev/integration-test/**"
