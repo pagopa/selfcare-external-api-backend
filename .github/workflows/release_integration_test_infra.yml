@@ -26,19 +26,19 @@ on:
 
 jobs:
   apply_dev:
-    uses: ./.github/workflows/call_release_infra.yml
+    uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
     name: "[Dev] Release to Infra Integration Test"
     if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
     secrets: inherit
     with:
       environment: dev
-      dir: "./infra/env/dev/integration-test/**"
+      base_path: "./infra/env/dev/integration-test"
 
   apply_uat:
-    uses: ./.github/workflows/call_release_infra.yml
+    uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
     name: "[UAT] Release to Infra Integration Test"
     if: ${{ (startsWith(github.ref_name, 'releases/') == true && inputs.env == null) || inputs.env == 'uat' }}
     secrets: inherit
     with:
       environment: uat
-      dir: "./infra/env/dev/integration-test/**"
+      base_path: "./infra/env/uat/integration-test"
