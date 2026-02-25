@@ -47,7 +47,7 @@ jobs:
     with:
       environment: dev
       base_path: "infra/resources"
-      override_github_environment: ${{ needs.setup.outputs.environ }}
+      override_github_environment: ${{ needs.setup.outputs.environ }}-ci
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
@@ -58,4 +58,4 @@ jobs:
     with:
       environment: uat
       base_path: "infra/resources"
-      override_github_environment: ${{ needs.setup.outputs.environ }}
+      override_github_environment: ${{ needs.setup.outputs.environ }}-ci
