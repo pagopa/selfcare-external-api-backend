@@ -34,10 +34,10 @@ jobs:
       - name: Set Environment Variable
         id: set-env
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "environ=${{ github.event.inputs.env }}" >> $GITHUB_OUTPUT
           else
-            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            if [ "${{ github.ref }}" = "refs/heads/main" ]; then
               echo "environ=dev" >> $GITHUB_OUTPUT
             else
               echo "environ=uat" >> $GITHUB_OUTPUT
@@ -52,7 +52,6 @@ jobs:
     with:
       environment: dev
       base_path: "infra/resources/"
-      override_github_environment: ${{ steps.set-env.outputs.environ }}
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
@@ -60,6 +59,7 @@ jobs:
       ARM_USE_OIDC: true
       ARM_USE_AZUREAD: true
       ARM_STORAGE_USE_AZUREAD: true
+      override_github_environment: ${{ needs.setup.outputs.environ }}
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
