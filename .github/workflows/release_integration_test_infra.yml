@@ -7,11 +7,11 @@ on:
       - releases/*
 
     paths:
-      - "./infra/_modules/integration-test/**"
-      - "./infra/env/dev/integration-test/**"
-      - "./infra/env/uat/integration-test/**"
-      - "./infra/env/dev-pnpg/integration-test/**"
-      - "./infra/env/uat-pnpg/integration-test/**"
+      - "./infra/resources/_modules/integration-test/**"
+      - "./infra/resources/dev/integration-test/**"
+      - "./infra/resources/uat/integration-test/**"
+      - "./infra/resources/dev-pnpg/integration-test/**"
+      - "./infra/resources/uat-pnpg/integration-test/**"
 
   workflow_dispatch:
     inputs:
@@ -32,7 +32,7 @@ jobs:
     secrets: inherit
     with:
       environment: dev
-      base_path: "infra"
+      base_path: "infra/resources/dev/integration-test"
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
@@ -41,4 +41,4 @@ jobs:
     secrets: inherit
     with:
       environment: uat
-      base_path: "infra/env/uat/integration-test"
+      base_path: "infra/resources/uat/integration-test"

@@ -1,6 +1,6 @@
 
 module "integration_test" {
-  source = "../../../_modules/integration-test"
+  source = "../../_modules/integration-test"
 
   is_pnpg          = local.is_pnpg
   prefix           = local.prefix
