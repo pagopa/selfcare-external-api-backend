@@ -25,14 +25,41 @@ on:
         required: true
 
 jobs:
+  setup:
+    name: Setup Environment
+    runs-on: "ubuntu-latest"
+    outputs:
+      environ: ${{ steps.set-env.outputs.environ }}
+    steps:
+      - name: Set Environment Variable
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environ=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              echo "environ=dev" >> $GITHUB_OUTPUT
+            else
+              echo "environ=uat" >> $GITHUB_OUTPUT
+            fi
+          fi
   apply_dev:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
     name: "[Dev] Release to Infra Integration Test"
     if: ${{ (startsWith(github.ref_name, 'releases/') != true && inputs.env == null) || inputs.env == 'dev' }}
-    secrets: inherit
+    environment: ${{ needs.setup.outputs.environ }}-ci
+    needs: setup
     with:
       environment: dev
       base_path: "infra/resources/"
+      override_github_environment: ${{ steps.set-env.outputs.environ }}
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: true
+      ARM_USE_AZUREAD: true
+      ARM_STORAGE_USE_AZUREAD: true
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
