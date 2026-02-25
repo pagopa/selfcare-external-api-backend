@@ -32,7 +32,7 @@ jobs:
     secrets: inherit
     with:
       environment: dev
-      base_path: "infra/env/dev/integration-test"
+      base_path: "infra"
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
