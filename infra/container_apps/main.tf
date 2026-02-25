@@ -29,7 +29,7 @@ module "container_app_ext_api_backend" {
 
   probes = []
 
-  dapr = []
+  dapr_settings = []
 
   tags = var.tags
 }
