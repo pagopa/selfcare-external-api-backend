@@ -27,41 +27,9 @@ module "container_app_ext_api_backend" {
   user_assigned_identity_id           = data.azurerm_user_assigned_identity.cae_identity.id
   user_assigned_identity_principal_id = data.azurerm_user_assigned_identity.cae_identity.principal_id
 
-  probes = [
-    {
-      httpGet = {
-        path   = "actuator/health"
-        port   = 8080
-        scheme = "HTTP"
-      }
-      timeoutSeconds      = 30
-      type                = "Liveness"
-      failureThreshold    = 3
-      initialDelaySeconds = 1
-    },
-    {
-      httpGet = {
-        path   = "actuator/health"
-        port   = 8080
-        scheme = "HTTP"
-      }
-      timeoutSeconds      = 30
-      type                = "Readiness"
-      failureThreshold    = 30
-      initialDelaySeconds = 30
-    },
-    {
-      httpGet = {
-        path   = "actuator/health"
-        port   = 8080
-        scheme = "HTTP"
-      }
-      timeoutSeconds      = 30
-      failureThreshold    = 30
-      type                = "Startup"
-      initialDelaySeconds = 60
-    }
-  ]
+  probes = []
+
+  dapr = []
 
   tags = var.tags
 }
