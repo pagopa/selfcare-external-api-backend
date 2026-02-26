@@ -74,3 +74,19 @@ variable "key_vault_pnpg" {
     name                = string
   })
 }
+
+variable "repo_full_name" {
+  description = "(Optional) GitHub repository full name used by the module"
+  type        = string
+  default     = "pagopa/selfcare-external-api-backend"
+}
+
+variable "env_url" {
+  description = "URL fragment for the chosen environment (e.g. .dev or empty)"
+  type        = string
+}
+
+variable "pnpg_suffix" {
+  description = "Suffix appended when is_pnpg is true (e.g. -pnpg)"
+  type        = string
+}

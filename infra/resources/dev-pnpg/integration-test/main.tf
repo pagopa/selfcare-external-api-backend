@@ -16,7 +16,12 @@ terraform {
     }
   }
 
-  backend "azurerm" {}
+  backend "azurerm" {
+    resource_group_name  = "terraform-state-rg"
+    storage_account_name = "tfappdevselfcare"
+    container_name       = "terraform-state"
+    key                  = "selfcare-pnpg-external-api-backend.integration-test.tfstate"
+  }
 }
 
 provider "azurerm" {
@@ -27,7 +32,3 @@ provider "azurerm" {
 provider "github" {
   owner = "pagopa"
 }
-
-data "azurerm_subscription" "current" {}
-
-data "azurerm_client_config" "current" {}
