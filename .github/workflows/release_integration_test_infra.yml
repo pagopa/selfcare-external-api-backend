@@ -29,8 +29,7 @@ jobs:
       environment: dev
       base_path: "infra/resources"
       override_github_environment: dev-ci
-    env:
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      env_vars: ARM_SUBSCRIPTION_ID=${{ vars.ARM_SUBSCRIPTION_ID }}
 
   apply_uat:
     uses: pagopa/dx/.github/workflows/infra_apply.yaml@main
@@ -41,5 +40,4 @@ jobs:
       environment: uat
       base_path: "infra/resources"
       override_github_environment: uat-ci
-    env:
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      env_vars: ARM_SUBSCRIPTION_ID=${{ vars.ARM_SUBSCRIPTION_ID }}
