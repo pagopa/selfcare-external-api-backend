@@ -1,0 +1,30 @@
+meta {
+  name: getDocuments
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{apiBaseUrl}}/external/internal/v1/documents
+  body: none
+  auth: inherit
+}
+
+headers {
+  Ocp-Apim-Subscription-Key: {{apimKeyInternal}}
+}
+
+script:post-response {
+  test("getDocuments ok", function() {
+    const status = res.getStatus();
+    expect([200, 204]).to.include(status);
+    if (status === 200) {
+      const jsonData = res.getBody();
+      expect(jsonData).to.be.an("array");
+    }
+  });
+}
+
+settings {
+  encodeUrl: true
+}
