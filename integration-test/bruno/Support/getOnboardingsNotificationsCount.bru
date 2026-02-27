@@ -20,9 +20,31 @@ headers {
   Ocp-Apim-Subscription-Key: {{apimKeySupport}}
 }
 
+script:pre-request {
+  // Log the final URL and headers before the request to compare remote vs local
+  try {
+    console.log('[DEBUG] getOnboardingsNotificationsCount - request url:', req.getUrl());
+    console.log('[DEBUG] getOnboardingsNotificationsCount - request headers:', JSON.stringify(req.getHeaders()));
+  } catch (e) {
+    console.log('[DEBUG] pre-request logging failed', e);
+  }
+}
+
 script:post-response {
   test("getOnboardingsNotificationsCount ok", function() {
     const status = res.getStatus();
+
+    // If server returns 5xx, print body and headers to help remote debugging
+    if (status >= 500) {
+      try {
+        console.log('[DEBUG] getOnboardingsNotificationsCount status:', status);
+        console.log('[DEBUG] response headers:', JSON.stringify(res.getHeaders()));
+        console.log('[DEBUG] response body:', JSON.stringify(res.getBody()));
+      } catch (e) {
+        console.log('[DEBUG] unable to stringify response for logging', e);
+      }
+    }
+
     expect([200, 204]).to.include(status);
 
     if (status === 200) {
