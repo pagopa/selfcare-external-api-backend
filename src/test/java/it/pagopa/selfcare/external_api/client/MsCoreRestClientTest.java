@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.external_api.client.config.MsCoreRestClientTestConfig;
+import it.pagopa.selfcare.external_api.client.decoder.FeignErrorDecoder;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitution;
 import it.pagopa.selfcare.external_api.model.pnpg.CreatePnPgInstitutionRequest;
 import it.pagopa.selfcare.external_api.model.pnpg.InstitutionPnPgResponse;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.commons.httpclient.HttpClientConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,11 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         properties = {
                 "logging.level.it.pagopa.selfcare.external_api.connector.rest=DEBUG",
                 "spring.application.name=selc-external-api-connector-rest",
-                "feign.okhttp.enabled=true"
+                "spring.cloud.openfeign.okhttp.enabled=true"
         })
 @ContextConfiguration(
         initializers = MsCoreRestClientTest.RandomPortInitializer.class,
-        classes = {MsCoreRestClientTestConfig.class, HttpClientConfiguration.class})
+        classes = {MsCoreRestClientTestConfig.class, FeignErrorDecoder.class})
+@EnableFeignClients(clients = MsCoreRestClient.class)
 class MsCoreRestClientTest extends BaseFeignRestClientTest {
     @Order(1)
     @RegisterExtension

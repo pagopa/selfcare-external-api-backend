@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.external_api.model.user.Person;
 import lombok.Data;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +29,13 @@ public class OnboardingInstitutionUsersRequest {
     @Schema(description = "Add users to the institution via subunit code. Can be used in combination with institutionTaxCode")
     private String institutionSubunitCode;
 
-    @Schema(description = "Send an email notification to the user. By default it's set to true")
+    @Schema(description = "Send an email notification to the user. By default it's set to true", example = "false")
     private Boolean sendCreateUserNotificationEmail = Boolean.TRUE;
 
-    @Schema(description = "Enable automatic management of group assignment")
+    @Schema(description = "Enable automatic management of group assignment", example = "false")
     private Boolean toAddOnAggregates;
 
+    @Schema(hidden = true)
     @AssertTrue(message = "at least one of institutionId or institutionTaxCode must be present")
     public boolean isIdOrTaxcodeNotEmpty() {
         final boolean isIdNotEmpty = Optional.ofNullable(institutionId).map(id -> !id.isEmpty()).orElse(false);

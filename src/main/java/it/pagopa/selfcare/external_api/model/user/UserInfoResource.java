@@ -1,6 +1,6 @@
 package it.pagopa.selfcare.external_api.model.user;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.onboarding.common.InstitutionType;
 import it.pagopa.selfcare.external_api.model.onboarding.ProductInfo;
 import lombok.Data;
@@ -12,34 +12,34 @@ import java.util.List;
 @Data
 public class UserInfoResource {
 
-    @ApiModelProperty(value = "${swagger.external_api.userInfo.model.user}")
+    @Schema(description = "${swagger.external_api.userInfo.model.user}")
     private UserResource user;
 
-    @ApiModelProperty(value = "${swagger.external_api.userInfo.model.onboardedInstitutions}")
+    @Schema(description = "${swagger.external_api.userInfo.model.onboardedInstitutions}")
     private List<OnboardedInstitutionResource> onboardedInstitutions;
 
     @Data
     public static class OnboardedInstitutionResource {
 
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.id}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.id}")
         private String id;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.description}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.description}")
         private String description;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.institutionType}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.institutionType}")
         private InstitutionType institutionType;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.digitalAddress}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.digitalAddress}")
         private String digitalAddress;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.address}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.address}")
         private String address;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.state}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.state}")
         private String state;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.zipCode}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.zipCode}")
         private String zipCode;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.taxCode}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.taxCode}")
         private String taxCode;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.userEmail}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.userEmail}")
         private String userEmail;
-        @ApiModelProperty(value = "${swagger.external_api.user.model.onboardedInstitutions.productInfo}")
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.productInfo}")
         private ProductInfo productInfo;
 
     }

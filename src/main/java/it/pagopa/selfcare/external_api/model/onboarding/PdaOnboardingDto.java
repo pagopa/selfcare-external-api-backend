@@ -1,41 +1,41 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.external_api.model.user.UserDto;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 public class PdaOnboardingDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.users}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.users}")
     @NotEmpty
     @Valid
     private List<UserDto> users;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.name}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.name}")
     @JsonProperty(required = true)
     @NotBlank
     private String businessName;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.taxCode}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.taxCode}")
     @JsonProperty(required = true)
     @NotBlank
     private String taxCode;
 
-    @ApiModelProperty(value = "${swagger.external_api.product.model.id}", required = true)
+    @Schema(description = "${swagger.external_api.product.model.id}")
     @NotNull
     private String productId;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.vatNumber}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.vatNumber}")
     private String vatNumber;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.recipientCode}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.recipientCode}")
     private String recipientCode;
 }

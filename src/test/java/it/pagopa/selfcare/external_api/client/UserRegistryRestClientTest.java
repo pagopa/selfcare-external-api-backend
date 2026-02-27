@@ -5,6 +5,7 @@ import it.pagopa.selfcare.commons.connector.rest.BaseFeignRestClientTest;
 import it.pagopa.selfcare.commons.connector.rest.RestTestUtils;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.external_api.client.config.UserRegistryRestClientTestConfig;
+import it.pagopa.selfcare.external_api.client.decoder.FeignErrorDecoder;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
 import it.pagopa.selfcare.external_api.model.user.MutableUserFieldsDto;
 import it.pagopa.selfcare.external_api.model.user.SaveUserDto;
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.commons.httpclient.HttpClientConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,12 +35,13 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = {
                 "logging.level.it.pagopa.selfcare.external_api.connector.rest=DEBUG",
                 "spring.application.name=selc-external-api-connector-rest",
-                "feign.okhttp.enabled=true"
+                "spring.cloud.openfeign.okhttp.enabled=true"
         }
 )
 @ContextConfiguration(
         initializers = UserRegistryRestClientTest.RandomPortInitializer.class,
-        classes = {UserRegistryRestClientTestConfig.class, HttpClientConfiguration.class})
+        classes = {UserRegistryRestClientTestConfig.class, FeignErrorDecoder.class})
+@EnableFeignClients(clients = UserRegistryRestClient.class)
 class UserRegistryRestClientTest extends BaseFeignRestClientTest {
 
     @Order(1)

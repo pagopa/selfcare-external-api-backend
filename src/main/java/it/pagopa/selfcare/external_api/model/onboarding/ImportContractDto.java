@@ -1,29 +1,29 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Data
 public class ImportContractDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.importContract.model.fileName}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.fileName}")
     @NotBlank
     private String fileName;
 
-    @ApiModelProperty(value = "${swagger.external_api.importContract.model.filePath}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.filePath}")
     @NotBlank
     private String filePath;
 
-    @ApiModelProperty(value = "${swagger.external_api.importContract.model.contractType}", required = true)
+    @Schema(description = "${swagger.external_api.importContract.model.contractType}")
     @NotBlank
     private String contractType;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.onboardingDate}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.onboardingDate}")
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime onboardingDate;

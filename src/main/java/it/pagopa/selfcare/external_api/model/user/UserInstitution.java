@@ -2,7 +2,7 @@ package it.pagopa.selfcare.external_api.model.user;
 
 import lombok.Data;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Data

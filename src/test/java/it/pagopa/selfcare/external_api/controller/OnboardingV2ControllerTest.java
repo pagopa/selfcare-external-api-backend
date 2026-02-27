@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.pagopa.selfcare.commons.base.security.SelfCareUser;
 import it.pagopa.selfcare.external_api.mapper.OnboardingResourceMapperImpl;
-import it.pagopa.selfcare.external_api.model.onboarding.*;
+import it.pagopa.selfcare.external_api.model.onboarding.BillingDataDto;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingInstitutionUsersRequest;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingProductDto;
+import it.pagopa.selfcare.external_api.model.onboarding.OnboardingUsersRequest;
 import it.pagopa.selfcare.external_api.model.user.RelationshipInfo;
 import it.pagopa.selfcare.external_api.service.OnboardingService;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +22,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.validation.ValidationException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -167,67 +166,6 @@ class OnboardingV2ControllerTest extends BaseControllerTest {
                 .accept(APPLICATION_JSON_VALUE))
         .andExpect(status().isBadRequest())
         .andReturn();
-  }
-
-  @Test
-  void oldContractOnboarding() throws Exception {
-
-    String institutionId = "institutionId";
-
-    byte[] onboardingImportDtoFile =
-        Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
-    OnboardingImportDto onboardingImportDto =
-        objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
-
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.post(BASE_URL + "/{institutionId}", institutionId)
-                .content(objectMapper.writeValueAsString(onboardingImportDto))
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE))
-        .andExpect(status().isCreated())
-        .andExpect(content().string(emptyString()))
-        .andReturn();
-  }
-
-  @Test
-  void oldContractOnboardingWithInvalidOnboardingDate() throws Exception {
-
-    String externalInstitutionId = "externalInstitutionId";
-
-    byte[] onboardingImportDtoFile =
-        Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
-    OnboardingImportDto onboardingImportDto =
-        objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
-    onboardingImportDto.getImportContract().setOnboardingDate(OffsetDateTime.now().plusDays(2));
-
-    Assertions.assertThrows(
-        ValidationException.class,
-        () ->
-            onboardingV2Controller.oldContractOnboarding(
-                externalInstitutionId, onboardingImportDto),
-        "Invalid onboarding date: the onboarding date must be prior to the current date.");
-  }
-
-  @Test
-  void oldContractOnboardingWithNullUsers() throws Exception {
-
-    final String externalInstitutionId = "externalInstitutionId";
-    byte[] onboardingImportDtoFile =
-            Files.readAllBytes(Paths.get("src/test/resources", "stubs/onboardingImportDto.json"));
-    OnboardingImportDto onboardingImportDto =
-            objectMapper.readValue(onboardingImportDtoFile, new TypeReference<>() {});
-    onboardingImportDto.setUsers(null);
-
-    mockMvc
-            .perform(
-                    MockMvcRequestBuilders.post(BASE_URL + "/{institutionId}", externalInstitutionId)
-                            .content(objectMapper.writeValueAsString(onboardingImportDto))
-                            .contentType(APPLICATION_JSON_VALUE)
-                            .accept(APPLICATION_JSON_VALUE))
-            .andExpect(status().isCreated())
-            .andExpect(content().string(emptyString()))
-            .andReturn();
   }
 
   @Test

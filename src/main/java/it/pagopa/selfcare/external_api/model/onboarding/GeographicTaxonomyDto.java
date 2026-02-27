@@ -1,20 +1,20 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class GeographicTaxonomyDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.code}", required = true)
+    @Schema(description = "${swagger.external_api.geographicTaxonomy.model.code}")
     @JsonProperty(required = true)
     @NotBlank
     private String code;
 
-    @ApiModelProperty(value = "${swagger.external_api.geographicTaxonomy.model.desc}", required = true)
+    @Schema(description = "${swagger.external_api.geographicTaxonomy.model.desc}")
     @JsonProperty(required = true)
     @NotBlank
     private String desc;

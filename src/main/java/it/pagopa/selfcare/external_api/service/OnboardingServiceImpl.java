@@ -29,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,15 +46,6 @@ class OnboardingServiceImpl implements OnboardingService {
   private final MsUserApiRestClient msUserApiRestClient;
   private final UserResourceMapper userResourceMapper;
   private final MsPartyRegistryProxyRestClient msPartyRegistryProxyRestClient;
-
-  @Override
-  public void oldContractOnboardingV2(OnboardingData onboardingImportData) {
-    log.trace("oldContractOnboarding start");
-    log.debug("oldContractOnboarding = {}", onboardingImportData);
-    onboardingControllerApi._onboardingPaImport(
-        onboardingMapper.mapToOnboardingImportRequest(onboardingImportData));
-    log.trace("oldContractOnboarding end");
-  }
 
   @Override
   public void autoApprovalOnboardingProductV2(OnboardingData onboardingData) {

@@ -1,68 +1,65 @@
 package it.pagopa.selfcare.external_api.model.product;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
+
 import java.time.Instant;
 import java.util.EnumMap;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import lombok.Data;
 
 @Data
 public class ProductResource {
-  @ApiModelProperty(value = "${swagger.external_api.products.model.id}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.id}")
   @NotBlank
   private String id;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.title}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.title}")
   @NotBlank
   private String title;
 
-  @ApiModelProperty(
-      value = "${swagger.external_api.products.model.contractTemplatePath}",
-      required = true)
+  @Schema(description = "${swagger.external_api.products.model.contractTemplatePath}")
   @NotBlank
   private String contractTemplatePath;
 
-  @ApiModelProperty(
-      value = "${swagger.external_api.products.model.contractTemplateVersion}",
-      required = true)
+  @Schema(description = "${swagger.external_api.products.model.contractTemplateVersion}")
   @NotBlank
   private String contractTemplateVersion;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.createdAt}")
+  @Schema(description = "${swagger.external_api.products.model.createdAt}")
   private Instant createdAt;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.description}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.description}")
   @NotBlank
   private String description;
 
-  @ApiModelProperty("${swagger.external_api.products.model.urlPublic}")
+  @Schema(description = "${swagger.external_api.products.model.urlPublic}")
   private String urlPublic;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.urlBO}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.urlBO}")
   @NotBlank
   private String urlBO;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.depictImageUrl}")
+  @Schema(description = "${swagger.external_api.products.model.depictImageUrl}")
   private String depictImageUrl;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.identityTokenAudience}")
+  @Schema(description = "${swagger.external_api.products.model.identityTokenAudience}")
   private String identityTokenAudience;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.logo}")
+  @Schema(description = "${swagger.external_api.products.model.logo}")
   private String logo;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.logoBgColor}")
+  @Schema(description = "${swagger.external_api.products.model.logoBgColor}")
   private String logoBgColor;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.parentId}")
+  @Schema(description = "${swagger.external_api.products.model.parentId}")
   private String parentId;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.roleMappings}", required = true)
+  @Schema(description = "${swagger.external_api.products.model.roleMappings}")
   @NotEmpty
   private EnumMap<PartyRole, it.pagopa.selfcare.product.entity.ProductRoleInfo> roleMappings;
 
-  @ApiModelProperty(value = "${swagger.external_api.products.model.roleManagementURL}")
+  @Schema(description = "${swagger.external_api.products.model.roleManagementURL}")
   private String roleManagementURL;
 }

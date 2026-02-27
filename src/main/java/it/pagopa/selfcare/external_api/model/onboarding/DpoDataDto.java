@@ -1,27 +1,27 @@
 package it.pagopa.selfcare.external_api.model.onboarding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class DpoDataDto {
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData.address}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.address}")
     @JsonProperty(required = true)
     @NotBlank
     private String address;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData.pec}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.pec}", format = "email", example = "email@example.com")
     @JsonProperty(required = true)
     @NotBlank
     @Email
     private String pec;
 
-    @ApiModelProperty(value = "${swagger.external_api.institutions.model.pspData.dpoData.email}", required = true)
+    @Schema(description = "${swagger.external_api.institutions.model.pspData.dpoData.email}", format = "email", example = "email@example.com")
     @JsonProperty(required = true)
     @NotBlank
     @Email

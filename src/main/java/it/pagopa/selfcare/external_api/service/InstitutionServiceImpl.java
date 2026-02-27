@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
