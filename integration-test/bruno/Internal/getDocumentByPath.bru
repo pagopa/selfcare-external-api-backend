@@ -1,0 +1,38 @@
+meta {
+  name: getDocumentByPath
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{apiBaseUrl}}/external/internal/v1/documents/{{documentPath}}
+  body: none
+  auth: inherit
+}
+
+params:path {
+  documentPath: {{documentPath}}
+}
+
+headers {
+  Ocp-Apim-Subscription-Key: {{apimKeyInternal}}
+}
+
+script:post-response {
+  test("getDocumentByPath ok", function() {
+    const status = res.getStatus();
+    expect([200, 404]).to.include(status);
+
+    if (status === 200) {
+      const data = res.getBody();
+      // If service returns array of files, expect array; if it returns file content, just check status
+      if (Array.isArray(data)) {
+        expect(data.length).to.be.greaterThan(0);
+      }
+    }
+  });
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,44 @@
+meta {
+  name: getOnboardingsNotificationsCount
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{apiBaseUrl}}/external/support/v1/api/onboardings/notifications/count?from={{from}}&to={{to}}&productId={{productId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~from:
+  ~to:
+  ~productId: {{productId}}
+}
+
+headers {
+  Ocp-Apim-Subscription-Key: {{apimKeySupport}}
+}
+
+script:post-response {
+  test("getOnboardingsNotificationsCount ok", function() {
+    const status = res.getStatus();
+    expect([200, 204]).to.include(status);
+
+    if (status === 200) {
+      const jsonData = res.getBody();
+      expect(jsonData).to.be.an("array");
+      if (jsonData.length > 0) {
+        jsonData.forEach(item => {
+          expect(item).to.have.property("productId");
+          // API returns `notificationCount` field (older tests used `count`) — accept both
+          expect(item).to.satisfy(i => i.hasOwnProperty('notificationCount') || i.hasOwnProperty('count'));
+        });
+      }
+    }
+  });
+}
+
+settings {
+  encodeUrl: true
+}
