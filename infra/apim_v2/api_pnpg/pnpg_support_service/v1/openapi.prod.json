@@ -20,6 +20,10 @@
       "description": "Onboarding V 2 Controller"
     },
     {
+      "name": "Proxy",
+      "description": "National Registry Controller"
+    },
+    {
       "name": "User",
       "description": "User V 2 Controller"
     },
@@ -74,7 +78,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -84,7 +88,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -94,7 +98,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -195,7 +199,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -205,7 +209,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem1"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -257,7 +261,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -267,7 +271,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -277,7 +281,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -287,7 +291,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -350,7 +354,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -360,7 +364,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -370,7 +374,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -380,7 +384,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem2"
+                  "$ref": "#/components/schemas/Problem1"
                 }
               }
             }
@@ -554,19 +558,31 @@
         ]
       }
     },
-    "/national-registries/legal-tax/verification": {
+    "/users": {
       "post": {
         "tags": [
-          "NationalRegistry"
+          "User"
         ],
-        "summary": "verifyLegal",
-        "description": "Verify if given taxId is legal of given institution identified with vatNumber",
-        "operationId": "verifyLegalByPOST",
+        "summary": "getUserInfo",
+        "description": "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
+        "operationId": "V2getUserInfoUsingGET",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "productId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VerifyRequestDto"
+                "$ref": "#/components/schemas/SearchUserDto"
               }
             }
           }
@@ -577,7 +593,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LegalVerificationResource"
+                  "$ref": "#/components/schemas/UserInfoResource"
                 }
               }
             }
@@ -594,26 +610,6 @@
           },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -733,31 +729,20 @@
         ]
       }
     },
-    "/users": {
+    "/national-registries/legal-tax/verification": {
       "post": {
         "tags": [
-          "User"
+          "Proxy",
+          "NationalRegistry"
         ],
-        "summary": "getUserInfo",
-        "description": "Service to retrieve user info including institutions and products linked to him, this service retrives 100 institutions at most",
-        "operationId": "V2getUserInfoUsingGET",
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "query",
-            "description": "productId",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "verifyLegal",
+        "description": "Verify if given taxId is legal of given institution identified with vatNumber",
+        "operationId": "verifyLegalByPOST",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchUserDto"
+                "$ref": "#/components/schemas/VerifyRequestDto"
               }
             }
           }
@@ -768,7 +753,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserInfoResource"
+                  "$ref": "#/components/schemas/LegalVerificationResource"
                 }
               }
             }
@@ -785,6 +770,26 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -934,7 +939,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -944,7 +949,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -954,7 +959,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -964,7 +969,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Problem3"
+                  "$ref": "#/components/schemas/Problem"
                 }
               }
             }
@@ -1264,7 +1269,7 @@
           }
         }
       },
-      "Problem1": {
+      "Problem": {
         "title": "Problem",
         "required": [
           "status",
@@ -1478,7 +1483,7 @@
         "type": "string",
         "example": "2022-03-10T12:15:50-04:00"
       },
-      "Problem2": {
+      "Problem1": {
         "type": "object",
         "properties": {
           "detail": {
@@ -1626,462 +1631,19 @@
           }
         }
       },
-      "LegalVerificationResource": {
-        "title": "LegalVerificationResource",
-        "type": "object",
-        "properties": {
-          "resultCode": {
-            "type": "string"
-          },
-          "resultDetail": {
-            "type": "string"
-          },
-          "verificationResult": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Problem": {
-        "title": "Problem",
-        "required": [
-          "status",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "detail": {
-            "type": "string",
-            "description": "Human-readable description of this specific problem."
-          },
-          "instance": {
-            "type": "string",
-            "description": "A URI that describes where the problem occurred."
-          },
-          "invalidParams": {
-            "type": "array",
-            "description": "A list of invalid parameters details.",
-            "items": {
-              "$ref": "#/components/schemas/InvalidParam"
-            }
-          },
-          "status": {
-            "type": "integer",
-            "description": "The HTTP status code.",
-            "format": "int32",
-            "example": 500
-          },
-          "title": {
-            "type": "string",
-            "description": "Short human-readable summary of the problem."
-          },
-          "type": {
-            "type": "string",
-            "description": "A URL to a page with more details regarding the problem."
-          }
-        },
-        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
-      },
-      "VerifyRequestDto": {
-        "title": "VerifyRequestDto",
-        "required": [
-          "taxId",
-          "vatNumber"
-        ],
-        "type": "object",
-        "properties": {
-          "taxId": {
-            "type": "string"
-          },
-          "vatNumber": {
-            "type": "string"
-          }
-        }
-      },
-      "RelationshipResult": {
-        "title": "RelationshipResult",
-        "type": "object",
-        "properties": {
-          "billing": {
-            "$ref": "#/components/schemas/BillingResponse"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "from": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "institutionUpdate": {
-            "$ref": "#/components/schemas/InstitutionUpdateResponse"
-          },
-          "pricingPlan": {
-            "type": "string"
-          },
-          "product": {
-            "$ref": "#/components/schemas/ProductInfo"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "ADMIN_EA",
-              "DELEGATE",
-              "MANAGER",
-              "OPERATOR",
-              "SUB_DELEGATE"
-            ]
-          },
-          "state": {
-            "type": "string",
-            "enum": [
-              "ACTIVE",
-              "DELETED",
-              "PENDING",
-              "REJECTED",
-              "SUSPENDED",
-              "TOBEVALIDATED"
-            ]
-          },
-          "to": {
-            "type": "string"
-          },
-          "tokenId": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "BillingResponse": {
-        "title": "BillingResponse",
-        "type": "object",
-        "properties": {
-          "publicServices": {
-            "type": "boolean"
-          },
-          "recipientCode": {
-            "type": "string"
-          },
-          "vatNumber": {
-            "type": "string"
-          }
-        }
-      },
-      "InstitutionUpdateResponse": {
-        "title": "InstitutionUpdateResponse",
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "businessRegisterPlace": {
-            "type": "string"
-          },
-          "dataProtectionOfficer": {
-            "$ref": "#/components/schemas/DpoDataResource"
-          },
-          "description": {
-            "type": "string"
-          },
-          "digitalAddress": {
-            "type": "string"
-          },
-          "geographicTaxonomies": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "imported": {
-            "type": "boolean"
-          },
-          "institutionType": {
-            "type": "string",
-            "enum": [
-              "AS",
-              "CON",
-              "GPU",
-              "GSP",
-              "PA",
-              "PG",
-              "PRV",
-              "PRV_PF",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCEC",
-              "SCP"
-            ]
-          },
-          "paymentServiceProvider": {
-            "$ref": "#/components/schemas/PspDataResource"
-          },
-          "rea": {
-            "type": "string"
-          },
-          "shareCapital": {
-            "type": "string"
-          },
-          "supportEmail": {
-            "type": "string"
-          },
-          "supportPhone": {
-            "type": "string"
-          },
-          "taxCode": {
-            "type": "string"
-          },
-          "zipCode": {
-            "type": "string"
-          }
-        }
-      },
-      "DpoDataResource": {
-        "title": "DpoDataResource",
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string",
-            "description": "DPO's address"
-          },
-          "email": {
-            "type": "string",
-            "description": "DPO's email"
-          },
-          "pec": {
-            "type": "string",
-            "description": "DPO's PEC"
-          }
-        }
-      },
-      "PspDataResource": {
-        "title": "PspDataResource",
-        "type": "object",
-        "properties": {
-          "abiCode": {
-            "type": "string",
-            "description": "PSP's ABI code"
-          },
-          "businessRegisterNumber": {
-            "type": "string",
-            "description": "PSP's Business Register number"
-          },
-          "legalRegisterName": {
-            "type": "string",
-            "description": "PSP's legal register name"
-          },
-          "legalRegisterNumber": {
-            "type": "string",
-            "description": "PSP's legal register number"
-          },
-          "vatNumberGroup": {
-            "type": "boolean",
-            "description": "PSP's Vat Number group",
-            "example": false
-          }
-        }
-      },
-      "ProductInfo": {
-        "title": "ProductInfo",
-        "type": "object",
-        "properties": {
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "id": {
-            "type": "string"
-          },
-          "productRole": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "OnboardingInstitutionUsersRequest": {
-        "title": "OnboardingInstitutionUsersRequest",
-        "type": "object",
-        "properties": {
-          "institutionId": {
-            "type": "string",
-            "description": "The institution ID where users will be added. This takes precedence over the tax code"
-          },
-          "institutionSubunitCode": {
-            "type": "string",
-            "description": "Add users to the institution via subunit code. Can be used in combination with institutionTaxCode"
-          },
-          "institutionTaxCode": {
-            "type": "string",
-            "description": "Add users to the institution via tax code. Can be used in combination with institutionSubunitCode"
-          },
-          "productId": {
-            "type": "string",
-            "description": "Product to add roles to"
-          },
-          "sendCreateUserNotificationEmail": {
-            "type": "boolean",
-            "description": "Send an email notification to the user. By default it's set to true",
-            "example": false
-          },
-          "toAddOnAggregates": {
-            "type": "boolean",
-            "description": "Enable automatic management of group assignment",
-            "example": false
-          },
-          "users": {
-            "type": "array",
-            "description": "List of users to add",
-            "items": {
-              "$ref": "#/components/schemas/Person"
-            }
-          }
-        }
-      },
-      "Person": {
-        "title": "Person",
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "The email address of the user to add / create. If id is present, the field is ignored"
-          },
-          "env": {
-            "type": "string",
-            "description": "Environment. The field is currently not used to create users. It's only returned in response",
-            "enum": [
-              "COLL",
-              "DEV",
-              "PROD",
-              "ROOT"
-            ]
-          },
-          "id": {
-            "type": "string",
-            "description": "User ID of a user already in the registry. A role will be added to the institution/product for the user. It takes precedence over taxCode"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the user to add / create. If id is present, the field is ignored"
-          },
-          "productRole": {
-            "type": "string",
-            "description": "The product role to assign to the user based on the product specifications"
-          },
-          "role": {
-            "type": "string",
-            "description": "The role to assign to the user",
-            "enum": [
-              "ADMIN_EA",
-              "DELEGATE",
-              "MANAGER",
-              "OPERATOR",
-              "SUB_DELEGATE"
-            ]
-          },
-          "roleLabel": {
-            "type": "string",
-            "description": "The product role label based on the product specifications. The field is currently not used to create users"
-          },
-          "surname": {
-            "type": "string",
-            "description": "The surname of the user to add / create. If id is present, the field is ignored"
-          },
-          "taxCode": {
-            "type": "string",
-            "description": "The tax code of the user to add / create. If id is present, the field is ignored"
-          },
-          "userMailUuid": {
-            "type": "string",
-            "description": "The email ID of the user already in the registry to be assigned to the institution/product. This field is only used when adding a user by ID"
-          }
-        }
-      },
       "UserInfoResource": {
         "title": "UserInfoResource",
         "type": "object",
         "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResource"
+          },
           "onboardedInstitutions": {
             "type": "array",
             "description": "Object that includes all info about onboarded institutions linked to a user",
             "items": {
               "$ref": "#/components/schemas/OnboardedInstitutionResource"
             }
-          },
-          "user": {
-            "description": "Object that includes all info about a user",
-            "$ref": "#/components/schemas/UserResource"
-          }
-        }
-      },
-      "OnboardedInstitutionResource": {
-        "title": "OnboardedInstitutionResource",
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string",
-            "description": "Institution's address"
-          },
-          "description": {
-            "type": "string",
-            "description": "Institution's description"
-          },
-          "digitalAddress": {
-            "type": "string",
-            "description": "Institution's digital address"
-          },
-          "id": {
-            "type": "string",
-            "description": "Institution's Id"
-          },
-          "institutionType": {
-            "type": "string",
-            "description": "Institution's type",
-            "enum": [
-              "AS",
-              "CON",
-              "GPU",
-              "GSP",
-              "PA",
-              "PG",
-              "PRV",
-              "PRV_PF",
-              "PSP",
-              "PT",
-              "REC",
-              "SA",
-              "SCEC",
-              "SCP"
-            ]
-          },
-          "productInfo": {
-            "description": "Products' info of onboardings",
-            "$ref": "#/components/schemas/ProductInfo"
-          },
-          "state": {
-            "type": "string",
-            "description": "Onboarding's state"
-          },
-          "taxCode": {
-            "type": "string",
-            "description": "Institution's tax code"
-          },
-          "userEmail": {
-            "type": "string",
-            "description": "User's email linked to the institution"
-          },
-          "zipCode": {
-            "type": "string",
-            "description": "Institution's zip code"
           }
         }
       },
@@ -2094,48 +1656,134 @@
         ],
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's institutional email"
-          },
-          "fiscalCode": {
-            "type": "string",
-            "description": "User's fiscal code"
-          },
           "id": {
             "type": "string",
             "description": "User's unique identifier",
             "format": "uuid"
           },
-          "lastActiveOnboardingUserEmail": {
-            "type": "string",
-            "description": "User's last active onboarding used email"
-          },
           "name": {
             "type": "string",
             "description": "User's name"
           },
-          "role": {
+          "surname": {
             "type": "string",
-            "description": "User's role",
-            "enum": [
-              "ADMIN_EA",
-              "DELEGATE",
-              "MANAGER",
-              "OPERATOR",
-              "SUB_DELEGATE"
-            ]
+            "description": "User's surname"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's institutional email"
+          },
+          "lastActiveOnboardingUserEmail": {
+            "type": "string",
+            "description": "User's last active onboarding used email"
+          },
+          "fiscalCode": {
+            "type": "string",
+            "description": "User's fiscal code"
           },
           "roles": {
             "type": "array",
             "description": "User's roles in product",
             "items": {
-              "type": "string"
+              "type": "string",
+              "description": "User's roles in product"
             }
           },
-          "surname": {
+          "role": {
             "type": "string",
-            "description": "User's surname"
+            "description": "User's role",
+            "enum": [
+              "MANAGER",
+              "DELEGATE",
+              "SUB_DELEGATE",
+              "OPERATOR",
+              "ADMIN_EA"
+            ]
+          }
+        },
+        "description": "Object that includes all info about a user"
+      },
+      "OnboardedInstitutionResource": {
+        "title": "OnboardedInstitutionResource",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Institution's Id"
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's description"
+          },
+          "institutionType": {
+            "type": "string",
+            "description": "Institution's type",
+            "enum": [
+              "PA",
+              "PG",
+              "GSP",
+              "SA",
+              "PT",
+              "SCP",
+              "PSP",
+              "AS",
+              "REC",
+              "CON",
+              "PRV",
+              "PRV_PF",
+              "GPU",
+              "SCEC"
+            ]
+          },
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digital address"
+          },
+          "address": {
+            "type": "string",
+            "description": "Institution's address"
+          },
+          "state": {
+            "type": "string",
+            "description": "Onboarding's state"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zip code"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's tax code"
+          },
+          "userEmail": {
+            "type": "string",
+            "description": "User's email linked to the institution"
+          },
+          "productInfo": {
+            "$ref": "#/components/schemas/ProductInfo"
+          }
+        },
+        "description": "Object that includes all info about onboarded institutions linked to a user"
+      },
+      "ProductInfo": {
+        "title": "ProductInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "productRole": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
           }
         }
       },
@@ -2155,15 +1803,340 @@
             "description": "User's statuses",
             "items": {
               "type": "string",
+              "description": "User's statuses",
               "enum": [
                 "ACTIVE",
-                "DELETED",
-                "PENDING",
-                "REJECTED",
                 "SUSPENDED",
+                "DELETED",
+                "REJECTED",
+                "PENDING",
                 "TOBEVALIDATED"
               ]
             }
+          }
+        },
+        "description": "User's fiscal code"
+      },
+      "RelationshipResult": {
+        "title": "RelationshipResult",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "MANAGER",
+              "DELEGATE",
+              "SUB_DELEGATE",
+              "OPERATOR",
+              "ADMIN_EA"
+            ]
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductInfo"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "DELETED",
+              "REJECTED",
+              "PENDING",
+              "TOBEVALIDATED"
+            ]
+          },
+          "pricingPlan": {
+            "type": "string"
+          },
+          "institutionUpdate": {
+            "$ref": "#/components/schemas/InstitutionUpdateResponse"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingResponse"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InstitutionUpdateResponse": {
+        "title": "InstitutionUpdateResponse",
+        "type": "object",
+        "properties": {
+          "institutionType": {
+            "type": "string",
+            "enum": [
+              "PA",
+              "PG",
+              "GSP",
+              "SA",
+              "PT",
+              "SCP",
+              "PSP",
+              "AS",
+              "REC",
+              "CON",
+              "PRV",
+              "PRV_PF",
+              "GPU",
+              "SCEC"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalAddress": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "taxCode": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "paymentServiceProvider": {
+            "$ref": "#/components/schemas/PspDataResource"
+          },
+          "dataProtectionOfficer": {
+            "$ref": "#/components/schemas/DpoDataResource"
+          },
+          "businessRegisterPlace": {
+            "type": "string"
+          },
+          "geographicTaxonomies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "imported": {
+            "type": "boolean"
+          },
+          "rea": {
+            "type": "string"
+          },
+          "shareCapital": {
+            "type": "string"
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportPhone": {
+            "type": "string"
+          }
+        }
+      },
+      "PspDataResource": {
+        "title": "PspDataResource",
+        "type": "object",
+        "properties": {
+          "businessRegisterNumber": {
+            "type": "string",
+            "description": "PSP's Business Register number"
+          },
+          "legalRegisterName": {
+            "type": "string",
+            "description": "PSP's legal register name"
+          },
+          "legalRegisterNumber": {
+            "type": "string",
+            "description": "PSP's legal register number"
+          },
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
+          },
+          "vatNumberGroup": {
+            "type": "boolean",
+            "description": "PSP's Vat Number group",
+            "example": false
+          }
+        }
+      },
+      "DpoDataResource": {
+        "title": "DpoDataResource",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "DPO's address"
+          },
+          "pec": {
+            "type": "string",
+            "description": "DPO's PEC"
+          },
+          "email": {
+            "type": "string",
+            "description": "DPO's email"
+          }
+        }
+      },
+      "BillingResponse": {
+        "title": "BillingResponse",
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string"
+          },
+          "recipientCode": {
+            "type": "string"
+          },
+          "publicServices": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OnboardingInstitutionUsersRequest": {
+        "title": "OnboardingInstitutionUsersRequest",
+        "required": [
+          "productId",
+          "users"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "Product to add roles to"
+          },
+          "users": {
+            "type": "array",
+            "description": "List of users to add",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "The institution ID where users will be added. This takes precedence over the tax code"
+          },
+          "institutionTaxCode": {
+            "type": "string",
+            "description": "Add users to the institution via tax code. Can be used in combination with institutionSubunitCode"
+          },
+          "institutionSubunitCode": {
+            "type": "string",
+            "description": "Add users to the institution via subunit code. Can be used in combination with institutionTaxCode"
+          },
+          "sendCreateUserNotificationEmail": {
+            "type": "boolean",
+            "description": "Send an email notification to the user. By default it's set to true",
+            "example": false
+          },
+          "toAddOnAggregates": {
+            "type": "boolean",
+            "description": "Enable automatic management of group assignment",
+            "example": false
+          }
+        }
+      },
+      "Person": {
+        "title": "Person",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID of a user already in the registry. A role will be added to the institution/product for the user. It takes precedence over taxCode"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "The tax code of the user to add / create. If id is present, the field is ignored"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the user to add / create. If id is present, the field is ignored"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the user to add / create. If id is present, the field is ignored"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the user to add / create. If id is present, the field is ignored"
+          },
+          "userMailUuid": {
+            "type": "string",
+            "description": "The email ID of the user already in the registry to be assigned to the institution/product. This field is only used when adding a user by ID"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role to assign to the user",
+            "enum": [
+              "MANAGER",
+              "DELEGATE",
+              "SUB_DELEGATE",
+              "OPERATOR",
+              "ADMIN_EA"
+            ]
+          },
+          "productRole": {
+            "type": "string",
+            "description": "The product role to assign to the user based on the product specifications"
+          },
+          "env": {
+            "type": "string",
+            "description": "Environment. The field is currently not used to create users. It's only returned in response",
+            "enum": [
+              "ROOT",
+              "DEV",
+              "COLL",
+              "PROD"
+            ]
+          },
+          "roleLabel": {
+            "type": "string",
+            "description": "The product role label based on the product specifications. The field is currently not used to create users"
+          }
+        },
+        "description": "List of users to add"
+      },
+      "LegalVerificationResource": {
+        "title": "LegalVerificationResource",
+        "type": "object",
+        "properties": {
+          "resultCode": {
+            "type": "string"
+          },
+          "resultDetail": {
+            "type": "string"
+          },
+          "verificationResult": {
+            "type": "boolean"
+          }
+        }
+      },
+      "VerifyRequestDto": {
+        "title": "VerifyRequestDto",
+        "required": [
+          "taxId",
+          "vatNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "taxId": {
+            "type": "string"
+          },
+          "vatNumber": {
+            "type": "string"
           }
         }
       },
@@ -2280,48 +2253,6 @@
             "description": "User by which the group was modified"
           }
         }
-      },
-      "Problem3": {
-        "title": "Problem",
-        "required": [
-          "status",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "A URL to a page with more details regarding the problem."
-          },
-          "title": {
-            "type": "string",
-            "description": "Short human-readable summary of the problem."
-          },
-          "status": {
-            "maximum": 599,
-            "minimum": 100,
-            "type": "integer",
-            "description": "The HTTP status code.",
-            "format": "int32",
-            "example": 500
-          },
-          "detail": {
-            "type": "string",
-            "description": "Human-readable description of this specific problem."
-          },
-          "instance": {
-            "type": "string",
-            "description": "A URI that describes where the problem occurred."
-          },
-          "invalidParams": {
-            "type": "array",
-            "description": "A list of invalid parameters details.",
-            "items": {
-              "$ref": "#/components/schemas/InvalidParam"
-            }
-          }
-        },
-        "description": "A \"problem detail\" as a way to carry machine-readable details of errors (https://datatracker.ietf.org/doc/html/rfc7807)"
       }
     },
     "securitySchemes": {
