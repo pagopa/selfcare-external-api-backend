@@ -114,7 +114,7 @@ public class InstitutionV2Controller {
     public List<UserResource> getInstitutionUsersByProduct(@Parameter(description = "${swagger.external_api.institutions.model.id}")
                                                            @PathVariable("institutionId") String institutionId,
                                                            @Parameter(description = "${swagger.external_api.products.model.id}")
-                                                           @RequestParam(value = "productId")
+                                                           @RequestParam(value = "productId", required = false) // Even if productId is required by the service, we leave it optional: the external policy should enforce it
                                                            String productId,
                                                            @Parameter(description = "${swagger.external_api.user.model.id}")
                                                            @RequestParam(value = "userId", required = false)

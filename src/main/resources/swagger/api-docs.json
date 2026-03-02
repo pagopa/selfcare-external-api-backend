@@ -338,8 +338,8 @@
           }
         },
         "responses" : {
-          "403" : {
-            "description" : "Forbidden",
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -358,16 +358,6 @@
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "OK",
             "content" : {
@@ -377,6 +367,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/RelationshipResult"
                   }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
@@ -573,8 +573,8 @@
               }
             }
           },
-          "403" : {
-            "description" : "Forbidden",
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -593,8 +593,8 @@
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized",
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -878,7 +878,7 @@
           "name" : "productId",
           "in" : "query",
           "description" : "Product's unique identifier",
-          "required" : true,
+          "required" : false,
           "style" : "form",
           "schema" : {
             "type" : "string"
