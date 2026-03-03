@@ -1,0 +1,11 @@
+variable "prefix" { type = string }
+variable "env_short" { type = string }
+variable "domain" { type = string }
+variable "tags" { type = map(any) }
+variable "tenant_id" { type = string }
+variable "key_vault_id" { type = string }
+#variable "identity_rg_id" { type = any }
+variable "ci_github_federations" { type = list(any) }
+variable "cd_github_federations" { type = list(any) }
+variable "environment_ci_roles" { type = any }
+variable "environment_cd_roles" { type = any }
