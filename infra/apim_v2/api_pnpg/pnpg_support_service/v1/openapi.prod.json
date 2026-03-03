@@ -1363,6 +1363,9 @@
           "businessRegisterPlace": {
             "type": "string"
           },
+          "supportEmail": {
+            "type": "string"
+          },
           "onboardings": {
             "type": "array",
             "items": {
