@@ -27,6 +27,10 @@ public class UserInfoResource {
         private String description;
         @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.institutionType}")
         private InstitutionType institutionType;
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.origin}")
+        private String origin;
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.originId}")
+        private String originId;
         @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.digitalAddress}")
         private String digitalAddress;
         @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.address}")
@@ -39,6 +43,10 @@ public class UserInfoResource {
         private String taxCode;
         @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.userEmail}")
         private String userEmail;
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.userMobilePhone}")
+        private String userMobilePhone;
+        @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.userTelephone}")
+        private String userTelephone;
         @Schema(description = "${swagger.external_api.user.model.onboardedInstitutions.productInfo}")
         private ProductInfo productInfo;
 

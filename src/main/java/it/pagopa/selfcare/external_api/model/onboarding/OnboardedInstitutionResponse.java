@@ -28,5 +28,6 @@ public class OnboardedInstitutionResponse {
     private String subunitType;
     private String aooParentCode;
     private String userEmail;
-
+    private String userMobilePhone;
+    private String userTelephone;
 }

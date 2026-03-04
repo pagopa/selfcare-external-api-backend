@@ -83,7 +83,9 @@
       "subunitCode": "subunitCodeValue",
       "subunitType": "subunitTypeValue",
       "aooParentCode": "aooParentCodeValue",
-      "userEmail": "utente@email.it"
+      "userEmail": "utente@email.it",
+      "userMobilePhone": "1234567890",
+      "userTelephone": "0987654321"
     }
   ]
 }
