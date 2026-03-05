@@ -338,12 +338,15 @@
           }
         },
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "200" : {
+            "description" : "OK",
             "content" : {
-              "application/problem+json" : {
+              "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RelationshipResult"
+                  }
                 }
               }
             }
@@ -358,8 +361,8 @@
               }
             }
           },
-          "403" : {
-            "description" : "Forbidden",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -368,15 +371,12 @@
               }
             }
           },
-          "200" : {
-            "description" : "OK",
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
-              "application/json" : {
+              "application/problem+json" : {
                 "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/RelationshipResult"
-                  }
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
@@ -563,12 +563,12 @@
           }
         },
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "200" : {
+            "description" : "OK",
             "content" : {
-              "application/problem+json" : {
+              "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+                  "$ref" : "#/components/schemas/LegalVerificationResource"
                 }
               }
             }
@@ -583,8 +583,8 @@
               }
             }
           },
-          "403" : {
-            "description" : "Forbidden",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -593,12 +593,12 @@
               }
             }
           },
-          "200" : {
-            "description" : "OK",
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
-              "application/json" : {
+              "application/problem+json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LegalVerificationResource"
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
