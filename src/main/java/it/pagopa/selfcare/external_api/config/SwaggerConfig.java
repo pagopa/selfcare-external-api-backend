@@ -1,7 +1,9 @@
 package it.pagopa.selfcare.external_api.config;
 
 import io.swagger.v3.core.converter.ModelConverters;
-import io.swagger.v3.oas.models.*;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.SpecVersion;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.*;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -23,7 +25,9 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The Class SwaggerConfig.
@@ -127,15 +131,22 @@ class SwaggerConfig {
             // Customize Paths
             openApi.getPaths().values().forEach(pathItem ->
                     pathItem.readOperationsMap().forEach((httpMethod, operation) -> {
-                        final ApiResponses responses = operation.getResponses();
-
-                        responses.addApiResponse("400", new ApiResponse());
-                        responses.addApiResponse("401", new ApiResponse());
+                        operation.getResponses().addApiResponse("400", new ApiResponse());
+                        operation.getResponses().addApiResponse("401", new ApiResponse());
                         if (httpMethod.name().equalsIgnoreCase("GET") ||
                             httpMethod.name().equalsIgnoreCase("HEAD")) {
-                            responses.addApiResponse("404", new ApiResponse());
+                            operation.getResponses().addApiResponse("404", new ApiResponse());
                         }
-                        responses.addApiResponse("500", new ApiResponse());
+                        operation.getResponses().addApiResponse("500", new ApiResponse());
+
+                        // Sort responses by status code
+                        operation.setResponses(operation.getResponses().entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey())
+                                .collect(
+                                        ApiResponses::new,
+                                        (r, e) -> r.put(e.getKey(), e.getValue()),
+                                        ApiResponses::putAll
+                                ));
 
                         // Include HTTP method in operationId (if it doesn't start with # and not already present)
                         Optional.ofNullable(operation.getOperationId()).ifPresent(opid -> {
@@ -175,17 +186,17 @@ class SwaggerConfig {
                         });
 
                         // Standard error responses
-                        Optional.ofNullable(responses.get("400"))
+                        Optional.ofNullable(operation.getResponses().get("400"))
                                 .ifPresent(r -> r.description("Bad Request").content(problemContent));
-                        Optional.ofNullable(responses.get("401"))
+                        Optional.ofNullable(operation.getResponses().get("401"))
                                 .ifPresent(r -> r.description("Unauthorized").content(problemContent));
-                        Optional.ofNullable(responses.get("403"))
+                        Optional.ofNullable(operation.getResponses().get("403"))
                                 .ifPresent(r -> r.description("Forbidden").content(problemContent));
-                        Optional.ofNullable(responses.get("404"))
+                        Optional.ofNullable(operation.getResponses().get("404"))
                                 .ifPresent(r -> r.description("Not Found").content(problemContent));
-                        Optional.ofNullable(responses.get("409"))
+                        Optional.ofNullable(operation.getResponses().get("409"))
                                 .ifPresent(r -> r.description("Conflict").content(problemContent));
-                        Optional.ofNullable(responses.get("500"))
+                        Optional.ofNullable(operation.getResponses().get("500"))
                                 .ifPresent(r -> r.description("Internal Server Error").content(problemContent));
 
                         // Sort tags
