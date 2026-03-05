@@ -54,7 +54,10 @@ public class UserServiceImpl implements UserService {
                         .map(onboardedInstitution -> {
                             OnboardedInstitutionResponse response = onboardingInstitutionMapper.toOnboardedInstitutionResponse(onboardedInstitution);
                             if (Objects.nonNull(onboardedInstitution.getUserMailUuid()) && user.getWorkContact(onboardedInstitution.getUserMailUuid()) != null) {
-                                response.setUserEmail(user.getWorkContact(onboardedInstitution.getUserMailUuid()).getEmail().getValue());
+                                final WorkContact workContact = user.getWorkContact(onboardedInstitution.getUserMailUuid());
+                                Optional.ofNullable(workContact.getEmail()).ifPresent(email -> response.setUserEmail(email.getValue()));
+                                Optional.ofNullable(workContact.getMobilePhone()).ifPresent(mobilePhone -> response.setUserMobilePhone(mobilePhone.getValue()));
+                                Optional.ofNullable(workContact.getTelephone()).ifPresent(telephone -> response.setUserTelephone(telephone.getValue()));
                             }
                             return response;
                         })

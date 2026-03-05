@@ -273,16 +273,6 @@
           }
         },
         "responses" : {
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
           "201" : {
             "description" : "Created"
           },
@@ -298,6 +288,16 @@
           },
           "401" : {
             "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -338,12 +338,15 @@
           }
         },
         "responses" : {
-          "401" : {
-            "description" : "Unauthorized",
+          "200" : {
+            "description" : "OK",
             "content" : {
-              "application/problem+json" : {
+              "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RelationshipResult"
+                  }
                 }
               }
             }
@@ -358,15 +361,12 @@
               }
             }
           },
-          "200" : {
-            "description" : "OK",
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
-              "application/json" : {
+              "application/problem+json" : {
                 "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/RelationshipResult"
-                  }
+                  "$ref" : "#/components/schemas/Problem"
                 }
               }
             }
@@ -423,16 +423,6 @@
           }
         },
         "responses" : {
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
           "201" : {
             "description" : "Created"
           },
@@ -448,6 +438,16 @@
           },
           "401" : {
             "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -498,16 +498,6 @@
           }
         },
         "responses" : {
-          "403" : {
-            "description" : "Forbidden",
-            "content" : {
-              "application/problem+json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
           "201" : {
             "description" : "Created"
           },
@@ -523,6 +513,16 @@
           },
           "401" : {
             "description" : "Unauthorized",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -573,8 +573,8 @@
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -583,8 +583,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "401" : {
+            "description" : "Unauthorized",
             "content" : {
               "application/problem+json" : {
                 "schema" : {
@@ -1284,6 +1284,14 @@
             "description" : "Institution's type",
             "enum" : [ "PA", "PG", "GSP", "SA", "PT", "SCP", "PSP", "AS", "REC", "CON", "PRV", "PRV_PF", "GPU", "SCEC" ]
           },
+          "origin" : {
+            "type" : "string",
+            "description" : "Institution's origin"
+          },
+          "originId" : {
+            "type" : "string",
+            "description" : "Institution's originId"
+          },
           "digitalAddress" : {
             "type" : "string",
             "description" : "Institution's digital address"
@@ -1307,6 +1315,14 @@
           "userEmail" : {
             "type" : "string",
             "description" : "User's email linked to the institution"
+          },
+          "userMobilePhone" : {
+            "type" : "string",
+            "description" : "User's phone number linked to the institution"
+          },
+          "userTelephone" : {
+            "type" : "string",
+            "description" : "User's phone number linked to the institution"
           },
           "productInfo" : {
             "$ref" : "#/components/schemas/ProductInfo"

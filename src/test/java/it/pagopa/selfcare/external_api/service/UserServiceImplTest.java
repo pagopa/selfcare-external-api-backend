@@ -21,10 +21,7 @@ import it.pagopa.selfcare.external_api.model.user.UserInfoWrapper;
 import it.pagopa.selfcare.external_api.model.user.UserInstitution;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
 import it.pagopa.selfcare.product.service.ProductService;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.CertifiableFieldResponseString;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserDetailResponse;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserInstitutionResponse;
-import it.pagopa.selfcare.user.generated.openapi.v1.dto.WorkContactResponse;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -392,6 +389,57 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(), "prod-1").getUser().getLastActiveOnboardingUserEmail());
         Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE), "prod-2").getUser().getLastActiveOnboardingUserEmail());
         Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED), "prod-3").getUser().getLastActiveOnboardingUserEmail());
+    }
+
+    @Test
+    void getUserInfoV2WithMobilePhoneAndTelephone() {
+        final UserDetailResponse user = new UserDetailResponse();
+        user.setId("userId");
+        final CertifiableFieldResponseString email = new CertifiableFieldResponseString();
+        email.setValue("test@test.com");
+        final CertifiableFieldResponseString mobilePhone = new CertifiableFieldResponseString();
+        mobilePhone.setValue("1234567890");
+        final CertifiableFieldResponseString telephone = new CertifiableFieldResponseString();
+        telephone.setValue("0987654321");
+        user.setWorkContacts(Map.of(
+                "1", new WorkContactResponse().email(email),
+                "2", new WorkContactResponse().email(email).mobilePhone(mobilePhone),
+                "3", new WorkContactResponse().email(email).mobilePhone(mobilePhone).telephone(telephone)
+        ));
+        user.setEmail(email);
+        when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+
+        final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
+                createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
+                createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
+                createOnboardedInstitutionInfo("info3", "prod-3", "ACTIVE", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3")
+        );
+        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails(eq("userId"), anyString());
+
+        final UserInfoWrapper userInfoWrapper = userService.getUserInfoV2("TEST", List.of(), "prod-x");
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getUser().getWorkContact("1").getEmail().getValue());
+        Assertions.assertNull(userInfoWrapper.getUser().getWorkContact("1").getMobilePhone());
+        Assertions.assertNull(userInfoWrapper.getUser().getWorkContact("1").getTelephone());
+        Assertions.assertEquals("info1", userInfoWrapper.getOnboardedInstitutions().get(0).getId());
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getOnboardedInstitutions().get(0).getUserEmail());
+        Assertions.assertNull(userInfoWrapper.getOnboardedInstitutions().get(0).getUserMobilePhone());
+        Assertions.assertNull(userInfoWrapper.getOnboardedInstitutions().get(0).getUserTelephone());
+
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getUser().getWorkContact("2").getEmail().getValue());
+        Assertions.assertEquals("1234567890", userInfoWrapper.getUser().getWorkContact("2").getMobilePhone().getValue());
+        Assertions.assertNull(userInfoWrapper.getUser().getWorkContact("2").getTelephone());
+        Assertions.assertEquals("info2", userInfoWrapper.getOnboardedInstitutions().get(1).getId());
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getOnboardedInstitutions().get(1).getUserEmail());
+        Assertions.assertEquals("1234567890", userInfoWrapper.getOnboardedInstitutions().get(1).getUserMobilePhone());
+        Assertions.assertNull(userInfoWrapper.getOnboardedInstitutions().get(1).getUserTelephone());
+
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getUser().getWorkContact("3").getEmail().getValue());
+        Assertions.assertEquals("1234567890", userInfoWrapper.getUser().getWorkContact("3").getMobilePhone().getValue());
+        Assertions.assertEquals("0987654321", userInfoWrapper.getUser().getWorkContact("3").getTelephone().getValue());
+        Assertions.assertEquals("info3", userInfoWrapper.getOnboardedInstitutions().get(2).getId());
+        Assertions.assertEquals("test@test.com", userInfoWrapper.getOnboardedInstitutions().get(2).getUserEmail());
+        Assertions.assertEquals("1234567890", userInfoWrapper.getOnboardedInstitutions().get(2).getUserMobilePhone());
+        Assertions.assertEquals("0987654321", userInfoWrapper.getOnboardedInstitutions().get(2).getUserTelephone());
     }
 
     private OnboardedInstitutionInfo createOnboardedInstitutionInfo(String id, String prodId, String state, String status, OffsetDateTime createdAt, String userMailUuid) {
