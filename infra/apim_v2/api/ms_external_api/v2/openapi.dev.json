@@ -4810,6 +4810,14 @@
               "SCEC"
             ]
           },
+          "origin": {
+            "type": "string",
+            "description": "Institution's origin"
+          },
+          "originId": {
+            "type": "string",
+            "description": "Institution's originId"
+          },
           "digitalAddress": {
             "type": "string",
             "description": "Institution's digital address"
@@ -4833,6 +4841,14 @@
           "userEmail": {
             "type": "string",
             "description": "User's email linked to the institution"
+          },
+          "userMobilePhone": {
+            "type": "string",
+            "description": "User's phone number linked to the institution"
+          },
+          "userTelephone": {
+            "type": "string",
+            "description": "User's phone number linked to the institution"
           },
           "productInfo": {
             "$ref": "#/components/schemas/ProductInfo"
