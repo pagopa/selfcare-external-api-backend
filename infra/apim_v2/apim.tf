@@ -506,6 +506,33 @@ module "apim_external_api_ms_v2" {
       xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-webhook-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
+    },
+    {
+      operation_id = "saveIAMUser"
+      xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-iam-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    }
+    ,
+    {
+      operation_id = "getIAMUser"
+      xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-iam-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    }
+    ,
+    {
+      operation_id = "getIAMUserByEmail"
+      xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-iam-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    }
+    ,
+    {
+      operation_id = "getIAMProductRolePermissionsList"
+      xml_content = templatefile("./api/base_ms_url_external_policy_get.xml.tpl", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-iam-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
