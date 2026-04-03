@@ -77,7 +77,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
 
     @BeforeEach
-    public void init() {
+    void init() {
         super.setUp();
     }
 
