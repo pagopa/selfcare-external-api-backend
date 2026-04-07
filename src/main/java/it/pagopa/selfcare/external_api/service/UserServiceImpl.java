@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
                     .filter(onboardedInstitutionInfo -> userInstitution.getProducts().stream()
                             .anyMatch(onboardedProductResponse -> onboardedProductResponse.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
                     )
-                    .peek(onboardedInstitution -> {
+                    .peek(onboardedInstitution -> { // NOSONAR
                         Optional<OnboardedProductResponse> optOnboardedProduct = userInstitution.getProducts()
                                 .stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()))
