@@ -1390,88 +1390,6 @@
         ]
       }
     },
-    "/documents": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFiles",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/documents/{path}": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFilesFromPath",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/onboarding/aggregation/increment": {
       "post": {
         "tags": [],
@@ -2010,101 +1928,6 @@
             "description": "OK",
             "content": {
               "application/json": {}
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/tokens/contract-report": {
-      "get": {
-        "tags": [],
-        "summary": "Check if contract signed is a CADES file",
-        "description": "Check if contract signed is a CADES file even if is not .p7m",
-        "operationId": "reportContractSigned",
-        "parameters": [
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContractSignedReport"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/tokens/contract-signed": {
-      "put": {
-        "tags": [],
-        "summary": "Find an attachment for a given onboarding id and update the contract signed path",
-        "description": "Find  an attachment for a given onboarding id and update the contract signed path",
-        "operationId": "updateContractSigned",
-        "parameters": [
-          {
-            "name": "contractSigned",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "format": "int64",
-                  "type": "integer"
-                }
-              }
             }
           },
           "401": {
@@ -5419,14 +5242,6 @@
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
-          }
-        }
-      },
-      "ContractSignedReport": {
-        "type": "object",
-        "properties": {
-          "cades": {
-            "type": "boolean"
           }
         }
       },
