@@ -12,15 +12,17 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:config/ms-party-registry-proxy-rest-client.properties")
 @PropertySource("classpath:config/ms-user-rest-client.properties")
 @PropertySource("classpath:config/user-registry-rest-client.properties")
+@PropertySource("classpath:config/ms-document-rest-client.properties")
 @EnableFeignClients(clients = {
         MsCoreRestClient.class,
         MsCoreInstitutionApiClient.class,
-        MsOnboardingTokenControllerApi.class,
         MsOnboardingControllerApi.class,
         MsPartyRegistryProxyRestClient.class,
         MsRegistryProxyNationalRegistryRestClient.class,
         MsUserApiRestClient.class,
-        UserRegistryRestClient.class
+        UserRegistryRestClient.class,
+        MsDocumentContentApiClient.class,
+        MsDocumentApiClient.class,
 })
 public class FeignClientConfig {
 }

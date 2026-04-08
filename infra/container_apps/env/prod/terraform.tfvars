@@ -97,6 +97,10 @@ app_settings = [
   {
     name  = "PRODUCT_STORAGE_CONTAINER"
     value = "selc-p-product"
+  },
+  {
+    name  = "MS_DOCUMENT_URL"
+    value = "http://selc-p-document-ms-ca"
   }
 ]
 

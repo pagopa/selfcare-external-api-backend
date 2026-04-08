@@ -92,6 +92,10 @@ app_settings = [
   {
     name  = "SELFCARE_USER_URL"
     value = "http://selc-d-user-ms-ca"
+  },
+  {
+    name  = "MS_DOCUMENT_URL"
+    value = "http://selc-d-document-ms-ca"
   }
 ]
 
