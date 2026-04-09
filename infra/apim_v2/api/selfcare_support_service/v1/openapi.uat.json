@@ -515,6 +515,33 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "products",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "roles",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -713,6 +740,51 @@
             "description": "OK",
             "content": {
               "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{userId}/otp-info": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user's email for OTP",
+        "description": "Get the user's email configured to receive the OTP",
+        "operationId": "getUserOtpEmailInfo",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOtpEmailInfoResponse"
+                }
+              }
             }
           },
           "401": {
@@ -2687,6 +2759,23 @@
           "mobilePhone": {
             "pattern": "^\\+?[0-9]{7,15}$",
             "type": "string"
+          }
+        }
+      },
+      "UserOtpEmailInfoResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "otpEmail": {
+            "type": "string"
+          },
+          "otpReferenceInstitutionId": {
+            "type": "string"
+          },
+          "canUserChangeOtpEmail": {
+            "type": "boolean"
           }
         }
       },
