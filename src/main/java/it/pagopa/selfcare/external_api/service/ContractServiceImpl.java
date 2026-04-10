@@ -3,15 +3,15 @@ package it.pagopa.selfcare.external_api.service;
 
 import it.pagopa.selfcare.commons.base.logging.LogUtils;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
+import it.pagopa.selfcare.document.generated.openapi.v1.dto.Document;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
-import it.pagopa.selfcare.external_api.client.MsOnboardingTokenControllerApi;
-import it.pagopa.selfcare.external_api.connector.FileStorageConnector;
+import it.pagopa.selfcare.external_api.client.MsDocumentApiClient;
+import it.pagopa.selfcare.external_api.client.MsDocumentContentApiClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.mapper.DocumentMapper;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapper;
-import it.pagopa.selfcare.external_api.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.model.document.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.external_api.model.token.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -33,23 +32,23 @@ public class ContractServiceImpl implements ContractService {
     public static final String TOKEN_FOR_S_AND_S_NOT_FOUND = "Token for %s and %s not found!";
     public static final String CONTRACT_FOR_S_AND_S_NOT_FOUND = "Contract for %s and %s not found!";
 
-    private final FileStorageConnector fileStorageConnector;
     private final MsCoreInstitutionApiClient institutionApiClient;
 
     private final InstitutionMapper institutionMapper;
-    private final MsOnboardingTokenControllerApi tokenControllerApi;
-    private final TokenMapper tokenMapper;
-    public ContractServiceImpl(FileStorageConnector fileStorageConnector,
-                               MsCoreInstitutionApiClient institutionApiClient,
+    private final MsDocumentContentApiClient documentContentApiClient;
+    private final MsDocumentApiClient documentApiClient;
+    private final DocumentMapper documentMapper;
+    public ContractServiceImpl(MsCoreInstitutionApiClient institutionApiClient,
                                InstitutionMapper institutionMapper,
-                               MsOnboardingTokenControllerApi tokenControllerApi,
-                               TokenMapper tokenMapper) {
+                               MsDocumentContentApiClient documentContentApiClient,
+                               MsDocumentApiClient documentApiClient,
+                               DocumentMapper documentMapper) {
         this.institutionApiClient = institutionApiClient;
         this.institutionMapper = institutionMapper;
-        this.tokenControllerApi = tokenControllerApi;
-        this.tokenMapper = tokenMapper;
+        this.documentContentApiClient = documentContentApiClient;
+        this.documentApiClient = documentApiClient;
+        this.documentMapper = documentMapper;
         log.trace("Initializing {}...", ContractServiceImpl.class.getSimpleName());
-        this.fileStorageConnector = fileStorageConnector;
     }
 
     @Override
@@ -66,15 +65,15 @@ public class ContractServiceImpl implements ContractService {
             .map(institutionMapper::toEntity)
             .orElseThrow(ResourceNotFoundException::new);
 
-        List<Token> tokens =  Objects.requireNonNull(tokenControllerApi._getToken(institutionOnboarding.getTokenId()).getBody()).stream()
-            .map(tokenMapper::toEntity)
+        List<Document> documents =  Objects.requireNonNull(documentApiClient._getDocumentByOnboardingId(institutionOnboarding.getTokenId()).getBody()).stream()
+            .map(documentMapper::toEntity)
             .toList();
 
-        if(CollectionUtils.isEmpty(tokens))
+        if(CollectionUtils.isEmpty(documents))
             throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
-        if(!StringUtils.hasText(tokens.get(0).getContractSigned()))
+        if(!StringUtils.hasText(documents.get(0).getContractSigned()))
             throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_FOUND_BUT_CONTRACT_SIGNED_REFERENCE_IS_EMPTY, institutionId, productId));
-        ResponseEntity<Resource> contract = tokenControllerApi._getContractSigned(institutionOnboarding.getTokenId());
+        ResponseEntity<Resource> contract = documentContentApiClient._getContractSigned(institutionOnboarding.getTokenId());
 
         ResourceResponse response = new ResourceResponse();
         try {
@@ -83,7 +82,7 @@ public class ContractServiceImpl implements ContractService {
             throw new ResourceNotFoundException(String.format(CONTRACT_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
         }
 
-        File contractSigned = new File(tokens.get(0).getContractSigned());
+        File contractSigned = new File(documents.get(0).getContractSigned());
         String fileName = contractSigned.getName();
         response.setFileName(fileName);
         String type = contract.getHeaders().containsKey("content-type") && !contract.getHeaders().get("content-type").isEmpty() ? contract.getHeaders().get("content-type").get(0) : "";
