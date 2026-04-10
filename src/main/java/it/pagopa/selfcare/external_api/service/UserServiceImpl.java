@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
                         })
                         .toList();
 
-        final String lastActiveOnboardingUserEmail = Optional.ofNullable(msUserApiRestClient._getUserOtpEmailInfo(user.getId()).getBody())
+        final String lastActiveOnboardingUserEmail = Optional.ofNullable(getUserOtpEmailInfo(user.getId()))
                 .map(UserOtpEmailInfoResponse::getOtpEmail).orElse(null);
         user.setLastActiveOnboardingUserEmail(lastActiveOnboardingUserEmail);
 
@@ -74,6 +74,14 @@ public class UserServiceImpl implements UserService {
         return infoWrapper;
     }
 
+    private UserOtpEmailInfoResponse getUserOtpEmailInfo(String userId) {
+        try {
+            return msUserApiRestClient._getUserOtpEmailInfo(userId).getBody();
+        } catch (ResourceNotFoundException ex) {
+            log.warn("Not otp info for user with id {}", userId);
+            return null;
+        }
+    }
 
     @Override
     public UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId) {
