@@ -5,7 +5,7 @@ import it.pagopa.selfcare.external_api.client.config.MsDocumentApiClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(
-        name = "${rest-client.ms-document-content-api.serviceCode}",
+        name = "${rest-client.ms-document-api.serviceCode}",
         url = "${rest-client.ms-document.base-url}",
         configuration = MsDocumentApiClientConfig.class
 )
