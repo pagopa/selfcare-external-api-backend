@@ -2110,6 +2110,96 @@
           }
         ]
       }
+    },
+    "/documents/contract-report": {
+      "get": {
+        "summary": "Check if contract signed is a CADES file",
+        "description": "Check if contract signed is a CADES file even if is not .p7m",
+        "operationId": "reportContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractSignedReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/documents/{onboardingId}/contract-signed": {
+      "put": {
+        "summary": "Update contract signed path for a given onboarding",
+        "description": "Update contract signed path for a given onboarding",
+        "operationId": "updateContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractSigned",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -5383,6 +5473,14 @@
               "description": "List of all the members of the group",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "ContractSignedReport": {
+        "type": "object",
+        "properties": {
+          "cades": {
+            "type": "boolean"
           }
         }
       }
