@@ -2972,10 +2972,10 @@
           "mail3": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           }
         }
@@ -4931,6 +4931,7 @@
           "REQUEST",
           "TOBEVALIDATED",
           "PENDING",
+          "PENDING_IN_REVIEW",
           "COMPLETED",
           "FAILED",
           "REJECTED",
