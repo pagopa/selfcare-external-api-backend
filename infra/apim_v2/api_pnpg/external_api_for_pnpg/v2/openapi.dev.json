@@ -1969,11 +1969,11 @@
             "type": "string"
           },
           "status": {
-            "$ref": "#/components/schemas/OnboardingStatus"
+            "$ref": "#/components/schemas/OnboardingStatus1"
           }
         }
       },
-      "OnboardingStatus": {
+      "OnboardingStatus1": {
         "type": "string",
         "enum": [
           "REQUEST",
