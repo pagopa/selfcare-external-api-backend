@@ -448,6 +448,15 @@ module "apim_external_api_ms_v2" {
       })
     },
     {
+      operation_id = "retrieveOnboardingOnSearchEngine"
+      xml_content = templatefile("./api/ms_external_api/v2/jwt_base_policy_iss_pagopa.xml.tpl", {
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        MS_BACKEND_URL             = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
       operation_id = "createProduct"
       xml_content = templatefile("./api/base_ms_url_external_policy_post.xml.tpl", {
         MS_BACKEND_URL         = "https://selc-${var.env_short}-product-ms-ca.${var.ca_suffix_dns_private_name}/"
@@ -982,6 +991,15 @@ module "apim_selfcare_support_service_v1" {
     },
     {
       operation_id = "retrieveInstitutionOnSearchEngine"
+      xml_content = templatefile("./api/jwt_base_policy_iss_pagopa.xml.tpl", {
+        API_DOMAIN                 = local.api_domain
+        KID                        = data.azurerm_key_vault_secret.jwt_kid.value
+        JWT_CERTIFICATE_THUMBPRINT = azurerm_api_management_certificate.jwt_certificate.thumbprint
+        MS_BACKEND_URL             = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "retrieveOnboardingOnSearchEngine"
       xml_content = templatefile("./api/jwt_base_policy_iss_pagopa.xml.tpl", {
         API_DOMAIN                 = local.api_domain
         KID                        = data.azurerm_key_vault_secret.jwt_kid.value
