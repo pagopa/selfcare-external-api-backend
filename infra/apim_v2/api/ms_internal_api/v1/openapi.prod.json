@@ -1435,88 +1435,6 @@
         ]
       }
     },
-    "/documents": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFiles",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/documents/{path}": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFilesFromPath",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/onboarding/aggregation/increment": {
       "post": {
         "tags": [],
@@ -2073,101 +1991,6 @@
         ]
       }
     },
-    "/tokens/contract-report": {
-      "get": {
-        "tags": [],
-        "summary": "Check if contract signed is a CADES file",
-        "description": "Check if contract signed is a CADES file even if is not .p7m",
-        "operationId": "reportContractSigned",
-        "parameters": [
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContractSignedReport"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/tokens/contract-signed": {
-      "put": {
-        "tags": [],
-        "summary": "Find an attachment for a given onboarding id and update the contract signed path",
-        "description": "Find  an attachment for a given onboarding id and update the contract signed path",
-        "operationId": "updateContractSigned",
-        "parameters": [
-          {
-            "name": "contractSigned",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "format": "int64",
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/user-groups/members": {
       "put": {
         "tags": [
@@ -2277,6 +2100,96 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/documents/contract-report": {
+      "get": {
+        "summary": "Check if contract signed is a CADES file",
+        "description": "Check if contract signed is a CADES file even if is not .p7m",
+        "operationId": "reportContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractSignedReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/documents/{onboardingId}/contract-signed": {
+      "put": {
+        "summary": "Update contract signed path for a given onboarding",
+        "description": "Update contract signed path for a given onboarding",
+        "operationId": "updateContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractSigned",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
           }
         },
         "security": [
@@ -3149,10 +3062,10 @@
           "mail3": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           }
         }
@@ -5484,14 +5397,6 @@
           }
         }
       },
-      "ContractSignedReport": {
-        "type": "object",
-        "properties": {
-          "cades": {
-            "type": "boolean"
-          }
-        }
-      },
       "AddMembersToUserGroupDto": {
         "title": "AddMembersToUserGroupDto",
         "required": [
@@ -5567,6 +5472,14 @@
               "description": "List of all the members of the group",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "ContractSignedReport": {
+        "type": "object",
+        "properties": {
+          "cades": {
+            "type": "boolean"
           }
         }
       }
