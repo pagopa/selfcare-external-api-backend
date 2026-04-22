@@ -84,7 +84,7 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
         DocumentResponse documentResponse = new DocumentResponse();
         documentResponse.setContractSigned(document.getContractSigned());
         when(documentApiClient._getDocumentByOnboardingId(any()))
-                .thenReturn(ResponseEntity.ok(List.of(documentResponse)));
+                .thenReturn(ResponseEntity.ok(documentResponse));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
         ResourceResponse result = contractService.getContractV2("institutionId", "productId");
         Assertions.assertEquals("application/octet-stream", result.getMimetype());
@@ -112,7 +112,7 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
         DocumentResponse documentResponse = new DocumentResponse();
         documentResponse.setContractSigned(document.getContractSigned());
         when(documentApiClient._getDocumentByOnboardingId(any()))
-          .thenReturn(ResponseEntity.ok(List.of(documentResponse)));
+          .thenReturn(ResponseEntity.ok(documentResponse));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
         Assertions.assertThrows(ResourceNotFoundException.class, () -> contractService.getContractV2("institutionId", "productId"));
     }
@@ -151,7 +151,7 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
 
         DocumentResponse documentResponse = new DocumentResponse();
         when(documentApiClient._getDocumentByOnboardingId(any()))
-                .thenReturn(ResponseEntity.ok(List.of(documentResponse)));
+                .thenReturn(ResponseEntity.ok(documentResponse));
 
         when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
