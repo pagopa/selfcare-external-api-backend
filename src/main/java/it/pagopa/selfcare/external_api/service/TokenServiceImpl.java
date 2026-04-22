@@ -23,20 +23,25 @@ public class TokenServiceImpl implements TokenService {
     public List<TokenOnboardedUsers> findByProductId(String productId, int page, int size, String status) {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
+        OnboardingStatus onboardingStatus = null;
+        if (status != null && !status.isBlank()) {
+            onboardingStatus = OnboardingStatus.fromValue(status);
+        }
         List<TokenOnboardedUsers> tokenOnboardedUsers = Objects.requireNonNull(
-                        onboardingControllerApi._getOnboardingWithFilter(null,
-                                        null,
-                                        null,
-                                        page,
-                                        productId,
-                                        null,
-                                        size,
-                                        null,
-                                        OnboardingStatus.valueOf(status),
-                                        null,
-                                        null,
-                                        null,
-                                        null)
+                        onboardingControllerApi._getOnboardingWithFilter(
+                                null,
+                                    null,
+                                    null,
+                                    page,
+                                    productId,
+                                    null,
+                                    size,
+                                    null,
+                                    onboardingStatus,
+                                    null,
+                                    null,
+                                    null,
+                                    null)
                                 .getBody())
                 .getItems().stream()
                 .map(tokenMapper::toEntity)
