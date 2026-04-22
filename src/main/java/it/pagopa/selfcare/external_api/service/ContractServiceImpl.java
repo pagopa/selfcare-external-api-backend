@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -65,13 +64,11 @@ public class ContractServiceImpl implements ContractService {
             .map(institutionMapper::toEntity)
             .orElseThrow(ResourceNotFoundException::new);
 
-        List<Document> documents =  Objects.requireNonNull(documentApiClient._getDocumentByOnboardingId(institutionOnboarding.getTokenId()).getBody()).stream()
+        Document document = Optional.ofNullable(documentApiClient._getDocumentByOnboardingId(institutionOnboarding.getTokenId()).getBody())
             .map(documentMapper::toEntity)
-            .toList();
+            .orElseThrow(() -> new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_NOT_FOUND, institutionId, productId)));
 
-        if(CollectionUtils.isEmpty(documents))
-            throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
-        if(!StringUtils.hasText(documents.get(0).getContractSigned()))
+        if(!StringUtils.hasText(document.getContractSigned()))
             throw new ResourceNotFoundException(String.format(TOKEN_FOR_S_AND_S_FOUND_BUT_CONTRACT_SIGNED_REFERENCE_IS_EMPTY, institutionId, productId));
         ResponseEntity<Resource> contract = documentContentApiClient._getContractSigned(institutionOnboarding.getTokenId());
 
@@ -82,7 +79,7 @@ public class ContractServiceImpl implements ContractService {
             throw new ResourceNotFoundException(String.format(CONTRACT_FOR_S_AND_S_NOT_FOUND, institutionId, productId));
         }
 
-        File contractSigned = new File(documents.get(0).getContractSigned());
+        File contractSigned = new File(document.getContractSigned());
         String fileName = contractSigned.getName();
         response.setFileName(fileName);
         String type = contract.getHeaders().containsKey("content-type") && !contract.getHeaders().get("content-type").isEmpty() ? contract.getHeaders().get("content-type").get(0) : "";
