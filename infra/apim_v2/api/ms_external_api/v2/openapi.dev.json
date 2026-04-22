@@ -32,6 +32,9 @@
       "description": "User group endpoint CRUD operations"
     },
     {
+      "name": "Onboarding Controller"
+    },
+    {
       "name": "ContractTemplate"
     },
     {
@@ -3453,6 +3456,141 @@
         ]
       }
     },
+    "/onboarding": {
+      "get": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Retrieve paged onboardings with optional filters and sorting.",
+        "description": "The API retrieves paged onboarding using optional filter, order by descending creation date",
+        "operationId": "getOnboardingWithFilter",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "institutionId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "onboardingId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "format": "int32",
+              "default": "0",
+              "type": "integer"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "format": "int32",
+              "default": "20",
+              "type": "integer"
+            }
+          },
+          {
+            "name": "skipPagination",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OnboardingStatus"
+            }
+          },
+          {
+            "name": "subunitCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingGetResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/onboarding/institutions/{institutionId}": {
       "get": {
         "tags": [],
@@ -3485,6 +3623,152 @@
                   "$ref": "#/components/schemas/OnboardingGet"
                 }
               }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/{onboardingId}": {
+      "delete": {
+        "tags": [],
+        "summary": "Perform delete operation of an onboarding request",
+        "description": "Perform delete operation of an onboarding request receiving onboarding id, then invokes async process to set DELETED as status for institution and user onboardings.",
+        "operationId": "deleteOnboarding",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/{onboardingId}/complete": {
+      "put": {
+        "tags": [],
+        "summary": "Complete onboarding by verifying and uploading contract, then trigger async activities.",
+        "description": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
+        "operationId": "completeOnboardingUsingPUT",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "contract"
+                ],
+                "type": "object",
+                "properties": {
+                  "contract": {
+                    "format": "binary",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/onboarding/{onboardingId}/reject": {
+      "put": {
+        "tags": [
+          "Onboarding Controller"
+        ],
+        "summary": "Perform reject operation of an onboarding request",
+        "description": "Perform reject operation of an onboarding request receiving onboarding id.Function change status to REJECT for an onboarding request that is not COMPLETED. ",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
             }
           },
           "401": {
@@ -6182,6 +6466,21 @@
           }
         }
       },
+      "OnboardingGetResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OnboardingGet"
+            }
+          }
+        }
+      },
       "OnboardingGet": {
         "type": "object",
         "properties": {
@@ -6523,6 +6822,27 @@
             "type": "string"
           },
           "userRequestUid": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingStatus": {
+        "enum": [
+          "REQUEST",
+          "TOBEVALIDATED",
+          "PENDING",
+          "PENDING_IN_REVIEW",
+          "COMPLETED",
+          "FAILED",
+          "REJECTED",
+          "DELETED"
+        ],
+        "type": "string"
+      },
+      "ReasonRequest": {
+        "type": "object",
+        "properties": {
+          "reasonForReject": {
             "type": "string"
           }
         }
