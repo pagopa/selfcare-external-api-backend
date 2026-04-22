@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.service;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TokenServiceImpl implements TokenService {
                                         null,
                                         size,
                                         null,
-                                        status,
+                                        OnboardingStatus.valueOf(status),
                                         null,
                                         null,
                                         null,

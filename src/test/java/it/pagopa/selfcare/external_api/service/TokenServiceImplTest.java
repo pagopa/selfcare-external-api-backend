@@ -3,9 +3,9 @@ package it.pagopa.selfcare.external_api.service;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
-import it.pagopa.selfcare.onboarding.common.OnboardingStatus;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGet;
 import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingGetResponse;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,21 @@ class TokenServiceImplTest extends BaseServiceTestUtils {
         OnboardingGet onboardingGet = new OnboardingGet();
         onboardingGet.setProductId("id");
         onboardingGetResponse.setItems(List.of(onboardingGet));
-        when(onboardingControllerApi._getOnboardingWithFilter(null, null, null, 1, "id", null, 10, null, OnboardingStatus.COMPLETED.name(), null, null, null, null))
-                .thenReturn(ResponseEntity.ok(onboardingGetResponse));
+        when(onboardingControllerApi._getOnboardingWithFilter(
+                null,
+                null,
+                null,
+                1,
+                "id",
+                null,
+                10,
+                null,
+                OnboardingStatus.COMPLETED,
+                null,
+                null,
+                null,
+                null))
+            .thenReturn(ResponseEntity.ok(onboardingGetResponse));
         List<TokenOnboardedUsers> tokens = this.tokenService.findByProductId("id", 1, 10, OnboardingStatus.COMPLETED.name());
         Assertions.assertEquals(1, tokens.size());
     }
