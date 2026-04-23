@@ -547,6 +547,30 @@ module "apim_external_api_ms_v2" {
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
+    },
+    {
+      operation_id = "getOnboardingWithFilter"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "deleteOnboarding"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "completeOnboardingUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
+    },
+    {
+      operation_id = "rejectOnboardingUsingPUT"
+      xml_content = templatefile("./api/base_ms_url_policy.xml", {
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-onboarding-ms-ca.${var.ca_suffix_dns_private_name}/"
+      })
     }
   ]
 }
