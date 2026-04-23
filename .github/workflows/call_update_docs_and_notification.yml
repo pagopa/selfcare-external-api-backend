@@ -80,8 +80,8 @@ jobs:
           else
             echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
             echo "checkout_cdn_profile=selc-${env:0:1}-checkout-cdn-profile" >> $GITHUB_OUTPUT
-            echo "pnpg_suffix=''" >> $GITHUB_OUTPUT
-            echo "pnpg_suffix_storage=''" >> $GITHUB_OUTPUT
+            echo "pnpg_suffix=" >> $GITHUB_OUTPUT
+            echo "pnpg_suffix_storage=" >> $GITHUB_OUTPUT
           fi
 
       - name: Download Developer OpenAPI from blob storage
