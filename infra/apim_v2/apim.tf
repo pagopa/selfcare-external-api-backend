@@ -330,7 +330,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "retrieveInstitutionByIdUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -354,7 +354,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getDelegationsUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -362,7 +362,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getDelegationsUsingGET_2"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/v2/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -370,7 +370,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getDelegateInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -378,7 +378,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getDelegatorInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -386,7 +386,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getOnboardingsInstitutionUsingGET"
       xml_content = templatefile("./api/base_ms_url_external_product_policy.xml.tpl", {
-        MS_BACKEND_URL         = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL         = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         TENANT_ID              = data.azurerm_client_config.current.tenant_id
         EXTERNAL-OAUTH2-ISSUER = data.azurerm_key_vault_secret.external-oauth2-issuer.value
       })
@@ -394,7 +394,7 @@ module "apim_external_api_ms_v2" {
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/ms_external_api/v2/getInstitutions_op_policy.xml.tpl", {
-        MS_BACKEND_URL          = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL          = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         MS_EXTERNAL_BACKEND_URL = "https://selc-${var.env_short}-ext-api-backend-ca.${var.ca_suffix_dns_private_name}/v2/"
         WEB_STORAGE_URL         = data.azurerm_key_vault_secret.web_storage_url.value
       })
@@ -618,7 +618,7 @@ module "apim_internal_api_ms_v1" {
     {
       operation_id = "retrieveInstitutionByIdUsingGET"
       xml_content = templatefile("./api/ms_internal_api/v1/getInstitutionById_op_policy.xml.tpl", {
-        MS_BACKEND_URL                = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL                = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
         MS_REGISTRY_PROXY_BACKEND_URL = "https://selc-${var.env_short}-party-reg-proxy-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
@@ -643,7 +643,7 @@ module "apim_internal_api_ms_v1" {
     {
       operation_id = "createDelegationFromInstitutionsTaxCodeUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -673,7 +673,7 @@ module "apim_internal_api_ms_v1" {
     {
       operation_id = "updateCreatedAtUsingPUT"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -739,7 +739,7 @@ module "apim_internal_api_ms_v1" {
     {
       operation_id = "getDelegationsUsingGET_2"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     },
     {
@@ -880,7 +880,7 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "getInstitutionsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -928,19 +928,19 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "getDelegationsUsingGET"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
       operation_id = "getDelegationsUsingGET_2"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/v2/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/v2/"
       })
     },
     {
       operation_id = "createDelegationUsingPOST"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -978,7 +978,7 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "updateInstitutionUsingPUT"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -998,7 +998,7 @@ module "apim_selfcare_support_service_v1" {
     {
       operation_id = "deleteDelegationUsingDELETE"
       xml_content = templatefile("./api/base_ms_url_policy.xml", {
-        MS_BACKEND_URL = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+        MS_BACKEND_URL = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
       })
     },
     {
@@ -1051,7 +1051,7 @@ module "apim_notification_event_api_v1" {
     "https"
   ]
 
-  service_url = "https://selc-${var.env_short}-ms-core-ca.${var.ca_suffix_dns_private_name}/"
+  service_url = "https://selc-${var.env_short}-institution-ms-ca.${var.ca_suffix_dns_private_name}/"
 
   content_format = "openapi+json"
   content_value = templatefile("./api/notification_event_api/v1/openapi.${var.env}.json", {
