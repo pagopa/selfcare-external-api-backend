@@ -63,7 +63,7 @@ app_settings = [
   },
   {
     name  = "MS_CORE_URL"
-    value = "http://selc-p-pnpg-ms-core-ca"
+    value = "http://selc-p-pnpg-institution-ms-ca"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
@@ -71,7 +71,7 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "http://selc-p-pnpg-ms-core-ca"
+    value = "http://selc-p-pnpg-institution-ms-ca"
   },
   {
     name  = "MS_PRODUCT_URL"
@@ -83,7 +83,7 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "http://selc-p-pnpg-ms-core-ca"
+    value = "http://selc-p-pnpg-institution-ms-ca"
   },
   {
     name  = "SELFCARE_USER_URL"
