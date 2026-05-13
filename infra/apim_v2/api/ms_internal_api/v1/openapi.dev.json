@@ -4763,6 +4763,9 @@
           },
           "iban": {
             "type": "string"
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
@@ -4876,6 +4879,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
@@ -5398,6 +5404,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "isTest": {
+            "type": "boolean"
           },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProviderRequest1"
