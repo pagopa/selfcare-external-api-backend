@@ -291,7 +291,8 @@ module "apim_external_api_ms_v2" {
     module.apim_product_fd.product_id,
     module.apim_product_fd_garantito.product_id,
     module.apim_product_registro_beni.product_id,
-    module.apim_product_idpay_gi.product_id
+    module.apim_product_idpay_gi.product_id,
+    module.apim_product_ced.product_id
   ]
 
   api_operation_policies = [
@@ -1619,6 +1620,23 @@ module "apim_product_idpay_gi" {
   approval_required     = false
 
   policy_xml = file("./api_product/idpay-gi/policy.xml")
+}
+
+module "apim_product_ced" {
+  source = "github.com/pagopa/terraform-azurerm-v4.git//api_management_product?ref=v7.26.5"
+
+  product_id   = "ced"
+  display_name = "CED"
+  description  = "Carta Europea della Disabilità"
+
+  api_management_name = module.apim.name
+  resource_group_name = azurerm_resource_group.rg_api.name
+
+  published             = true
+  subscription_required = true
+  approval_required     = false
+
+  policy_xml = file("./api_product/ced/policy.xml")
 }
 
 module "apim_product_io_sign" {
