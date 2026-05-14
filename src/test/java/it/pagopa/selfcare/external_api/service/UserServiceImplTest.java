@@ -43,7 +43,6 @@ import java.time.ZoneOffset;
 import java.util.*;
 
 import static it.pagopa.selfcare.external_api.model.user.RelationshipState.ACTIVE;
-import static it.pagopa.selfcare.external_api.model.user.RelationshipState.SUSPENDED;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -78,7 +77,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
 
     @BeforeEach
-    public void init() {
+    void init() {
         super.setUp();
     }
 
@@ -240,6 +239,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
         Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
+        Mockito.when(msUserApiRestClient._getUserOtpEmailInfo(anyString())).thenReturn(ResponseEntity.ok(new UserOtpEmailInfoResponse()));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
@@ -272,6 +272,8 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         });
         Mockito.when(msUserApiRestClient._retrievePaginatedAndFilteredUser(null, null, null, null, null, 350, null,user.getId()))
                 .thenReturn(ResponseEntity.ok(userInstitutions));
+        Mockito.when(msUserApiRestClient._getUserOtpEmailInfo(anyString())).thenReturn(ResponseEntity.ok(UserOtpEmailInfoResponse.builder()
+                .otpEmail("contact2@work.it").build()));
         Mockito.when(userMapper.getProductService()).thenReturn(productService);
         Mockito.when(productService.getProductRaw(any())).thenReturn(TestUtils.dummyProduct(PRODUCT_ID));
 
@@ -355,40 +357,14 @@ class UserServiceImplTest extends BaseServiceTestUtils {
 
     @Test
     void getUserInfoV2WithLastOnboardingUserEmail() {
-        final UserDetailResponse user = new UserDetailResponse();
-        user.setId("userId");
-        final CertifiableFieldResponseString email1 = new CertifiableFieldResponseString();
-        email1.setValue("test1@test.com");
-        final CertifiableFieldResponseString email2 = new CertifiableFieldResponseString();
-        email2.setValue("test2@test.com");
-        final CertifiableFieldResponseString email3 = new CertifiableFieldResponseString();
-        email3.setValue("test3@test.com");
-        final CertifiableFieldResponseString email4 = new CertifiableFieldResponseString();
-        email4.setValue("test4@test.com");
-        final CertifiableFieldResponseString email5 = new CertifiableFieldResponseString();
-        email5.setValue("test5@test.com");
-        user.setWorkContacts(Map.of(
-            "1", new WorkContactResponse().email(email1),
-            "2", new WorkContactResponse().email(email2),
-            "3", new WorkContactResponse().email(email3),
-            "4", new WorkContactResponse().email(email4),
-            "5", new WorkContactResponse().email(email5)
-        ));
-        user.setEmail(email1);
-        when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+        when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(UserDetailResponse.builder()
+                .id("userId").build()));
+        when(msUserApiRestClient._getUserOtpEmailInfo(anyString())).thenReturn(ResponseEntity.ok(UserOtpEmailInfoResponse.builder()
+                .userId("userId").otpReferenceInstitutionId("institutionId").otpEmail("email").canUserChangeOtpEmail(true).build()));
+        doReturn(List.of()).when(userService).getOnboardedInstitutionsDetails(eq("userId"), anyString());
 
-        final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
-            createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),
-            createOnboardedInstitutionInfo("info2", "prod-2", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC), "2"),
-            createOnboardedInstitutionInfo("info3", "prod-3", "ACTIVE", "SUSPENDED", OffsetDateTime.of(2025, 2, 2, 0, 0, 0, 0, ZoneOffset.UTC), "3"),
-            createOnboardedInstitutionInfo("info4", "prod-4", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC), "4"),
-            createOnboardedInstitutionInfo("info5", "prod-5", "SUSPENDED", "ACTIVE", OffsetDateTime.of(2025, 6, 1, 0, 0, 0, 0, ZoneOffset.UTC), "5")
-        );
-        doReturn(onboardedInstitutionInfos).when(userService).getOnboardedInstitutionsDetails(eq("userId"), anyString());
-
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(), "prod-1").getUser().getLastActiveOnboardingUserEmail());
-        Assertions.assertEquals("test2@test.com", userService.getUserInfoV2("TEST", List.of(ACTIVE), "prod-2").getUser().getLastActiveOnboardingUserEmail());
-        Assertions.assertEquals("test3@test.com", userService.getUserInfoV2("TEST", List.of(SUSPENDED), "prod-3").getUser().getLastActiveOnboardingUserEmail());
+        final UserInfoWrapper response = userService.getUserInfoV2("taxCode", List.of(ACTIVE), "productId");
+        Assertions.assertEquals("email", response.getUser().getLastActiveOnboardingUserEmail());
     }
 
     @Test
@@ -408,6 +384,7 @@ class UserServiceImplTest extends BaseServiceTestUtils {
         ));
         user.setEmail(email);
         when(msUserApiRestClient._searchUserByFiscalCode(any(), any())).thenReturn(ResponseEntity.ok(user));
+        when(msUserApiRestClient._getUserOtpEmailInfo(anyString())).thenReturn(ResponseEntity.ok(new UserOtpEmailInfoResponse()));
 
         final List<OnboardedInstitutionInfo> onboardedInstitutionInfos = List.of(
                 createOnboardedInstitutionInfo("info1", "prod-1", "ACTIVE", "ACTIVE", OffsetDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC), "1"),

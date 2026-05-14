@@ -68,7 +68,7 @@ app_settings = [
   },
   {
     name  = "MS_CORE_URL"
-    value = "http://selc-p-ms-core-ca"
+    value = "http://selc-p-institution-ms-ca"
   },
   {
     name  = "USERVICE_PARTY_REGISTRY_PROXY_URL"
@@ -76,7 +76,7 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_PROCESS_URL"
-    value = "http://selc-p-ms-core-ca"
+    value = "http://selc-p-institution-ms-ca"
   },
   {
     name  = "USERVICE_USER_REGISTRY_URL"
@@ -84,7 +84,7 @@ app_settings = [
   },
   {
     name  = "USERVICE_PARTY_MANAGEMENT_URL"
-    value = "http://selc-p-ms-core-ca"
+    value = "http://selc-p-institution-ms-ca"
   },
   {
     name  = "STORAGE_CONTAINER"
@@ -97,6 +97,10 @@ app_settings = [
   {
     name  = "PRODUCT_STORAGE_CONTAINER"
     value = "selc-p-product"
+  },
+  {
+    name  = "MS_DOCUMENT_URL"
+    value = "http://selc-p-document-ms-ca"
   }
 ]
 

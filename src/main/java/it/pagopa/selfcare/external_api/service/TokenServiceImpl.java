@@ -3,6 +3,7 @@ package it.pagopa.selfcare.external_api.service;
 import it.pagopa.selfcare.external_api.client.MsOnboardingControllerApi;
 import it.pagopa.selfcare.external_api.mapper.TokenMapper;
 import it.pagopa.selfcare.external_api.model.token.TokenOnboardedUsers;
+import it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.OnboardingStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,20 +23,25 @@ public class TokenServiceImpl implements TokenService {
     public List<TokenOnboardedUsers> findByProductId(String productId, int page, int size, String status) {
         log.trace("findByProductId start");
         log.debug("findByProductId parameter: {}", productId);
+        OnboardingStatus onboardingStatus = null;
+        if (status != null && !status.isBlank()) {
+            onboardingStatus = OnboardingStatus.fromValue(status);
+        }
         List<TokenOnboardedUsers> tokenOnboardedUsers = Objects.requireNonNull(
-                        onboardingControllerApi._getOnboardingWithFilter(null,
-                                        null,
-                                        null,
-                                        page,
-                                        productId,
-                                        null,
-                                        size,
-                                        null,
-                                        status,
-                                        null,
-                                        null,
-                                        null,
-                                        null)
+                        onboardingControllerApi._getOnboardingWithFilter(
+                                null,
+                                    null,
+                                    null,
+                                    page,
+                                    productId,
+                                    null,
+                                    size,
+                                    null,
+                                    onboardingStatus,
+                                    null,
+                                    null,
+                                    null,
+                                    null)
                                 .getBody())
                 .getItems().stream()
                 .map(tokenMapper::toEntity)

@@ -15,6 +15,7 @@ import it.pagopa.selfcare.external_api.model.onboarding.mapper.OnboardingInstitu
 import it.pagopa.selfcare.external_api.model.user.*;
 import it.pagopa.selfcare.external_api.utils.UserServiceUtils;
 import it.pagopa.selfcare.onboarding.common.PartyRole;
+import it.pagopa.selfcare.user.generated.openapi.v1.dto.UserOtpEmailInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -63,10 +64,8 @@ public class UserServiceImpl implements UserService {
                         })
                         .toList();
 
-        final String lastActiveOnboardingUserEmail = onboardedInstitutionResponses.stream()
-                .filter(o -> o.getState().equals("ACTIVE"))
-                .max(Comparator.comparing(o -> o.getProductInfo().getCreatedAt()))
-                .map(OnboardedInstitutionResponse::getUserEmail).orElse(null);
+        final String lastActiveOnboardingUserEmail = Optional.ofNullable(getUserOtpEmailInfo(user.getId()))
+                .map(UserOtpEmailInfoResponse::getOtpEmail).orElse(null);
         user.setLastActiveOnboardingUserEmail(lastActiveOnboardingUserEmail);
 
         UserInfoWrapper infoWrapper = new UserInfoWrapper();
@@ -75,6 +74,14 @@ public class UserServiceImpl implements UserService {
         return infoWrapper;
     }
 
+    private UserOtpEmailInfoResponse getUserOtpEmailInfo(String userId) {
+        try {
+            return msUserApiRestClient._getUserOtpEmailInfo(userId).getBody();
+        } catch (ResourceNotFoundException ex) {
+            log.warn("Not otp info for user with id {}", userId);
+            return null;
+        }
+    }
 
     @Override
     public UserDetailsWrapper getUserOnboardedProductsDetailsV2(String userId, String institutionId, String productId) {
@@ -131,7 +138,7 @@ public class UserServiceImpl implements UserService {
                     .filter(onboardedInstitutionInfo -> userInstitution.getProducts().stream()
                             .anyMatch(onboardedProductResponse -> onboardedProductResponse.getProductId().equals(onboardedInstitutionInfo.getProductInfo().getId()))
                     )
-                    .peek(onboardedInstitution -> {
+                    .peek(onboardedInstitution -> { // NOSONAR
                         Optional<OnboardedProductResponse> optOnboardedProduct = userInstitution.getProducts()
                                 .stream()
                                 .filter(product -> product.getProductId().equals(onboardedInstitution.getProductInfo().getId()))

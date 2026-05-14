@@ -3,15 +3,16 @@ package it.pagopa.selfcare.external_api.service;
 import it.pagopa.selfcare.commons.utils.TestUtils;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingResponse;
 import it.pagopa.selfcare.core.generated.openapi.v1.dto.OnboardingsResponse;
+import it.pagopa.selfcare.document.generated.openapi.v1.dto.Document;
+import it.pagopa.selfcare.document.generated.openapi.v1.dto.DocumentResponse;
 import it.pagopa.selfcare.external_api.client.MsCoreInstitutionApiClient;
-import it.pagopa.selfcare.external_api.client.MsOnboardingTokenControllerApi;
-import it.pagopa.selfcare.external_api.connector.FileStorageConnector;
+import it.pagopa.selfcare.external_api.client.MsDocumentApiClient;
+import it.pagopa.selfcare.external_api.client.MsDocumentContentApiClient;
 import it.pagopa.selfcare.external_api.exception.ResourceNotFoundException;
+import it.pagopa.selfcare.external_api.mapper.DocumentMapperImpl;
 import it.pagopa.selfcare.external_api.mapper.InstitutionMapperImpl;
-import it.pagopa.selfcare.external_api.mapper.TokenMapperImpl;
 import it.pagopa.selfcare.external_api.model.document.ResourceResponse;
 import it.pagopa.selfcare.external_api.model.onboarding.InstitutionOnboarding;
-import it.pagopa.selfcare.external_api.model.token.Token;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,10 +44,10 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     private ContractServiceImpl contractService;
 
     @Mock
-    private FileStorageConnector storageConnectorMock;
+    private MsDocumentApiClient documentApiClient;
 
     @Mock
-    private MsOnboardingTokenControllerApi tokenControllerApi;
+    private MsDocumentContentApiClient documentContentApiClient;
 
     @Mock
     private MsCoreInstitutionApiClient institutionApiClient;
@@ -55,7 +56,7 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     private InstitutionMapperImpl institutionMapper;
 
     @Spy
-    private TokenMapperImpl tokenMapper;
+    private DocumentMapperImpl documentMapper;
 
     @BeforeEach
     public void setUp() {
@@ -66,9 +67,9 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     void getContractV2() throws Exception {
         InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
         institutionOnboarding.setTokenId("tokenId");
-        ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
-        byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
-        Token token = objectMapper.readValue(tokenStream, Token.class);
+        ClassPathResource inputResource = new ClassPathResource("expectations/Document.json");
+        byte[] documentStream = Files.readAllBytes(inputResource.getFile().toPath());
+        Document document = objectMapper.readValue(documentStream, Document.class);
         OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
 
         Resource resource = new ByteArrayResource("test content".getBytes());
@@ -78,12 +79,12 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
           .body(resource);
 
         when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
-        when(tokenControllerApi._getContractSigned(anyString())).thenReturn(responseFile);
+        when(documentContentApiClient._getContractSigned(anyString())).thenReturn(responseFile);
 
-        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
-        tokenResponse.setContractSigned(token.getContractSigned());
-        when(tokenControllerApi._getToken(any()))
-                .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+        DocumentResponse documentResponse = new DocumentResponse();
+        documentResponse.setContractSigned(document.getContractSigned());
+        when(documentApiClient._getDocumentByOnboardingId(any()))
+                .thenReturn(ResponseEntity.ok(documentResponse));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
         ResourceResponse result = contractService.getContractV2("institutionId", "productId");
         Assertions.assertEquals("application/octet-stream", result.getMimetype());
@@ -95,9 +96,9 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     void getContractErrorTest() throws Exception {
         InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
         institutionOnboarding.setTokenId("tokenId");
-        ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
-        byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
-        Token token = objectMapper.readValue(tokenStream, Token.class);
+        ClassPathResource inputResource = new ClassPathResource("expectations/Document.json");
+        byte[] documentStream = Files.readAllBytes(inputResource.getFile().toPath());
+        Document document = objectMapper.readValue(documentStream, Document.class);
         OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
 
         ResponseEntity<Resource> responseFile = ResponseEntity.ok()
@@ -106,12 +107,12 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
           .body(null);
 
         when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
-        when(tokenControllerApi._getContractSigned(anyString())).thenReturn(responseFile);
+        when(documentContentApiClient._getContractSigned(anyString())).thenReturn(responseFile);
 
-        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
-        tokenResponse.setContractSigned(token.getContractSigned());
-        when(tokenControllerApi._getToken(any()))
-          .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+        DocumentResponse documentResponse = new DocumentResponse();
+        documentResponse.setContractSigned(document.getContractSigned());
+        when(documentApiClient._getDocumentByOnboardingId(any()))
+          .thenReturn(ResponseEntity.ok(documentResponse));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));
         Assertions.assertThrows(ResourceNotFoundException.class, () -> contractService.getContractV2("institutionId", "productId"));
     }
@@ -143,15 +144,14 @@ class ContractServiceImplTest extends BaseServiceTestUtils {
     void getContractV2WhereContractSignedIsNull() throws IOException {
         InstitutionOnboarding institutionOnboarding = new InstitutionOnboarding();
         institutionOnboarding.setTokenId(null);
-        ClassPathResource inputResource = new ClassPathResource("expectations/Token.json");
-        byte[] tokenStream = Files.readAllBytes(inputResource.getFile().toPath());
-        Token token = objectMapper.readValue(tokenStream, Token.class);
-        token.setContractSigned(null);
+
+
+
         OnboardingsResponse onboardingsResponse = mock(OnboardingsResponse.class);
 
-        it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse tokenResponse = new it.pagopa.selfcare.onboarding.generated.openapi.v1.dto.TokenResponse();
-        when(tokenControllerApi._getToken(any()))
-                .thenReturn(ResponseEntity.ok(List.of(tokenResponse)));
+        DocumentResponse documentResponse = new DocumentResponse();
+        when(documentApiClient._getDocumentByOnboardingId(any()))
+                .thenReturn(ResponseEntity.ok(documentResponse));
 
         when(onboardingsResponse.getOnboardings()).thenReturn(List.of(TestUtils.mockInstance(new OnboardingResponse())));
         when(institutionApiClient._getOnboardingsInstitutionUsingGET("institutionId", "productId")).thenReturn(ResponseEntity.ok(onboardingsResponse));

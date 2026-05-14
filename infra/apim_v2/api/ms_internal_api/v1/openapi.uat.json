@@ -409,6 +409,51 @@
         ]
       }
     },
+    "/users/{userId}/otp-info": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user's email for OTP",
+        "description": "Get the user's email configured to receive the OTP",
+        "operationId": "getUserOtpEmailInfo",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOtpEmailInfoResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
     "/uo/{codiceUniUo}": {
       "get": {
         "tags": [
@@ -1390,88 +1435,6 @@
         ]
       }
     },
-    "/documents": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFiles",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/documents/{path}": {
-      "get": {
-        "tags": [],
-        "summary": "Retrieves the list of files on the azure storage on the given path",
-        "description": "Fetches a list of files associated with the specified path on the storage.",
-        "operationId": "getFilesFromPath",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/onboarding/aggregation/increment": {
       "post": {
         "tags": [],
@@ -1818,7 +1781,9 @@
     },
     "/onboarding/{onboardingId}": {
       "delete": {
-        "tags": [],
+        "tags": [
+          "Onboarding Controller"
+        ],
         "summary": "Perform delete operation of an onboarding request",
         "description": "Perform delete operation of an onboarding request receiving onboarding id, then invokes async process to set DELETED as status for institution and user onboardings.",
         "operationId": "deleteOnboarding",
@@ -1857,7 +1822,9 @@
     },
     "/onboarding/{onboardingId}/complete": {
       "put": {
-        "tags": [],
+        "tags": [
+          "Onboarding Controller"
+        ],
         "summary": "Complete onboarding by verifying and uploading contract, then trigger async activities.",
         "description": "Perform complete operation of an onboarding request receiving onboarding id and contract signed by the institution.It checks the contract's signature and upload the contract on an azure storageAt the end, function triggers async activities related to complete onboarding that consist of create the institution, activate the onboarding and sending data to notification queue.",
         "operationId": "completeOnboardingUsingPUT",
@@ -2028,101 +1995,6 @@
         ]
       }
     },
-    "/tokens/contract-report": {
-      "get": {
-        "tags": [],
-        "summary": "Check if contract signed is a CADES file",
-        "description": "Check if contract signed is a CADES file even if is not .p7m",
-        "operationId": "reportContractSigned",
-        "parameters": [
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContractSignedReport"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
-    "/tokens/contract-signed": {
-      "put": {
-        "tags": [],
-        "summary": "Find an attachment for a given onboarding id and update the contract signed path",
-        "description": "Find  an attachment for a given onboarding id and update the contract signed path",
-        "operationId": "updateContractSigned",
-        "parameters": [
-          {
-            "name": "contractSigned",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "onboardingId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "format": "int64",
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not Authorized"
-          },
-          "403": {
-            "description": "Not Allowed"
-          }
-        },
-        "security": [
-          {
-            "apiKeyHeader": [
-              "global"
-            ]
-          }
-        ]
-      }
-    },
     "/user-groups/members": {
       "put": {
         "tags": [
@@ -2232,6 +2104,96 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/documents/contract-report": {
+      "get": {
+        "summary": "Check if contract signed is a CADES file",
+        "description": "Check if contract signed is a CADES file even if is not .p7m",
+        "operationId": "reportContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractSignedReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": [
+              "global"
+            ]
+          }
+        ]
+      }
+    },
+    "/documents/{onboardingId}/contract-signed": {
+      "put": {
+        "summary": "Update contract signed path for a given onboarding",
+        "description": "Update contract signed path for a given onboarding",
+        "operationId": "updateContractSigned",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractSigned",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Not Authorized"
+          },
+          "403": {
+            "description": "Not Allowed"
           }
         },
         "security": [
@@ -2835,6 +2797,23 @@
           }
         }
       },
+      "UserOtpEmailInfoResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "otpEmail": {
+            "type": "string"
+          },
+          "otpReferenceInstitutionId": {
+            "type": "string"
+          },
+          "canUserChangeOtpEmail": {
+            "type": "boolean"
+          }
+        }
+      },
       "UOResource": {
         "type": "object",
         "properties": {
@@ -3087,10 +3066,10 @@
           "mail3": {
             "type": "string"
           },
-          "uriprotocolloInformatico": {
+          "cap": {
             "type": "string"
           },
-          "cap": {
+          "uriprotocolloInformatico": {
             "type": "string"
           }
         }
@@ -3405,6 +3384,11 @@
             "items": {
               "$ref": "#/components/schemas/AggregateInstitutionDto"
             }
+          },
+          "isTest": {
+            "type": "boolean",
+            "description": "True if institution is a test institution",
+            "example": false
           }
         }
       },
@@ -4779,6 +4763,9 @@
           },
           "iban": {
             "type": "string"
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
@@ -4892,6 +4879,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
@@ -5046,6 +5036,7 @@
           "REQUEST",
           "TOBEVALIDATED",
           "PENDING",
+          "PENDING_IN_REVIEW",
           "COMPLETED",
           "FAILED",
           "REJECTED",
@@ -5414,19 +5405,14 @@
               "type": "string"
             }
           },
+          "isTest": {
+            "type": "boolean"
+          },
           "paymentServiceProvider": {
             "$ref": "#/components/schemas/PaymentServiceProviderRequest1"
           },
           "dataProtectionOfficer": {
             "$ref": "#/components/schemas/DataProtectionOfficerRequest1"
-          }
-        }
-      },
-      "ContractSignedReport": {
-        "type": "object",
-        "properties": {
-          "cades": {
-            "type": "boolean"
           }
         }
       },
@@ -5505,6 +5491,14 @@
               "description": "List of all the members of the group",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "ContractSignedReport": {
+        "type": "object",
+        "properties": {
+          "cades": {
+            "type": "boolean"
           }
         }
       }
