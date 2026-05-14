@@ -75,13 +75,15 @@ jobs:
           if ${{ inputs.is_pnpg }}; then
             echo "checkout_cdn_name=selc-${env:0:1}-weu-pnpg-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
             echo "checkout_cdn_profile=selc-${env:0:1}-weu-pnpg-checkout-cdn-profile" >> $GITHUB_OUTPUT
+            echo "domain=weu-pnpg" >> $GITHUB_OUTPUT
             echo "pnpg_suffix=-weu-pnpg" >> $GITHUB_OUTPUT
             echo "pnpg_suffix_storage=weupnpg" >> $GITHUB_OUTPUT
           else
             echo "checkout_cdn_name=selc-${env:0:1}-checkout-cdn-endpoint" >> $GITHUB_OUTPUT
             echo "checkout_cdn_profile=selc-${env:0:1}-checkout-cdn-profile" >> $GITHUB_OUTPUT
-            echo "pnpg_suffix=''" >> $GITHUB_OUTPUT
-            echo "pnpg_suffix_storage=''" >> $GITHUB_OUTPUT
+            echo "domain=weu-ar" >> $GITHUB_OUTPUT
+            echo "pnpg_suffix=-''" >> $GITHUB_OUTPUT
+            echo "pnpg_suffix_storage=weuar" >> $GITHUB_OUTPUT
           fi
 
       - name: Download Developer OpenAPI from blob storage
@@ -116,14 +118,14 @@ jobs:
           inlineScript: |
             az storage blob upload --auth-mode key \
               --container '$web' \
-              --account-name selc${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix_storage }}checkoutsa \
+              --account-name selc${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix_storage }}checkoutst01 \
               --file "${{ env.DIR }}${{ inputs.api_folder_path }}/openapi.${{ inputs.env }}.json" \
               --overwrite true \
               --name '${{ inputs.docs_openapi_path }}' &&
-            az cdn endpoint purge \
+            az afd endpoint purge \
               --resource-group selc-${{ steps.extract_env_short.outputs.env_short }}${{ steps.extract_env_short.outputs.pnpg_suffix }}-checkout-fe-rg \
-              --name ${{ steps.extract_env_short.outputs.checkout_cdn_name }} \
-              --profile-name ${{ steps.extract_env_short.outputs.checkout_cdn_profile }} \
+              --endpoint-name selc-${{ steps.extract_env_short.outputs.env_short }}-${{ steps.extract_env_short.outputs.domain }}-checkout-fde-01 \
+              --profile-name selc-${{ steps.extract_env_short.outputs.env_short }}-${{ steps.extract_env_short.outputs.domain }}-checkout-afd-01 \
               --content-paths "/${{ inputs.docs_openapi_path }}" \
               --no-wait
 
