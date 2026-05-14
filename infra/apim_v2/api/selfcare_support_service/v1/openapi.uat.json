@@ -4570,6 +4570,9 @@
           },
           "iban": {
             "type": "string"
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
@@ -4683,6 +4686,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "isTest": {
+            "type": "boolean"
           }
         }
       },
